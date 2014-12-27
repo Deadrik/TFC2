@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.World.Biome;
+package com.bioxx.tfc2.World.TerrainTypes;
 
 import java.awt.Color;
 
@@ -8,22 +8,30 @@ import net.royawesome.jlibnoise.module.Cache;
 import net.royawesome.jlibnoise.module.modifier.Clamp;
 import net.royawesome.jlibnoise.module.modifier.Curve;
 import net.royawesome.jlibnoise.module.modifier.ScaleBias;
+import net.royawesome.jlibnoise.module.modifier.ScalePoint;
 import net.royawesome.jlibnoise.module.source.Perlin;
 
-public class TerrainOcean extends TerrainType {
+public class TerrainLowMountains extends TerrainType {
 
-	public TerrainOcean(int i, String n, Color c) 
+	public TerrainLowMountains(int i, String n, Color c) 
 	{
 		super(i, n, c);
-		minHeight = 12;
-		maxHeight = 28;
+		minHeight = 34;
+		maxHeight = 120;
+
 		Perlin pe = new Perlin();
-		pe.setSeed (0);
+		pe.setSeed (i);
 		pe.setFrequency (0.03125);
-		pe.setOctaveCount (3);
+		pe.setOctaveCount (4);
 		pe.setNoiseQuality (NoiseQuality.BEST);
+
+		ScalePoint sp = new ScalePoint();
+		sp.setSourceModule(0, pe);
+		sp.setxScale(.1);
+		sp.setzScale(.1);
+
 		//The scalebias makes our noise fit the range 0-1
-		ScaleBias sb = new ScaleBias(pe);
+		ScaleBias sb = new ScaleBias(sp);
 		//Noise is normally +-2 so we scale by 0.25 to make it +-0.5
 		sb.setScale(0.25);
 		//Next we offset by +0.5 which makes the noise 0-1
@@ -32,7 +40,7 @@ public class TerrainOcean extends TerrainType {
 		Curve curveModule = new Curve();
 		curveModule.setSourceModule(0, sb);
 		curveModule.AddControlPoint(0, 0);
-		curveModule.AddControlPoint(0.55, 0.15);
+		curveModule.AddControlPoint(0.35, 0.1);
 		curveModule.AddControlPoint(0.75, 0.9);
 		curveModule.AddControlPoint(1, 1);
 

@@ -2,6 +2,7 @@ package com.bioxx.tfc2;
 
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -12,6 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import com.bioxx.tfc2.Commands.PrintImageMapCommand;
+import com.bioxx.tfc2.Handlers.CreateSpawnHandler;
 import com.bioxx.tfc2.Networking.PacketPipeline;
 import com.bioxx.tfc2.World.WorldProviderSurface;
 
@@ -64,6 +66,7 @@ public class TFC
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		packetPipeline.postInitialise();
+		MinecraftForge.EVENT_BUS.register(new CreateSpawnHandler());
 	}
 
 	@EventHandler

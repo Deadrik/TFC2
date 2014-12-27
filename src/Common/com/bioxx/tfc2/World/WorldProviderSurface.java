@@ -1,9 +1,12 @@
 package com.bioxx.tfc2.World;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.IChunkProvider;
+
+import com.bioxx.tfc2.Core;
 
 public class WorldProviderSurface extends WorldProvider 
 {
@@ -33,6 +36,13 @@ public class WorldProviderSurface extends WorldProvider
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z)
 	{
-		return this.worldObj.getGroundAboveSeaLevel(new BlockPos(x, 0, z)) == Blocks.dirt;
+		Block b = Core.getGroundAboveSeaLevel(this.worldObj, new BlockPos(x, 0, z));
+		return b == Blocks.grass;
+	}
+
+	@Override
+	public double getHorizon()
+	{
+		return 32D;
 	}
 }

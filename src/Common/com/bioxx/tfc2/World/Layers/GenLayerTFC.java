@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.gen.layer.GenLayer;
 
-import com.bioxx.tfc2.World.Biome.TerrainType;
+import com.bioxx.tfc2.World.TerrainTypes.TerrainType;
 
 public abstract class GenLayerTFC extends GenLayer
 {
@@ -40,8 +40,6 @@ public abstract class GenLayerTFC extends GenLayer
 		drawImage(512, island, "Remove Ocean");
 		island = GenLayerZoomTFC.magnify(2004L, island, 1);
 		drawImage(512, island, "Magnify");
-		//island = new GenLayerAddIslandTFC(1L, island);
-		//drawImage(512, island, "IslandAddland");
 		island = new GenLayerZoomTFC(2005L, island);
 		drawImage(512, island, "Island Zoom");
 		island = new GenLayerAddIslandTFC(3L, island);
@@ -50,45 +48,22 @@ public abstract class GenLayerTFC extends GenLayer
 		drawImage(512, island, "Island Zoom");
 		island = new GenLayerRemoveOcean(2007L, island);
 		drawImage(512, island, "Remove Ocean");
-		//island = new GenLayerFuzzyZoomTFC(2000L, island);
-		//drawImage(512, island, "ContinentsFuzzyZoom");
-		island = GenLayerZoomTFC.magnify(2008L, island, 3);
-		drawImage(512, island, "Magnify");
-		//island = new GenLayerAddIslandTFC(4L, island);
-		//drawImage(512, island, "IslandAddland");
+		island = new GenLayerShore(5000L, island);
+		drawImage(512, island, "Shore");
 		island = new GenLayerZoomTFC(2009L, island);
 		drawImage(512, island, "Island Zoom");
-		//island = new GenLayerAddIslandTFC(1L, island);
-		//drawImage(512, island, "IslandAddland");
+		island = new GenLayerZoomTFC(2009L, island);
+		drawImage(512, island, "Island Zoom");
+		island = new GenLayerZoomTFC(2009L, island);
+		drawImage(512, island, "Island Zoom");
+		island = new GenLayerZoomTFC(2009L, island);
+		drawImage(512, island, "Island Zoom");
 		island = new GenLayerZoomTFC(2010L, island);
 		drawImage(512, island, "Island Zoom");
 		return island;
 	}
 
-	/*public static GenLayerTFC genContinent()
-	{
-		GenLayerTFC continentStart = new GenLayerIslandTFC(1L);
-		drawImage(512, continentStart, "0 ContinentsStart");
-		GenLayerFuzzyZoomTFC continentFuzzyZoom = new GenLayerFuzzyZoomTFC(2000L, continentStart);
-		drawImage(512, continentFuzzyZoom, "1 ContinentsFuzzyZoom");
-		GenLayerTFC var10 = new GenLayerAddIslandTFC(1L, continentFuzzyZoom);
-		drawImage(512, var10, "2 ContinentsAddIsland");
-		GenLayerTFC var11 = new GenLayerZoomTFC(2001L, var10);
-		drawImage(512, var11, "3 ContinentsAddIslandZoom");
-		var10 = new GenLayerAddIslandTFC(2L, var11);
-		drawImage(512, var10, "4 ContinentsAddIsland2");
-		var11 = new GenLayerZoomTFC(2002L, var10);
-		drawImage(512, var11, "5 ContinentsAddIslandZoom2");
-		var10 = new GenLayerAddIslandTFC(3L, var11);
-		drawImage(512, var10, "6 ContinentsAddIsland3");
-		var11 = new GenLayerZoomTFC(2003L, var10);
-		drawImage(512, var11, "7 ContinentsAddIslandZoom3");
-		GenLayerTFC continent = new GenLayerAddIslandTFC(4L, var11);
-		drawImage(512, continent, "8 ContinentsDone");
-		return continent;
-	}*/
-
-	static boolean shouldDraw = true;
+	static boolean shouldDraw = false;
 	static int imageCount = 0;
 	public static void drawImage(int size, GenLayerTFC genlayer, String name)
 	{

@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.World.Biome;
+package com.bioxx.tfc2.World.TerrainTypes;
 
 import java.awt.Color;
 
@@ -14,10 +14,14 @@ public class TerrainType
 	public int minHeight = 0;
 	public int maxHeight = 255;
 	protected Color mapColor;
+	protected boolean canSmoothUpward = true;
+	protected boolean canSmoothDownward = true;
 
 	protected static TerrainType[] terrainList = new TerrainType[256];
 	public static TerrainType Ocean = new TerrainOcean(0, "Ocean", Color.BLUE);
 	public static TerrainType FlatlandsLow = new TerrainLowPlains(1, "Low Plains", Color.GREEN);
+	public static TerrainType Beach = new TerrainBeach(2, "Beach", Color.YELLOW);
+	public static TerrainType MountainsLow = new TerrainLowMountains(3, "Low Mountains", Color.GRAY);
 
 
 
@@ -33,6 +37,16 @@ public class TerrainType
 		pe.setNoiseQuality (NoiseQuality.BEST);
 		heightPlane = new Plane(pe);
 		mapColor = c;
+	}
+
+	public boolean getCanSmoothUpward()
+	{
+		return this.canSmoothUpward;
+	}
+
+	public boolean getCanSmoothDownward()
+	{
+		return this.canSmoothDownward;
 	}
 
 	public int getID()

@@ -7,9 +7,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
+import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 
-import com.bioxx.tfc2.World.Biome.TerrainType;
+import com.bioxx.tfc2.World.TerrainTypes.TerrainType;
 
 public class ChunkProviderSurface extends ChunkProviderGenerate 
 {
@@ -53,15 +54,20 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				{
 					if(chunkprimer.getBlockState(x, y, z) == Blocks.stone.getDefaultState())
 					{
+						TerrainType t = getTerrain(x, z);
 						if(chunkprimer.getBlockState(x, y+1, z) == Blocks.air.getDefaultState())
 						{
-							chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
+							if((t == TerrainType.Ocean || t == TerrainType.Beach) && y <= 35)
+							{
+								chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
+							}
+							else
+							{
+								chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
+							}
 						}
 
-						if(getTerrain(x, z) == TerrainType.Ocean && y <= 34)
-						{
-							chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
-						}
+
 					}
 				}
 			}
@@ -124,12 +130,28 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						avgCount++;
 						TerrainType blend = terrainDataWide[(16+xOffset+xR)+48*(16+zOffset+zR)];
-						avgMax+=blend.maxHeight;
-						avgMin+=blend.minHeight;
+						if(!b.getCanSmoothUpward())
+							avgMax+=b.maxHeight;
+						else
+							avgMax+=blend.maxHeight;
+
+						if(!b.getCanSmoothDownward())
+							avgMin+=b.minHeight;
+						else
+							avgMin+=blend.minHeight;
 					}
 				}
-				maxH = avgMax/avgCount;
-				minH = avgMin/avgCount;
+
+				if(!b.getCanSmoothUpward())
+					maxH = Math.min(avgMax/avgCount, maxH);
+				else
+					maxH = avgMax/avgCount;	
+
+				if(!b.getCanSmoothDownward())
+					minH = Math.max(avgMin/avgCount, minH);
+				else
+					minH = avgMin/avgCount;	
+
 				double diff = maxH-minH;
 				outHeight[xOffset+16*zOffset] = minH + diff*n;
 			}
@@ -150,5 +172,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	protected TerrainType getTerrain(int x, int z)
 	{	
 		return this.terrainData[(x&15)+16*(z&15)];
+	}
+
+	@Override
+	public void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_)
+	{
+
 	}
 }

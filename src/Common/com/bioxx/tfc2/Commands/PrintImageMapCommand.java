@@ -24,7 +24,7 @@ import net.royawesome.jlibnoise.module.modifier.ScalePoint;
 import net.royawesome.jlibnoise.module.source.Perlin;
 
 import com.bioxx.tfc2.World.ChunkManager;
-import com.bioxx.tfc2.World.Biome.TerrainType;
+import com.bioxx.tfc2.World.TerrainTypes.TerrainType;
 
 public class PrintImageMapCommand extends CommandBase
 {
@@ -204,16 +204,13 @@ public class PrintImageMapCommand extends CommandBase
 			Perlin pe = new Perlin();
 			pe.setSeed (0);
 			pe.setFrequency (0.03125);
-			pe.setOctaveCount (3);
+			pe.setOctaveCount (4);
 			pe.setNoiseQuality (NoiseQuality.BEST);
-
-
 
 			ScalePoint sp = new ScalePoint();
 			sp.setSourceModule(0, pe);
-			sp.setxScale(.33);
-			sp.setyScale(.33);
-			sp.setzScale(.33);
+			sp.setxScale(.1);
+			sp.setzScale(.1);
 
 			//The scalebias makes our noise fit the range 0-1
 			ScaleBias sb = new ScaleBias(sp);

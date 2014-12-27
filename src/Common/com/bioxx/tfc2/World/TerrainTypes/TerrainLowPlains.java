@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.World.Biome;
+package com.bioxx.tfc2.World.TerrainTypes;
 
 import java.awt.Color;
 
