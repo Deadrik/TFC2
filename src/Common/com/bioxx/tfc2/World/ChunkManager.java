@@ -24,13 +24,13 @@ public class ChunkManager extends WorldChunkManager
 		world = worldIn;
 	}
 
-	public TerrainType[] getBiomeData(int worldX, int worldZ, int rangeX, int rangeZ)
+	public TerrainType[] getTerrainData(int worldX, int worldZ, int rangeX, int rangeZ)
 	{
 		int[] ids = genTerrain.getInts(worldX, worldZ, rangeX, rangeZ);
 		TerrainType[] biomeArray = new TerrainType[rangeX*rangeZ];
 		for(int i = 0; i < ids.length; i++)
 		{
-			biomeArray[i] = TerrainType.getBiome(ids[i]);
+			biomeArray[i] = TerrainType.getTerrain(ids[i]);
 		}
 		return biomeArray;
 	}
@@ -41,7 +41,7 @@ public class ChunkManager extends WorldChunkManager
 		int localZ = z & 15;
 		int chunkX = x >> 4;
 		int chunkZ = z >> 4;
-		TerrainType[] biomeArray = ((ChunkManager)world.getWorldChunkManager()).getBiomeData(chunkX << 4, chunkZ << 4, 16, 16);
+		TerrainType[] biomeArray = ((ChunkManager)world.getWorldChunkManager()).getTerrainData(chunkX << 4, chunkZ << 4, 16, 16);
 		//PrintImageMapCommand.drawChunkBiomeImage(x, z, world, "testBiome");
 		return biomeArray[localZ + localX*16];
 	}

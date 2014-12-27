@@ -15,7 +15,7 @@ public class TerrainType
 	public int maxHeight = 255;
 	protected Color mapColor;
 
-	protected static TerrainType[] biomeList = new TerrainType[256];
+	protected static TerrainType[] terrainList = new TerrainType[256];
 	public static TerrainType Ocean = new TerrainOcean(0, "Ocean", Color.BLUE);
 	public static TerrainType FlatlandsLow = new TerrainLowPlains(1, "Low Plains", Color.GREEN);
 
@@ -23,7 +23,7 @@ public class TerrainType
 
 	public TerrainType(int i, String n, Color c)
 	{
-		biomeList[i] = this;
+		terrainList[i] = this;
 		id = i;
 		name = n;
 		Perlin pe = new Perlin();
@@ -55,8 +55,8 @@ public class TerrainType
 		return heightPlane;
 	}
 
-	public static TerrainType getBiome(int i)
+	public static TerrainType getTerrain(int i)
 	{
-		return biomeList[i];
+		return terrainList[i];
 	}
 }

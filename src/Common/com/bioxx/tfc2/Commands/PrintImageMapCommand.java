@@ -92,7 +92,7 @@ public class PrintImageMapCommand extends CommandBase
 			System.out.println(name+".bmp");
 			float perc = 0.1f;
 			float count = 0;
-			TerrainType[] b = ((ChunkManager)world.getWorldChunkManager()).getBiomeData(xCoord-size/2, zCoord-size/2, size, size);
+			TerrainType[] b = ((ChunkManager)world.getWorldChunkManager()).getTerrainData(xCoord-size/2, zCoord-size/2, size, size);
 			for(int z = 0; z < size; z++)
 			{
 				for(int x = 0; x < size; x++)
@@ -129,7 +129,7 @@ public class PrintImageMapCommand extends CommandBase
 			System.out.println(name+".bmp");
 			float perc = 0.1f;
 			float count = 0;
-			TerrainType[] b = ((ChunkManager)world.getWorldChunkManager()).getBiomeData(chunkX << 4, chunkZ << 4, 16, 16);
+			TerrainType[] b = ((ChunkManager)world.getWorldChunkManager()).getTerrainData(chunkX << 4, chunkZ << 4, 16, 16);
 			for(int z = 0; z < 16; z++)
 			{
 				for(int x = 0; x < 16; x++)

@@ -110,7 +110,7 @@ public abstract class GenLayerTFC extends GenLayer
 				for(int z = 0; z < size; z++)
 				{
 					int height = ints[x*size+z]*64;
-					graphics.setColor(TerrainType.getBiome(ints[x*size+z]).getMapColor());	
+					graphics.setColor(TerrainType.getTerrain(ints[x*size+z]).getMapColor());	
 					graphics.drawRect(x, z, 1, 1);
 				}
 			}
