@@ -1,0 +1,21 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "terrafirmacraft",
+    "name": "TerraFirmaCraft",
+    "description": "TerraFirmaCraft is a total conversion for minecraft that tries to bring hardcore believability to minecraft.",
+    "version": "${mod_version}",
+    "mcversion": "${minecraft_version}",
+    "url" : "http://www.terrafirmacraft.com/download/change-log/",
+    "updateUrl": "",
+    "authorList": [ "bioxx", "dunkleosteus" ],
+    "credits": "",
+    "logoFile": "/assets/textures/gui/TFCLogo.png",
+    "screenshots": [  ],
+    "parent": "",
+    "requiredMods": [  ],
+    "dependencies": [  ],
+    "dependants": [  ],
+    "useDependencyInformation": "true"
+  }]
+}

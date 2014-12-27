@@ -1,0 +1,23 @@
+.DS_Store
+*.pyc
+*~
+*swp
+TFC Build/
+bin/
+.gradle/
+build/
+.settings/
+logs/
+crash-reports/
+config/
+saves/
+screenshots/
+.project
+.classpath
+options.txt
+out
+*.iws
+*.ipr
+*.iml
+mods
+asm
