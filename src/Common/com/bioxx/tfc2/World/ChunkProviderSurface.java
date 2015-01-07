@@ -55,15 +55,19 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					if(chunkprimer.getBlockState(x, y, z) == Blocks.stone.getDefaultState())
 					{
 						TerrainType t = getTerrain(x, z);
-						if(chunkprimer.getBlockState(x, y+1, z) == Blocks.air.getDefaultState())
+						if(chunkprimer.getBlockState(x, y+1, z) == Blocks.air.getDefaultState() || chunkprimer.getBlockState(x, y+1, z) == Blocks.water.getDefaultState())
 						{
 							if((t == TerrainType.Ocean || t == TerrainType.Beach) && y <= 35)
 							{
 								chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
+								chunkprimer.setBlockState(x, y-1, z, Blocks.sand.getDefaultState());
+								chunkprimer.setBlockState(x, y-2, z, Blocks.sand.getDefaultState());
 							}
 							else
 							{
 								chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
+								chunkprimer.setBlockState(x, y-1, z, Blocks.dirt.getDefaultState());
+								chunkprimer.setBlockState(x, y-2, z, Blocks.dirt.getDefaultState());
 							}
 						}
 
@@ -116,43 +120,43 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		{
 			for (int zOffset = 0; zOffset < 16; ++zOffset)
 			{
-				TerrainType b = this.terrainData[xOffset+16*zOffset];
+				TerrainType base = this.terrainData[xOffset+16*zOffset];
 				double n = getValue((chunkX<<4)+xOffset, (chunkZ<<4)+zOffset);
-				int maxH = b.maxHeight;
-				int minH = b.minHeight;
+				int maxH = base.maxHeight;
+				int minH = base.minHeight;
 
 				int avgMax = 0;
 				int avgMin = 0;
 				int avgCount = 0;
-				for (int xR = -15; xR < 16; ++xR)
+				double avgNoise = 0;
+				double diff = 0;
+				int radius = 5;
+				if(base != TerrainType.Beach)
 				{
-					for (int zR = -15; zR < 16; ++zR)
+					for (int xR = -radius; xR <= radius; ++xR)
 					{
-						avgCount++;
-						TerrainType blend = terrainDataWide[(16+xOffset+xR)+48*(16+zOffset+zR)];
-						if(!b.getCanSmoothUpward())
-							avgMax+=b.maxHeight;
-						else
-							avgMax+=blend.maxHeight;
+						for (int zR = -radius; zR <= radius; ++zR)
+						{
+							TerrainType blend = terrainDataWide[(16+xOffset+xR)+48*(16+zOffset+zR)];
 
-						if(!b.getCanSmoothDownward())
-							avgMin+=b.minHeight;
-						else
-							avgMin+=blend.minHeight;
+							if((base.getCanSmoothUpward() && blend.maxHeight > base.maxHeight) || blend.maxHeight < base.maxHeight)
+								maxH = (maxH + blend.maxHeight)/2;
+							/*else
+									maxH = Math.min((maxH + blend.maxHeight)/2, maxH);*/
+							if((base.getCanSmoothDownward() && blend.minHeight < base.minHeight) || blend.minHeight > base.minHeight)
+								minH = (minH + blend.minHeight)/2;
+							/*else
+									minH = Math.max((minH + blend.minHeight)/2, minH);*/
+							if(blend != base)
+							{
+								avgNoise = (avgNoise + blend.getHeightPlane().GetValue((chunkX<<4)+xOffset+xR, (chunkZ<<4)+zOffset+zR)) / 2;
+							}
+						}
 					}
 				}
-
-				if(!b.getCanSmoothUpward())
-					maxH = Math.min(avgMax/avgCount, maxH);
-				else
-					maxH = avgMax/avgCount;	
-
-				if(!b.getCanSmoothDownward())
-					minH = Math.max(avgMin/avgCount, minH);
-				else
-					minH = avgMin/avgCount;	
-
-				double diff = maxH-minH;
+				if(base.hasHardBottom)
+					minH = Math.max(base.minHeight, minH);
+				diff = maxH-minH;
 				outHeight[xOffset+16*zOffset] = minH + diff*n;
 			}
 		}

@@ -20,7 +20,7 @@ public class CreateSpawnHandler
 		World world = event.world;
 		world.findingSpawnPoint = true;
 		ChunkManager worldchunkmanager = (ChunkManager)world.getWorldChunkManager();
-		List list = Lists.newArrayList(TerrainType.FlatlandsLow, TerrainType.MountainsLow);
+		List list = Lists.newArrayList(TerrainType.FlatlandsLow);
 		Random random = new Random(world.getSeed());
 		BlockPos blockpos = worldchunkmanager.findTerrainPositionForSpawn(-10000, 4096, 1024, list, random);
 		int i = 0;

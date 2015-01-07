@@ -27,8 +27,8 @@ public class TerrainLowMountains extends TerrainType {
 
 		ScalePoint sp = new ScalePoint();
 		sp.setSourceModule(0, pe);
-		sp.setxScale(.1);
-		sp.setzScale(.1);
+		sp.setxScale(.05);
+		sp.setzScale(.05);
 
 		//The scalebias makes our noise fit the range 0-1
 		ScaleBias sb = new ScaleBias(sp);

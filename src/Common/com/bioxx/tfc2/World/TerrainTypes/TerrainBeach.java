@@ -15,12 +15,13 @@ public class TerrainBeach extends TerrainType {
 	public TerrainBeach(int i, String n, Color c) 
 	{
 		super(i, n, c);
-		minHeight = 32;
-		maxHeight = 34;
+		minHeight = 31;
+		maxHeight = 33;
 		this.canSmoothUpward = false;
+		this.canSmoothDownward = false;
 
 		Perlin pe = new Perlin();
-		pe.setSeed (1);
+		pe.setSeed (0);
 		pe.setFrequency (0.03125);
 		pe.setOctaveCount (3);
 		pe.setNoiseQuality (NoiseQuality.BEST);

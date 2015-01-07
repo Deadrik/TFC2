@@ -16,12 +16,14 @@ public class TerrainType
 	protected Color mapColor;
 	protected boolean canSmoothUpward = true;
 	protected boolean canSmoothDownward = true;
+	public boolean hasHardBottom = true;
 
 	protected static TerrainType[] terrainList = new TerrainType[256];
 	public static TerrainType Ocean = new TerrainOcean(0, "Ocean", Color.BLUE);
 	public static TerrainType FlatlandsLow = new TerrainLowPlains(1, "Low Plains", Color.GREEN);
 	public static TerrainType Beach = new TerrainBeach(2, "Beach", Color.YELLOW);
 	public static TerrainType MountainsLow = new TerrainLowMountains(3, "Low Mountains", Color.GRAY);
+	public static TerrainType MountainsLowEdge = new TerrainLowMountains(4, "Low Mountains Edge", Color.GRAY);
 
 
 

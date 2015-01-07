@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 
 public class GenLayerIslandTFC extends GenLayerTFC
 {
-	public static List<TerrainType> viableTerrains = Lists.newArrayList(TerrainType.FlatlandsLow, TerrainType.MountainsLow);
+	public static List<TerrainType> viableTerrains = Lists.newArrayList(TerrainType.FlatlandsLow);
 	public GenLayerIslandTFC(long par1)
 	{
 		super(par1);
@@ -25,7 +25,7 @@ public class GenLayerIslandTFC extends GenLayerTFC
 			for (int x = 0; x < pWidth; ++x)
 			{
 				this.initChunkSeed(pX + x, pZ + z);
-				if(((pX+x>>1) % 2 != 0) && ((pZ+z>>1) % 2 != 0) /*&& (this.nextInt(6) != 0)*/)
+				if(((pX+x>>1) % 2 == 0) && ((pZ+z>>1) % 2 == 0) /*&& (this.nextInt(6) != 0)*/)
 				{
 					outArray[x + z * pWidth] = viableTerrains.get(this.nextInt(viableTerrains.size())).getID();
 				}
