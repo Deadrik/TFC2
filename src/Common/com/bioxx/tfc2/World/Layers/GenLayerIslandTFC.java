@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 
 public class GenLayerIslandTFC extends GenLayerTFC
 {
-	public static List<TerrainType> viableTerrains = Lists.newArrayList(TerrainType.FlatlandsLow);
+	public static List<TerrainType> viableTerrains = Lists.newArrayList(TerrainType.FlatlandsLow, TerrainType.MountainsLow);
 	public GenLayerIslandTFC(long par1)
 	{
 		super(par1);
