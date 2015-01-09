@@ -16,8 +16,10 @@ public class TerrainLowPlains extends TerrainType {
 	public TerrainLowPlains(int i, String n, Color c) 
 	{
 		super(i, n, c);
-		minHeight = 33;
-		maxHeight = 40;
+		minNoiseHeight = 33;
+		maxNoiseHeight = 40;
+		minSmoothHeight = 33;
+		maxSmoothHeight = 50;
 
 		Perlin pe = new Perlin();
 		pe.setSeed (0);

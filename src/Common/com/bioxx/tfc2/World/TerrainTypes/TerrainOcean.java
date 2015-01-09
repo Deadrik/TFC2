@@ -15,8 +15,11 @@ public class TerrainOcean extends TerrainType {
 	public TerrainOcean(int i, String n, Color c) 
 	{
 		super(i, n, c);
-		minHeight = 12;
-		maxHeight = 28;
+		minNoiseHeight = 12;
+		maxNoiseHeight = 28;
+		minSmoothHeight = 12;
+		maxSmoothHeight = 31;
+
 		Perlin pe = new Perlin();
 		pe.setSeed (0);
 		pe.setFrequency (0.03125);

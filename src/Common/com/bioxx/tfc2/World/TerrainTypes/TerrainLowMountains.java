@@ -16,8 +16,8 @@ public class TerrainLowMountains extends TerrainType {
 	public TerrainLowMountains(int i, String n, Color c) 
 	{
 		super(i, n, c);
-		minHeight = 34;
-		maxHeight = 120;
+		minNoiseHeight = 34;
+		maxNoiseHeight = 120;
 
 		Perlin pe = new Perlin();
 		pe.setSeed (i);

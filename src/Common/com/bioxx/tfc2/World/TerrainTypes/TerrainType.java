@@ -11,8 +11,12 @@ public class TerrainType
 	protected int id;
 	protected String name;
 	protected Plane heightPlane;
-	public int minHeight = 0;
-	public int maxHeight = 255;
+	public int minNoiseHeight = 0;
+	public int maxNoiseHeight = 255;
+	public int minSmoothHeight = 0;
+	public int maxSmoothHeight = 255;
+	public int smoothDistance = 16;
+
 	protected Color mapColor;
 	protected boolean canSmoothUpward = true;
 	protected boolean canSmoothDownward = true;

@@ -63,6 +63,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								chunkprimer.setBlockState(x, y-1, z, Blocks.sand.getDefaultState());
 								chunkprimer.setBlockState(x, y-2, z, Blocks.sand.getDefaultState());
 							}
+							else if (t == TerrainType.MountainsLow)
+							{
+								chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
+							}
 							else
 							{
 								chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
@@ -92,7 +96,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					}
 					if(y <= 32 && chunkprimer.getBlockState(x, y, z).getBlock() == Blocks.air)
 					{
-						//chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
+						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 					}
 					if(y == 0)
 					{
@@ -123,7 +127,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			for (int zOffset = 0; zOffset < 48; ++zOffset)
 			{
 				TerrainType t = terrainDataWide[(xOffset)+48*(zOffset)];
-				nsHeight[(xOffset)+48*(zOffset)] = t.minHeight + (t.maxHeight-t.minHeight)*t.getHeightPlane().GetValue((chunkX << 4)-16+xOffset, (chunkZ << 4)-16+zOffset);
+				nsHeight[(xOffset)+48*(zOffset)] = t.minNoiseHeight + (t.maxNoiseHeight-t.minNoiseHeight)*t.getHeightPlane().GetValue((chunkX << 4)-16+xOffset, (chunkZ << 4)-16+zOffset);
 			}
 		}
 		for (int xOffset = 0; xOffset < 16; ++xOffset)
@@ -131,25 +135,31 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			for (int zOffset = 0; zOffset < 16; ++zOffset)
 			{
 				TerrainType base = this.terrainData[xOffset+16*zOffset];
-				double n = base.minHeight;//getValue((chunkX<<4)+xOffset, (chunkZ<<4)+zOffset);
-				int maxH = base.maxHeight;
-				int minH = base.minHeight;
+				double n = base.minNoiseHeight;//getValue((chunkX<<4)+xOffset, (chunkZ<<4)+zOffset);
+				int maxH = base.maxNoiseHeight;
+				int minH = base.minNoiseHeight;
 				double diff = 0;
-				int radius = 16;
+				int radius = base.smoothDistance;
 				int count = 1;
-				/*if(base != TerrainType.Beach)*/
+				double ns = 0;
+				for (int xR = -radius; xR <= radius; ++xR)
 				{
-
-					for (int xR = -radius; xR <= radius; ++xR)
+					for (int zR = -radius; zR <= radius; ++zR)
 					{
-						for (int zR = -radius; zR <= radius; ++zR)
-						{
-							TerrainType blend = terrainDataWide[(16+xOffset+(xR))+48*(16+zOffset+(zR))];
-							double ns = nsHeight[(16+xOffset+(xR))+48*(16+zOffset+(zR))];
 
-							n = (n + ns);
-							count++;
+						TerrainType blend = terrainDataWide[(16+xOffset+(xR))+48*(16+zOffset+(zR))];
+
+						ns = nsHeight[(16+xOffset+(xR))+48*(16+zOffset+(zR))];
+						if(!base.getCanSmoothDownward() && ns < base.minSmoothHeight)
+						{
+							ns = base.minSmoothHeight;
 						}
+						if(!base.getCanSmoothUpward() && ns > base.maxSmoothHeight)
+						{
+							ns = base.maxSmoothHeight;
+						}
+						n += ns;
+						count++;
 					}
 				}
 				n/= count;
