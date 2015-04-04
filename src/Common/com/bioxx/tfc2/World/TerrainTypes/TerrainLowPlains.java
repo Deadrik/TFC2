@@ -2,14 +2,14 @@ package com.bioxx.tfc2.World.TerrainTypes;
 
 import java.awt.Color;
 
-import net.royawesome.jlibnoise.NoiseQuality;
-import net.royawesome.jlibnoise.model.Plane;
-import net.royawesome.jlibnoise.module.Cache;
-import net.royawesome.jlibnoise.module.modifier.Clamp;
-import net.royawesome.jlibnoise.module.modifier.Curve;
-import net.royawesome.jlibnoise.module.modifier.ScaleBias;
-import net.royawesome.jlibnoise.module.modifier.ScalePoint;
-import net.royawesome.jlibnoise.module.source.Perlin;
+import com.bioxx.libnoise.NoiseQuality;
+import com.bioxx.libnoise.model.Plane;
+import com.bioxx.libnoise.module.Cache;
+import com.bioxx.libnoise.module.modifier.Clamp;
+import com.bioxx.libnoise.module.modifier.Curve;
+import com.bioxx.libnoise.module.modifier.ScaleBias;
+import com.bioxx.libnoise.module.modifier.ScalePoint;
+import com.bioxx.libnoise.module.source.Perlin;
 
 public class TerrainLowPlains extends TerrainType {
 

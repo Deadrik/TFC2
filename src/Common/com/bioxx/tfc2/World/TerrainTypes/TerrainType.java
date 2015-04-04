@@ -2,9 +2,9 @@ package com.bioxx.tfc2.World.TerrainTypes;
 
 import java.awt.Color;
 
-import net.royawesome.jlibnoise.NoiseQuality;
-import net.royawesome.jlibnoise.model.Plane;
-import net.royawesome.jlibnoise.module.source.Perlin;
+import com.bioxx.libnoise.NoiseQuality;
+import com.bioxx.libnoise.model.Plane;
+import com.bioxx.libnoise.module.source.Perlin;
 
 public class TerrainType 
 {

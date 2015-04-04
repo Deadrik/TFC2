@@ -135,31 +135,48 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			for (int zOffset = 0; zOffset < 16; ++zOffset)
 			{
 				TerrainType base = this.terrainData[xOffset+16*zOffset];
-				double n = base.minNoiseHeight;//getValue((chunkX<<4)+xOffset, (chunkZ<<4)+zOffset);
+				double n = nsHeight[(16+xOffset)+48*(16+zOffset)];//getValue((chunkX<<4)+xOffset, (chunkZ<<4)+zOffset);
 				int maxH = base.maxNoiseHeight;
 				int minH = base.minNoiseHeight;
 				double diff = 0;
 				int radius = base.smoothDistance;
 				int count = 1;
 				double ns = 0;
+				boolean foundOtherTerrain = false;
+				double sameTerrainNS = 0;
+				int sameTerrainCount = 0;
 				for (int xR = -radius; xR <= radius; ++xR)
 				{
 					for (int zR = -radius; zR <= radius; ++zR)
 					{
 
-						TerrainType blend = terrainDataWide[(16+xOffset+(xR))+48*(16+zOffset+(zR))];
+						TerrainType blend = terrainDataWide[(16+xOffset+xR)+48*(16+zOffset+zR)];
 
-						ns = nsHeight[(16+xOffset+(xR))+48*(16+zOffset+(zR))];
-						if(!base.getCanSmoothDownward() && ns < base.minSmoothHeight)
+						if(!foundOtherTerrain && blend == base)
 						{
-							ns = base.minSmoothHeight;
+							sameTerrainNS += nsHeight[(16+xOffset+xR)+48*(16+zOffset+zR)];
+							sameTerrainCount++;
 						}
-						if(!base.getCanSmoothUpward() && ns > base.maxSmoothHeight)
+						else
 						{
-							ns = base.maxSmoothHeight;
+							if(!foundOtherTerrain)
+							{
+								n+=sameTerrainNS;
+								count+=sameTerrainCount;
+								foundOtherTerrain = true;
+							}
+							ns = nsHeight[(16+xOffset+xR)+48*(16+zOffset+zR)];
+							if(!base.getCanSmoothDownward() && ns < base.minSmoothHeight)
+							{
+								ns = base.minSmoothHeight;
+							}
+							if(!base.getCanSmoothUpward() && ns > base.maxSmoothHeight)
+							{
+								ns = base.maxSmoothHeight;
+							}
+							n += ns;
+							count++;
 						}
-						n += ns;
-						count++;
 					}
 				}
 				n/= count;
