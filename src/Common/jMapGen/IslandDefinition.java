@@ -14,7 +14,7 @@ import com.bioxx.libnoise.module.source.RidgedMulti;
 
 //Factory class to build the 'inside' function that tells us whether
 //a point should be on the island or in the water.
-public class IslandShape 
+public class IslandDefinition 
 {
 	// This class has factory functions for generating islands of
 	// different shapes. The factory returns a function that takes a
@@ -23,63 +23,28 @@ public class IslandShape
 	// (lake or ocean).
 
 	double oceanRatio = 0.5;
-	int SIZE = 1024;
+	public double lakeThreshold = 0.3;
+	int SIZE = 4096;
 
 	// The radial island radius is based on overlapping sine waves 
 	static public double ISLAND_FACTOR = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
 
 
+	public IslandDefinition (long seed, int size, double oceans) 
+	{
+		this(seed, size, oceans, 0.3);
+	}
+
 	// The Perlin-based island combines perlin noise with the radius
-	public IslandShape (long seed, int size, double oceans) 
+	public IslandDefinition (long seed, int size, double oceans, double lake) 
 	{
 		SIZE = size;
 		double landRatioMinimum = 0.1;
 		double landRatioMaximum = 0.5;
 		oceanRatio = ((landRatioMaximum - landRatioMinimum) * oceans) + landRatioMinimum;
-
+		lakeThreshold = lake;
 		createShape(seed);
 		createElevation(seed);
-
-		/*if(IslandMapGen.DEBUG)
-		{
-			try
-			{
-				BufferedImage outBitmap = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
-				Graphics2D g = (Graphics2D) outBitmap.getGraphics();
-
-				for(int x = 0; x < SIZE; x++)
-				{
-					for(int z = 0; z < SIZE; z++)
-					{
-						if(insidePerlin(new Point(x,z)))
-						{
-							float h = (float) elevModule.GetValue(x, 0, z);
-							g.setColor(Color.getHSBColor(0, 0, (h+2)/4));
-							g.fillRect(x, z, 1, 1);
-						}
-					}
-				}
-				ImageIO.write(outBitmap, "BMP", new File("hm-elev.bmp"));
-
-				for(int x = 0; x < SIZE; x++)
-				{
-					for(int z = 0; z < SIZE; z++)
-					{
-						if(insidePerlin(new Point(x,z)))
-						{
-							float h = (float) shapeModule.GetValue(x, 0, z);
-							g.setColor(Color.getHSBColor(0, 0, (h+2)/4));
-							g.fillRect(x, z, 1, 1);
-						}
-
-					}
-				}
-				ImageIO.write(outBitmap, "BMP", new File("hm-shape.bmp"));
-			}
-			catch(Exception e){e.printStackTrace();}
-		}*/
-
-
 	}
 
 	public Module shapeModule;

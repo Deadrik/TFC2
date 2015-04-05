@@ -1,6 +1,5 @@
 package com.bioxx.tfc2.World;
 
-import jMapGen.IslandMapGen;
 import jMapGen.Point;
 import jMapGen.graph.Center;
 
@@ -14,38 +13,77 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 
+import com.bioxx.libnoise.model.Plane;
+import com.bioxx.libnoise.module.modifier.ScaleBias;
+import com.bioxx.libnoise.module.source.Perlin;
+
 public class ChunkProviderSurface2 extends ChunkProviderGenerate 
 {
 	private World worldObj;
 	private Random rand;
 	private static final int MAP_SIZE = 4096;
-	private static IslandMapGen mapgen = new IslandMapGen(0 + 0 * 10000 + 0);
-	private long SEED = 0;
-	int worldX ;
-	int worldZ;
-	int islandX;
-	int islandZ;
+	int worldX;//This is the x coordinate of the chunk using world coords.
+	int worldZ;//This is the z coordinate of the chunk using world coords.
+	int islandX;//This is the x coordinate of the chunk within the bounds of the island (0 - MAP_SIZE)
+	int islandZ;//This is the z coordinate of the chunk within the bounds of the island (0 - MAP_SIZE)
+	int mapX;//This is the x coordinate of the chunk using world coords.
+	int mapZ;//This is the z coordinate of the chunk using world coords.
 
-	private Center[][] CenterCache;
+	Plane turbMap;
+
+	/**
+	 * Cache for Hex lookup.
+	 */
+	private Center[][] centerCache;
+	/**
+	 * A static array of sample points for performing our hex smoothing
+	 */
+	private static Point[] hexSmoothingPoints;
 
 	public ChunkProviderSurface2(World worldIn, long seed, boolean enableMapFeatures, String rules) 
 	{
 		super(worldIn, seed, enableMapFeatures, rules);
 		worldObj = worldIn;
 		rand = worldObj.rand;
-		SEED = seed;
 
+		double c = 5;
+		double a = 0.5*c;
+		double b = Math.sin(60)*c;
+		hexSmoothingPoints = new Point[6];
+		hexSmoothingPoints[0] = new Point(0, b);
+		hexSmoothingPoints[1] = new Point(a, 0);
+		hexSmoothingPoints[2] = new Point(a+c, 0);
+		hexSmoothingPoints[3] = new Point(2*c, b);
+		hexSmoothingPoints[4] = new Point(a+c, 2*b);
+		hexSmoothingPoints[5] = new Point(a, 2*b);
+
+		Perlin pe = new Perlin();
+		pe.setSeed ((int)seed);
+		pe.setFrequency (1f/256f);
+		pe.setPersistence(.9);
+		pe.setLacunarity(1.5);
+		pe.setOctaveCount(2);
+		pe.setNoiseQuality (com.bioxx.libnoise.NoiseQuality.BEST);
+		//The scalebias makes our noise fit the range 0-1
+		ScaleBias sb2 = new ScaleBias();
+		sb2.setSourceModule(0, pe);
+		//Noise is normally +-2 so we scale by 0.25 to make it +-0.5
+		sb2.setScale(0.25);
+		//Next we offset by +0.5 which makes the noise 0-1
+		sb2.setBias(0.5);
+		turbMap = new Plane(sb2);
 	}
 
 	@Override
 	public Chunk provideChunk(int chunkX, int chunkZ)
 	{
-		CenterCache = new Center[48][48];
+		centerCache = new Center[48][48];
 		worldX = chunkX * 16;
 		worldZ = chunkZ * 16;
 		islandX = worldX % MAP_SIZE;
 		islandZ = worldZ % MAP_SIZE;
-		//mapgen = new IslandMapGen(this.SEED + islandX * 10000 + islandZ);
+		mapX = worldX >> 12;
+		mapZ = worldZ >> 12;
 		this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
 		generateTerrain(chunkprimer, chunkX, chunkZ);
@@ -55,18 +93,21 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		return chunk;  
 	}
 
+	/**
+	 * @param p this Point should always be using local chunk coordinates
+	 * @return Returns the nearest Hex for this map
+	 */
 	protected Center getHex(Point p)
 	{
 		int x = (int)p.x;
 		int y = (int)p.y;
 		int x16 = (int)p.x + 16;
 		int y16 = (int)p.y + 16;
-		/*if(CenterCache[x16][y16] == null)
+		if(centerCache[x16][y16] == null)
 		{
-			//CenterCache[x16][y16] = mapgen.map.getClosestCenterHex(p.plus(islandX, islandZ));
-			CenterCache[x16][y16] = mapgen.map.getSelectedHexagon2(p.plus(islandX, islandZ));
-		}*/
-		return mapgen.map.getSelectedHexagon(p.plus(islandX, islandZ));
+			centerCache[x16][y16] = WorldGen.instance.getIslandMap(mapX, mapZ).getSelectedHexagon(p.plus(islandX, islandZ));
+		}
+		return centerCache[x16][y16];
 	}
 
 	protected void decorate(ChunkPrimer chunkprimer, int chunkX, int chunkZ)
@@ -94,12 +135,13 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 							chunkprimer.getBlockState(x, y+1, z) == Blocks.air.getDefaultState())
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
+
 						if(closestCenter.river > 0)
 						{
 							if(closestCenter.downslope != null)
 							{
 								double d = distToSegmentSquared(closestCenter.point, closestCenter.downslope.point, p.plus(islandX, islandZ))[0];
-								if(d < 25)//Sqrt = 5
+								if(d < squared(2+closestCenter.river))
 								{
 									chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 								}
@@ -109,7 +151,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 								for(Iterator<Center> iter = closestCenter.upriver.iterator(); iter.hasNext();)
 								{
 									double d = distToSegmentSquared(closestCenter.point, iter.next().point, p.plus(islandX, islandZ))[0];
-									if(d < 25)//Sqrt = 5
+									if(d < squared(2+closestCenter.river))
 									{
 										chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 									}
@@ -180,9 +222,11 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 			{
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
+				Point p2 = p.plus(islandX, islandZ);
+				double turb = (turbMap.GetValue(p2.x, p2.y));
 				for(int y = 255; y >= 0; y--)
 				{
-					if(!closestCenter.ocean && y < 128+closestCenter.elevation*128D)
+					if(!closestCenter.ocean && y < 128+getSmoothHeightHex(closestCenter, p)*100D)
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.stone.getDefaultState());
 					}
@@ -199,6 +243,23 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 				}
 			}
 		}
+	}
+
+	protected double getSmoothHeightHex(Center c, Point p)
+	{
+		double h = c.elevation;
+		if(/*!c.water &&*/ (getHex(hexSmoothingPoints[0].plus(p)) != c || getHex(hexSmoothingPoints[1].plus(p)) != c || 
+				getHex(hexSmoothingPoints[2].plus(p)) != c || getHex(hexSmoothingPoints[3].plus(p)) != c || 
+				getHex(hexSmoothingPoints[4].plus(p)) != c || getHex(hexSmoothingPoints[5].plus(p)) != c))
+		{
+			for(int i = 0; i < 6; i++)
+			{
+				h += getHex(hexSmoothingPoints[i].plus(p)).elevation;
+			}
+
+			h /= 7;
+		}
+		return h;
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public class CreateSpawnHandler
 		ChunkManager worldchunkmanager = (ChunkManager)world.getWorldChunkManager();
 		List list = Lists.newArrayList(TerrainType.FlatlandsLow);
 		Random random = new Random(world.getSeed());
-		BlockPos blockpos = worldchunkmanager.findTerrainPositionForSpawn(-10000, 4096, 1024, list, random);
+		BlockPos blockpos = worldchunkmanager.findTerrainPositionForSpawn(random);
 		int i = 0;
 		int j = world.provider.getAverageGroundLevel();
 		int k = 0;

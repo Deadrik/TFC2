@@ -28,6 +28,25 @@ public class Center
 	public Vector<Edge> borders;
 	public Vector<Corner> corners;
 
+	public Center getClosestNeighbor(Point p)
+	{
+		double angle = (Math.atan2((p.y - point.y) , (p.x - point.x)) * 180 / Math.PI) - 30;
+		if((angle >= 330 || angle < 30) && neighbors.size() > 0)
+			return neighbors.get(0);
+		if(angle < 90 && neighbors.size() > 1)
+			return neighbors.get(1);
+		if(angle < 150 && neighbors.size() > 2)
+			return neighbors.get(2);
+		if(angle < 210 && neighbors.size() > 3)
+			return neighbors.get(3);
+		if(angle < 270 && neighbors.size() > 4)
+			return neighbors.get(4);
+		if(angle < 330 && neighbors.size() >= 5)
+			return neighbors.get(5);
+
+		return null;
+	}
+
 	public Corner getClosestCorner(Point p)
 	{
 		Corner closest = corners.get(0);

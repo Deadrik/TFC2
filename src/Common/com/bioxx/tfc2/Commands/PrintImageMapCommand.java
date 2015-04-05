@@ -23,7 +23,6 @@ import com.bioxx.libnoise.module.modifier.Curve;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.modifier.ScalePoint;
 import com.bioxx.libnoise.module.source.Perlin;
-import com.bioxx.tfc2.World.ChunkManager;
 import com.bioxx.tfc2.World.TerrainTypes.TerrainType;
 
 public class PrintImageMapCommand extends CommandBase
@@ -61,95 +60,24 @@ public class PrintImageMapCommand extends CommandBase
 			if(params[0].equals("terrain"))
 			{
 				int size = params.length >= 3 ? Integer.parseInt(params[2]) : 512;
-				drawTerrainImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), size, world, name);
+				//drawTerrainImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), size, world, name);
 			}
 			else if(params[0].equals("biome"))
 			{
 				int size = params.length >= 3 ? Integer.parseInt(params[2]) : 512;
-				TerrainType biome = ((ChunkManager)world.getWorldChunkManager()).getBiomeAt((int)Math.floor(player.posX), (int)Math.floor(player.posZ));
-				if(biome != null)
-					drawBiomeImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), size, world, name, biome);
+				//TerrainType biome = ((ChunkManager)world.getWorldChunkManager()).getBiomeAt((int)Math.floor(player.posX), (int)Math.floor(player.posZ));
+				//if(biome != null)
+				//	drawBiomeImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), size, world, name, biome);
 			}
 			else if(params[0].equals("chunk"))
 			{
-				drawChunkBiomeImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), world, name);
+				//drawChunkBiomeImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), world, name);
 			}
 			else if(params[0].equals("noise"))
 			{
 				int size = params.length >= 3 ? Integer.parseInt(params[2]) : 512;
 				drawNoiseImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), size, world, name);
 			}
-		}
-	}
-	public static void drawTerrainImage(int xCoord, int zCoord, int size, World world, String name)
-	{
-		try 
-		{
-			File outFile = new File(name+".bmp");
-			BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
-			Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
-			graphics.clearRect(0, 0, size, size);
-			System.out.println(name+".bmp");
-			float perc = 0.1f;
-			float count = 0;
-			TerrainType[] b = ((ChunkManager)world.getWorldChunkManager()).getTerrainData(xCoord-size/2, zCoord-size/2, size, size);
-			for(int z = 0; z < size; z++)
-			{
-				for(int x = 0; x < size; x++)
-				{
-					count++;
-					graphics.setColor(b[z+x*size].getMapColor());	
-					graphics.drawRect(z, x, 1, 1);
-					if(count / (size*size) > perc)
-					{
-						System.out.println((int)(perc*100)+"%");
-						perc+=0.1f;
-					}
-				}
-			}
-			System.out.println(name+".bmp Done!");
-			ImageIO.write(outBitmap, "BMP", outFile);
-		}
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public static void drawChunkBiomeImage(int xCoord, int zCoord, World world, String name)
-	{
-		try 
-		{
-			int chunkX = xCoord >> 4;
-			int chunkZ = zCoord >> 4;
-			File outFile = new File(name+".bmp");
-			BufferedImage outBitmap = new BufferedImage(16,16,BufferedImage.TYPE_INT_RGB);
-			Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
-			graphics.clearRect(0, 0, 16, 16);
-			System.out.println(name+".bmp");
-			float perc = 0.1f;
-			float count = 0;
-			TerrainType[] b = ((ChunkManager)world.getWorldChunkManager()).getTerrainData(chunkX << 4, chunkZ << 4, 16, 16);
-			for(int z = 0; z < 16; z++)
-			{
-				for(int x = 0; x < 16; x++)
-				{
-					count++;
-					graphics.setColor(b[z+x*16].getMapColor());	
-					graphics.drawRect(z, x, 1, 1);
-					if(count / (16*16) > perc)
-					{
-						System.out.println((int)(perc*100)+"%");
-						perc+=0.1f;
-					}
-				}
-			}
-			System.out.println(name+".bmp Done!");
-			ImageIO.write(outBitmap, "BMP", outFile);
-		}
-		catch (Exception e) 
-		{
-			e.printStackTrace();
 		}
 	}
 

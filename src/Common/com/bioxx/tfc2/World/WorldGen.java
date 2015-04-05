@@ -1,23 +1,55 @@
 package com.bioxx.tfc2.World;
 
-import com.bioxx.libnoise.module.Module;
+import jMapGen.IslandMapGen;
+import jMapGen.Map;
 
-public class WorldGen extends Module {
+import java.util.HashMap;
 
-	public WorldGen() 
+import net.minecraft.world.World;
+
+import com.bioxx.tfc2.api.Util.Helper;
+
+
+public class WorldGen
+{
+	public static WorldGen instance;
+	HashMap<Integer, CachedIsland> islandCache;
+	World world;
+	public static final int ISLAND_SIZE = 4096;
+
+	public WorldGen(World w) 
 	{
-		super(0);
-
+		world = w;
+		islandCache = new HashMap<Integer, CachedIsland>();
 	}
 
-	@Override
-	public int GetSourceModuleCount() {
-		return 0;
+	public static void initialize(World world)
+	{
+		if(instance == null)
+			instance = new WorldGen(world);
 	}
 
-	@Override
-	public double GetValue(double x, double y, double z) {
-		return 0;
+	/**
+	 * Coordinates should already be in MapCoords
+	 */
+	public Map getIslandMap(int x, int z)
+	{
+		int id = Helper.cantorize(x, z);
+		if(islandCache.containsKey(id))
+		{
+			return islandCache.get(id).getIslandMap();
+		}
+
+		return createIsland(x, z);
 	}
+
+	private Map createIsland(int x, int z)
+	{
+		IslandMapGen mapgen = new IslandMapGen(world.getSeed()+Helper.cantorize(x, z), ISLAND_SIZE);
+		islandCache.put(Helper.cantorize(x, z), new CachedIsland(mapgen));
+		return mapgen.map;
+	}
+
+
 
 }

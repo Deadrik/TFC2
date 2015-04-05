@@ -31,11 +31,8 @@ import za.co.iocom.math.MathUtil;
 
 public class Map 
 {
-	public static int NUM_POINTS = 4096*4;
-	public static int NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
-	static double LAKE_THRESHOLD = 0.3;  // 0 to 1, fraction of water corners for water polygon
-
-
+	public int NUM_POINTS = 4096*4;
+	public int NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 
 	// Passed in by the caller:
 	public int SIZE;
@@ -44,7 +41,7 @@ public class Map
 	// type of island, passed in when we set the island shape. The
 	// islandShape function uses both of them to determine whether any
 	// point should be water or land.
-	public IslandShape islandShape;
+	public IslandDefinition islandShape;
 
 
 	// Island details are controlled by this random generator. The
@@ -73,25 +70,26 @@ public class Map
 	// Random parameters governing the overall shape of the island
 	public void newIsland(long seed) 
 	{
-		islandShape = new IslandShape(seed, SIZE, 0.5);
+		islandShape = new IslandDefinition(seed, SIZE, 0.5);
 		mapRandom.setSeed(seed);
 		MathUtil.random = mapRandom;
-
-		//mapgen2.graphics.translate(10, 32);
 	}
 
+	public void newIsland(long seed, IslandDefinition is) 
+	{
+		islandShape = is;
+		mapRandom.setSeed(seed);
+		MathUtil.random = mapRandom;
+		NUM_POINTS = is.SIZE*4;
+		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
+	}
 
 	public void go() 
 	{
-
 		points = new Vector<Point>();
 		edges = new Vector<Edge>();
 		centers = new Vector<Center>();
 		corners = new Vector<Corner>();
-
-		double[] radii = {10};	
-		double[] minRadii = {5};	
-		double[] minDist = {30};
 
 		points = this.generateHexagon(SIZE);
 		//System.out.println("Points: " + points.size());
@@ -141,17 +139,6 @@ public class Map
 		// Create rivers.
 		createRiversCenter();
 
-		/*for(int i = 0; i < this.edges.size(); i++)
-		{
-			Edge e = edges.get(i);
-			if(e.river != 0 && !e.vCorner1.water)
-			{
-				IslandMapGen.graphics.setColor(Color.CYAN);
-				IslandMapGen.graphics.drawLine((int)e.vCorner0.point.x, (int)e.vCorner0.point.y, 
-						(int)e.vCorner1.point.x, (int)e.vCorner1.point.y);
-			}
-		}*/
-
 		//fixLakeCorners(lakeCenters(centers));
 
 		// Determine moisture at corners, starting at rivers
@@ -166,6 +153,12 @@ public class Map
 
 		assignBiomes();
 
+		sortCornersClockwise();
+
+		sortNeighborsClockwise();
+	}
+
+	private void sortCornersClockwise() {
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
@@ -196,6 +189,40 @@ public class Map
 				}
 			}
 			center.corners = sortedCorners;
+		}
+	}
+
+	private void sortNeighborsClockwise() {
+		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
+		{
+			Center center = (Center)centerIter.next();
+			Vector<Center> sortedNeighbors = new Vector<Center>();
+			Point zeroPoint = new Point(center.point.x, center.point.y+1);
+			for(Iterator<Center> cornerIter = center.neighbors.iterator(); cornerIter.hasNext();)
+			{
+				Center c = (Center)cornerIter.next();
+				if(sortedNeighbors.size() == 0)
+					sortedNeighbors.add(c);
+				else
+				{
+					boolean found = false;
+					for(int i = 0; i < sortedNeighbors.size(); i++)
+					{
+						Center c1 = sortedNeighbors.get(i);
+						double c1angle = Math.atan2((c1.point.y - zeroPoint.y) , (c1.point.x - zeroPoint.x));
+						double c2angle = Math.atan2((c.point.y - zeroPoint.y) , (c.point.x - zeroPoint.x));
+						if(c2angle < c1angle)
+						{
+							sortedNeighbors.add(i, c);
+							found = true;
+							break;
+						}
+					}
+					if(!found)
+						sortedNeighbors.add(c);
+				}
+			}
+			center.neighbors = sortedNeighbors;
 		}
 	}
 
@@ -729,7 +756,7 @@ public class Map
 					numWater += 1;
 				}
 			}
-			p.water = (p.ocean || numWater >= p.corners.size() * LAKE_THRESHOLD);
+			p.water = (p.ocean || numWater >= p.corners.size() * this.islandShape.lakeThreshold);
 		}
 		while (queue.size() > 0) 
 		{
@@ -889,6 +916,26 @@ public class Map
 		return null;
 	}
 
+	public void calculateDownslopes() 
+	{
+		Corner upCorner, tempCorner, downCorner;
+
+		for(int j = 0; j < corners.size(); j++)
+		{
+			upCorner = corners.get(j);
+			downCorner = upCorner;
+			for(int i = 0; i < upCorner.adjacent.size(); i++)
+			{
+				tempCorner= upCorner.adjacent.get(i);
+				if (tempCorner.elevation <= downCorner.elevation) 
+				{
+					downCorner = tempCorner;
+				}
+			}	
+			upCorner.downslope = downCorner;
+		}
+	}
+
 	public void calculateDownslopesCenter() 
 	{
 		Center upCorner, tempCorner, downCorner;
@@ -964,8 +1011,8 @@ public class Map
 					break;
 				}
 				count++;
-				q.river = (q != null ? q.river : 0) + 1;
-				q.downslope.river = (q != null ? q.downslope.river : 0) + 1;  // TODO: fix double count
+				q.river = q.river + 1;
+				//q.downslope.river =  q.downslope.river + 1;  // TODO: fix double count
 				if(q.downslope.upriver == null)
 					q.downslope.upriver = new Vector<Center>();
 				q.downslope.upriver.add(q);
@@ -1004,7 +1051,7 @@ public class Map
 			}
 		}
 		// Salt water
-		for(Corner cr : corners)
+		for(Center cr : centers)
 		{
 			if (cr.ocean || cr.coast) 
 			{
@@ -1146,12 +1193,16 @@ public class Map
 			p.y += SIZE;
 
 		//Form the best guess coordinates
-		int x = (int)Math.floor((p.x /32));
-		int y = (int)Math.floor((p.y /32));
+		int x = (int)Math.floor((p.x /(SIZE/NUM_POINTS_SQ)));
+		int y = (int)Math.floor((p.y /(SIZE/NUM_POINTS_SQ)));
 
-		Center orig = this.centers.get( 128*x+y);
+		Center orig = this.centers.get( NUM_POINTS_SQ*x+y);
 		//Get the inCircle radius
-		double r = Math.sqrt(3)/2*(orig.corners.get(0).getTouchingEdge(orig.corners.get(1)).midpoint.distanceSq(orig.point));
+		double r = 0;
+		if(orig.corners.size() > 0)
+		{
+			r = Math.sqrt(3)/2*(orig.borders.get(0).midpoint.distanceSq(orig.point));
+		}
 		Center bestGuess = orig;
 		double dist = p.distanceSq(orig.point);
 		//Perform a quick test to see if the point is within the inCircle. If it is then we can skip the rest of the method and return the Best Guess

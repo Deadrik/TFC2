@@ -20,6 +20,8 @@ public class Corner
 	public Vector<Edge> protrudes;
 	public Vector<Corner> adjacent;
 
+	public Corner downslope;  // pointer to adjacent corner most downhill
+
 	public Corner()
 	{
 		ocean = false;
