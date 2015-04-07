@@ -11,5 +11,6 @@ public class WorldLoadHandler
 	public void onWorldUnload(WorldEvent.Unload event)
 	{
 		WorldGen.instance.resetCache();
+		WorldGen.instance = null;
 	}
 }

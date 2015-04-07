@@ -64,7 +64,7 @@ public class Perlin extends Module {
 	double persistence = DEFAULT_PERLIN_PERSISTENCE;
 
 	/// Seed value used by the Perlin-noise function.
-	int seed = DEFAULT_PERLIN_SEED;
+	long seed = DEFAULT_PERLIN_SEED;
 
 	public Perlin() {
 		super(0);
@@ -114,11 +114,11 @@ public class Perlin extends Module {
 		this.persistence = persistence;
 	}
 
-	public int getSeed() {
+	public long getSeed() {
 		return seed;
 	}
 
-	public void setSeed(int seed) {
+	public void setSeed(long seed) {
 		this.seed = seed;
 	}
 
@@ -136,7 +136,7 @@ public class Perlin extends Module {
 		double signal;
 		double curPersistence = 1.0;
 		double nx, ny, nz;
-		int seed;
+		long seed;
 
 		x1 *= frequency;
 		y1 *= frequency;

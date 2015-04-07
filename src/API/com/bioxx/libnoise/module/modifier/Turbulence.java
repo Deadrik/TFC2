@@ -16,7 +16,7 @@
 
  This is a port of libnoise ( http://libnoise.sourceforge.net/index.html ).  Original implementation by Jason Bevins
 
-*/
+ */
 package com.bioxx.libnoise.module.modifier;
 
 import com.bioxx.libnoise.exception.NoModuleException;
@@ -40,13 +40,13 @@ public class Turbulence extends Module {
 	double power = DEFAULT_TURBULENCE_POWER;
 
 	/// Noise module that displaces the @a x coordinate.
-    final Perlin xDistortModule;
+	final Perlin xDistortModule;
 
 	/// Noise module that displaces the @a y coordinate.
-    final Perlin yDistortModule;
+	final Perlin yDistortModule;
 
 	/// Noise module that displaces the @a z coordinate.
-    final Perlin zDistortModule;
+	final Perlin zDistortModule;
 
 	public Turbulence() {
 		super(1);
@@ -71,7 +71,7 @@ public class Turbulence extends Module {
 		return xDistortModule.getFrequency();
 	}
 
-	public int getSeed() {
+	public long getSeed() {
 		return xDistortModule.getSeed();
 	}
 

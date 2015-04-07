@@ -62,23 +62,23 @@ public class Map
 
 	public Vector<Corner> riverSources;
 
-	public int seed;
+	public long seed;
 
-	public Map(int size, int s) 
+	public Map(int size, long s) 
 	{
 		SIZE = size;
 		seed = s;
 	}
 
 	// Random parameters governing the overall shape of the island
-	public void newIsland(int seed) 
+	public void newIsland(long seed) 
 	{
 		islandShape = new IslandDefinition(seed, SIZE, 0.5);
 		mapRandom.setSeed(seed);
 		MathUtil.random = mapRandom;
 	}
 
-	public void newIsland(int seed, IslandDefinition is) 
+	public void newIsland(long seed, IslandDefinition is) 
 	{
 		islandShape = is;
 		mapRandom.setSeed(seed);

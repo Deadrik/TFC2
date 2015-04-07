@@ -44,7 +44,7 @@ public class Noise {
 	 *         noise and <i>value</i> noise, see the comments for the
 	 *         GradientNoise3D() function.
 	 */
-	public static double GradientCoherentNoise3D(double x, double y, double z, int seed, NoiseQuality quality) {
+	public static double GradientCoherentNoise3D(double x, double y, double z, long seed, NoiseQuality quality) {
 
 		// Create a unit-length cube aligned along an integer boundary.  This cube
 		// surrounds the input point.
@@ -140,11 +140,11 @@ public class Noise {
 	 *         it always returns the same output value if the same input value
 	 *         is passed to it.
 	 */
-	public static double GradientNoise3D(double fx, double fy, double fz, int ix, int iy, int iz, int seed) {
+	public static double GradientNoise3D(double fx, double fy, double fz, int ix, int iy, int iz, long seed) {
 		// Randomly generate a gradient vector given the integer coordinates of the
 		// input value.  This implementation generates a random number and uses it
 		// as an index into a normalized-vector lookup table.
-		int vectorIndex = (X_NOISE_GEN * ix + Y_NOISE_GEN * iy + Z_NOISE_GEN * iz + SEED_NOISE_GEN * seed);
+		int vectorIndex = (int)(X_NOISE_GEN * ix + Y_NOISE_GEN * iy + Z_NOISE_GEN * iz + SEED_NOISE_GEN * seed);
 		vectorIndex ^= (vectorIndex >> SHIFT_NOISE_GEN);
 		vectorIndex &= 0xff;
 
@@ -180,12 +180,12 @@ public class Noise {
 	 *         it always returns the same output value if the same input value
 	 *         is passed to it.
 	 */
-	public static int IntValueNoise3D(int x, int y, int z, int seed) {
+	public static long IntValueNoise3D(int x, int y, int z, long seed) {
 		// All constants are primes and must remain prime in order for this noise
 		// function to work correctly.
-		int n = (X_NOISE_GEN * x + Y_NOISE_GEN * y + Z_NOISE_GEN * z + SEED_NOISE_GEN * seed) & 0x7fffffff;
+		long n = (X_NOISE_GEN * x + Y_NOISE_GEN * y + Z_NOISE_GEN * z + SEED_NOISE_GEN * seed) & 0x7fffffffffffffffL;
 		n = (n >> 13) ^ n;
-		return (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
+		return (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffffffffffffL;
 
 	}
 
@@ -206,7 +206,7 @@ public class Noise {
 	 *         noise and <i>value</i> noise, see the comments for the
 	 *         GradientNoise3D() function.
 	 */
-	public static double ValueCoherentNoise3D(double x, double y, double z, int seed, NoiseQuality quality) {
+	public static double ValueCoherentNoise3D(double x, double y, double z, long seed, NoiseQuality quality) {
 		// Create a unit-length cube aligned along an integer boundary.  This cube
 		// surrounds the input point.
 		int x0 = (x > 0.0 ? (int) x : (int) x - 1);
@@ -274,8 +274,8 @@ public class Noise {
 	 *         it always returns the same output value if the same input value
 	 *         is passed to it.
 	 */
-	public static double ValueNoise3D(int x, int y, int z, int seed) {
-		return 1.0 - (IntValueNoise3D(x, y, z, seed) / 1073741824.0);
+	public static double ValueNoise3D(int x, int y, int z, long seed) {
+		return 1.0 - (IntValueNoise3D(x, y, z, seed) / 4611686018427387904.0);
 
 	}
 

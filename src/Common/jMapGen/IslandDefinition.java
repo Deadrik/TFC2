@@ -26,13 +26,13 @@ public class IslandDefinition
 	public double lakeThreshold = 0.3;
 	int SIZE = 4096;
 
-	public IslandDefinition (int seed, int size, double oceans) 
+	public IslandDefinition (long seed, int size, double oceans) 
 	{
 		this(seed, size, oceans, 0.3);
 	}
 
 	// The Perlin-based island combines perlin noise with the radius
-	public IslandDefinition (int seed, int size, double oceans, double lake) 
+	public IslandDefinition (long seed, int size, double oceans, double lake) 
 	{
 		SIZE = size;
 		double landRatioMinimum = 0.1;

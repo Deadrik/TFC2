@@ -46,7 +46,7 @@ public class WorldGen
 
 	private Map createIsland(int x, int z)
 	{
-		int seed = (int)(world.getSeed()/2)+Helper.cantorize(x, z);
+		long seed = world.getSeed()+Helper.cantorize(x, z);
 		IslandDefinition id = new IslandDefinition(seed, ISLAND_SIZE, 0.5, 0.3);
 		IslandMapGen mapgen = new IslandMapGen(id, seed);
 		islandCache.put(Helper.cantorize(x, z), new CachedIsland(mapgen));

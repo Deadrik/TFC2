@@ -10,7 +10,7 @@ public class IslandMapGen
 	// Island shape is controlled by the islandRandom seed and the
 	// type of island. The islandShape function uses both of them to
 	// determine whether any point should be water or land.
-	public int mapSeed = 0;
+	public long mapSeed = 0;
 
 	// The map data
 	public Map map;
@@ -19,7 +19,7 @@ public class IslandMapGen
 
 	IslandDefinition def;
 
-	public IslandMapGen(IslandDefinition is, int seed) 
+	public IslandMapGen(IslandDefinition is, long seed) 
 	{
 		mapSeed = seed;
 		map = new Map(is.SIZE, seed);
