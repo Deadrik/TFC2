@@ -52,6 +52,6 @@ public class WorldProviderSurface extends WorldProvider
 	@SideOnly(Side.CLIENT)
 	public float getCloudHeight()
 	{
-		return 256;
+		return 258;
 	}
 }

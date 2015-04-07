@@ -6,6 +6,7 @@ import jMapGen.graph.Center;
 import java.util.Iterator;
 import java.util.Random;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -122,17 +123,20 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 				closestCenter = this.getHex(p);
 				for(int y = 255; y >= 0; y--)
 				{
-					if(chunkprimer.getBlockState(x, y, z) == Blocks.stone.getDefaultState() && 
-							chunkprimer.getBlockState(x, y+1, z) == Blocks.air.getDefaultState() && closestCenter.water && !closestCenter.ocean)
+					IBlockState block = chunkprimer.getBlockState(x, y, z);
+					IBlockState blockUp = chunkprimer.getBlockState(x, y+1, z);
+
+					if(block == Blocks.stone.getDefaultState() && 
+							blockUp == Blocks.air.getDefaultState() && closestCenter.water && !closestCenter.ocean)
 					{
-						if(!isLakeBorder(p, closestCenter))
+						if(!isLakeBorder(p, closestCenter) /*&& y < 128+closestCenter.elevation*100D*/)
 						{
 							chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 						}
 					}
 
-					if(chunkprimer.getBlockState(x, y, z) == Blocks.stone.getDefaultState() && 
-							chunkprimer.getBlockState(x, y+1, z) == Blocks.air.getDefaultState())
+					if(block == Blocks.stone.getDefaultState() && 
+							blockUp == Blocks.air.getDefaultState())
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
 
@@ -151,7 +155,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 								for(Iterator<Center> iter = closestCenter.upriver.iterator(); iter.hasNext();)
 								{
 									double d = distToSegmentSquared(closestCenter.point, iter.next().point, p.plus(islandX, islandZ))[0];
-									if(d < squared(2+closestCenter.river))
+									if(d < squared(1+closestCenter.river))
 									{
 										chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 									}

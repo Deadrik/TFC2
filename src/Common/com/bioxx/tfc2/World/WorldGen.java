@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.World;
 
+import jMapGen.IslandDefinition;
 import jMapGen.IslandMapGen;
 import jMapGen.Map;
 
@@ -45,11 +46,16 @@ public class WorldGen
 
 	private Map createIsland(int x, int z)
 	{
-		IslandMapGen mapgen = new IslandMapGen(world.getSeed()+Helper.cantorize(x, z), ISLAND_SIZE);
+		int seed = (int)(world.getSeed()/2)+Helper.cantorize(x, z);
+		IslandDefinition id = new IslandDefinition(seed, ISLAND_SIZE, 0.5, 0.3);
+		IslandMapGen mapgen = new IslandMapGen(id, seed);
 		islandCache.put(Helper.cantorize(x, z), new CachedIsland(mapgen));
 		return mapgen.map;
 	}
 
-
+	public void resetCache()
+	{
+		islandCache = new HashMap<Integer, CachedIsland>();
+	}
 
 }

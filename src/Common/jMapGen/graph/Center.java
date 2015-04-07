@@ -14,6 +14,7 @@ public class Center
 	public Boolean water = false;  // lake or ocean
 	public Boolean ocean = false;  // ocean
 	public Boolean coast = false;  // land polygon touching an ocean
+	public Boolean coastWater = false;  // land polygon touching an ocean
 	public Boolean border = false;  // at the edge of the map
 	public BiomeType biome;  // biome type (see article)
 	public double elevation = 0;  // 0.0-1.0

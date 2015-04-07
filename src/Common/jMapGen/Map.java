@@ -10,6 +10,7 @@ import jMapGen.graph.Center;
 import jMapGen.graph.Corner;
 import jMapGen.graph.CornerElevationSorter;
 import jMapGen.graph.Edge;
+import jMapGen.graph.MoistureComparator;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -55,27 +56,29 @@ public class Map
 	public Vector<Center> centers;
 	public Vector<Corner> corners;
 	public Vector<Edge> edges;
+	public Vector<River> rivers;
+	public Vector<Lake> lakes;
 
 
 	public Vector<Corner> riverSources;
 
-	public long seed;
+	public int seed;
 
-	public Map(int size, long s) 
+	public Map(int size, int s) 
 	{
 		SIZE = size;
 		seed = s;
 	}
 
 	// Random parameters governing the overall shape of the island
-	public void newIsland(long seed) 
+	public void newIsland(int seed) 
 	{
 		islandShape = new IslandDefinition(seed, SIZE, 0.5);
 		mapRandom.setSeed(seed);
 		MathUtil.random = mapRandom;
 	}
 
-	public void newIsland(long seed, IslandDefinition is) 
+	public void newIsland(int seed, IslandDefinition is) 
 	{
 		islandShape = is;
 		mapRandom.setSeed(seed);
@@ -90,6 +93,8 @@ public class Map
 		edges = new Vector<Edge>();
 		centers = new Vector<Center>();
 		corners = new Vector<Corner>();
+		lakes = new Vector<Lake>();
+		rivers = new Vector<River>();
 
 		points = this.generateHexagon(SIZE);
 		//System.out.println("Points: " + points.size());
@@ -99,11 +104,6 @@ public class Map
 		Voronoi voronoi = new Voronoi(points, R);
 		//System.out.println("Finished Creating map Voronoi...");
 		buildGraph(points, voronoi);
-
-
-		//drawCorners("Pre-Improve");
-
-		//improveCorners();
 
 		// Determine the elevations and water at Voronoi corners.
 		assignCornerElevations();
@@ -127,6 +127,7 @@ public class Map
 		// Polygon elevations are the average of their corners
 		assignPolygonElevations();
 
+
 		assignLakeElevations(lakeCenters(centers));
 
 		// Determine downslope paths.
@@ -139,23 +140,86 @@ public class Map
 		// Create rivers.
 		createRiversCenter();
 
-		//fixLakeCorners(lakeCenters(centers));
+		assignTerrainNoise2();
 
-		// Determine moisture at corners, starting at rivers
-		// and lakes, but not oceans. Then redistribute
-		// moisture to cover the entire range evenly from 0.0
-		// to 1.0. Then assign polygon moisture as the average
-		// of the corner moisture.
 		assignMoisture();
-		//redistributeMoisture(landCorners(corners));
-
-		assignPolygonMoisture();
+		redistributeMoisture(landCenters(centers));
 
 		assignBiomes();
 
 		sortCornersClockwise();
 
 		sortNeighborsClockwise();
+	}
+
+	private void assignTerrainNoise() {
+		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
+		{
+			Center center = (Center)centerIter.next();
+			if(!center.water && center.river == 0)
+			{
+				boolean nearWater = false;
+				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
+				{
+					Center center2 = (Center)centerIter2.next();
+					if(center2.water)
+						nearWater  = true;
+				}
+				if(!nearWater && this.mapRandom.nextInt(100) < 30)
+				{
+					center.elevation += (0.15 * mapRandom.nextDouble() - 0.075);
+				}
+			}
+		}
+	}
+
+	private void assignTerrainNoise2() {
+		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
+		{
+			Center center = (Center)centerIter.next();
+			if(!center.water && center.river == 0)
+			{
+				boolean nearWater = false;
+				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
+				{
+					Center center2 = (Center)centerIter2.next();
+					if(center2.water)
+						nearWater  = true;
+				}
+				if(!nearWater && this.mapRandom.nextInt(100) < 50 && center.river == 0)
+				{
+					if(this.mapRandom.nextInt(100) < 70)
+						center.elevation = getLowestNeighbor(center).elevation;
+					else
+						center.elevation = getHighestNeighbor(center).elevation;
+				}
+			}
+		}
+	}
+
+	private Center getHighestNeighbor(Center c)
+	{
+		Center highest = c;
+		for(Iterator<Center> centerIter2 = c.neighbors.iterator(); centerIter2.hasNext();)
+		{
+			Center center2 = (Center)centerIter2.next();
+			if(highest == null || center2.elevation > highest.elevation)
+				highest = center2;
+		}
+		return highest;
+	}
+
+
+	private Center getLowestNeighbor(Center c)
+	{
+		Center lowest = c;
+		for(Iterator<Center> centerIter2 = c.neighbors.iterator(); centerIter2.hasNext();)
+		{
+			Center center2 = (Center)centerIter2.next();
+			if(lowest == null || center2.elevation < lowest.elevation)
+				lowest = center2;
+		}
+		return lowest;
 	}
 
 	private void sortCornersClockwise() {
@@ -360,6 +424,18 @@ public class Map
 		Vector<Corner> locations = new Vector<Corner>();
 		for (int i = 0; i < corners.size(); i++) {
 			q = corners.get(i);
+			if (!q.ocean && !q.coast) {
+				locations.add(q);
+			}
+		}
+		return locations;
+	}
+
+	public Vector<Center> landCenters(Vector<Center> centers) {
+		Center q; 
+		Vector<Center> locations = new Vector<Center>();
+		for (int i = 0; i < centers.size(); i++) {
+			q = centers.get(i);
 			if (!q.ocean && !q.coast) {
 				locations.add(q);
 			}
@@ -716,12 +792,16 @@ public class Map
 	}
 
 
-	// Change the overall distribution of moisture to be evenly distributed.
-	public void redistributeMoisture(Vector<Corner> locations) {
+	// Change the overall distribution of moisture to be evenly distributed.	
+	public void redistributeMoisture(Vector<Center> locations) {
 		int i;
-		sortMoisture(locations);
-		for (i = 0; i < locations.size(); i++) {
-			locations.get(i).moisture = i/(locations.size()-1);
+		Collections.sort(locations, new MoistureComparator());
+		Center c1;
+		for (i = 0; i < locations.size(); i++) 
+		{
+			c1 = locations.get(i);
+			double m = i/(double)(locations.size());
+			c1.moisture = m;
 		}
 	}
 
@@ -792,6 +872,7 @@ public class Map
 			}
 
 			p.coast = (numOcean > 0) && (numLand > 0);
+			p.coastWater = p.ocean && (numLand > 0);
 		}
 
 
@@ -839,26 +920,24 @@ public class Map
 
 	public void assignLakeElevations(Vector<Center> centers) 
 	{
-		Vector<Vector<Center>> Lakes = new Vector<Vector<Center>>();
-		Vector<Double> elev = new Vector<Double>();
-
 		for(Center c : centers)
 		{
 			//if there are current no lakes, or the current center doesnt exist in any lakes already
-			Vector<Center> exists = centerInExistingLake(Lakes, c);
-			if(Lakes.isEmpty() || exists == null)
+			Lake exists = centerInExistingLake(c);
+			if(lakes.isEmpty() || exists == null)
 			{
 				//default the lakeElevation 1
 				double lakeElev = 1;
 
 				//Create a new lake
-				Vector<Center> lake = new Vector<Center>();
+				Lake lake = new Lake();
 
 				//contains a list of centers that need to check outward to find the bounds of the lake.
 				LinkedList<Center> centersToCheck = new LinkedList<Center>();
 
 				// add the current center to the centersToCheck list
-				lake.add(c);
+				lake.addCenter(c);
+				//Add the center to the queue for outward propagation
 				centersToCheck.add(c);
 
 				while (centersToCheck.size() > 0) 
@@ -867,28 +946,34 @@ public class Map
 
 					for(Center adj : baseCenter.neighbors)
 					{
-						if(!lake.contains(adj) && adj.water && !adj.ocean)
+						if(!lake.hasCenter(adj) && adj.water && !adj.ocean)
 						{
-							lake.add(adj);
+							lake.addCenter(adj);
 							centersToCheck.add(adj);
 						}
 					}			
-					for(Corner cn : baseCenter.corners)
-						if(cn.elevation < lakeElev)
-							lakeElev = cn.elevation;
 				}
-				elev.add(lakeElev);
-				Lakes.add(lake);
+				lakes.add(lake);
 			}
 		}
-		for(int i = 0; i < Lakes.size(); i++)
+		for(int i = 0; i < lakes.size(); i++)
 		{
-			Vector<Center> lake = Lakes.get(i);
-			for(Center c : lake)
+			Lake lake = lakes.get(i);
+			for(Center c : lake.centers)
 			{
-				c.elevation = elev.get(i);
+				c.elevation = lake.lowestCenter.elevation;
 			}
 		}
+	}
+
+	private Lake centerInExistingLake(Center center)
+	{
+		for(Lake lake : lakes)
+		{
+			if(lake.hasCenter(center))
+				return lake;
+		}
+		return null;
 	}
 
 	private void fixLakeCorners(Vector<Center> lakeCenters)
@@ -997,28 +1082,70 @@ public class Map
 
 	}
 
-	public void createRiversCenter() {
-		int i; Center q; Edge edge;
+	public void createRiversCenter() 
+	{
+		Center c;
+		Center prev;
 
-		for (i = 0; i < SIZE/6; i++) {
-			q = centers.get(mapRandom.nextInt(centers.size()-1));
+		Vector<Center> possibleStarts = new Vector<Center>();
 
-			if (q.ocean || q.elevation < 0.3 || q.elevation > 0.85) continue;
+		for (int i = 0; i < SIZE/6; i++) 
+		{
+			possibleStarts.add(centers.get(mapRandom.nextInt(centers.size()-1)));
+		}
+
+		for (int i = 0; i < lakes.size(); i++) 
+		{
+			possibleStarts.add(lakes.get(i).lowestCenter);
+		}
+
+		for (int i = 0; i < possibleStarts.size(); i++) 
+		{
+			c = possibleStarts.get(i);
+
+			if (c.ocean || c.elevation < 0.2 || c.elevation > 0.85) continue;
+
+			River r = new River();
 
 			int count = 0;
-			while (!q.coast) {
-				if (q == q.downslope || count > 250) {
+			while (true)
+			{
+				if (c == c.downslope || count > 250) 
+				{
 					break;
 				}
 				count++;
-				q.river = q.river + 1;
-				//q.downslope.river =  q.downslope.river + 1;  // TODO: fix double count
-				if(q.downslope.upriver == null)
-					q.downslope.upriver = new Vector<Center>();
-				q.downslope.upriver.add(q);
-				q = q.downslope;
+				Center next = getNextRiverCenter(c);
+				c.river = c.river + 1;
+				/*if(c.downslope.riverUp == null)
+					c.downslope.riverUp = c;*/
+				r.addCenter(c);
+				if(c.water && (c.downslope.water || c.downslope == null))
+					break;
+				c = next;
+
+			}
+			if(r.centers.size() > 5)
+				rivers.add(r);
+		}	
+	}
+
+	public Center getNextRiverCenter(Center c)
+	{
+		Center next = c.downslope;
+		if(this.mapRandom.nextInt(100) < 30 && c.river == 0)
+		{
+			for(Center n : c.neighbors)
+			{
+				if(n.river > 0)
+					return n;
+				if(n.ocean || n.water)
+					return n;
+				if(n.elevation <= c.elevation && n != c.downslope)
+					next = n;
 			}
 		}
+		return next;
 	}
 
 	// Calculate moisture. Freshwater sources spread moisture: rivers
