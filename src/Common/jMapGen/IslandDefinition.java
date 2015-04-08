@@ -65,7 +65,7 @@ public class IslandDefinition
 	{
 		Perlin modulePerl = new Perlin();
 		modulePerl.setSeed((int)seed);
-		modulePerl.setFrequency(0.00045);
+		modulePerl.setFrequency(0.00055);
 		modulePerl.setPersistence(0.55);
 		modulePerl.setOctaveCount(8);
 		modulePerl.setNoiseQuality(NoiseQuality.BEST);

@@ -10,7 +10,7 @@ public class WorldLoadHandler
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event)
 	{
-		if(event.world.provider.getDimensionId() == 0)
+		if(WorldGen.instance != null)
 		{
 			WorldGen.instance.resetCache();
 			WorldGen.instance = null;

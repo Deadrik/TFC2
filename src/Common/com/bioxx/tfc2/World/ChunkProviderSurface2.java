@@ -14,9 +14,7 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 
-import com.bioxx.libnoise.model.Line;
 import com.bioxx.libnoise.model.Plane;
-import com.bioxx.libnoise.module.Cache;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 
@@ -25,6 +23,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 	private World worldObj;
 	private Random rand;
 	private static final int MAP_SIZE = 4096;
+	private static final int SEA_LEVEL = 64;
 	int worldX;//This is the x coordinate of the chunk using world coords.
 	int worldZ;//This is the z coordinate of the chunk using world coords.
 	int islandX;//This is the x coordinate of the chunk within the bounds of the island (0 - MAP_SIZE)
@@ -33,8 +32,6 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 	int mapZ;//This is the z coordinate of the chunk using world coords.
 
 	Plane turbMap;
-	Line edgeTurbulenceMap;
-
 	/**
 	 * Cache for Hex lookup.
 	 */
@@ -63,11 +60,12 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 
 		Perlin pe = new Perlin();
 		pe.setSeed (seed);
-		pe.setFrequency (1f/256f);
-		pe.setPersistence(.9);
+		pe.setFrequency (1f/16f);
+		//pe.setPersistence(.9);
 		pe.setLacunarity(1.5);
-		pe.setOctaveCount(2);
+		pe.setOctaveCount(4);
 		pe.setNoiseQuality (com.bioxx.libnoise.NoiseQuality.BEST);
+
 		//The scalebias makes our noise fit the range 0-1
 		ScaleBias sb2 = new ScaleBias();
 		sb2.setSourceModule(0, pe);
@@ -75,27 +73,8 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		sb2.setScale(0.25);
 		//Next we offset by +0.5 which makes the noise 0-1
 		sb2.setBias(0.5);
+
 		turbMap = new Plane(sb2);
-
-
-		Perlin pe2 = new Perlin();
-		pe2.setSeed (seed);
-		pe2.setFrequency (2f);
-		//pe2.setPersistence(.5);
-		//pe2.setLacunarity(1.5);
-		pe2.setOctaveCount(8);
-		pe2.setNoiseQuality (com.bioxx.libnoise.NoiseQuality.STANDARD);
-		ScaleBias sb3 = new ScaleBias();
-		sb3.setSourceModule(0, pe2);
-		//Noise is normally +-2 so we scale by 0.25 to make it +-0.5
-		sb3.setScale(0.5);
-		//Next we offset by +0.5 which makes the noise 0-1
-		//sb3.setBias(0.5);
-		Cache edgeCache = new Cache();
-		edgeCache.setSourceModule(0, sb3);
-
-		edgeTurbulenceMap = new Line(edgeCache);
-		edgeTurbulenceMap.setAttenuate(true);
 	}
 
 	@Override
@@ -144,6 +123,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 			{
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
+				int elev = getElevation(closestCenter, p);
 				for(int y = 255; y >= 0; y--)
 				{
 					IBlockState block = chunkprimer.getBlockState(x, y, z);
@@ -152,7 +132,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 					if(block == Blocks.stone.getDefaultState() && 
 							blockUp == Blocks.air.getDefaultState() && closestCenter.water && !closestCenter.ocean)
 					{
-						if(!isLakeBorder(p, closestCenter) /*&& y < 128+closestCenter.elevation*100D*/)
+						if(!isLakeBorder(p, closestCenter) && y < this.getHexElevation(closestCenter, p))
 						{
 							chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 						}
@@ -161,39 +141,15 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 					if(block == Blocks.stone.getDefaultState() && 
 							blockUp == Blocks.air.getDefaultState())
 					{
-						chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
-
-						if(closestCenter.river > 0)
+						if(elev > y+1)
 						{
-							if(closestCenter.downriver != null)
-							{
-								edgeTurbulenceMap.setPoints(closestCenter.point, closestCenter.downriver.point);
-								double[] dts = distToSegmentSquared(closestCenter.point, closestCenter.downriver.point, p.plus(islandX, islandZ));
-								double dist = dts[0];
-								double loc = dts[1];
-								double turb = edgeTurbulenceMap.getValue(loc);
-								if(dist < squared(Math.max(closestCenter.river, 1.0)))
-								{
-									chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
-								}
-							}
-							if(closestCenter.upriver != null && closestCenter.upriver.size() > 0)
-							{
-								for(Iterator<Center> iter = closestCenter.upriver.iterator(); iter.hasNext();)
-								{
-									Center up = iter.next();
-									edgeTurbulenceMap.setPoints(closestCenter.point, up.point);
-									double[] dts = distToSegmentSquared(closestCenter.point, up.point, p.plus(islandX, islandZ));
-									double dist = dts[0];
-									double loc = dts[1];
-									double turb = edgeTurbulenceMap.getValue(loc);
-									if(dist < squared(Math.max(up.river, 1.0)))
-									{
-										chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
-									}
-								}
-							}
+							chunkprimer.setBlockState(x, y+1, z, Blocks.grass.getDefaultState());
 						}
+						else
+						{
+							chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
+						}
+
 					}
 				}
 			}
@@ -248,34 +204,99 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		return false;
 	}
 
+	protected int getElevation(Center c, Point p)
+	{
+		Point p2 = p.plus(islandX, islandZ);
+		double turb = (turbMap.GetValue(p2.x, p2.y));
+		return getHexElevation(c, p) + (int)(turb * 1.5);
+	}
+
+	protected int getHexElevation(Center c, Point p)
+	{
+		return(int) (SEA_LEVEL+getSmoothHeightHex(c, p)*100D);
+	}
+
 	protected void generateTerrain(ChunkPrimer chunkprimer, int chunkX, int chunkZ)
 	{
 		Point p;
 		Center closestCenter;
+		double[] dts = new double[] {0,0};
+		double dist = 0;
+		double loc = 0;
+
 		for(int x = 0; x < 16; x++)
 		{
 			for(int z = 0; z < 16; z++)
 			{
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
-				Point p2 = p.plus(islandX, islandZ);
-				double turb = (turbMap.GetValue(p2.x, p2.y));
+
+				int hexElev = getHexElevation(closestCenter, p);
 				for(int y = 255; y >= 0; y--)
 				{
-					if(!closestCenter.ocean && y < 128+getSmoothHeightHex(closestCenter, p)*100D)
+					if(!closestCenter.ocean && y < hexElev)
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.stone.getDefaultState());
+
+						if(closestCenter.river > 0 && chunkprimer.getBlockState(x, y+1, z) == Blocks.air.getDefaultState())
+						{
+							if(closestCenter.downriver != null)
+							{
+
+								dts = distToSegmentSquared(closestCenter.point, closestCenter.downriver.point, p.plus(islandX, islandZ));
+								dist = dts[0];
+								loc = dts[1];
+								if(dist < squared(Math.max(closestCenter.river, 1.0)))
+								{
+									while(y >= hexElev && y > SEA_LEVEL)
+									{
+										chunkprimer.setBlockState(x, y, z, Blocks.air.getDefaultState());
+										y--;
+									}
+									if(y < hexElev-1)
+									{
+										chunkprimer.setBlockState(x, y, z, Blocks.air.getDefaultState());
+										y--;
+									}
+									chunkprimer.setBlockState(x, y, z, Blocks.flowing_water.getDefaultState());
+								}
+							}
+							if(closestCenter.upriver != null && closestCenter.upriver.size() > 0)
+							{
+								for(Iterator<Center> iter = closestCenter.upriver.iterator(); iter.hasNext();)
+								{
+									Center up = iter.next();
+									dts = distToSegmentSquared(closestCenter.point, up.point, p.plus(islandX, islandZ));
+									dist = dts[0];
+									loc = dts[1];
+									if(dist < squared(Math.max(up.river, 1.0)))
+									{
+										while(y >= hexElev && y > SEA_LEVEL)
+										{
+											chunkprimer.setBlockState(x, y, z, Blocks.air.getDefaultState());
+											y--;
+										}
+										if(y < hexElev-1)
+										{
+											chunkprimer.setBlockState(x, y, z, Blocks.air.getDefaultState());
+											y--;
+										}
+										chunkprimer.setBlockState(x, y, z, Blocks.flowing_water.getDefaultState());
+									}
+								}
+							}
+						}
 					}
 					else if(y < 100)
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.stone.getDefaultState());
 					}
-					else if(closestCenter.ocean && y < 128)
+					else if(closestCenter.ocean && y < SEA_LEVEL)
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 					}
 
-					else if(y < 128)
+					else if(y < SEA_LEVEL)
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 					}
