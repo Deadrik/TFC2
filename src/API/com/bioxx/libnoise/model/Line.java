@@ -16,9 +16,11 @@
 
  This is a port of libnoise ( http://libnoise.sourceforge.net/index.html ).  Original implementation by Jason Bevins
 
-*/
+ */
 
 package com.bioxx.libnoise.model;
+
+import jMapGen.Point;
 
 import com.bioxx.libnoise.exception.NoModuleException;
 import com.bioxx.libnoise.module.Module;
@@ -121,6 +123,15 @@ public class Line {
 		this.x1 = x;
 		this.y1 = y;
 		this.z1 = z;
+	}
+
+	public void setPoints(Point p0, Point p1) {
+		this.x0 = p0.x;
+		this.y0 = 0;
+		this.z0 = p0.y;
+		this.x1 = p1.x;
+		this.y1 = 0;
+		this.z1 = p1.y;
 	}
 
 	/**

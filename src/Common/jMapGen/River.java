@@ -6,21 +6,27 @@ import java.util.Vector;
 
 public class River 
 {
-	public Vector<Center> centers;
-	public Center riverStart;
+	public Vector<RiverNode> nodes;
+	public RiverNode riverStart;
+	public int lengthToMerge = 0;
 
 	public River()
 	{
-		centers = new Vector<Center>();
+		nodes = new Vector<RiverNode>();
 	}
 
 	public void addCenter(Center c)
 	{
-		centers.add(c);
+		nodes.add(new RiverNode(c));
 	}
 
-	public boolean hasCenter(Center c)
+	public void addNode(RiverNode c)
 	{
-		return centers.contains(c);
+		nodes.add(c);
+	}
+
+	public boolean hasCenter(RiverNode c)
+	{
+		return nodes.contains(c);
 	}
 }

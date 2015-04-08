@@ -2,6 +2,7 @@ package com.bioxx.tfc2;
 
 import jMapGen.Map;
 import jMapGen.Point;
+import jMapGen.graph.Center;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -20,7 +21,8 @@ public class RenderOverlayHandler
 		int xM = ((int)(mc.thePlayer.posX) >> 12);
 		int zM = ((int)(mc.thePlayer.posZ) >> 12);
 		Map map = WorldGen.instance.getIslandMap(xM, zM);
-		//Biome biome = ((ChunkManager)mc.theWorld.getWorldChunkManager()).getBiomeAt((int)Math.floor(mc.thePlayer.posX), (int)Math.floor(mc.thePlayer.posZ));
-		event.left.add("biome: "+map.getSelectedHexagon(new Point(mc.thePlayer.posX, mc.thePlayer.posZ)).biome.name());
+		Center hex = map.getSelectedHexagon(new Point(mc.thePlayer.posX, mc.thePlayer.posZ));
+		event.left.add("biome: "+hex.biome.name());
+		event.left.add("river: "+hex.river+" | "+(hex.upriver != null ? hex.upriver.size() : 0));
 	}
 }

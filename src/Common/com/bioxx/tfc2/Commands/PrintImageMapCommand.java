@@ -27,7 +27,6 @@ import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.modifier.ScalePoint;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.World.WorldGen;
-import com.bioxx.tfc2.World.TerrainTypes.TerrainType;
 
 public class PrintImageMapCommand extends CommandBase
 {
@@ -106,42 +105,6 @@ public class PrintImageMapCommand extends CommandBase
 					count++;
 					graphics.setColor(map.getSelectedHexagon(p).biome.color);	
 					graphics.drawRect(x, z, 1, 1);
-					if(count / (size*size) > perc)
-					{
-						System.out.println((int)(perc*100)+"%");
-						perc+=0.1f;
-					}
-				}
-			}
-			System.out.println(name+".bmp Done!");
-			ImageIO.write(outBitmap, "BMP", outFile);
-		}
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public static void drawBiomeImage(int xCoord, int zCoord, int size, World world, String name, TerrainType biome)
-	{
-		try 
-		{
-			File outFile = new File(name+".bmp");
-			BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
-			Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
-			graphics.clearRect(0, 0, size, size);
-			System.out.println(name+".bmp");
-			float perc = 0.1f;
-			float count = 0;
-			for(int z = 0; z < size; z++)
-			{
-				for(int x = 0; x < size; x++)
-				{
-					count++;
-					double n = biome.getHeightPlane().GetValue(xCoord-size/2+x, zCoord-size/2+z);
-					int h = (int)(255*n);
-					graphics.setColor(colorMap[h]);	
-					graphics.drawRect(z, x, 1, 1);
 					if(count / (size*size) > perc)
 					{
 						System.out.println((int)(perc*100)+"%");

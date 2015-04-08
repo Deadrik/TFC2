@@ -22,12 +22,22 @@ public class Center
 
 	public int river = 0;
 	public Vector<Center> upriver;  // pointer to adjacent corner most uphill
+	public Center downriver; 
+
 	public Center downslope;  // pointer to adjacent corner most downhill
 	public Center watershed;  // pointer to coastal corner, or null
 
 	public Vector<Center> neighbors;
 	public Vector<Edge> borders;
 	public Vector<Corner> corners;
+
+	public void addUpRiverCenter(Center c)
+	{
+		if(upriver == null)
+			upriver = new Vector<Center>();
+		if(!upriver.contains(c))
+			upriver.add(c);
+	}
 
 	public Center getClosestNeighbor(Point p)
 	{

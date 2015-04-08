@@ -127,7 +127,6 @@ public class Map
 		// Polygon elevations are the average of their corners
 		assignPolygonElevations();
 
-
 		assignLakeElevations(lakeCenters(centers));
 
 		// Determine downslope paths.
@@ -140,7 +139,10 @@ public class Map
 		// Create rivers.
 		createRiversCenter();
 
-		assignTerrainNoise2();
+		assignSlopedNoise();
+		assignHillyNoise();
+
+		calculateDownslopesCenter();
 
 		assignMoisture();
 		redistributeMoisture(landCenters(centers));
@@ -152,28 +154,35 @@ public class Map
 		sortNeighborsClockwise();
 	}
 
-	private void assignTerrainNoise() {
+	private void assignHillyNoise() 
+	{
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.water && center.river == 0)
+			if(this.mapRandom.nextInt(100) < 10 && !center.water && center.river == 0)
 			{
-				boolean nearWater = false;
+				Center highest = this.getHighestNeighbor(center);
+				highest = this.getHighestNeighbor(highest);
+				highest = this.getHighestNeighbor(highest);
+				highest = this.getHighestNeighbor(highest);
+
+				double diff = highest.elevation - center.elevation;
+				center.elevation += diff * (0.5 + 0.5*mapRandom.nextDouble());
+
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(center2.water)
-						nearWater  = true;
-				}
-				if(!nearWater && this.mapRandom.nextInt(100) < 30)
-				{
-					center.elevation += (0.15 * mapRandom.nextDouble() - 0.075);
+					if(center2.river == 0 && !center2.water)
+					{
+						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
+					}
 				}
 			}
 		}
 	}
 
-	private void assignTerrainNoise2() {
+	private void assignSlopedNoise() 
+	{
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
@@ -186,12 +195,15 @@ public class Map
 					if(center2.water)
 						nearWater  = true;
 				}
-				if(!nearWater && this.mapRandom.nextInt(100) < 50 && center.river == 0)
+				if(!nearWater && this.mapRandom.nextInt(100) < 50 && center.river < 3)
 				{
+					Center lowest = getLowestNeighbor(center);
+					Center highest = getHighestNeighbor(center);
+
 					if(this.mapRandom.nextInt(100) < 70)
-						center.elevation = getLowestNeighbor(center).elevation;
+						center.elevation -= mapRandom.nextDouble() * (center.elevation - lowest.elevation);
 					else
-						center.elevation = getHighestNeighbor(center).elevation;
+						center.elevation += mapRandom.nextDouble() * (center.elevation - highest.elevation);
 				}
 			}
 		}
@@ -206,9 +218,12 @@ public class Map
 			if(highest == null || center2.elevation > highest.elevation)
 				highest = center2;
 		}
+		if(c.upriver != null)
+		{
+			highest = getLowestFromGroup(c.upriver);
+		}
 		return highest;
 	}
-
 
 	private Center getLowestNeighbor(Center c)
 	{
@@ -219,7 +234,33 @@ public class Map
 			if(lowest == null || center2.elevation < lowest.elevation)
 				lowest = center2;
 		}
+		if(c.downriver != null)
+			lowest = c.downriver;
 		return lowest;
+	}
+
+	private Center getLowestFromGroup(Vector<Center> group)
+	{
+		Center lowest = group.get(0);
+		for(Iterator<Center> centerIter2 = group.iterator(); centerIter2.hasNext();)
+		{
+			Center center2 = (Center)centerIter2.next();
+			if(lowest == null || center2.elevation < lowest.elevation)
+				lowest = center2;
+		}
+		return lowest;
+	}
+
+	private Center getHighestFromGroup(Vector<Center> group)
+	{
+		Center highest = group.get(0);
+		for(Iterator<Center> centerIter2 = group.iterator(); centerIter2.hasNext();)
+		{
+			Center center2 = (Center)centerIter2.next();
+			if(highest == null || center2.elevation > highest.elevation)
+				highest = center2;
+		}
+		return highest;
 	}
 
 	private void sortCornersClockwise() {
@@ -623,7 +664,6 @@ public class Map
 
 	}
 
-
 	void addToCornerList(Vector<Corner> v, Corner x) 
 	{
 		if (x != null && !v.contains(x)) { v.add(x); }
@@ -633,7 +673,6 @@ public class Map
 	{
 		if (x != null && v.indexOf(x) < 0) { v.add(x); }
 	}
-
 
 	// Determine elevations and water at Voronoi corners. By
 	// construction, we have no local minima. This is important for
@@ -708,14 +747,6 @@ public class Map
 	}
 
 	double highestElevation = 0;
-
-	public void fixElevations(Vector<Corner> locations) 
-	{
-		for(Corner c : locations)
-		{
-			c.elevation /= highestElevation;
-		}
-	}
 
 	public Vector<Corner> sortElevation(Vector<Corner> locations)
 	{
@@ -1103,49 +1134,94 @@ public class Map
 		{
 			c = possibleStarts.get(i);
 
-			if (c.ocean || c.elevation < 0.2 || c.elevation > 0.85) continue;
+			if (c.ocean || c.elevation > 0.85 || c.river > 0) continue;
 
 			River r = new River();
-
+			RiverNode curNode = new RiverNode(c);
+			RiverNode nextNode = curNode;
 			int count = 0;
 			while (true)
 			{
-				if (c == c.downslope || count > 250) 
+				if (c == null || c == c.downslope || count > 250) 
 				{
 					break;
 				}
 				count++;
-				Center next = getNextRiverCenter(c);
-				c.river = c.river + 1;
-				/*if(c.downslope.riverUp == null)
-					c.downslope.riverUp = c;*/
-				r.addCenter(c);
-				if(c.water && (c.downslope.water || c.downslope == null))
+				curNode = nextNode;
+				//calculate the next rivernode
+				nextNode = getNextRiverNode(curNode.center);
+				//set the downriver center for this node to the next center
+				curNode.downRiver = nextNode.center;
+				//add the next node to the river graph
+				r.addNode(nextNode);
+				//If the current hex is water and so is the next then we exit early
+				if(c.water && (curNode.downRiver == null || curNode.downRiver.water))
 					break;
-				c = next;
 
+				//Keep track of the length of a river before it joins another river or reaches its end
+				if(nextNode.center.river == 0)
+					r.lengthToMerge++;
+				//set the current working center to our next node before starting over
+				c = nextNode.center;
 			}
-			if(r.centers.size() > 5)
+
+			//If this river is long enough to be acceptable and it eventually empties into a water hex then we process the river into the map
+			if(r.lengthToMerge > 3 && r.nodes.lastElement().center.water)
+			{
+				//Add this river to the river collection
 				rivers.add(r);
-		}	
+				curNode = r.nodes.get(0);
+				nextNode = curNode;
+
+				for (int j = 1; j < r.nodes.size(); j++) 
+				{
+					nextNode = r.nodes.get(j);
+
+					curNode.center.river += 1;
+					curNode.center.downriver = nextNode.center;
+					nextNode.center.addUpRiverCenter(curNode.center);
+					curNode = nextNode;
+				}
+			}
+		}
 	}
 
-	public Center getNextRiverCenter(Center c)
+	public RiverNode getNextRiverNode(Center c)
 	{
-		Center next = c.downslope;
-		if(this.mapRandom.nextInt(100) < 30 && c.river == 0)
+		Center next = c.downriver;
+		if(next != null)
+			return new RiverNode(next);
+
+		Vector<Center> possibles = new Vector<Center>();
+
+		//Chance for the river to meander a bit only if we are not currently propagating down an existing river
+		if(this.mapRandom.nextInt(100) < 50 && c.river == 0)
 		{
 			for(Center n : c.neighbors)
 			{
-				if(n.river > 0)
-					return n;
-				if(n.ocean || n.water)
-					return n;
-				if(n.elevation <= c.elevation && n != c.downslope)
-					next = n;
+				if(n.elevation <= c.elevation)
+				{
+					//If next to a water hex then we move to it instead of anything else
+					if(n.ocean || n.water)
+						return new RiverNode(n);
+
+					//If one of the neighbors is also a river then we want to join it
+					if(n.river > 0)
+						return new RiverNode(n);
+
+					//If the elevation is <= our current cell elevation then we allow this cell to be selected
+					possibles.add(n);
+				}
 			}
 		}
-		return next;
+		if(possibles.size() > 1)
+		{
+			return new RiverNode(possibles.get(mapRandom.nextInt(possibles.size())));
+		}
+		else if(possibles.size() == 1)
+			return new RiverNode(possibles.get(0));
+
+		return new RiverNode(c.downslope);
 	}
 
 	// Calculate moisture. Freshwater sources spread moisture: rivers

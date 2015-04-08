@@ -4,6 +4,7 @@ import jMapGen.Map;
 import jMapGen.graph.Center;
 
 import java.util.Random;
+import java.util.Vector;
 
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -28,8 +29,9 @@ public class ChunkManager extends WorldChunkManager
 	{
 		BlockPos blockpos = new BlockPos(0,0,0);
 		Map map = WorldGen.instance.getIslandMap(0, 0);
-		Center c = map.centers.get(random.nextInt(map.centers.size()));
-		for(int i = 0; i < 1000; i++)
+		Vector<Center> land = map.landCenters(map.centers);
+		Center c = land.get(random.nextInt(land.size()));
+		for(int i = 0; i < 10000; i++)
 		{
 			if(c.coast)
 			{
@@ -42,9 +44,10 @@ public class ChunkManager extends WorldChunkManager
 			}
 			else
 			{
-				c = map.centers.get(random.nextInt(map.centers.size()));
+				c = land.get(random.nextInt(land.size()));
 			}
 		}
+		blockpos = new BlockPos((int)c.point.x, 0, (int)c.point.y);
 		return blockpos;
 	}
 }

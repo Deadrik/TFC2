@@ -14,7 +14,9 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 
+import com.bioxx.libnoise.model.Line;
 import com.bioxx.libnoise.model.Plane;
+import com.bioxx.libnoise.module.Cache;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 
@@ -31,6 +33,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 	int mapZ;//This is the z coordinate of the chunk using world coords.
 
 	Plane turbMap;
+	Line edgeTurbulenceMap;
 
 	/**
 	 * Cache for Hex lookup.
@@ -59,7 +62,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		hexSmoothingPoints[5] = new Point(a, 2*b);
 
 		Perlin pe = new Perlin();
-		pe.setSeed ((int)seed);
+		pe.setSeed (seed);
 		pe.setFrequency (1f/256f);
 		pe.setPersistence(.9);
 		pe.setLacunarity(1.5);
@@ -73,6 +76,26 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		//Next we offset by +0.5 which makes the noise 0-1
 		sb2.setBias(0.5);
 		turbMap = new Plane(sb2);
+
+
+		Perlin pe2 = new Perlin();
+		pe2.setSeed (seed);
+		pe2.setFrequency (2f);
+		//pe2.setPersistence(.5);
+		//pe2.setLacunarity(1.5);
+		pe2.setOctaveCount(8);
+		pe2.setNoiseQuality (com.bioxx.libnoise.NoiseQuality.STANDARD);
+		ScaleBias sb3 = new ScaleBias();
+		sb3.setSourceModule(0, pe2);
+		//Noise is normally +-2 so we scale by 0.25 to make it +-0.5
+		sb3.setScale(0.5);
+		//Next we offset by +0.5 which makes the noise 0-1
+		//sb3.setBias(0.5);
+		Cache edgeCache = new Cache();
+		edgeCache.setSourceModule(0, sb3);
+
+		edgeTurbulenceMap = new Line(edgeCache);
+		edgeTurbulenceMap.setAttenuate(true);
 	}
 
 	@Override
@@ -142,10 +165,14 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 
 						if(closestCenter.river > 0)
 						{
-							if(closestCenter.downslope != null)
+							if(closestCenter.downriver != null)
 							{
-								double d = distToSegmentSquared(closestCenter.point, closestCenter.downslope.point, p.plus(islandX, islandZ))[0];
-								if(d < squared(2+closestCenter.river))
+								edgeTurbulenceMap.setPoints(closestCenter.point, closestCenter.downriver.point);
+								double[] dts = distToSegmentSquared(closestCenter.point, closestCenter.downriver.point, p.plus(islandX, islandZ));
+								double dist = dts[0];
+								double loc = dts[1];
+								double turb = edgeTurbulenceMap.getValue(loc);
+								if(dist < squared(Math.max(closestCenter.river, 1.0)))
 								{
 									chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 								}
@@ -154,8 +181,13 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 							{
 								for(Iterator<Center> iter = closestCenter.upriver.iterator(); iter.hasNext();)
 								{
-									double d = distToSegmentSquared(closestCenter.point, iter.next().point, p.plus(islandX, islandZ))[0];
-									if(d < squared(1+closestCenter.river))
+									Center up = iter.next();
+									edgeTurbulenceMap.setPoints(closestCenter.point, up.point);
+									double[] dts = distToSegmentSquared(closestCenter.point, up.point, p.plus(islandX, islandZ));
+									double dist = dts[0];
+									double loc = dts[1];
+									double turb = edgeTurbulenceMap.getValue(loc);
+									if(dist < squared(Math.max(up.river, 1.0)))
 									{
 										chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 									}
@@ -234,7 +266,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.stone.getDefaultState());
 					}
-					else if(closestCenter.ocean && y < 100)
+					else if(y < 100)
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.stone.getDefaultState());
 					}
@@ -242,6 +274,12 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 					}
+
+					else if(y < 128)
+					{
+						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
+					}
+
 					if(y <= 1)
 						chunkprimer.setBlockState(x, y, z, Blocks.bedrock.getDefaultState());
 				}
@@ -252,7 +290,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 	protected double getSmoothHeightHex(Center c, Point p)
 	{
 		double h = c.elevation;
-		if(/*!c.water &&*/ (getHex(hexSmoothingPoints[0].plus(p)) != c || getHex(hexSmoothingPoints[1].plus(p)) != c || 
+		if((getHex(hexSmoothingPoints[0].plus(p)) != c || getHex(hexSmoothingPoints[1].plus(p)) != c || 
 				getHex(hexSmoothingPoints[2].plus(p)) != c || getHex(hexSmoothingPoints[3].plus(p)) != c || 
 				getHex(hexSmoothingPoints[4].plus(p)) != c || getHex(hexSmoothingPoints[5].plus(p)) != c))
 		{
@@ -263,7 +301,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 
 			h /= 7;
 		}
-		return h;
+		return c.elevation - (c.elevation - h);
 	}
 
 	@Override

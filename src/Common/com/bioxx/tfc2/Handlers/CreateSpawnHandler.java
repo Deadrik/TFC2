@@ -1,6 +1,5 @@
 package com.bioxx.tfc2.Handlers;
 
-import java.util.List;
 import java.util.Random;
 
 import net.minecraft.util.BlockPos;
@@ -9,8 +8,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.bioxx.tfc2.World.ChunkManager;
-import com.bioxx.tfc2.World.TerrainTypes.TerrainType;
-import com.google.common.collect.Lists;
 
 public class CreateSpawnHandler 
 {
@@ -20,7 +17,6 @@ public class CreateSpawnHandler
 		World world = event.world;
 		world.findingSpawnPoint = true;
 		ChunkManager worldchunkmanager = (ChunkManager)world.getWorldChunkManager();
-		List list = Lists.newArrayList(TerrainType.FlatlandsLow);
 		Random random = new Random(world.getSeed());
 		BlockPos blockpos = worldchunkmanager.findTerrainPositionForSpawn(random);
 		int i = 0;
