@@ -210,6 +210,21 @@ public class Center
 		return closest;
 	}
 
+	/**
+	 * Returns an edge shared between two centers. May return null if neighbors are not supplied.
+	 */
+	public Edge	getSharedEdge(Center c)
+	{
+		for(Edge e : borders)
+		{
+			if(e.dCenter0 == this && e.dCenter1 == c)
+				return e;
+			if(e.dCenter1 == this && e.dCenter0 == c)
+				return e;
+		}
+		return null;
+	}
+
 	boolean SameSide(pythagoras.d.Vector p1, pythagoras.d.Vector p2, pythagoras.d.Vector a, pythagoras.d.Vector b)
 	{
 		pythagoras.d.Vector cp1 = b.subtract(a).cross(p1.subtract(a));

@@ -23,6 +23,8 @@ public class River
 	public void addNode(RiverNode c)
 	{
 		nodes.add(c);
+		if(nodes.size() == 1)
+			riverStart = c;
 	}
 
 	public boolean hasCenter(RiverNode c)

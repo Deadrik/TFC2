@@ -1,5 +1,12 @@
 package jMapGen;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
 import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
@@ -18,6 +25,7 @@ public class IslandDefinition
 	double oceanRatio = 0.5;
 	public double lakeThreshold = 0.3;
 	int SIZE = 4096;
+	public double islandMaxHeight = 100.0;
 
 	public IslandDefinition (long seed, int size, double oceans) 
 	{
@@ -34,7 +42,11 @@ public class IslandDefinition
 		lakeThreshold = lake;
 		createShape(seed);
 
-		/*try
+		//for(double d = 0; d < 0.21; d+=0.01)
+		//{
+		//	landRatioMaximum= 0.4+d;
+		//	oceanRatio = ((landRatioMaximum - landRatioMinimum) * oceans) + landRatioMinimum;
+		try
 		{
 			BufferedImage outBitmap = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
 			Graphics2D g = (Graphics2D) outBitmap.getGraphics();
@@ -52,10 +64,11 @@ public class IslandDefinition
 
 				}
 			}
-			ImageIO.write(outBitmap, "BMP", new File("hm-shape-" + seed + ".bmp"));
+			ImageIO.write(outBitmap, "BMP", new File("hm-shape-" + seed+".bmp"));
 		}
 		catch(Exception e){e.printStackTrace();
-		}*/
+		}
+		//}
 	}
 
 	public Module shapeModule;
@@ -65,9 +78,10 @@ public class IslandDefinition
 	{
 		Perlin modulePerl = new Perlin();
 		modulePerl.setSeed((int)seed);
-		modulePerl.setFrequency(0.00055);
-		modulePerl.setPersistence(0.55);
-		modulePerl.setOctaveCount(8);
+		modulePerl.setFrequency(0.00058);
+		modulePerl.setPersistence(0.7);
+		modulePerl.setLacunarity(2.0);
+		modulePerl.setOctaveCount(5);
 		modulePerl.setNoiseQuality(NoiseQuality.BEST);
 
 		ScaleBias sb = new ScaleBias();

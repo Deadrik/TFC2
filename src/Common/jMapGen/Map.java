@@ -132,7 +132,7 @@ public class Map
 		// Determine downslope paths.
 		calculateDownslopesCenter();
 
-		// Determine watersheds: for every corner, where does it flow
+		// Determine watersheds: for every center, where does it flow
 		// out into the ocean? 
 		calculateWatershedsCenter();
 
@@ -149,9 +149,8 @@ public class Map
 
 		assignBiomes();
 
-		sortCornersClockwise();
-
-		sortNeighborsClockwise();
+		sortClockwise();
+		setOceanElevations();
 	}
 
 	private void assignHillyNoise() 
@@ -263,15 +262,18 @@ public class Map
 		return highest;
 	}
 
-	private void sortCornersClockwise() {
+	private void sortClockwise() 
+	{
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
 			Vector<Corner> sortedCorners = new Vector<Corner>();
+			Vector<Center> sortedNeighbors = new Vector<Center>();
 			Point zeroPoint = new Point(center.point.x, center.point.y+1);
-			for(Iterator<Corner> cornerIter = center.corners.iterator(); cornerIter.hasNext();)
+			//Sort neighbors clockwise
+			for(Iterator<Corner> iter = center.corners.iterator(); iter.hasNext();)
 			{
-				Corner c = (Corner)cornerIter.next();
+				Corner c = (Corner)iter.next();
 				if(sortedCorners.size() == 0)
 					sortedCorners.add(c);
 				else
@@ -293,19 +295,10 @@ public class Map
 						sortedCorners.add(c);
 				}
 			}
-			center.corners = sortedCorners;
-		}
-	}
-
-	private void sortNeighborsClockwise() {
-		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
-		{
-			Center center = (Center)centerIter.next();
-			Vector<Center> sortedNeighbors = new Vector<Center>();
-			Point zeroPoint = new Point(center.point.x, center.point.y+1);
-			for(Iterator<Center> cornerIter = center.neighbors.iterator(); cornerIter.hasNext();)
+			//Sort neighbors clockwise
+			for(Iterator<Center> iter = center.neighbors.iterator(); iter.hasNext();)
 			{
-				Center c = (Center)cornerIter.next();
+				Center c = (Center)iter.next();
 				if(sortedNeighbors.size() == 0)
 					sortedNeighbors.add(c);
 				else
@@ -328,6 +321,18 @@ public class Map
 				}
 			}
 			center.neighbors = sortedNeighbors;
+			center.corners = sortedCorners;
+		}
+	}
+
+	private void setOceanElevations() {
+		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
+		{
+			Center center = (Center)centerIter.next();
+			if(center.coastWater)
+				center.elevation = -0.04;
+			else if(center.ocean)
+				center.elevation = -0.1 - mapRandom.nextDouble()*0.25;
 		}
 	}
 
@@ -1063,7 +1068,7 @@ public class Map
 			for(int i = 0; i < upCorner.neighbors.size(); i++)
 			{
 				tempCorner= upCorner.neighbors.get(i);
-				if (tempCorner.elevation <= downCorner.elevation) 
+				if (convertHeightToMC(tempCorner.elevation) <= convertHeightToMC(downCorner.elevation)) 
 				{
 					downCorner = tempCorner;
 				}
@@ -1127,7 +1132,7 @@ public class Map
 
 		for (int i = 0; i < lakes.size(); i++) 
 		{
-			possibleStarts.add(lakes.get(i).lowestCenter);
+			possibleStarts.addAll(lakes.get(i).centers);
 		}
 
 		for (int i = 0; i < possibleStarts.size(); i++) 
@@ -1149,13 +1154,13 @@ public class Map
 				count++;
 				curNode = nextNode;
 				//calculate the next rivernode
-				nextNode = getNextRiverNode(curNode.center);
+				nextNode = getNextRiverNode(r, curNode);
 				//set the downriver center for this node to the next center
 				curNode.downRiver = nextNode.center;
 				//add the next node to the river graph
 				r.addNode(nextNode);
-				//If the current hex is water and so is the next then we exit early
-				if(c.water && (curNode.downRiver == null || curNode.downRiver.water))
+				//If the current hex is water then we exit early unless this is the first node in the river
+				if((c.water && curNode != r.riverStart) && (curNode.downRiver == null || curNode.downRiver.water))
 					break;
 
 				//Keep track of the length of a river before it joins another river or reaches its end
@@ -1166,7 +1171,13 @@ public class Map
 			}
 
 			//If this river is long enough to be acceptable and it eventually empties into a water hex then we process the river into the map
+			boolean isValid = false;
+			if(r.riverStart != null && r.riverStart.center.water && r.nodes.lastElement().center.water)
+				isValid = true;
 			if(r.lengthToMerge > 3 && r.nodes.lastElement().center.water)
+				isValid = true;
+
+			if(isValid)
 			{
 				//Add this river to the river collection
 				rivers.add(r);
@@ -1186,24 +1197,31 @@ public class Map
 		}
 	}
 
-	public RiverNode getNextRiverNode(Center c)
+	public RiverNode getNextRiverNode(River r, RiverNode c)
 	{
-		Center next = c.downriver;
+		Center next = c.center.downriver;
 		if(next != null)
 			return new RiverNode(next);
 
 		Vector<Center> possibles = new Vector<Center>();
 
 		//Chance for the river to meander a bit only if we are not currently propagating down an existing river
-		if(this.mapRandom.nextInt(100) < 50 && c.river == 0)
+		if(/*this.mapRandom.nextInt(100) < 50 &&*/ c.center.river == 0)
 		{
-			for(Center n : c.neighbors)
+			for(Center n : c.center.neighbors)
 			{
-				if(n.elevation <= c.elevation)
+				if(r.riverStart == c && convertHeightToMC(n.elevation) == convertHeightToMC(c.center.elevation))
+					continue;
+				if(convertHeightToMC(n.elevation) <= convertHeightToMC(c.center.elevation))
 				{
 					//If next to a water hex then we move to it instead of anything else
 					if(n.ocean || n.water)
+					{
+						//Unless we are dealing with a lake tile and this is the first River node
+						if(r.riverStart == c && !n.ocean)
+							continue;
 						return new RiverNode(n);
+					}
 
 					//If one of the neighbors is also a river then we want to join it
 					if(n.river > 0)
@@ -1221,7 +1239,12 @@ public class Map
 		else if(possibles.size() == 1)
 			return new RiverNode(possibles.get(0));
 
-		return new RiverNode(c.downslope);
+		return new RiverNode(c.center.downslope);
+	}
+
+	private int convertHeightToMC(double d)
+	{
+		return (int)Math.floor(this.islandShape.islandMaxHeight * d);
 	}
 
 	// Calculate moisture. Freshwater sources spread moisture: rivers
