@@ -7,7 +7,6 @@ import jMapGen.Spline2D;
 import jMapGen.graph.Center;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.Vector;
 
@@ -291,50 +290,13 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		}
 	}
 
-	protected int carveRiver(ChunkPrimer chunkprimer, Center closestCenter, Point p, int x, int y, int z, int hexElev) {
-		double[] dts;
-		double dist;
-		double loc;
-		if(!closestCenter.ocean && y < hexElev && closestCenter.river > 0 && chunkprimer.getBlockState(x, y+1, z) == Blocks.air.getDefaultState())
-		{
-			if(closestCenter.downriver != null)
-			{
-				dts = distToSegmentSquared(closestCenter.point, closestCenter.downriver.point, p.plus(islandX, islandZ));
-				dist = dts[0];
-				loc = dts[1];
-
-				if(dist < squared(Math.max(closestCenter.river, 1.0)))
-				{
-					y = carveRiverBank(chunkprimer, x, z, y, hexElev);
-					chunkprimer.setBlockState(x, y, z, Blocks.flowing_water.getDefaultState());
-				}
-			}
-			//If this hex has any up river hexes then we need to carve in those directions as well
-			if(closestCenter.upriver != null && closestCenter.upriver.size() > 0)
-			{
-				for(Iterator<Center> iter = closestCenter.upriver.iterator(); iter.hasNext();)
-				{
-					Center up = iter.next();
-					dts = distToSegmentSquared(closestCenter.point, up.point, p.plus(islandX, islandZ));
-					dist = dts[0];
-					loc = dts[1];
-					if(dist < squared(Math.max(up.river, 1.0)))
-					{
-						y = carveRiverBank(chunkprimer, x, z, y, hexElev);
-						chunkprimer.setBlockState(x, y, z, Blocks.flowing_water.getDefaultState());
-					}
-				}
-			}
-		}
-		return y;
-	}
-
 	protected void carveRiverSpline(ChunkPrimer chunkprimer) 
 	{
 		ArrayList riverPoints;
-		double riverHalfWidth = 1;
+		int riverDepth = 0;
 		for(Center c : centersInChunk)
 		{
+			riverDepth = 0;
 			if(c.river > 0)
 			{
 				//If the river has multiple Up River locations then we need to handle the splines in two parts.
@@ -342,13 +304,18 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 				{
 					for(Center u : c.upriver)
 					{
+						riverDepth = 0;
 						riverPoints = new ArrayList<Point>();
 						riverPoints.add(c.getSharedEdge(u).midpoint);
 						riverPoints.add(c.point);
 						riverPoints.add(c.getSharedEdge(c.downriver).midpoint);
-						riverHalfWidth = Math.min(u.river*0.5+0.5, 2.5);
-						processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth*2, 0, Blocks.air.getDefaultState());
-						processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth, -1, Blocks.flowing_water.getDefaultState());
+						if(u.river > 0 && !c.water)
+						{
+							processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), u.river+1, riverDepth, Blocks.air.getDefaultState());
+							riverDepth--;
+						}
+
+						processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), u.river, riverDepth, Blocks.flowing_water.getDefaultState());
 					}
 				}
 				else if(c.upriver != null && c.upriver.size() == 1)
@@ -359,78 +326,73 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 					riverPoints.add(upPoint);
 					riverPoints.add(c.point);
 					riverPoints.add(downPoint);
-					riverHalfWidth = Math.min(c.river*0.5+0.5, 2.5);
-					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth*2, 0, Blocks.air.getDefaultState());
-					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth, -1, Blocks.flowing_water.getDefaultState());
+					if(c.river > 0 && !c.water)
+					{
+						processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), c.river+1, riverDepth, Blocks.air.getDefaultState());
+						riverDepth--;
+
+					}
+					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), c.river, riverDepth, Blocks.flowing_water.getDefaultState());
 				}
 				else
 				{
 					riverPoints = new ArrayList<Point>();
 					riverPoints.add(c.point);
 					riverPoints.add(c.getSharedEdge(c.downriver).midpoint);
-					riverHalfWidth = Math.min(c.river*0.5+0.5, 2.5);
-					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth*2, 0, Blocks.air.getDefaultState());
-					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth, -1, Blocks.flowing_water.getDefaultState());
+					if(c.river > 0 && !c.water)
+					{
+						processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), c.river+1, riverDepth, Blocks.air.getDefaultState());
+						riverDepth--;
+					}
+					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), c.river, riverDepth, Blocks.flowing_water.getDefaultState());
 				}
 
 			}
 		}
 	}
 
-	protected void processRiverSpline(ChunkPrimer chunkprimer, Center c, Spline2D spline, double width, int yOffset, IBlockState fillBlock) 
+	protected void processRiverSpline(ChunkPrimer chunkprimer, Center c, Spline2D spline, int width, int yOffset, IBlockState fillBlock) 
 	{
 		Point interval, temp;
 		int waterLevel = SEA_LEVEL;
 		if(c.water)
 			waterLevel = convertElevation(c.elevation);
 		//This loop moves in increments of X% and attempts to carve the river at each point
-		for(double m = 0; m < 1; m+= 0.05)
+		for(double m = 0; m < 1; m+= 0.02)
 		{
-			interval = spline.getPoint(m).minus(new Point(worldX, worldZ));
-			for(int x = (int)-Math.floor(width); x <= (int)Math.ceil(width); x++)
+			interval = spline.getPoint(m).floor().minus(new Point(worldX, worldZ));
+			for(int x = -width; x <= width; x++)
 			{
-				for(int z = (int)-Math.floor(width); z <= (int)Math.ceil(width); z++)
+				for(int z = -width; z <= width; z++)
 				{
 					temp = interval.plus(x, z);
 					int xC = (int)Math.floor(temp.x);
 					int zC = (int)Math.floor(temp.y);
 
+					//If we're outside the bounds of the chunk then skip this location
 					if(xC < 0 || xC > 15)
 						continue;
 					if(zC < 0 || zC > 15)
 						continue;
+					//grab the local elevation from our elevation map
 					int yC = elevationMap[xC][zC]+yOffset;
-					IBlockState bs = chunkprimer.getBlockState(xC, yC-1, zC);
-					if(yC >= waterLevel && bs != Blocks.flowing_water.getDefaultState() && bs != Blocks.water.getDefaultState())
-					{
-						//If the fill block is air then we want to move the surface block down a level
-						/*if(fillBlock == Blocks.air.getDefaultState())
-						{
-							bs = chunkprimer.getBlockState(xC, yC-1, zC);
-							if(bs != Blocks.air.getDefaultState())
-								chunkprimer.setBlockState(xC, yC-2, zC, bs);
-						}*/
 
-						chunkprimer.setBlockState(xC, yC-2, zC, Blocks.gravel.getDefaultState());
-						chunkprimer.setBlockState(xC, yC-1, zC, fillBlock);
+					IBlockState bs = chunkprimer.getBlockState(xC, yC-2, zC);
+					if(yC < convertElevation(c.elevation) && c.water && this.isLakeBorder(temp, c))
+						yC = convertElevation(c.elevation)+yOffset;
+
+					if(bs != Blocks.flowing_water.getDefaultState() && bs != Blocks.water.getDefaultState())
+					{
+						//First we place the fill block
+						if(bs != Blocks.gravel.getDefaultState())
+							chunkprimer.setBlockState(xC, yC-1, zC, fillBlock);
+						//Next we replace the underblock with gravel
+						if(chunkprimer.getBlockState(xC, yC-2, zC) == Blocks.stone.getDefaultState())
+							chunkprimer.setBlockState(xC, yC-2, zC, Blocks.gravel.getDefaultState());
 					}
 				}
 			}
 		}
-	}
-
-	private int carveRiverBank(ChunkPrimer chunkprimer, int x, int z, int y, int hexElev) {
-		while(y >= hexElev && y > SEA_LEVEL)
-		{
-			chunkprimer.setBlockState(x, y, z, Blocks.air.getDefaultState());
-			y--;
-		}
-		if(y < hexElev-1)
-		{
-			chunkprimer.setBlockState(x, y, z, Blocks.air.getDefaultState());
-			y--;
-		}
-		return y;
 	}
 
 	protected double getSmoothHeightHex(Center c, Point p)

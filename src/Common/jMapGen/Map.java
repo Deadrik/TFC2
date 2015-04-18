@@ -1199,11 +1199,12 @@ public class Map
 
 			River r = new River();
 			RiverNode curNode = new RiverNode(c);
+			r.addNode(curNode);
 			RiverNode nextNode = curNode;
 			int count = 0;
 			while (true)
 			{
-				if (c == null || c == c.downslope || count > 250) 
+				if (c == null || c == c.downslope || count > 250 || (curNode.center.water && curNode != r.riverStart)) 
 				{
 					break;
 				}
@@ -1228,13 +1229,18 @@ public class Map
 
 			//If this river is long enough to be acceptable and it eventually empties into a water hex then we process the river into the map
 			boolean isValid = false;
-			if(r.riverStart != null && r.riverStart.center.water && r.nodes.lastElement().center.water)
+			if(r.riverStart != null && r.riverStart.center.water && r.nodes.lastElement().center.water &&(r.riverStart != r.nodes.lastElement()))
 				isValid = true;
 			if(r.lengthToMerge > 3 && r.nodes.lastElement().center.water)
 				isValid = true;
 
+			if(r.riverStart == null || r.riverStart.center.river != 0 || r.nodes.size() < 4)
+				isValid = false;
+
 			if(isValid)
 			{
+				if(r.riverStart.center.water)
+					r.riverWidth = 2;
 				//Add this river to the river collection
 				rivers.add(r);
 				curNode = r.nodes.get(0);
@@ -1244,7 +1250,7 @@ public class Map
 				{
 					nextNode = r.nodes.get(j);
 
-					curNode.center.river += 1;
+					curNode.center.river = Math.min(curNode.center.river + r.riverWidth, 4);
 					curNode.center.downriver = nextNode.center;
 					nextNode.center.addUpRiverCenter(curNode.center);
 					curNode = nextNode;
@@ -1253,28 +1259,31 @@ public class Map
 		}
 	}
 
-	public RiverNode getNextRiverNode(River r, RiverNode c)
+	public RiverNode getNextRiverNode(River river, RiverNode curNode)
 	{
-		Center next = c.center.downriver;
+		Center next = curNode.center.downriver;
 		if(next != null)
 			return new RiverNode(next);
 
 		Vector<Center> possibles = new Vector<Center>();
 
-		//Chance for the river to meander a bit only if we are not currently propagating down an existing river
-		if(/*this.mapRandom.nextInt(100) < 50 &&*/ c.center.river == 0)
+		//The river will attempt to meander if we aren't propagating down an existing river
+		if(curNode.center.river == 0)
 		{
-			for(Center n : c.center.neighbors)
+			//Go through each neighbor and find all possible hexes at the same elevation or lower
+			for(Center n : curNode.center.neighbors)
 			{
-				if(r.riverStart == c && convertHeightToMC(n.elevation) == convertHeightToMC(c.center.elevation))
+				//Make sure that we aren't trying to flow backwards if the hexes are on the same level
+				if(n == river.nodes.lastElement().center)
 					continue;
-				if(convertHeightToMC(n.elevation) <= convertHeightToMC(c.center.elevation))
+				//If the elevations are the same or lower then this might be an ok location
+				if(convertHeightToMC(n.elevation) <= convertHeightToMC(curNode.center.elevation))
 				{
 					//If next to a water hex then we move to it instead of anything else
 					if(n.ocean || n.water)
 					{
 						//Unless we are dealing with a lake tile and this is the first River node
-						if(r.riverStart == c && !n.ocean)
+						if(river.riverStart == curNode && !n.ocean)
 							continue;
 						return new RiverNode(n);
 					}
@@ -1290,12 +1299,13 @@ public class Map
 		}
 		if(possibles.size() > 1)
 		{
-			return new RiverNode(possibles.get(mapRandom.nextInt(possibles.size())));
+			Center p = possibles.get(mapRandom.nextInt(possibles.size()));
+			return new RiverNode(p);
 		}
 		else if(possibles.size() == 1)
 			return new RiverNode(possibles.get(0));
 
-		return new RiverNode(c.center.downslope);
+		return new RiverNode(curNode.center.downslope);
 	}
 
 	private int convertHeightToMC(double d)

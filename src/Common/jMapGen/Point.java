@@ -84,4 +84,17 @@ public class Point extends Point2D
 		return this;
 	}
 
+	public Point floor()
+	{
+		this.x = Math.floor(this.x);
+		this.y = Math.floor(this.y);
+		return this;
+	}
+
+	public Point ceil()
+	{
+		this.x = Math.ceil(this.x);
+		this.y = Math.ceil(this.y);
+		return this;
+	}
 }

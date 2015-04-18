@@ -8,6 +8,7 @@ public class River
 {
 	public Vector<RiverNode> nodes;
 	public RiverNode riverStart;
+	public int riverWidth = 1;
 	public int lengthToMerge = 0;
 
 	public River()
