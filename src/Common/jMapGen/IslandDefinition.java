@@ -1,12 +1,5 @@
 package jMapGen;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
-
 import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
@@ -46,7 +39,7 @@ public class IslandDefinition
 		//{
 		//	landRatioMaximum= 0.4+d;
 		//	oceanRatio = ((landRatioMaximum - landRatioMinimum) * oceans) + landRatioMinimum;
-		try
+		/*try
 		{
 			BufferedImage outBitmap = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
 			Graphics2D g = (Graphics2D) outBitmap.getGraphics();
@@ -67,7 +60,7 @@ public class IslandDefinition
 			ImageIO.write(outBitmap, "BMP", new File("hm-shape-" + seed+".bmp"));
 		}
 		catch(Exception e){e.printStackTrace();
-		}
+		}*/
 		//}
 	}
 

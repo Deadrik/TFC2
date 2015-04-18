@@ -147,10 +147,8 @@ public class Map
 		assignMoisture();
 		redistributeMoisture(landCenters(centers));
 
-		assignBiomes();
-
 		sortClockwise();
-		setOceanElevations();
+		setupBiomeInfo();
 	}
 
 	private void assignHillyNoise() 
@@ -158,7 +156,7 @@ public class Map
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(this.mapRandom.nextInt(100) < 10 && !center.water && center.river == 0)
+			if(!center.coast && this.mapRandom.nextInt(100) < 10 && !center.water && center.river == 0)
 			{
 				Center highest = this.getHighestNeighbor(center);
 				highest = this.getHighestNeighbor(highest);
@@ -171,7 +169,7 @@ public class Map
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(center2.river == 0 && !center2.water)
+					if(!center2.coast && center2.river == 0 && !center2.water)
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
 					}
@@ -185,7 +183,7 @@ public class Map
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.water && center.river == 0)
+			if(!center.coast && !center.water && center.river == 0)
 			{
 				boolean nearWater = false;
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
@@ -325,15 +323,73 @@ public class Map
 		}
 	}
 
-	private void setOceanElevations() {
+	private void setupBiomeInfo() 
+	{
+		double edgeDistance = 0.10;
+		double min = this.SIZE * edgeDistance;
+		double max = this.SIZE * (1 -edgeDistance);
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
+
+			//Assign biome information to each hex
+			center.biome = getBiome(center);
+
+			//If this hex is near the map border we want to count the number of hexes in the connected island.
+			//If there are too few then we will delete this tiny island to make the islands look better
+			if(!center.water && (center.point.x < min || center.point.x > max ||
+					center.point.y < min || center.point.y > max))
+			{
+				Vector<Center> island = countIsland(center, 25);
+				if(island != null && island.size() > 0)
+				{
+					for(Center n : island)
+					{
+						n.water = true;
+						n.ocean = true;
+						n.biome = BiomeType.OCEAN;
+					}
+				}
+			}
+
 			if(center.coastWater)
-				center.elevation = -0.04;
+				center.elevation = -0.01 - mapRandom.nextDouble()*0.03;
 			else if(center.ocean)
 				center.elevation = -0.1 - mapRandom.nextDouble()*0.25;
+
+
 		}
+	}
+
+	/**
+	 * @return May return null if the island is too big.
+	 */
+	public Vector<Center> countIsland(Center start, int maxSize) 
+	{
+		Vector<Center> outList = new Vector<Center>();
+		LinkedList<Center> checkList = new LinkedList<Center>();
+
+		outList.add(start);
+		checkList.add(start);
+
+		while(checkList.size() > 0)
+		{
+			Center c = checkList.pollFirst();
+			for(Center n : c.neighbors)
+			{
+				if(!checkList.contains(n) && !outList.contains(n) && !n.water)
+				{
+					outList.add(n);
+					checkList.addLast(n);
+				}
+			}
+
+			if(outList.size() >= maxSize)
+				return null;
+		}
+
+
+		return outList;
 	}
 
 	public Vector<Point> generateHexagon(int size) {
@@ -1338,16 +1394,6 @@ public class Map
 			else return BiomeType.SUBTROPICAL_DESERT;
 		}
 	}
-
-	public void assignBiomes() 
-	{
-		for(int j = 0; j < centers.size(); j++)
-		{
-			Center p = centers.get(j);
-			p.biome = getBiome(p);
-		}
-	}
-
 
 	// Look up a Voronoi Edge object given two adjacent Voronoi
 	// polygons, or two adjacent Voronoi corners
