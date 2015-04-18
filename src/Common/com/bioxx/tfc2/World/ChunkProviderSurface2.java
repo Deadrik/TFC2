@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -40,8 +41,6 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 
 	Vector<Center> centersInChunk;
 	int[][] elevationMap;
-
-
 	/**
 	 * Cache for Hex lookup.
 	 */
@@ -149,31 +148,29 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 			{
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
-				int elev = getElevation(closestCenter, p);
 				int hexElev = this.getHexElevation(closestCenter, p);
-				for(int y = elev; y >= 0; y--)
+				for(int y = hexElev; y >= 0; y--)
 				{
 					IBlockState block = chunkprimer.getBlockState(x, y, z);
 					IBlockState blockUp = chunkprimer.getBlockState(x, y+1, z);
 
 					if(block == Blocks.stone.getDefaultState() && blockUp == Blocks.air.getDefaultState())
 					{
-						/*if(!isLakeBorder(p, closestCenter) && y <= hexElev && closestCenter.water && !closestCenter.ocean)
-						{
-							chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
-						}
-						else if(!isLakeBorder(p, closestCenter) && y <= hexElev&& 
-								closestCenter.biome == BiomeType.MARSH && this.rand.nextBoolean())
-						{
-							chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
-						}*/
-
 						chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
 
 						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= SEA_LEVEL + 3)
 						{
 							chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
 						}
+					}
+
+					if(closestCenter.biome == BiomeType.LAKE && !isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 4)-1)
+					{
+						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
+					}
+					else if(closestCenter.biome == BiomeType.MARSH && !isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
+					{
+						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 					}
 
 					if(closestCenter.ocean && block == Blocks.stone.getDefaultState() && blockUp == Blocks.water.getDefaultState())
@@ -221,11 +218,11 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		return false;
 	}
 
-	protected int getElevation(Center c, Point p)
+	protected int getElevation(Center c, Point p, double scale)
 	{
 		Point p2 = p.plus(islandX, islandZ);
 		double turb = (turbMap.GetValue(p2.x, p2.y));
-		return getHexElevation(c, p) + (int)(turb * 1.5);
+		return (int)(turb * scale);
 	}
 
 	protected int getHexElevation(Center c, Point p)
@@ -257,34 +254,24 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 				elevationMap[x][z] = hexElev;
 				for(int y = Math.max(hexElev, SEA_LEVEL); y >= 0; y--)
 				{
+					Block b = Blocks.air;
 					if(!closestCenter.ocean && y < hexElev)
 					{
-						chunkprimer.setBlockState(x, y, z, Blocks.stone.getDefaultState());
+						b = Blocks.stone;
 					}
 					else if(y < hexElev)
 					{
-						chunkprimer.setBlockState(x, y, z, Blocks.stone.getDefaultState());
-					}
-					else if(closestCenter.ocean && y < SEA_LEVEL)
-					{
-						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
+						b = Blocks.stone;
 					}
 					else if(y < SEA_LEVEL)
 					{
-						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
+						b = Blocks.water;
 					}
 
 					if(y <= 1)
-						chunkprimer.setBlockState(x, y, z, Blocks.bedrock.getDefaultState());
+						b = Blocks.bedrock;
 
-					if(closestCenter.biome == BiomeType.LAKE && !isLakeBorder(p, closestCenter) && y == hexElev-1)
-					{
-						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
-					}
-					else if(closestCenter.biome == BiomeType.MARSH && !isLakeBorder(p, closestCenter) && y == hexElev-1 && this.rand.nextBoolean())
-					{
-						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
-					}
+					chunkprimer.setBlockState(x, y, z, b.getDefaultState());
 				}
 			}
 		}
@@ -360,8 +347,8 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		Point interval, temp;
 		Center closest;
 		int waterLevel = SEA_LEVEL;
-		if(c.water)
-			waterLevel = convertElevation(c.elevation);
+		//if(c.water)
+		waterLevel = convertElevation(c.elevation);
 		//This loop moves in increments of X% and attempts to carve the river at each point
 		for(double m = 0; m < 1; m+= 0.03)
 		{
@@ -394,6 +381,12 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 					//This makes sure that when we're carving a lake border, we dont carve below the water level
 					if(c.downriver != null && c.downriver.water && yC == convertElevation(c.downriver.elevation))
 						yC++;
+
+					if(yC > waterLevel && m > 0.5)
+						continue;
+
+					if(yC < SEA_LEVEL+1)
+						yC = SEA_LEVEL+1;
 
 					for(int y = -1, i = 0; i < fillBlocks.length; y--, i++)
 					{

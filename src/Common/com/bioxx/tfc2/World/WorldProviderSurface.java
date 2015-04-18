@@ -45,7 +45,7 @@ public class WorldProviderSurface extends WorldProvider
 	@Override
 	public double getHorizon()
 	{
-		return 128D;
+		return 64D;
 	}
 
 	@Override
