@@ -169,16 +169,9 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 							chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 						}*/
 
-						if(elev > y+1)
-						{
-							chunkprimer.setBlockState(x, y+1, z, Blocks.grass.getDefaultState());
-						}
-						else
-						{
-							chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
-						}
+						chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
 
-						if(closestCenter.biome == BiomeType.BEACH && y < SEA_LEVEL+3)
+						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= SEA_LEVEL + 3)
 						{
 							chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
 						}
@@ -194,20 +187,6 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 
 		carveRiverSpline(chunkprimer);
 	}
-
-	private double[] distToSegmentSquared(Point v, Point w, Point local) 
-	{
-		double l2 = dist2(v, w);    
-		if (l2 == 0) return new double[] {dist2(local, v), -1};
-		double t = ((local.x - v.x) * (w.x - v.x) + (local.y - v.y) * (w.y - v.y)) / l2;
-		if (t < 0) return new double[] {dist2(local, v), 0};
-		if (t > 1) return new double[] {dist2(local, w), 1};
-		return new double[] {dist2(local, new Point( v.x + t * (w.x - v.x),  v.y + t * (w.y - v.y) )), t};
-	}
-
-	private double squared(double d) { return d * d; }
-
-	private double dist2(Point v, Point w) { return squared(v.x - w.x) + squared(v.y - w.y); }
 
 	protected boolean isLakeBorder(Point p, Center c)
 	{
@@ -353,6 +332,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 	protected void carveRiverSpline(ChunkPrimer chunkprimer) 
 	{
 		ArrayList riverPoints;
+		double riverHalfWidth = 1;
 		for(Center c : centersInChunk)
 		{
 			if(c.river > 0)
@@ -366,7 +346,9 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 						riverPoints.add(c.getSharedEdge(u).midpoint);
 						riverPoints.add(c.point);
 						riverPoints.add(c.getSharedEdge(c.downriver).midpoint);
-						processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), u.river);
+						riverHalfWidth = Math.min(u.river*0.5+0.5, 2.5);
+						processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth*2, 0, Blocks.air.getDefaultState());
+						processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth, -1, Blocks.flowing_water.getDefaultState());
 					}
 				}
 				else if(c.upriver != null && c.upriver.size() == 1)
@@ -377,29 +359,37 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 					riverPoints.add(upPoint);
 					riverPoints.add(c.point);
 					riverPoints.add(downPoint);
-					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), c.river);
+					riverHalfWidth = Math.min(c.river*0.5+0.5, 2.5);
+					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth*2, 0, Blocks.air.getDefaultState());
+					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth, -1, Blocks.flowing_water.getDefaultState());
 				}
 				else
 				{
 					riverPoints = new ArrayList<Point>();
 					riverPoints.add(c.point);
 					riverPoints.add(c.getSharedEdge(c.downriver).midpoint);
-					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), c.river);
+					riverHalfWidth = Math.min(c.river*0.5+0.5, 2.5);
+					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth*2, 0, Blocks.air.getDefaultState());
+					processRiverSpline(chunkprimer, c, new Spline2D(riverPoints.toArray()), riverHalfWidth, -1, Blocks.flowing_water.getDefaultState());
 				}
 
 			}
 		}
 	}
 
-	protected void processRiverSpline(ChunkPrimer chunkprimer, Center c, Spline2D spline, int width) 
+	protected void processRiverSpline(ChunkPrimer chunkprimer, Center c, Spline2D spline, double width, int yOffset, IBlockState fillBlock) 
 	{
 		Point interval, temp;
+		int waterLevel = SEA_LEVEL;
+		if(c.water)
+			waterLevel = convertElevation(c.elevation);
+		//This loop moves in increments of X% and attempts to carve the river at each point
 		for(double m = 0; m < 1; m+= 0.05)
 		{
 			interval = spline.getPoint(m).minus(new Point(worldX, worldZ));
-			for(int x = -width; x <= width; x++)
+			for(int x = (int)-Math.floor(width); x <= (int)Math.ceil(width); x++)
 			{
-				for(int z = -width; z <= width; z++)
+				for(int z = (int)-Math.floor(width); z <= (int)Math.ceil(width); z++)
 				{
 					temp = interval.plus(x, z);
 					int xC = (int)Math.floor(temp.x);
@@ -409,15 +399,20 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 						continue;
 					if(zC < 0 || zC > 15)
 						continue;
-					int yC = elevationMap[xC][zC];
-					if(yC >= SEA_LEVEL)
+					int yC = elevationMap[xC][zC]+yOffset;
+					IBlockState bs = chunkprimer.getBlockState(xC, yC-1, zC);
+					if(yC >= waterLevel && bs != Blocks.flowing_water.getDefaultState() && bs != Blocks.water.getDefaultState())
 					{
-						chunkprimer.setBlockState(xC, yC-1, zC, Blocks.flowing_water.getDefaultState());
-						while(chunkprimer.getBlockState(xC, yC, zC) != Blocks.air.getDefaultState())
+						//If the fill block is air then we want to move the surface block down a level
+						/*if(fillBlock == Blocks.air.getDefaultState())
 						{
-							chunkprimer.setBlockState(xC, yC, zC, Blocks.air.getDefaultState());
-							yC++;
-						}
+							bs = chunkprimer.getBlockState(xC, yC-1, zC);
+							if(bs != Blocks.air.getDefaultState())
+								chunkprimer.setBlockState(xC, yC-2, zC, bs);
+						}*/
+
+						chunkprimer.setBlockState(xC, yC-2, zC, Blocks.gravel.getDefaultState());
+						chunkprimer.setBlockState(xC, yC-1, zC, fillBlock);
 					}
 				}
 			}
@@ -441,12 +436,16 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 	protected double getSmoothHeightHex(Center c, Point p)
 	{
 		double h = c.elevation;
-		boolean isBorder = false;
-		if(!c.water || (c.water && !c.ocean))
+		boolean isLakeBorder = false;
+		boolean isOcean = c.ocean;
+		boolean isLake = c.water && !c.ocean;
+		boolean isLand = !c.water;
+		//if(isLand || isLake)
 		{
-			if(c.water)
-				isBorder = isLakeBorder(p, c);
-			if(((c.water && isBorder) || !c.water) && (getHex(hexSamplePoints[0].plus(p)) != c || getHex(hexSamplePoints[1].plus(p)) != c || 
+			if(isLake)
+				isLakeBorder = isLakeBorder(p, c);
+
+			if(/*((isLake && isLakeBorder) || isLand)*/ !(isLake && !isLakeBorder) && (getHex(hexSamplePoints[0].plus(p)) != c || getHex(hexSamplePoints[1].plus(p)) != c || 
 					getHex(hexSamplePoints[2].plus(p)) != c || getHex(hexSamplePoints[3].plus(p)) != c || 
 					getHex(hexSamplePoints[4].plus(p)) != c || getHex(hexSamplePoints[5].plus(p)) != c))
 			{
@@ -460,7 +459,7 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		}
 		double outH = c.elevation - (c.elevation - h);
 		//If this hex is a water hex and the smoothed elevation is lower than the hex elevation than we do not want to lower this cell
-		if(c.water && isBorder && outH < c.elevation)
+		if(c.water && isLakeBorder && outH < c.elevation)
 			return c.elevation;
 		return outH;
 	}
@@ -470,4 +469,18 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 	{
 
 	}
+
+	private double[] distToSegmentSquared(Point v, Point w, Point local) 
+	{
+		double l2 = dist2(v, w);    
+		if (l2 == 0) return new double[] {dist2(local, v), -1};
+		double t = ((local.x - v.x) * (w.x - v.x) + (local.y - v.y) * (w.y - v.y)) / l2;
+		if (t < 0) return new double[] {dist2(local, v), 0};
+		if (t > 1) return new double[] {dist2(local, w), 1};
+		return new double[] {dist2(local, new Point( v.x + t * (w.x - v.x),  v.y + t * (w.y - v.y) )), t};
+	}
+
+	private double squared(double d) { return d * d; }
+
+	private double dist2(Point v, Point w) { return squared(v.x - w.x) + squared(v.y - w.y); }
 }
