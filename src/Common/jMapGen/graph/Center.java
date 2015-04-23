@@ -11,16 +11,12 @@ public class Center
 	public int index;
 
 	public Point point;  // location
-	public Boolean water = false;  // lake or ocean
-	public Boolean ocean = false;  // ocean
-	public Boolean coast = false;  // land polygon touching an ocean
-	public Boolean coastWater = false;  // land polygon touching an ocean
-	public Boolean border = false;  // at the edge of the map
+	private int flags = 0;
 	public BiomeType biome;  // biome type (see article)
 	public double elevation = 0;  // 0.0-1.0
 	public double moisture = 0;  // 0.0-1.0
 
-	public int river = 0;
+	private double river = 0;
 	public Vector<Center> upriver;  // pointer to adjacent corner most uphill
 	public Center downriver; 
 
@@ -30,6 +26,99 @@ public class Center
 	public Vector<Center> neighbors;
 	public Vector<Edge> borders;
 	public Vector<Corner> corners;
+
+	public void addRiver(double d)
+	{
+		river = Math.min(river + d, 4.0);
+	}
+
+	public void setRiver(double d)
+	{
+		river = Math.min(d, 4.0);
+	}
+
+	public double getRiver()
+	{
+		return river;
+	}
+
+	public boolean isWater()
+	{
+		return (flags & 1) > 0;
+	}
+
+	public void setWater(boolean b)
+	{
+		if(b)
+			flags |= 1;
+		else if(isWater())
+			flags ^= 1;
+	}
+
+	public boolean isOcean()
+	{
+		return (flags & 2) > 0;
+	}
+
+	public void setOcean(boolean b)
+	{
+		if(b)
+			flags |= 2;
+		else if(isOcean())
+			flags ^= 2;
+	}
+
+	public boolean isCoast()
+	{
+		return (flags & 4) > 0;
+	}
+
+	public void setCoast(boolean b)
+	{
+		if(b)
+			flags |= 4;
+		else if(isCoast())
+			flags ^= 4;
+	}
+
+	public boolean isCoastWater()
+	{
+		return (flags & 8) > 0;
+	}
+
+	public void setCoastWater(boolean b)
+	{
+		if(b)
+			flags |= 8;
+		else if(isCoastWater())
+			flags ^= 8;
+	}
+
+	public boolean isBorder()
+	{
+		return (flags & 16) > 0;
+	}
+
+	public void setBorder(boolean b)
+	{
+		if(b)
+			flags |= 16;
+		else if(isBorder())
+			flags ^= 16;
+	}
+
+	public boolean isCanyon()
+	{
+		return (flags & 32) > 0;
+	}
+
+	public void setCanyon(boolean b)
+	{
+		if(b)
+			flags |= 32;
+		else if(isCanyon())
+			flags ^= 32;
+	}
 
 	public void addUpRiverCenter(Center c)
 	{

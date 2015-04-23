@@ -23,6 +23,6 @@ public class RenderOverlayHandler
 		Map map = WorldGen.instance.getIslandMap(xM, zM);
 		Center hex = map.getSelectedHexagon(new Point(mc.thePlayer.posX, mc.thePlayer.posZ));
 		event.left.add("biome: "+hex.biome.name());
-		event.left.add("river: "+hex.river+" | "+(hex.upriver != null ? hex.upriver.size() : 0));
+		event.left.add("river: "+hex.getRiver()+" | "+(hex.upriver != null ? hex.upriver.size() : 0));
 	}
 }

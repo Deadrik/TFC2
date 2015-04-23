@@ -9,24 +9,23 @@ public class Edge
 	public Center dCenter0, dCenter1;  // Delaunay edge
 	public Corner vCorner0, vCorner1;  // Voronoi edge
 	public Point midpoint;  // halfway between v0,v1
-	public int river = 0;  // volume of water, or 0
-	
+
 	public void setVoronoiEdge(Corner c0, Corner c1)
 	{
 		vCorner0 = c0;
 		vCorner1 = c1;
-		
+
 		if(/*v0 != null && */ !vCorner0.adjacent.contains(vCorner1) && vCorner0.index != vCorner1.index)
 		{
 			vCorner0.adjacent.add(vCorner1);
 		}
-		
+
 		if(/*v1 != null && */ !vCorner1.adjacent.contains(vCorner0) && vCorner1.index != vCorner0.index)
 		{
 			vCorner1.adjacent.add(vCorner0);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param c The Corner that you already have
@@ -40,7 +39,7 @@ public class Edge
 			return vCorner0;
 		else return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param c The Center that you already have
@@ -54,12 +53,12 @@ public class Edge
 			return dCenter0;
 		else return null;
 	}
-	
+
 	public boolean isShoreline()
 	{
-		if((dCenter0.water && !dCenter1.water) || (!dCenter0.water && dCenter1.water))
+		if((dCenter0.isWater() && !dCenter1.isWater()) || (!dCenter0.isWater() && dCenter1.isWater()))
 			return true;
-		
+
 		return false;
 	}
 }

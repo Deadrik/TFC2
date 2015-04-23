@@ -24,13 +24,13 @@ public class Lava
 		for(int i = 0; i < map.edges.size(); i++) 
 		{
 			edge = map.edges.get(i);
-			if (edge.river != 1 && !edge.dCenter0.water && !edge.dCenter1.water
+			/*if (edge.river != 1 && !edge.dCenter0.isWater() && !edge.dCenter1.isWater()
 					&& edge.dCenter0.elevation > 0.8 && edge.dCenter1.elevation > 0.8
 					&& edge.dCenter0.moisture < 0.3 && edge.dCenter1.moisture < 0.3
 					&& random.nextDouble() < FRACTION_LAVA_FISSURES) 
 			{
 				lava.set(edge.index, true);
-			}
+			}*/
 		}
 	}
 }

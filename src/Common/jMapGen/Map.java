@@ -12,20 +12,13 @@ import jMapGen.graph.CornerElevationSorter;
 import jMapGen.graph.Edge;
 import jMapGen.graph.MoistureComparator;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Vector;
-
-import javax.imageio.ImageIO;
 
 import za.co.iocom.math.MathUtil;
 
@@ -37,14 +30,11 @@ public class Map
 
 	// Passed in by the caller:
 	public int SIZE;
-
 	// Island shape is controlled by the islandRandom seed and the
 	// type of island, passed in when we set the island shape. The
 	// islandShape function uses both of them to determine whether any
 	// point should be water or land.
-	public IslandDefinition islandShape;
-
-
+	public IslandParameters islandParams;
 	// Island details are controlled by this random generator. The
 	// initial map upon loading is always deterministic, but
 	// subsequent maps reset this random number generator with a
@@ -58,10 +48,6 @@ public class Map
 	public Vector<Edge> edges;
 	public Vector<River> rivers;
 	public Vector<Lake> lakes;
-
-
-	public Vector<Corner> riverSources;
-
 	public long seed;
 
 	public Map(int size, long s) 
@@ -73,14 +59,14 @@ public class Map
 	// Random parameters governing the overall shape of the island
 	public void newIsland(long seed) 
 	{
-		islandShape = new IslandDefinition(seed, SIZE, 0.5);
+		islandParams = new IslandParameters(seed, SIZE, 0.5);
 		mapRandom.setSeed(seed);
 		MathUtil.random = mapRandom;
 	}
 
-	public void newIsland(long seed, IslandDefinition is) 
+	public void newIsland(long seed, IslandParameters is) 
 	{
-		islandShape = is;
+		islandParams = is;
 		mapRandom.setSeed(seed);
 		MathUtil.random = mapRandom;
 		NUM_POINTS = is.SIZE*4;
@@ -132,6 +118,11 @@ public class Map
 		// Determine downslope paths.
 		calculateDownslopesCenter();
 
+		createCanyons();
+
+		// Determine downslope paths.
+		calculateDownslopesCenter();
+
 		// Determine watersheds: for every center, where does it flow
 		// out into the ocean? 
 		calculateWatershedsCenter();
@@ -156,7 +147,7 @@ public class Map
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.coast && this.mapRandom.nextInt(100) < 10 && !center.water && center.river == 0)
+			if(!center.isCoast() && this.mapRandom.nextInt(100) < 10 && !center.isWater() && center.getRiver() == 0)
 			{
 				Center highest = this.getHighestNeighbor(center);
 				highest = this.getHighestNeighbor(highest);
@@ -169,7 +160,7 @@ public class Map
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(!center2.coast && center2.river == 0 && !center2.water)
+					if(!center2.isCoast() && center2.getRiver() == 0 && !center2.isWater())
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
 					}
@@ -183,16 +174,16 @@ public class Map
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.coast && !center.water && center.river == 0)
+			if(!center.isCoast() && !center.isWater() && center.getRiver() == 0)
 			{
 				boolean nearWater = false;
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(center2.water)
+					if(center2.isWater())
 						nearWater  = true;
 				}
-				if(!nearWater && this.mapRandom.nextInt(100) < 50 && center.river < 3)
+				if(!nearWater && this.mapRandom.nextInt(100) < 50 && center.getRiver() < 3)
 				{
 					Center lowest = getLowestNeighbor(center);
 					Center highest = getHighestNeighbor(center);
@@ -337,7 +328,7 @@ public class Map
 
 			//If this hex is near the map border we want to count the number of hexes in the connected island.
 			//If there are too few then we will delete this tiny island to make the islands look better
-			if(!center.water && (center.point.x < min || center.point.x > max ||
+			if(!center.isWater() && (center.point.x < min || center.point.x > max ||
 					center.point.y < min || center.point.y > max))
 			{
 				Vector<Center> island = countIsland(center, 25);
@@ -345,16 +336,16 @@ public class Map
 				{
 					for(Center n : island)
 					{
-						n.water = true;
-						n.ocean = true;
+						n.setWater(true);
+						n.setOcean(true);
 						n.biome = BiomeType.OCEAN;
 					}
 				}
 			}
 
-			if(center.coastWater)
+			if(center.isCoastWater())
 				center.elevation = -0.01 - mapRandom.nextDouble()*0.03;
-			else if(center.ocean)
+			else if(center.isOcean())
 				center.elevation = -0.1 - mapRandom.nextDouble()*0.25;
 
 
@@ -377,7 +368,7 @@ public class Map
 			Center c = checkList.pollFirst();
 			for(Center n : c.neighbors)
 			{
-				if(!checkList.contains(n) && !outList.contains(n) && !n.water)
+				if(!checkList.contains(n) && !outList.contains(n) && !n.isWater())
 				{
 					outList.add(n);
 					checkList.addLast(n);
@@ -404,48 +395,11 @@ public class Map
 		return points;
 	}
 
-	private void drawCorners(String suffix) {
-		try 
-		{
-			System.out.println("Drawing hm-corners-"+suffix+".bmp");
-			BufferedImage outBitmap = new BufferedImage(1024,1024,BufferedImage.TYPE_INT_RGB);
-			Graphics2D g = (Graphics2D) outBitmap.getGraphics();
-
-			g.setColor(Color.GRAY);
-			for(int i = 0; i < edges.size(); i++)
-			{
-				Edge e = edges.get(i);
-
-				if (e.river > 0)
-					g.setColor(Color.BLUE);
-				else 
-					g.setColor(Color.GRAY);
-
-				g.drawLine((int)e.vCorner0.point.x, (int)e.vCorner0.point.y, (int)e.vCorner1.point.x, (int)e.vCorner1.point.y);
-			}
-
-			float HSBOne = (1f/360f);
-			float HSBGreen = HSBOne*60;
-			for(int i = 0; i < corners.size(); i++)
-			{
-				Corner c = corners.get(i);
-
-
-				//g.setColor(Color.getHSBColor(HSBGreen+((float)c.moisture*HSBGreen), 1, 1));
-				if(c.water) g.setColor(Color.BLUE);
-				else if(c.coast) g.setColor(Color.CYAN);
-				else g.setColor(Color.YELLOW);
-
-				g.drawRect((int)c.point.x, (int)c.point.y, 1,1);
-			}
-			ImageIO.write(outBitmap, "BMP", new File("hm-corners-"+suffix+".bmp"));
-		} catch (IOException e) {e.printStackTrace();}
-	}
-
-	// Generate random points and assign them to be on the island or
-	// in the water. Some water points are inland lakes; others are
-	// ocean. We'll determine ocean later by looking at what's
-	// connected to ocean.
+	/* Generate random points and assign them to be on the island or
+	 in the water. Some water points are inland lakes; others are
+	 ocean. We'll determine ocean later by looking at what's
+	 connected to ocean.
+	 */
 	public Vector<Point> generateRandomPoints()
 	{
 		Point p; 
@@ -461,14 +415,16 @@ public class Map
 		return points;
 	}
 
-	// Although Lloyd relaxation improves the uniformity of polygon
-	// sizes, it doesn't help with the edge lengths. Short edges can
-	// be bad for some games, and lead to weird artifacts on
-	// rivers. We can easily lengthen short edges by moving the
-	// corners, but **we lose the Voronoi property**.  The corners are
-	// moved to the average of the polygon centers around them. Short
-	// edges become longer. Long edges tend to become shorter. The
-	// polygons tend to be more uniform after this step.
+	/*
+	 * Although Lloyd relaxation improves the uniformity of polygon
+	 sizes, it doesn't help with the edge lengths. Short edges can
+	 be bad for some games, and lead to weird artifacts on
+	 rivers. We can easily lengthen short edges by moving the
+	 corners, but **we lose the Voronoi property**.  The corners are
+	 moved to the average of the polygon centers around them. Short
+	 edges become longer. Long edges tend to become shorter. The
+	 polygons tend to be more uniform after this step.
+	 */
 	public void improveCorners() 
 	{
 		Vector<Point> newCorners = new Vector<Point>(corners.size());
@@ -516,7 +472,6 @@ public class Map
 		}
 	}
 
-
 	// Create an array of corners that are on land only, for use by
 	// algorithms that work only on land.  We return an array instead
 	// of a vector because the redistribution algorithms want to sort
@@ -538,7 +493,7 @@ public class Map
 		Vector<Center> locations = new Vector<Center>();
 		for (int i = 0; i < centers.size(); i++) {
 			q = centers.get(i);
-			if (!q.ocean && !q.coast) {
+			if (!q.isOcean() && !q.isCoast()) {
 				locations.add(q);
 			}
 		}
@@ -550,13 +505,12 @@ public class Map
 		Vector<Center> locations = new Vector<Center>();
 		for (int i = 0; i < centers2.size(); i++) {
 			q = centers2.get(i);
-			if (!q.ocean && q.water) {
+			if (!q.isOcean() && q.isWater()) {
 				locations.add(q);
 			}
 		}
 		return locations;
 	}
-
 
 	// Build graph data structure in 'edges', 'centers', 'corners',
 	// based on information in the Voronoi results: point.neighbors
@@ -622,7 +576,6 @@ public class Map
 			// the edge from the voronoi library.
 			Edge edge = new Edge();
 			edge.index = edges.size();
-			edge.river = 0;
 			edges.add(edge);
 			edge.midpoint = vedge.p0 != null && vedge.p1 != null ? Point.interpolate(vedge.p0, vedge.p1, 0.5) : null;
 
@@ -799,15 +752,12 @@ public class Map
 					if (newElevation < adjacentCorner.elevation) 
 					{
 						adjacentCorner.elevation = newElevation;
-						highestElevation = highestElevation < newElevation ? newElevation : highestElevation;
 						queue.add(adjacentCorner);
 					}
 				}
 			}
 		}
 	}
-
-	double highestElevation = 0;
 
 	public Vector<Corner> sortElevation(Vector<Corner> locations)
 	{
@@ -883,7 +833,6 @@ public class Map
 		}
 	}
 
-
 	// Change the overall distribution of moisture to be evenly distributed.	
 	public void redistributeMoisture(Vector<Center> locations) {
 		int i;
@@ -896,7 +845,6 @@ public class Map
 			c1.moisture = m;
 		}
 	}
-
 
 	// Determine polygon and corner types: ocean, coast, land.
 	public void assignOceanCoastAndLand() {
@@ -919,8 +867,8 @@ public class Map
 			{
 				q = p.corners.get(j);
 				if (q.border) {
-					p.border = true;
-					p.ocean = true;
+					p.setBorder(true);
+					p.setOcean(true);
 					q.water = true;
 					queue.add(p);
 				}
@@ -928,7 +876,7 @@ public class Map
 					numWater += 1;
 				}
 			}
-			p.water = (p.ocean || numWater >= p.corners.size() * this.islandShape.lakeThreshold);
+			p.setWater((p.isOcean() || numWater >= p.corners.size() * this.islandParams.lakeThreshold));
 		}
 		while (queue.size() > 0) 
 		{
@@ -937,8 +885,8 @@ public class Map
 			for(int j = 0; j < p.neighbors.size(); j++)
 			{
 				r = p.neighbors.get(j);
-				if (r.water && !r.ocean) {
-					r.ocean = true;
+				if (r.isWater() && !r.isOcean()) {
+					r.setOcean(true);;
 					queue.add(r);
 				}
 			}
@@ -959,12 +907,12 @@ public class Map
 			for(int j = 0; j < p.neighbors.size(); j++)
 			{
 				r = p.neighbors.get(j);
-				numOcean += (r.ocean ? 1 : 0);
-				numLand += (!r.water ? 1 : 0);
+				numOcean += (r.isOcean() ? 1 : 0);
+				numLand += (!r.isWater() ? 1 : 0);
 			}
 
-			p.coast = (numOcean > 0) && (numLand > 0);
-			p.coastWater = p.ocean && (numLand > 0);
+			p.setCoast((numOcean > 0) && (numLand > 0));
+			p.setCoastWater(p.isOcean() && (numLand > 0));
 		}
 
 
@@ -980,8 +928,8 @@ public class Map
 			for(int i = 0; i < q.touches.size(); i++)
 			{
 				p = q.touches.get(i);
-				numOcean += (p.ocean ? 1 : 0);
-				numLand += (!p.water ? 1 : 0);
+				numOcean += (p.isOcean() ? 1 : 0);
+				numLand += (!p.isWater() ? 1 : 0);
 			}
 			q.ocean = (numOcean == q.touches.size());
 			q.coast = (numOcean > 0) && (numLand > 0);
@@ -989,7 +937,6 @@ public class Map
 
 		}
 	}
-
 
 	// Polygon elevations are the average of the elevations of their corners.
 	public void assignPolygonElevations() 
@@ -1038,7 +985,7 @@ public class Map
 
 					for(Center adj : baseCenter.neighbors)
 					{
-						if(!lake.hasCenter(adj) && adj.water && !adj.ocean)
+						if(!lake.hasCenter(adj) && adj.isWater() && !adj.isOcean())
 						{
 							lake.addCenter(adj);
 							centersToCheck.add(adj);
@@ -1142,7 +1089,7 @@ public class Map
 		{
 			workCorner = centers.get(j);
 			workCorner.watershed = workCorner;
-			if (!workCorner.ocean && !workCorner.coast) 
+			if (!workCorner.isOcean() && !workCorner.isCoast()) 
 			{
 				workCorner.watershed = workCorner.downslope;
 			}
@@ -1157,9 +1104,9 @@ public class Map
 			for(int j = 0; j < centers.size(); j++)
 			{
 				workCorner = centers.get(j);
-				if (!workCorner.ocean && !workCorner.coast && !workCorner.watershed.coast) {
+				if (!workCorner.isOcean() && !workCorner.isCoast() && !workCorner.watershed.isCoast()) {
 					tempCorner = workCorner.downslope.watershed;
-					if (!tempCorner.ocean) workCorner.watershed = tempCorner;
+					if (!tempCorner.isOcean()) workCorner.watershed = tempCorner;
 					changed = true;
 				}
 			}
@@ -1174,6 +1121,98 @@ public class Map
 
 	}
 
+	private void createCanyons()
+	{
+		if(!this.islandParams.shouldGenCanyons())
+			return;
+
+		Vector<Center> possibleStarts = new Vector<Center>();
+
+		for (int i = 0; i < SIZE/6; i++) 
+		{
+			possibleStarts.add(centers.get(mapRandom.nextInt(centers.size()-1)));
+		}
+
+		for(Center c : possibleStarts)
+		{
+			if(c.isWater())
+				continue;
+			Center curNode = c;
+			Center nextNode = c;
+			int count = 0;
+			while (true)
+			{
+				if (c == null || count > 250 || curNode.isWater()) 
+				{
+					break;
+				}
+				count++;
+				curNode = nextNode;
+				//calculate the next rivernode
+				nextNode = getNextCanyonNode(curNode);
+				//set the downriver center for this node to the next center
+				curNode.downriver = nextNode;
+				curNode.setCanyon(true);
+
+				//set the current working center to our next node before starting over
+				curNode = nextNode;
+			}
+		}
+
+		for(Center c : centers)
+		{
+			if(!c.isWater() && !c.isCanyon())
+			{
+				if(c.elevation > 0.05)
+				{
+					c.elevation = Math.min(c.elevation+(0.2*Math.min(c.elevation*2, 1.0)), c.elevation*2);
+				}
+			}
+
+			/*if(c.isWater() && !c.isOcean() && c.elevation > 0.3)
+			{
+				c.setWater(false);
+			}*/
+		}
+	}
+
+	public Center getNextCanyonNode(Center center)
+	{
+		Center next = center.downslope;
+
+		Vector<Center> possibles = new Vector<Center>();
+
+		//The river will attempt to meander if we aren't propagating down an existing river
+		if(center.getRiver() == 0)
+		{
+			//Go through each neighbor and find all possible hexes at the same elevation or lower
+			for(Center n : center.neighbors)
+			{
+				//If the elevations are the same or lower then this might be an ok location
+				if(convertHeightToMC(n.elevation) <= convertHeightToMC(center.elevation))
+				{
+					//If next to a water hex then we move to it instead of anything else
+					if(n.isOcean() || n.isWater())
+					{
+						return n;
+					}
+
+					//If the elevation is <= our current cell elevation then we allow this cell to be selected
+					possibles.add(n);
+				}
+			}
+		}
+		if(possibles.size() > 1)
+		{
+			Center p = possibles.get(mapRandom.nextInt(possibles.size()));
+			return p;
+		}
+		else if(possibles.size() == 1)
+			return possibles.get(0);
+
+		return center.downslope;
+	}
+
 	public void createRiversCenter() 
 	{
 		Center c;
@@ -1183,19 +1222,28 @@ public class Map
 
 		for (int i = 0; i < SIZE/6; i++) 
 		{
-			possibleStarts.add(centers.get(mapRandom.nextInt(centers.size()-1)));
+			c = centers.get(mapRandom.nextInt(centers.size()-1));
+			if(this.islandParams.shouldGenCanyons() && c.isCanyon())
+				possibleStarts.add(c);
+			else
+				possibleStarts.add(c);
 		}
 
 		for (int i = 0; i < lakes.size(); i++) 
 		{
-			possibleStarts.addAll(lakes.get(i).centers);
+			possibleStarts.add(lakes.get(i).lowestCenter);
+			for(Center cen : lakes.get(i).lowestCenter.neighbors)
+			{
+				if(cen.isWater() && mapRandom.nextBoolean())
+					possibleStarts.add(cen);
+			}
 		}
 
 		for (int i = 0; i < possibleStarts.size(); i++) 
 		{
 			c = possibleStarts.get(i);
 
-			if (c.ocean || c.elevation > 0.85 || c.river > 0) continue;
+			if (c.isOcean() || c.elevation > 0.85 || c.getRiver() > 0) continue;
 
 			River r = new River();
 			RiverNode curNode = new RiverNode(c);
@@ -1204,7 +1252,7 @@ public class Map
 			int count = 0;
 			while (true)
 			{
-				if (c == null || c == c.downslope || count > 250 || (curNode.center.water && curNode != r.riverStart)) 
+				if (c == null || c == c.downslope || count > 250 || (curNode.center.isWater() && curNode != r.riverStart)) 
 				{
 					break;
 				}
@@ -1213,15 +1261,16 @@ public class Map
 				//calculate the next rivernode
 				nextNode = getNextRiverNode(r, curNode);
 				//set the downriver center for this node to the next center
-				curNode.downRiver = nextNode.center;
+				curNode.setDownRiver(nextNode.center);
+				nextNode.setUpRiver(curNode.center);
 				//add the next node to the river graph
 				r.addNode(nextNode);
 				//If the current hex is water then we exit early unless this is the first node in the river
-				if((c.water && curNode != r.riverStart) && (curNode.downRiver == null || curNode.downRiver.water))
+				if((c.isWater() && curNode != r.riverStart) && (curNode.downRiver == null || curNode.downRiver.isWater()))
 					break;
 
 				//Keep track of the length of a river before it joins another river or reaches its end
-				if(nextNode.center.river == 0)
+				if(nextNode.center.getRiver() == 0)
 					r.lengthToMerge++;
 				//set the current working center to our next node before starting over
 				c = nextNode.center;
@@ -1229,31 +1278,47 @@ public class Map
 
 			//If this river is long enough to be acceptable and it eventually empties into a water hex then we process the river into the map
 			boolean isValid = false;
-			if(r.riverStart != null && r.riverStart.center.water && r.nodes.lastElement().center.water &&(r.riverStart != r.nodes.lastElement()))
+			if(r.riverStart != null && r.riverStart.center.isWater() && r.nodes.lastElement().center.isWater() &&(r.riverStart != r.nodes.lastElement()) &&
+					r.nodes.lastElement().center.elevation < r.riverStart.center.elevation)
 				isValid = true;
-			if(r.lengthToMerge > 3 && r.nodes.lastElement().center.water)
+			if(r.lengthToMerge > 3 && r.nodes.lastElement().center.isWater())
 				isValid = true;
 
-			if(r.riverStart == null || r.riverStart.center.river != 0 || r.nodes.size() < 4)
+			if(r.riverStart == null || r.riverStart.center.getRiver() != 0 || r.nodes.size() < 4)
 				isValid = false;
 
 			if(isValid)
 			{
-				if(r.riverStart.center.water)
-					r.riverWidth = 2;
+				if(r.riverStart.center.isWater())
+					r.riverWidth = 4 - 3 * r.riverStart.center.elevation;
 				//Add this river to the river collection
 				rivers.add(r);
 				curNode = r.nodes.get(0);
 				nextNode = curNode;
-
-				for (int j = 1; j < r.nodes.size(); j++) 
+				boolean cancelRiver = false;
+				for (int j = 0; j < r.nodes.size() && !cancelRiver; j++) 
 				{
-					nextNode = r.nodes.get(j);
+					if(j == 0)
+					{
+						for(Center n :r.riverStart.center.neighbors)
+						{
+							if(n.getRiver() > 0)
+							{
+								rivers.remove(rivers.size()-1);
+								cancelRiver = true;
+								break;
+							}
+						}
+					}
+					else
+					{
+						nextNode = r.nodes.get(j);
 
-					curNode.center.river = Math.min(curNode.center.river + r.riverWidth, 4);
-					curNode.center.downriver = nextNode.center;
-					nextNode.center.addUpRiverCenter(curNode.center);
-					curNode = nextNode;
+						curNode.center.addRiver(r.riverWidth);
+						curNode.center.downriver = nextNode.center;
+						nextNode.center.addUpRiverCenter(curNode.center);
+						curNode = nextNode;
+					}
 				}
 			}
 		}
@@ -1268,28 +1333,32 @@ public class Map
 		Vector<Center> possibles = new Vector<Center>();
 
 		//The river will attempt to meander if we aren't propagating down an existing river
-		if(curNode.center.river == 0)
+		if(curNode.center.getRiver() == 0)
 		{
 			//Go through each neighbor and find all possible hexes at the same elevation or lower
 			for(Center n : curNode.center.neighbors)
 			{
 				//Make sure that we aren't trying to flow backwards if the hexes are on the same level
-				if(n == river.nodes.lastElement().center)
+				if(n == curNode.upRiver)
 					continue;
+				//We dont want our rivers to turn at very sharp angles so we check our previous node to make sure that it is not neighbors with this node
+				if(n.neighbors.contains(curNode.upRiver))
+					continue;
+
 				//If the elevations are the same or lower then this might be an ok location
 				if(convertHeightToMC(n.elevation) <= convertHeightToMC(curNode.center.elevation))
 				{
 					//If next to a water hex then we move to it instead of anything else
-					if(n.ocean || n.water)
+					if(n.isOcean() || n.isWater())
 					{
 						//Unless we are dealing with a lake tile and this is the first River node
-						if(river.riverStart == curNode && !n.ocean)
+						if(river.riverStart == curNode && !n.isOcean())
 							continue;
 						return new RiverNode(n);
 					}
 
 					//If one of the neighbors is also a river then we want to join it
-					if(n.river > 0)
+					if(n.getRiver() > 0)
 						return new RiverNode(n);
 
 					//If the elevation is <= our current cell elevation then we allow this cell to be selected
@@ -1310,7 +1379,7 @@ public class Map
 
 	private int convertHeightToMC(double d)
 	{
-		return (int)Math.floor(this.islandShape.islandMaxHeight * d);
+		return (int)Math.floor(this.islandParams.islandMaxHeight * d);
 	}
 
 	// Calculate moisture. Freshwater sources spread moisture: rivers
@@ -1322,8 +1391,8 @@ public class Map
 		// Fresh water
 		for(Center cr : centers)
 		{
-			if ((cr.water || cr.river > 0) && !cr.ocean) {
-				cr.moisture = cr.river > 0? Math.min(3.0, (0.1 * (double)cr.river)) : 1.0;
+			if ((cr.isWater() || cr.getRiver() > 0) && !cr.isOcean()) {
+				cr.moisture = cr.getRiver() > 0? Math.min(3.0, (0.1 * cr.getRiver())) : 1.0;
 				queue.push(cr);
 			} else {
 				cr.moisture = 0.0;
@@ -1345,13 +1414,12 @@ public class Map
 		// Salt water
 		for(Center cr : centers)
 		{
-			if (cr.ocean || cr.coast) 
+			if (cr.isOcean() || cr.isCoast()) 
 			{
 				cr.moisture = 1.0;
 			}
 		}
 	}
-
 
 	// Polygon moisture is the average of the moisture at corners
 	public void assignPolygonMoisture() {
@@ -1368,20 +1436,19 @@ public class Map
 		}
 	}
 
-
 	// Assign a biome type to each polygon. If it has
 	// ocean/coast/water, then that's the biome; otherwise it depends
 	// on low/high elevation and low/medium/high moisture. This is
 	// roughly based on the Whittaker diagram but adapted to fit the
 	// needs of the island map generator.
 	static public BiomeType getBiome(Center p) {
-		if (p.ocean) {
+		if (p.isOcean()) {
 			return BiomeType.OCEAN;
-		} else if (p.water) {
+		} else if (p.isWater()) {
 			if (p.elevation < 0.1) return BiomeType.MARSH;
 			if (p.elevation > 0.8) return BiomeType.ICE;
 			return BiomeType.LAKE;
-		} else if (p.coast) {
+		} else if (p.isCoast()) {
 			return BiomeType.BEACH;
 		} else if (p.elevation > 0.8) {
 			if (p.moisture > 0.50) return BiomeType.SNOW;
@@ -1427,16 +1494,15 @@ public class Map
 		return null;
 	}
 
-
 	// Determine whether a given point should be on the island or in the water.
 	public Boolean inside(Point p) 
 	{
-		return islandShape.insidePerlin(p);
+		return islandParams.insidePerlin(p);
 	}
 
 	double elevationBucket(Center p) 
 	{
-		if (p.ocean) return -1;
+		if (p.isOcean()) return -1;
 		else return Math.floor(p.elevation*10);
 	}
 

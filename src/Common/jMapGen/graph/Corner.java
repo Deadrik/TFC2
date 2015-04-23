@@ -64,7 +64,7 @@ public class Corner
 		{
 			for(Center c : touches)
 			{
-				if(!c.water)
+				if(!c.isWater())
 					return true;
 			}
 		}

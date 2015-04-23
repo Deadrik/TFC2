@@ -4,12 +4,12 @@
 
 package jMapGen;
 
-import java.util.Random;
-import java.util.Vector;
-
 import jMapGen.com.nodename.Delaunay.DelaunayUtil;
 import jMapGen.graph.Center;
 import jMapGen.graph.Edge;
+
+import java.util.Random;
+import java.util.Vector;
 
 public class NoisyEdges 
 {
@@ -45,8 +45,8 @@ public class NoisyEdges
 
 					int minLength = 10;
 					if (edge.dCenter0.biome != edge.dCenter1.biome) minLength = 3;
-					if (edge.dCenter0.ocean && edge.dCenter1.ocean) minLength = 100;
-					if (edge.dCenter0.coast || edge.dCenter1.coast) minLength = 1;
+					if (edge.dCenter0.isOcean() && edge.dCenter1.isOcean()) minLength = 100;
+					if (edge.dCenter0.isCoast() || edge.dCenter1.isCoast()) minLength = 1;
 					//if (edge.river == 1 || lava.lava.get(edge.index) != null) minLength = 1;
 
 					DelaunayUtil.setAtPosition(path0, edge.index, buildNoisyLineSegments(random, edge.vCorner0.point, t, edge.midpoint, q, minLength));

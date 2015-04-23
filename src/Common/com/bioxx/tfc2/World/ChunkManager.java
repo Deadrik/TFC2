@@ -33,7 +33,7 @@ public class ChunkManager extends WorldChunkManager
 		Center c = land.get(random.nextInt(land.size()));
 		for(int i = 0; i < 10000; i++)
 		{
-			if(c.coast)
+			if(c.isCoast())
 			{
 				blockpos = new BlockPos((int)c.point.x, 0, (int)c.point.y);
 				return blockpos;

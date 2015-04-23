@@ -4,15 +4,15 @@ import jMapGen.graph.Center;
 
 import java.util.Vector;
 
-public class River 
+public class Canyon 
 {
 	public Vector<RiverNode> nodes;
 	public RiverNode riverStart;
-	public double riverWidth = 0.5;
+	public int riverWidth = 1;
 	public int lengthToMerge = 0;
 	public boolean hasWater = true;
 
-	public River()
+	public Canyon()
 	{
 		nodes = new Vector<RiverNode>();
 	}

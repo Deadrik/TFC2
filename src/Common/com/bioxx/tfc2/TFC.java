@@ -20,7 +20,6 @@ import com.bioxx.tfc2.Handlers.CreateSpawnHandler;
 import com.bioxx.tfc2.Handlers.WorldLoadHandler;
 import com.bioxx.tfc2.Networking.PacketPipeline;
 import com.bioxx.tfc2.World.WorldProviderSurface;
-import com.bioxx.tfc2.World.Generators.WorldGenTreeTest;
 
 @Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, dependencies = Reference.ModDependencies)
 public class TFC
@@ -51,8 +50,8 @@ public class TFC
 		WorldType.LARGE_BIOMES = new TFCWorldType(2, "TFCLargeBiomes");
 		WorldType.AMPLIFIED = new TFCWorldType(3, "TFCAmplified");*/
 
-		net.minecraftforge.fml.common.registry.GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 0);
-		
+		//net.minecraftforge.fml.common.registry.GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 0);
+
 		DimensionManager.unregisterDimension(0);
 		DimensionManager.unregisterProviderType(0);
 		DimensionManager.registerProviderType(0, WorldProviderSurface.class, true);

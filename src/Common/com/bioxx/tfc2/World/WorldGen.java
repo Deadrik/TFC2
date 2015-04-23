@@ -1,7 +1,7 @@
 package com.bioxx.tfc2.World;
 
-import jMapGen.IslandDefinition;
 import jMapGen.IslandMapGen;
+import jMapGen.IslandParameters;
 import jMapGen.Map;
 
 import java.util.HashMap;
@@ -46,12 +46,13 @@ public class WorldGen
 
 	private Map createIsland(int x, int z)
 	{
-		System.nanoTime();
+		long l = System.currentTimeMillis();
 		long seed = world.getSeed()+Helper.cantorize(x, z);
-		IslandDefinition id = new IslandDefinition(seed, ISLAND_SIZE, 0.5, 0.3);
+		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
+		//id.setFeatures(1);
 		IslandMapGen mapgen = new IslandMapGen(id, seed);
 		islandCache.put(Helper.cantorize(x, z), new CachedIsland(mapgen));
-		System.out.println("Time to create Island: "+System.nanoTime());
+		System.out.println("Time to create Island: "+(System.currentTimeMillis()-l));
 		return mapgen.map;
 	}
 

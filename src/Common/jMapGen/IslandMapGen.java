@@ -17,9 +17,9 @@ public class IslandMapGen
 	//public Roads roads;
 	public Lava lava;
 
-	IslandDefinition def;
+	IslandParameters def;
 
-	public IslandMapGen(IslandDefinition is, long seed) 
+	public IslandMapGen(IslandParameters is, long seed) 
 	{
 		mapSeed = seed;
 		map = new Map(is.SIZE, seed);

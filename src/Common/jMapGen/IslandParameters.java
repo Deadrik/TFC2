@@ -5,28 +5,38 @@ import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 
-//Factory class to build the 'inside' function that tells us whether
-//a point should be on the island or in the water.
-public class IslandDefinition 
+public class IslandParameters 
 {
 	// This class has factory functions for generating islands of
 	// different shapes. The factory returns a function that takes a
 	// normalized point (x and y are -1 to +1) and returns true if the
 	// point should be on the island, and false if it should be water
 	// (lake or ocean).
-
+	protected Module shapeModule;
 	double oceanRatio = 0.5;
 	public double lakeThreshold = 0.3;
 	int SIZE = 4096;
 	public double islandMaxHeight = 100.0;
+	public double moistureMultiplier = 1.0;
+	/**
+	 * 0x1 = Canyons
+	 * 0x2 = Volcano
+	 * 0x4 =
+	 * 0x8
+	 * 0x16
+	 * 0x32
+	 * 0x64
+	 * 0x128
+	 */
+	private int features = 0;
 
-	public IslandDefinition (long seed, int size, double oceans) 
+	public IslandParameters (long seed, int size, double oceans) 
 	{
 		this(seed, size, oceans, 0.3);
 	}
 
 	// The Perlin-based island combines perlin noise with the radius
-	public IslandDefinition (long seed, int size, double oceans, double lake) 
+	public IslandParameters (long seed, int size, double oceans, double lake) 
 	{
 		SIZE = size;
 		double landRatioMinimum = 0.1;
@@ -34,40 +44,9 @@ public class IslandDefinition
 		oceanRatio = ((landRatioMaximum - landRatioMinimum) * oceans) + landRatioMinimum;
 		lakeThreshold = lake;
 		createShape(seed);
-
-		//for(double d = 0; d < 0.21; d+=0.01)
-		//{
-		//	landRatioMaximum= 0.4+d;
-		//	oceanRatio = ((landRatioMaximum - landRatioMinimum) * oceans) + landRatioMinimum;
-		/*try
-		{
-			BufferedImage outBitmap = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_RGB);
-			Graphics2D g = (Graphics2D) outBitmap.getGraphics();
-
-			for(int x = 0; x < SIZE; x++)
-			{
-				for(int z = 0; z < SIZE; z++)
-				{
-					if(insidePerlin(new Point(x,z)))
-					{
-						float h = (float) shapeModule.GetValue(x, 0, z);
-						g.setColor(Color.getHSBColor(0, 0, (h+2)/4));
-						g.fillRect(x, z, 1, 1);
-					}
-
-				}
-			}
-			ImageIO.write(outBitmap, "BMP", new File("hm-shape-" + seed+".bmp"));
-		}
-		catch(Exception e){e.printStackTrace();
-		}*/
-		//}
 	}
 
-	public Module shapeModule;
-
-
-	public void createShape(long seed)
+	protected void createShape(long seed)
 	{
 		Perlin modulePerl = new Perlin();
 		modulePerl.setSeed((int)seed);
@@ -96,5 +75,20 @@ public class IslandDefinition
 		Point np = new Point(2.3*(q.x/SIZE - 0.5), 2.3*(q.y/SIZE - 0.5));
 		double height = shapeModule.GetValue(q.x, 0, q.y);
 		return height > oceanRatio+oceanRatio*np.getLength()*np.getLength();
+	}
+
+	public boolean shouldGenCanyons()
+	{
+		return (features & 1) > 0;
+	}
+
+	public void setFeatures(int f)
+	{
+		features = f;
+	}
+
+	public boolean shouldGenVolcano()
+	{
+		return (features & 2) > 0;
 	}
 }
