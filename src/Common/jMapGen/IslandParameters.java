@@ -21,7 +21,7 @@ public class IslandParameters
 	/**
 	 * 0x1 = Canyons
 	 * 0x2 = Volcano
-	 * 0x4 =
+	 * 0x4 = Cliffs
 	 * 0x8
 	 * 0x16
 	 * 0x32
@@ -77,18 +77,23 @@ public class IslandParameters
 		return height > oceanRatio+oceanRatio*np.getLength()*np.getLength();
 	}
 
-	public boolean shouldGenCanyons()
-	{
-		return (features & 1) > 0;
-	}
-
 	public void setFeatures(int f)
 	{
 		features = f;
 	}
 
+	public boolean shouldGenCanyons()
+	{
+		return (features & 1) > 0;
+	}
+
 	public boolean shouldGenVolcano()
 	{
 		return (features & 2) > 0;
+	}
+
+	public boolean shouldGenCliffs()
+	{
+		return (features & 4) > 0;
 	}
 }

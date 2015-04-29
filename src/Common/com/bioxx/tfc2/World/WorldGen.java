@@ -49,7 +49,7 @@ public class WorldGen
 		long l = System.currentTimeMillis();
 		long seed = world.getSeed()+Helper.cantorize(x, z);
 		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
-		//id.setFeatures(1);
+		id.setFeatures(5);
 		IslandMapGen mapgen = new IslandMapGen(id, seed);
 		islandCache.put(Helper.cantorize(x, z), new CachedIsland(mapgen));
 		System.out.println("Time to create Island: "+(System.currentTimeMillis()-l));

@@ -1,35 +1,31 @@
 package jMapGen;
 
-import jMapGen.graph.Center;
-
 import java.util.Vector;
 
 public class Canyon 
 {
-	public Vector<RiverNode> nodes;
-	public RiverNode riverStart;
-	public int riverWidth = 1;
-	public int lengthToMerge = 0;
-	public boolean hasWater = true;
+	public Vector<CanyonNode> nodes;
+	public CanyonNode start;
+	public double maxElev = Double.MIN_VALUE;
+	public double minElev = Double.MAX_VALUE;
 
 	public Canyon()
 	{
-		nodes = new Vector<RiverNode>();
+		nodes = new Vector<CanyonNode>();
 	}
 
-	public void addCenter(Center c)
+	public void addNode(CanyonNode c)
 	{
-		nodes.add(new RiverNode(c));
-	}
-
-	public void addNode(RiverNode c)
-	{
+		if(c.center.elevation < minElev)
+			minElev = c.center.elevation;
+		if(c.center.elevation > maxElev)
+			maxElev = c.center.elevation;
 		nodes.add(c);
 		if(nodes.size() == 1)
-			riverStart = c;
+			start = c;
 	}
 
-	public boolean hasCenter(RiverNode c)
+	public boolean hasCenter(CanyonNode c)
 	{
 		return nodes.contains(c);
 	}

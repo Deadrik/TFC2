@@ -31,7 +31,7 @@ public class WorldProviderSurface extends WorldProvider
 	@Override
 	public IChunkProvider createChunkGenerator()
 	{
-		return new ChunkProviderSurface2(worldObj, worldObj.getSeed(), false, "");
+		return new ChunkProviderSurface(worldObj, worldObj.getSeed(), false, "");
 	}
 
 	@Override

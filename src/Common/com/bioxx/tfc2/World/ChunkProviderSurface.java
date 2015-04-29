@@ -23,7 +23,7 @@ import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 
-public class ChunkProviderSurface2 extends ChunkProviderGenerate 
+public class ChunkProviderSurface extends ChunkProviderGenerate 
 {
 	private World worldObj;
 	private Random rand;
@@ -48,25 +48,27 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 	/**
 	 * A static array of sample points for performing our hex smoothing
 	 */
-	private static Point[] hexSamplePoints;
+	private static Point[][] hexSamplePoints;
 
-	public ChunkProviderSurface2(World worldIn, long seed, boolean enableMapFeatures, String rules) 
+	public ChunkProviderSurface(World worldIn, long seed, boolean enableMapFeatures, String rules) 
 	{
 		super(worldIn, seed, enableMapFeatures, rules);
 		worldObj = worldIn;
 		rand = worldObj.rand;
-
+		hexSamplePoints = new Point[11][6];
 		//Setup the sampling hexagon for hex smoothing
-		double c = 5;
-		double a = 0.5*c;
-		double b = Math.sin(60)*c;
-		hexSamplePoints = new Point[6];
-		hexSamplePoints[0] = new Point(0, b);
-		hexSamplePoints[1] = new Point(a, 0);
-		hexSamplePoints[2] = new Point(a+c, 0);
-		hexSamplePoints[3] = new Point(2*c, b);
-		hexSamplePoints[4] = new Point(a+c, 2*b);
-		hexSamplePoints[5] = new Point(a, 2*b);
+		for(int i = 0; i < 11; i++)
+		{
+			double c = i;
+			double a = 0.5*c;
+			double b = Math.sin(60)*c;
+			hexSamplePoints[i][0] = new Point(0, b);
+			hexSamplePoints[i][1] = new Point(a, 0);
+			hexSamplePoints[i][2] = new Point(a+c, 0);
+			hexSamplePoints[i][3] = new Point(2*c, b);
+			hexSamplePoints[i][4] = new Point(a+c, 2*b);
+			hexSamplePoints[i][5] = new Point(a, 2*b);
+		}
 
 		/**
 		 * Setup our turbulence Module
@@ -227,7 +229,9 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 
 	protected int getHexElevation(Center c, Point p)
 	{
-		return convertElevation(getSmoothHeightHex(c, p));
+		if(this.islandMap.islandParams.shouldGenCliffs())
+			return convertElevation(getSmoothHeightHex(c, p, 2));
+		return convertElevation(getSmoothHeightHex(c, p, 5));
 	}
 
 	protected int convertElevation(double height)
@@ -409,35 +413,37 @@ public class ChunkProviderSurface2 extends ChunkProviderGenerate
 		}
 	}
 
-	protected double getSmoothHeightHex(Center c, Point p)
+	protected double getSmoothHeightHex(Center c, Point p, int range)
 	{
 		double h = c.elevation;
 		boolean isLakeBorder = false;
-		boolean isOcean = c.isOcean();
 		boolean isLake = c.isWater() && !c.isOcean();
-		boolean isLand = !c.isWater();
-		//if(isLand || isLake)
+
+		if(isLake)
+			isLakeBorder = isLakeBorder(p, c);
+
+		if(!(isLake && !isLakeBorder) && (getHex(hexSamplePoints[range][0].plus(p)) != c || getHex(hexSamplePoints[range][1].plus(p)) != c || 
+				getHex(hexSamplePoints[range][2].plus(p)) != c || getHex(hexSamplePoints[range][3].plus(p)) != c || 
+				getHex(hexSamplePoints[range][4].plus(p)) != c || getHex(hexSamplePoints[range][5].plus(p)) != c))
 		{
-			if(isLake)
-				isLakeBorder = isLakeBorder(p, c);
-
-			if(/*((isLake && isLakeBorder) || isLand)*/ !(isLake && !isLakeBorder) && (getHex(hexSamplePoints[0].plus(p)) != c || getHex(hexSamplePoints[1].plus(p)) != c || 
-					getHex(hexSamplePoints[2].plus(p)) != c || getHex(hexSamplePoints[3].plus(p)) != c || 
-					getHex(hexSamplePoints[4].plus(p)) != c || getHex(hexSamplePoints[5].plus(p)) != c))
+			for(int i = 0; i < 6; i++)
 			{
-				for(int i = 0; i < 6; i++)
-				{
-					h += getHex(hexSamplePoints[i].plus(p)).elevation;
-				}
-
-				h /= 7;
+				h += getHex(hexSamplePoints[range][i].plus(p)).elevation;
 			}
+
+			h /= 7;
 		}
+
 		double outH = c.elevation - (c.elevation - h);
 		//If this hex is a water hex and the smoothed elevation is lower than the hex elevation than we do not want to lower this cell
 		if(c.isWater() && isLakeBorder && outH < c.elevation)
 			return c.elevation;
 		return outH;
+	}
+
+	protected double getSmoothHeightHex(Center c, Point p)
+	{
+		return getSmoothHeightHex(c, p, 5);
 	}
 
 	@Override

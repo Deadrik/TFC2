@@ -123,14 +123,11 @@ public class Map
 		// Determine downslope paths.
 		calculateDownslopesCenter();
 
-		// Determine watersheds: for every center, where does it flow
-		// out into the ocean? 
-		calculateWatershedsCenter();
-
 		// Create rivers.
 		createRiversCenter();
 
 		assignSlopedNoise();
+
 		assignHillyNoise();
 
 		calculateDownslopesCenter();
@@ -142,12 +139,17 @@ public class Map
 		setupBiomeInfo();
 	}
 
+	/**
+	 * This method chooses a random hex and raises it by a random amount, no higher than the highest hex within 4 hexes.
+	 * All neighboring hexes are also elevated to a lesser degree.
+	 */
 	private void assignHillyNoise() 
 	{
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.isCoast() && this.mapRandom.nextInt(100) < 10 && !center.isWater() && center.getRiver() == 0)
+			//10% change of any hex being selected as long as it is not a water or canyon hex, and does not contain a river.
+			if(!center.isCanyon() && !center.isCoast() && this.mapRandom.nextInt(100) < 10 && !center.isWater() && center.getRiver() == 0)
 			{
 				Center highest = this.getHighestNeighbor(center);
 				highest = this.getHighestNeighbor(highest);
@@ -160,7 +162,7 @@ public class Map
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(!center2.isCoast() && center2.getRiver() == 0 && !center2.isWater())
+					if(!center2.isCanyon() && !center2.isCoast() && center2.getRiver() == 0 && !center2.isWater())
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
 					}
@@ -169,12 +171,15 @@ public class Map
 		}
 	}
 
+	/**
+	 * This Method Adds some noise to the world by perturbing random hexes between the lowest and highest adjacent hexes.
+	 */
 	private void assignSlopedNoise() 
 	{
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.isCoast() && !center.isWater() && center.getRiver() == 0)
+			if(!center.isCanyon() && !center.isCoast() && !center.isWater() && center.getRiver() == 0)
 			{
 				boolean nearWater = false;
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
@@ -393,83 +398,6 @@ public class Map
 			}
 		}
 		return points;
-	}
-
-	/* Generate random points and assign them to be on the island or
-	 in the water. Some water points are inland lakes; others are
-	 ocean. We'll determine ocean later by looking at what's
-	 connected to ocean.
-	 */
-	public Vector<Point> generateRandomPoints()
-	{
-		Point p; 
-		int i; 
-		Vector<Point> points = new Vector<Point>();
-
-		for (i = 0; i < NUM_POINTS; i++) 
-		{
-			p = new Point(10 + mapRandom.nextDouble() * (SIZE-10),
-					10 + mapRandom.nextDouble() * (SIZE-10));
-			points.add(p);
-		}
-		return points;
-	}
-
-	/*
-	 * Although Lloyd relaxation improves the uniformity of polygon
-	 sizes, it doesn't help with the edge lengths. Short edges can
-	 be bad for some games, and lead to weird artifacts on
-	 rivers. We can easily lengthen short edges by moving the
-	 corners, but **we lose the Voronoi property**.  The corners are
-	 moved to the average of the polygon centers around them. Short
-	 edges become longer. Long edges tend to become shorter. The
-	 polygons tend to be more uniform after this step.
-	 */
-	public void improveCorners() 
-	{
-		Vector<Point> newCorners = new Vector<Point>(corners.size());
-
-		Point point; 
-		int i; 
-		Edge edge;
-
-		// First we compute the average of the centers next to each corner.
-		int count = 0;
-		for(Corner q : corners)  
-		{
-			if (q.border) 
-			{
-				DelaunayUtil.setAtPosition(newCorners, q.index, q.point);
-			} else {
-				point = new Point(0.0, 0.0);
-				for(Center r : q.touches)  
-				{
-					point.x += r.point.x;
-					point.y += r.point.y;
-				}
-				point.x /= q.touches.size();
-				point.y /= q.touches.size();
-				DelaunayUtil.setAtPosition(newCorners, q.index, point);
-				q.point = point;
-			}
-			count++;
-		}
-
-		// Move the corners to the new locations.
-		for (i = 0; i < corners.size(); i++) {
-			corners.get(i).point = newCorners.get(i);
-		}
-
-		// The edge midpoints were computed for the old corners and need
-		// to be recomputed.
-		for(i = 0; i < edges.size(); i++) 
-		{
-			edge = edges.get(i);
-			if (edge.vCorner0 != null && edge.vCorner1 != null) 
-			{
-				edge.midpoint = edge.vCorner0.point != null && edge.vCorner1.point != null ? Point.interpolate(edge.vCorner0.point, edge.vCorner1.point, 0.5) : null;
-			}
-		}
 	}
 
 	// Create an array of corners that are on land only, for use by
@@ -811,8 +739,9 @@ public class Map
 
 		Collections.sort(locations, new CornerElevationSorter());
 		int locationsSize = locations.size();
-
+		Corner c;
 		for (int i = 0; i < locationsSize; i++) {
+			c = locations.get(i);
 			// Let y(x) be the total area that we want at elevation <= x.
 			// We want the higher elevations to occur less than lower
 			// ones, and set the area to be y(x) = 1 - (1-x)^2.
@@ -829,7 +758,8 @@ public class Map
 
 			double x = sqrtScale - sqrtscale1Y;
 			if (x > 1.0) x = 1.0;  // TODO: does this break downslopes?
-			locations.get(i).elevation = x;
+
+			c.elevation = x;
 		}
 	}
 
@@ -911,7 +841,7 @@ public class Map
 				numLand += (!r.isWater() ? 1 : 0);
 			}
 
-			p.setCoast((numOcean > 0) && (numLand > 0));
+			p.setCoast((numOcean > 0) && !p.isOcean());
 			p.setCoastWater(p.isOcean() && (numLand > 0));
 		}
 
@@ -954,6 +884,9 @@ public class Map
 				sumElevation += q.elevation;
 			}
 			p.elevation = sumElevation / p.corners.size();
+			//If we are generating cliffs then we multiply the elevation by .85 to keep it <= 1.0 and add 0.15
+			if(this.islandParams.shouldGenCliffs() && !p.isOcean() && !p.isCoast() && p.elevation >= 0)
+				p.elevation = Math.max((p.elevation * 0.85) + 0.15, 0.15);
 		}
 	}
 
@@ -1010,31 +943,6 @@ public class Map
 		for(Lake lake : lakes)
 		{
 			if(lake.hasCenter(center))
-				return lake;
-		}
-		return null;
-	}
-
-	private void fixLakeCorners(Vector<Center> lakeCenters)
-	{
-		for(Center c : lakeCenters)
-		{
-			for(Corner cn : c.corners)
-			{
-				if(!cn.isShoreline())
-					cn.elevation = c.elevation;
-			}
-		}
-	}
-
-	// Calculate downslope pointers.  At every point, we point to the
-	// point downstream from it, or to itself.  This is used for
-	// generating rivers and watersheds.
-	private Vector<Center> centerInExistingLake(Vector<Vector<Center>> Lakes, Center center)
-	{
-		for(Vector<Center> lake : Lakes)
-		{
-			if(lake.contains(center))
 				return lake;
 		}
 		return null;
@@ -1121,96 +1029,130 @@ public class Map
 
 	}
 
+	public Vector<Center> getCentersAboveElevation(double elev)
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if (c.elevation >= elev)
+				out.add(c);
+		}
+		return out;
+	}
+
 	private void createCanyons()
 	{
 		if(!this.islandParams.shouldGenCanyons())
 			return;
 
 		Vector<Center> possibleStarts = new Vector<Center>();
+		Vector<Canyon> canyons = new Vector<Canyon>();
+		Canyon canyon = null;
 
-		for (int i = 0; i < SIZE/6; i++) 
+		Vector<Center> highCenters = this.getCentersAboveElevation(0.4);
+		for (int i = 0; i < highCenters.size()*0.5; i++) 
 		{
-			possibleStarts.add(centers.get(mapRandom.nextInt(centers.size()-1)));
+			boolean flag = true;
+			Center c = highCenters.get(mapRandom.nextInt(highCenters.size()-1));
+			for(Center n : c.neighbors)
+			{
+				if(possibleStarts.contains(n))
+				{
+					flag = false;
+					break;
+				}
+			}
+			if(flag)
+				possibleStarts.add(c);
 		}
 
 		for(Center c : possibleStarts)
 		{
 			if(c.isWater())
 				continue;
-			Center curNode = c;
-			Center nextNode = c;
+			canyon = new Canyon();
+			CanyonNode curNode = new CanyonNode(c);
+			CanyonNode nextNode = curNode;
 			int count = 0;
 			while (true)
 			{
-				if (c == null || count > 250 || curNode.isWater()) 
+				if (c == null || count > 250 || curNode == null || curNode.center.isWater()) 
 				{
 					break;
 				}
 				count++;
-				curNode = nextNode;
-				//calculate the next rivernode
+
+				//calculate the next node
 				nextNode = getNextCanyonNode(curNode);
+				if(nextNode != null)
+					nextNode.setUp(curNode);
 				//set the downriver center for this node to the next center
-				curNode.downriver = nextNode;
-				curNode.setCanyon(true);
+				curNode.setDown(nextNode);
+				canyon.addNode(curNode);
 
 				//set the current working center to our next node before starting over
 				curNode = nextNode;
 			}
-		}
 
-		for(Center c : centers)
-		{
-			if(!c.isWater() && !c.isCanyon())
+			if(canyon != null && canyon.nodes.size() > 2)
 			{
-				if(c.elevation > 0.05)
+				canyons.add(canyon);
+				for(CanyonNode cn : canyon.nodes)
 				{
-					c.elevation = Math.min(c.elevation+(0.2*Math.min(c.elevation*2, 1.0)), c.elevation*2);
+					double diff = cn.center.elevation - canyon.minElev;
+					if(!cn.center.isCanyon())
+						cn.center.elevation = Math.max(canyon.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2));
+					cn.center.setCanyon(true);
 				}
 			}
-
-			/*if(c.isWater() && !c.isOcean() && c.elevation > 0.3)
-			{
-				c.setWater(false);
-			}*/
 		}
+
+
+
+		/*for(Canyon c : canyons)
+		{
+			for(CanyonNode cn : c.nodes)
+			{
+				double diff = cn.center.elevation - c.minElev;
+				if(!cn.center.isCanyon())
+					cn.center.elevation = Math.max(c.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2));
+				cn.center.setCanyon(true);
+			}
+		}*/
 	}
 
-	public Center getNextCanyonNode(Center center)
+	public CanyonNode getNextCanyonNode(CanyonNode cur)
 	{
-		Center next = center.downslope;
-
 		Vector<Center> possibles = new Vector<Center>();
 
-		//The river will attempt to meander if we aren't propagating down an existing river
-		if(center.getRiver() == 0)
+		//Go through each neighbor and find all possible hexes at the same elevation or lower
+		for(Center n : cur.center.neighbors)
 		{
-			//Go through each neighbor and find all possible hexes at the same elevation or lower
-			for(Center n : center.neighbors)
+			//If the elevations are the same or lower then this might be an ok location
+			if(convertHeightToMC(n.elevation) < convertHeightToMC(cur.center.elevation))
 			{
-				//If the elevations are the same or lower then this might be an ok location
-				if(convertHeightToMC(n.elevation) <= convertHeightToMC(center.elevation))
+				//If next to a water hex then we move to it instead of anything else
+				if(n.isCanyon())
+					return new CanyonNode(n);
+				if(n.isOcean() || n.isWater())
 				{
-					//If next to a water hex then we move to it instead of anything else
-					if(n.isOcean() || n.isWater())
-					{
-						return n;
-					}
-
-					//If the elevation is <= our current cell elevation then we allow this cell to be selected
-					possibles.add(n);
+					return null;
 				}
+
+				//If the elevation is <= our current cell elevation then we allow this cell to be selected
+				possibles.add(n);
 			}
 		}
+
 		if(possibles.size() > 1)
 		{
 			Center p = possibles.get(mapRandom.nextInt(possibles.size()));
-			return p;
+			return new CanyonNode(p);
 		}
 		else if(possibles.size() == 1)
-			return possibles.get(0);
+			return new CanyonNode(possibles.get(0));
 
-		return center.downslope;
+		return new CanyonNode(cur.center.downslope);
 	}
 
 	public void createRiversCenter() 
@@ -1225,7 +1167,7 @@ public class Map
 			c = centers.get(mapRandom.nextInt(centers.size()-1));
 			if(this.islandParams.shouldGenCanyons() && c.isCanyon())
 				possibleStarts.add(c);
-			else
+			else if(!this.islandParams.shouldGenCanyons())
 				possibleStarts.add(c);
 		}
 
@@ -1446,7 +1388,7 @@ public class Map
 			return BiomeType.OCEAN;
 		} else if (p.isWater()) {
 			if (p.elevation < 0.1) return BiomeType.MARSH;
-			if (p.elevation > 0.8) return BiomeType.ICE;
+			//if (p.elevation > 0.8) return BiomeType.ICE;
 			return BiomeType.LAKE;
 		} else if (p.isCoast()) {
 			return BiomeType.BEACH;
