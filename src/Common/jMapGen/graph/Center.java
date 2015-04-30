@@ -1,9 +1,12 @@
 package jMapGen.graph;
 
 import jMapGen.BiomeType;
+import jMapGen.Map;
 import jMapGen.Point;
 
 import java.util.Vector;
+
+import net.minecraft.nbt.NBTTagCompound;
 
 
 public class Center 
@@ -19,13 +22,25 @@ public class Center
 	private double river = 0;
 	public Vector<Center> upriver;  // pointer to adjacent corner most uphill
 	public Center downriver; 
-
 	public Center downslope;  // pointer to adjacent corner most downhill
-	public Center watershed;  // pointer to coastal corner, or null
 
 	public Vector<Center> neighbors;
 	public Vector<Edge> borders;
 	public Vector<Corner> corners;
+
+	public Center()
+	{
+		index = 0;
+		neighbors = new  Vector<Center>();
+		borders = new Vector<Edge>();
+		corners = new Vector<Corner>();
+	}
+
+	public Center(int i)
+	{
+		this();
+		index = i;
+	}
 
 	public void addRiver(double d)
 	{
@@ -419,5 +434,98 @@ public class Center
 			return true;
 
 		return false;
+	}
+
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		nbt.setInteger("index", index);
+		nbt.setInteger("biome", biome.ordinal());
+		nbt.setDouble("xCoord", point.x);
+		nbt.setDouble("yCoord", point.y);
+		nbt.setInteger("flags", flags);
+		nbt.setDouble("elevation", elevation);
+		nbt.setDouble("moisture", moisture);
+		nbt.setDouble("river", river);
+		if(downriver != null)
+			nbt.setInteger("downriver", downriver.index);
+		if(downslope != null)
+			nbt.setInteger("downslope", downslope.index);
+
+		int[] nArray = new int[neighbors.size()];
+		for(int i = 0; i < nArray.length; i++)
+		{
+			nArray[i] = neighbors.get(i).index;
+		}
+		nbt.setIntArray("neighbors", nArray);
+
+		nArray = new int[corners.size()];
+		for(int i = 0; i < nArray.length; i++)
+		{
+			nArray[i] = corners.get(i).index;
+		}
+		nbt.setIntArray("corners", nArray);
+
+		nArray = new int[borders.size()];
+		for(int i = 0; i < nArray.length; i++)
+		{
+			nArray[i] = borders.get(i).index;
+		}
+		nbt.setIntArray("borders", nArray);
+
+		if(upriver != null && upriver.size() > 0)
+		{
+			nArray = new int[upriver.size()];
+			for(int i = 0; i < nArray.length; i++)
+			{
+				nArray[i] = upriver.get(i).index;
+			}
+			nbt.setIntArray("upriver", nArray);
+		}
+	}
+
+	public void readFromNBT(NBTTagCompound nbt, Map m)
+	{
+		try 
+		{
+			biome = BiomeType.values()[nbt.getInteger("biome")];
+			point = new Point(nbt.getDouble("xCoord"), nbt.getDouble("yCoord"));
+			flags = nbt.getInteger("flags");
+			elevation = nbt.getDouble("elevation");
+			moisture = nbt.getDouble("moisture");
+			river = nbt.getDouble("river");
+			if(nbt.hasKey("downriver"))
+				downriver = m.centers.get(nbt.getInteger("downriver"));
+			if(nbt.hasKey("downslope"))
+				downslope = m.centers.get(nbt.getInteger("downslope"));
+			int[] nArray = nbt.getIntArray("neighbors");
+			for(int i = 0; i < nArray.length; i++)
+			{
+				this.neighbors.add(m.centers.get(nArray[i]));
+			}
+			nArray = nbt.getIntArray("corners");
+			for(int i = 0; i < nArray.length; i++)
+			{
+				this.corners.add(m.corners.get(nArray[i]));
+			}
+			nArray = nbt.getIntArray("borders");
+			for(int i = 0; i < nArray.length; i++)
+			{
+				this.borders.add(m.edges.get(nArray[i]));
+			}
+			if(nbt.hasKey("upriver"))
+			{
+				nArray = nbt.getIntArray("upriver");
+				upriver = new Vector<Center>();
+				for(int i = 0; i < nArray.length; i++)
+				{
+					this.upriver.add(m.centers.get(nArray[i]));
+				}
+			}
+
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
 	}
 }

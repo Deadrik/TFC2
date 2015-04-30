@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.Vector;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import za.co.iocom.math.MathUtil;
 
 
@@ -54,17 +56,23 @@ public class Map
 	{
 		SIZE = size;
 		seed = s;
+		points = new Vector<Point>();
+		edges = new Vector<Edge>();
+		centers = new Vector<Center>();
+		corners = new Vector<Corner>();
+		lakes = new Vector<Lake>();
+		rivers = new Vector<River>();
 	}
 
 	// Random parameters governing the overall shape of the island
-	public void newIsland(long seed) 
+	public void newIsland() 
 	{
 		islandParams = new IslandParameters(seed, SIZE, 0.5);
 		mapRandom.setSeed(seed);
 		MathUtil.random = mapRandom;
 	}
 
-	public void newIsland(long seed, IslandParameters is) 
+	public void newIsland(IslandParameters is) 
 	{
 		islandParams = is;
 		mapRandom.setSeed(seed);
@@ -75,13 +83,6 @@ public class Map
 
 	public void go() 
 	{
-		points = new Vector<Point>();
-		edges = new Vector<Edge>();
-		centers = new Vector<Center>();
-		corners = new Vector<Corner>();
-		lakes = new Vector<Lake>();
-		rivers = new Vector<River>();
-
 		points = this.generateHexagon(SIZE);
 		//System.out.println("Points: " + points.size());
 		Rectangle R = new Rectangle();
@@ -104,7 +105,7 @@ public class Map
 		for(Iterator<Corner> i = corners.iterator(); i.hasNext();)
 		{
 			Corner q = (Corner)i.next();
-			if (q.ocean || q.coast) 
+			if (q.isOcean() || q.isCoast()) 
 			{
 				q.elevation = 0.0;
 			}
@@ -409,7 +410,7 @@ public class Map
 		Vector<Corner> locations = new Vector<Corner>();
 		for (int i = 0; i < corners.size(); i++) {
 			q = corners.get(i);
-			if (!q.ocean && !q.coast) {
+			if (!q.isOcean() && !q.isCoast()) {
 				locations.add(q);
 			}
 		}
@@ -469,9 +470,6 @@ public class Map
 			p = new Center();
 			p.index = centers.size();
 			p.point = point;
-			p.neighbors = new  Vector<Center>();
-			p.borders = new Vector<Edge>();
-			p.corners = new Vector<Corner>();
 			centers.add(p);
 			centerLookup.put(point, p);
 		}
@@ -594,11 +592,8 @@ public class Map
 		corners.add(q);
 
 		q.point = point;
-		q.border = (point.x == 0 || point.x == SIZE
-				|| point.y == 0 || point.y == SIZE);
-		q.touches = new Vector<Center>();
-		q.protrudes = new Vector<Edge>();
-		q.adjacent = new Vector<Corner>();		
+		q.setBorder(point.x == 0 || point.x == SIZE
+				|| point.y == 0 || point.y == SIZE);	
 
 		_cornerMap.get(bucket).add(q);
 
@@ -634,9 +629,9 @@ public class Map
 		 * */
 		for(Corner c : corners)
 		{
-			c.water = !inside(c.point);
+			c.setWater(!inside(c.point));
 
-			if (c.border) 
+			if (c.isBorder()) 
 			{
 				c.elevation = 0;
 				queue.add(c);
@@ -660,18 +655,18 @@ public class Map
 
 				adjacentCorner = baseCorner.adjacent.get(i);
 
-				if(!adjacentCorner.border)
+				if(!adjacentCorner.isBorder())
 				{
 					// Every step up is epsilon over water or 1 over land. The
 					// number doesn't matter because we'll rescale the
 					// elevations later.				
 					double newElevation = 0.000000001 + baseCorner.elevation;
 
-					if (!baseCorner.water && !adjacentCorner.water && newElevation < 0.20) 
+					if (!baseCorner.isWater() && !adjacentCorner.isWater() && newElevation < 0.20) 
 					{
 						newElevation += 0.05;
 					}
-					else if (!baseCorner.water && !adjacentCorner.water) 
+					else if (!baseCorner.isWater() && !adjacentCorner.isWater()) 
 					{
 						newElevation += 1;
 					}
@@ -796,13 +791,13 @@ public class Map
 			for(int j = 0; j < p.corners.size(); j++)
 			{
 				q = p.corners.get(j);
-				if (q.border) {
+				if (q.isBorder()) {
 					p.setBorder(true);
 					p.setOcean(true);
-					q.water = true;
+					q.setWater(true);
 					queue.add(p);
 				}
-				if (q.water) {
+				if (q.isWater()) {
 					numWater += 1;
 				}
 			}
@@ -861,9 +856,9 @@ public class Map
 				numOcean += (p.isOcean() ? 1 : 0);
 				numLand += (!p.isWater() ? 1 : 0);
 			}
-			q.ocean = (numOcean == q.touches.size());
-			q.coast = (numOcean > 0) && (numLand > 0);
-			q.water = q.border || ((numLand != q.touches.size()) && !q.coast);
+			q.setOcean(numOcean == q.touches.size());
+			q.setCoast((numOcean > 0) && (numLand > 0));
+			q.setWater(q.isBorder() || ((numLand != q.touches.size()) && !q.isCoast()));
 
 		}
 	}
@@ -948,26 +943,6 @@ public class Map
 		return null;
 	}
 
-	public void calculateDownslopes() 
-	{
-		Corner upCorner, tempCorner, downCorner;
-
-		for(int j = 0; j < corners.size(); j++)
-		{
-			upCorner = corners.get(j);
-			downCorner = upCorner;
-			for(int i = 0; i < upCorner.adjacent.size(); i++)
-			{
-				tempCorner= upCorner.adjacent.get(i);
-				if (tempCorner.elevation <= downCorner.elevation) 
-				{
-					downCorner = tempCorner;
-				}
-			}	
-			upCorner.downslope = downCorner;
-		}
-	}
-
 	public void calculateDownslopesCenter() 
 	{
 		Center upCorner, tempCorner, downCorner;
@@ -986,47 +961,6 @@ public class Map
 			}	
 			upCorner.downslope = downCorner;
 		}
-	}
-
-	public void calculateWatershedsCenter() 
-	{
-		Center workCorner, tempCorner; int i; boolean changed;
-
-		// Initially the watershed pointer points downslope one step.      
-		for(int j = 0; j < centers.size(); j++)
-		{
-			workCorner = centers.get(j);
-			workCorner.watershed = workCorner;
-			if (!workCorner.isOcean() && !workCorner.isCoast()) 
-			{
-				workCorner.watershed = workCorner.downslope;
-			}
-		}
-		// Follow the downslope pointers to the coast. Limit to 100
-		// iterations although most of the time with NUM_POINTS=2000 it
-		// only takes 20 iterations because most points are not far from
-		// a coast.  TODO: can run faster by looking at
-		// p.watershed.watershed instead of p.downslope.watershed.
-		for (i = 0; i < 100; i++) {
-			changed = false;
-			for(int j = 0; j < centers.size(); j++)
-			{
-				workCorner = centers.get(j);
-				if (!workCorner.isOcean() && !workCorner.isCoast() && !workCorner.watershed.isCoast()) {
-					tempCorner = workCorner.downslope.watershed;
-					if (!tempCorner.isOcean()) workCorner.watershed = tempCorner;
-					changed = true;
-				}
-			}
-			if (!changed) break;
-		}
-		// How big is each watershed?
-		for(int j = 0; j < centers.size(); j++)
-		{
-			workCorner = centers.get(j);
-			tempCorner = workCorner.watershed;
-		}
-
 	}
 
 	public Vector<Center> getCentersAboveElevation(double elev)
@@ -1542,5 +1476,73 @@ public class Map
 			}
 		}
 		return closest;
+	}
+
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		NBTTagList nList = new NBTTagList();
+		for(Center c : centers)
+		{
+			NBTTagCompound n = new NBTTagCompound();
+			c.writeToNBT(n);
+			nList.appendTag(n);
+		}
+		nbt.setTag("centers", nList);
+
+		nList = new NBTTagList();
+		for(Corner c : corners)
+		{
+			NBTTagCompound n = new NBTTagCompound();
+			c.writeToNBT(n);
+			nList.appendTag(n);
+		}
+		nbt.setTag("corners", nList);
+
+		nList = new NBTTagList();
+		for(Edge e : edges)
+		{
+			NBTTagCompound n = new NBTTagCompound();
+			e.writeToNBT(n);
+			nList.appendTag(n);
+		}
+		nbt.setTag("edges", nList);
+	}
+
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		NBTTagList centerList = nbt.getTagList("centers", 10);
+		NBTTagList cornerList = nbt.getTagList("corners", 10);
+		NBTTagList edgeList = nbt.getTagList("edges", 10);
+
+		//First we create empty centers, corners, and edges that can be referenced from each other
+		for(int i = 0; i < centerList.tagCount(); i++)
+		{
+			centers.add(new Center(i));
+		}
+
+		for(int i = 0; i < cornerList.tagCount(); i++)
+		{
+			corners.add(new Corner(i));
+		}
+
+		for(int i = 0; i < edgeList.tagCount(); i++)
+		{
+			edges.add(new Edge(i));
+		}
+
+		for(int i = 0; i < centers.size(); i++)
+		{
+			centers.get(i).readFromNBT(centerList.getCompoundTagAt(i), this);
+		}
+
+		for(int i = 0; i < corners.size(); i++)
+		{
+			corners.get(i).readFromNBT(cornerList.getCompoundTagAt(i), this);
+		}
+
+		for(int i = 0; i < edges.size(); i++)
+		{
+			edges.get(i).readFromNBT(edgeList.getCompoundTagAt(i), this);
+		}
 	}
 }

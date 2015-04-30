@@ -27,9 +27,16 @@ public class IslandMapGen
 		createNewIsland();
 	}
 
+	public IslandMapGen(Map m) 
+	{
+		mapSeed = m.seed;
+		map = m;
+		def = m.islandParams;
+	}
+
 	public void createNewIsland() 
 	{
-		map.newIsland(mapSeed, def);
+		map.newIsland(def);
 		map.go();
 	}
 }

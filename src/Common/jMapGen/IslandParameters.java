@@ -1,5 +1,7 @@
 package jMapGen;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
@@ -18,6 +20,10 @@ public class IslandParameters
 	int SIZE = 4096;
 	public double islandMaxHeight = 100.0;
 	public double moistureMultiplier = 1.0;
+
+	private int xCoord = 0;
+	private int zCoord = 0;
+
 	/**
 	 * 0x1 = Canyons
 	 * 0x2 = Volcano
@@ -29,6 +35,11 @@ public class IslandParameters
 	 * 0x128
 	 */
 	private int features = 0;
+
+	public IslandParameters() 
+	{
+		this(0, 4096, 0.5, 0.3);
+	}
 
 	public IslandParameters (long seed, int size, double oceans) 
 	{
@@ -77,6 +88,16 @@ public class IslandParameters
 		return height > oceanRatio+oceanRatio*np.getLength()*np.getLength();
 	}
 
+	public int getXCoord()
+	{
+		return this.xCoord;
+	}
+
+	public int getZCoord()
+	{
+		return this.zCoord;
+	}
+
 	public void setFeatures(int f)
 	{
 		features = f;
@@ -95,5 +116,32 @@ public class IslandParameters
 	public boolean shouldGenCliffs()
 	{
 		return (features & 4) > 0;
+	}
+
+	public void setCoords(int x, int z) 
+	{
+		this.xCoord = x;
+		this.zCoord = z;
+	}
+
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		this.setFeatures(nbt.getInteger("features"));
+		this.setCoords(nbt.getInteger("xCoord"), nbt.getInteger("zCoord"));
+		this.oceanRatio = nbt.getDouble("oceanRatio");
+		this.lakeThreshold = nbt.getDouble("lakeThreshold");
+		this.islandMaxHeight = nbt.getDouble("islandMaxHeight");
+		this.moistureMultiplier = nbt.getDouble("moistureMultiplier");
+	}
+
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		nbt.setInteger("features", features);
+		nbt.setInteger("xCoord", xCoord);
+		nbt.setInteger("zCoord", zCoord);
+		nbt.setDouble("oceanRatio", oceanRatio);
+		nbt.setDouble("lakeThreshold", lakeThreshold);
+		nbt.setDouble("islandMaxHeight", islandMaxHeight);
+		nbt.setDouble("moistureMultiplier", moistureMultiplier);
 	}
 }
