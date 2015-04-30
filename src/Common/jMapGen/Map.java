@@ -983,8 +983,8 @@ public class Map
 		Vector<Canyon> canyons = new Vector<Canyon>();
 		Canyon canyon = null;
 
-		Vector<Center> highCenters = this.getCentersAboveElevation(0.4);
-		for (int i = 0; i < highCenters.size()*0.5; i++) 
+		Vector<Center> highCenters = this.getCentersAboveElevation(0.5);
+		for (int i = 0; i < 100; i++) 
 		{
 			boolean flag = true;
 			Center c = highCenters.get(mapRandom.nextInt(highCenters.size()-1));
@@ -1235,6 +1235,9 @@ public class Map
 
 					//If one of the neighbors is also a river then we want to join it
 					if(n.getRiver() > 0)
+						return new RiverNode(n);
+
+					if(curNode.center.elevation - n.elevation > 0.06)
 						return new RiverNode(n);
 
 					//If the elevation is <= our current cell elevation then we allow this cell to be selected
