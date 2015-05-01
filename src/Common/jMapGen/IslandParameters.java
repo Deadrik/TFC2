@@ -28,8 +28,8 @@ public class IslandParameters
 	 * 0x1 = Canyons
 	 * 0x2 = Volcano
 	 * 0x4 = Cliffs
-	 * 0x8
-	 * 0x16
+	 * 0x8 = Sharper Mountains
+	 * 0x16 = Even Sharper Mountains
 	 * 0x32
 	 * 0x64
 	 * 0x128
@@ -116,6 +116,16 @@ public class IslandParameters
 	public boolean shouldGenCliffs()
 	{
 		return (features & 4) > 0;
+	}
+
+	public boolean shouldGenSharperMountians()
+	{
+		return (features & 8) > 0;
+	}
+
+	public boolean shouldGenEvenSharperMountians()
+	{
+		return (features & 16) > 0;
 	}
 
 	public void setCoords(int x, int z) 

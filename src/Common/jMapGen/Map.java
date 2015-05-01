@@ -198,6 +198,8 @@ public class Map
 						center.elevation -= mapRandom.nextDouble() * (center.elevation - lowest.elevation);
 					else
 						center.elevation += mapRandom.nextDouble() * (center.elevation - highest.elevation);
+
+					center.elevation = Math.min(Math.max(0, center.elevation), 1.0);
 				}
 			}
 		}
@@ -727,7 +729,8 @@ public class Map
 	// elevations. Specifically, we want elevation X to have frequency
 	// (1-X).  To do this we will sort the corners, then set each
 	// corner to its desired elevation.
-	public void redistributeElevations(Vector<Corner> locations) {
+	public void redistributeElevations(Vector<Corner> locations) 
+	{
 		// SCALE_FACTOR increases the mountain area. At 1.0 the maximum
 		// elevation barely shows up on the map, so we set it to 1.1.
 		double SCALE_FACTOR = 1.0;
@@ -735,26 +738,41 @@ public class Map
 		Collections.sort(locations, new CornerElevationSorter());
 		int locationsSize = locations.size();
 		Corner c;
-		for (int i = 0; i < locationsSize; i++) {
-			c = locations.get(i);
-			// Let y(x) be the total area that we want at elevation <= x.
-			// We want the higher elevations to occur less than lower
-			// ones, and set the area to be y(x) = 1 - (1-x)^2.
-			double y = (double)i/(double)(locationsSize-1);
-			// Now we have to solve for x, given the known y.
-			//  *  y = 1 - (1-x)^2
-			//  *  y = 1 - (1 - 2x + x^2)
-			//  *  y = 2x - x^2
-			//  *  x^2 - 2x + y = 0
-			// From this we can use the quadratic equation to get:
-			double sqrtScale = Math.sqrt(SCALE_FACTOR);
-			double scale1Y = SCALE_FACTOR*(1-y);
-			double sqrtscale1Y = Math.sqrt(scale1Y);
 
-			double x = sqrtScale - sqrtscale1Y;
-			if (x > 1.0) x = 1.0;  // TODO: does this break downslopes?
+		for (int i = 0; i < locationsSize; i++) 
+		{
+			c = locations.get(i);
+			double y = (double)i/(double)(locationsSize-1);
+			double x = y;
+			if(this.islandParams.shouldGenSharperMountians() && y >= 0.05)
+			{
+				x = Math.pow(y, 2);	
+			}
+			else if(this.islandParams.shouldGenEvenSharperMountians() && y >= 0.05)
+			{
+				x = Math.pow(y, 3);
+			}
+			else
+			{
+				// Now we have to solve for x, given the known y.
+				//  *  y = 1 - (1-x)^2
+				//  *  y = 1 - (1 - 2x + x^2)
+				//  *  y = 2x - x^2
+				//  *  x^2 - 2x + y = 0
+				// From this we can use the quadratic equation to get:
+				double sqrtScale = Math.sqrt(SCALE_FACTOR);
+				double scale1Y = SCALE_FACTOR*(1-y);
+				double sqrtscale1Y = Math.sqrt(scale1Y);
+
+				x = sqrtScale - sqrtscale1Y;
+			}
+
+			if (x > 1.0) 
+				x = 1.0;
 
 			c.elevation = x;
+			if(!c.isWater() && !c.isShoreline())
+				c.elevation +=0.01;
 		}
 	}
 
@@ -1099,6 +1117,9 @@ public class Map
 		for (int i = 0; i < SIZE/6; i++) 
 		{
 			c = centers.get(mapRandom.nextInt(centers.size()-1));
+			if(c.elevation < 0.2)
+				continue;
+
 			if(this.islandParams.shouldGenCanyons() && c.isCanyon())
 				possibleStarts.add(c);
 			else if(!this.islandParams.shouldGenCanyons())
