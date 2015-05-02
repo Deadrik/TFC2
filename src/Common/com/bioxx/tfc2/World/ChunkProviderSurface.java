@@ -168,6 +168,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 					if(closestCenter.biome == BiomeType.LAKE && !isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 4)-1)
 					{
+						/*if(this.islandMap.islandParams.shouldGenVolcano())
+							chunkprimer.setBlockState(x, y, z, Blocks.lava.getDefaultState());
+						else*/
 						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 					}
 					else if(closestCenter.biome == BiomeType.MARSH && !isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
@@ -289,6 +292,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		IBlockState[] bankStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.gravel.getDefaultState()};
 		IBlockState[] riverStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.flowing_water.getDefaultState(), Blocks.gravel.getDefaultState()};
 
+		/*if(this.islandMap.islandParams.shouldGenVolcano())
+			riverStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.flowing_lava.getDefaultState(), Blocks.gravel.getDefaultState()};*/
+
 		for(Center c : centersInChunk)
 		{
 			riverDepth = 0;
@@ -399,7 +405,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						IBlockState bs = chunkprimer.getBlockState(xC, yC+y, zC);
 						//We dont want to replace any existing water blocks
-						if(bs != Blocks.water.getDefaultState() && bs != Blocks.flowing_water.getDefaultState())
+						if(bs != Blocks.water.getDefaultState() && bs != Blocks.flowing_water.getDefaultState() && bs != Blocks.flowing_lava.getDefaultState())
 						{
 							bs = fillBlocks[i];
 							//This converts 60% of the river water into stationary blocks so that we cut down on the number of required updates.

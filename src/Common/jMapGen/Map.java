@@ -119,6 +119,8 @@ public class Map
 		// Determine downslope paths.
 		calculateDownslopesCenter();
 
+		createVolcano(getCentersAboveElevation(0.8));
+
 		createCanyons();
 
 		// Determine downslope paths.
@@ -138,6 +140,31 @@ public class Map
 
 		sortClockwise();
 		setupBiomeInfo();
+	}
+
+	private void createVolcano(Vector<Center> candidates)
+	{
+		if(!this.islandParams.shouldGenVolcano())
+			return;
+		Center mid = candidates.get(mapRandom.nextInt(candidates.size()));
+		System.out.println("Volcano: X" + mid.point.x + " Z"+ mid.point.y);
+		Vector<Center> caldera = new Vector<Center>();
+		caldera.add(mid);
+		caldera.addAll(mid.neighbors);
+		double lowestElev = 1.0;
+		for(Center c : caldera)
+		{
+			c.setRiver(0);
+			c.setWater(false);
+			c.setLava(true);
+			if(c.elevation < lowestElev)
+				lowestElev = c.elevation;
+		}
+
+		for(Center c : caldera)
+		{
+			c.elevation = lowestElev * 0.85;
+		}
 	}
 
 	/**
@@ -163,7 +190,7 @@ public class Map
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(!center2.isCanyon() && !center2.isCoast() && center2.getRiver() == 0 && !center2.isWater())
+					if(!center2.isLava() && !center2.isCanyon() && !center2.isCoast() && center2.getRiver() == 0 && !center2.isWater())
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
 					}
@@ -189,7 +216,7 @@ public class Map
 					if(center2.isWater())
 						nearWater  = true;
 				}
-				if(!nearWater && this.mapRandom.nextInt(100) < 50 && center.getRiver() < 3)
+				if(!center.isLava() && !nearWater && this.mapRandom.nextInt(100) < 50 && center.getRiver() < 1.5)
 				{
 					Center lowest = getLowestNeighbor(center);
 					Center highest = getHighestNeighbor(center);
@@ -403,10 +430,12 @@ public class Map
 		return points;
 	}
 
-	// Create an array of corners that are on land only, for use by
-	// algorithms that work only on land.  We return an array instead
-	// of a vector because the redistribution algorithms want to sort
-	// this array using Array.sortOn.
+	/** 
+	 * Create an array of corners that are on land only, for use by
+	 * algorithms that work only on land.  We return an array instead
+	 * of a vector because the redistribution algorithms want to sort
+	 * this array using Array.sortOn.
+	 */
 	public Vector<Corner> landCorners(Vector<Corner> corners) {
 		Corner q; 
 		Vector<Corner> locations = new Vector<Corner>();
@@ -443,6 +472,7 @@ public class Map
 		return locations;
 	}
 
+	/**
 	// Build graph data structure in 'edges', 'centers', 'corners',
 	// based on information in the Voronoi results: point.neighbors
 	// will be a list of neighboring points of the same type (corner
@@ -451,6 +481,7 @@ public class Map
 	// edge.{v0,v1} and its dual Delaunay triangle edge edge.{d0,d1}.
 	// For boundary polygons, the Delaunay edge will have one null
 	// point, and the Voronoi edge may be null.
+	 */
 	public void buildGraph(Vector<Point> points, Voronoi voronoi) 
 	{
 		Center p; 
@@ -1341,7 +1372,8 @@ public class Map
 	// on low/high elevation and low/medium/high moisture. This is
 	// roughly based on the Whittaker diagram but adapted to fit the
 	// needs of the island map generator.
-	static public BiomeType getBiome(Center p) {
+	public BiomeType getBiome(Center p) 
+	{
 		if (p.isOcean()) {
 			return BiomeType.OCEAN;
 		} else if (p.isWater()) {

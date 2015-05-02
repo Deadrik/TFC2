@@ -22,6 +22,7 @@ public class Center
 	 * 8 = coastwater
 	 * 16 = border
 	 * 32 = canyon
+	 * 64 = lava
 	 */
 	private int flags = 0;
 
@@ -143,6 +144,19 @@ public class Center
 			flags |= 32;
 		else if(isCanyon())
 			flags ^= 32;
+	}
+
+	public boolean isLava()
+	{
+		return (flags & 64) > 0;
+	}
+
+	public void setLava(boolean b)
+	{
+		if(b)
+			flags |= 64;
+		else if(isCanyon())
+			flags ^= 64;
 	}
 
 	public void addUpRiverCenter(Center c)
