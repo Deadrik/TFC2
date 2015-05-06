@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -77,6 +79,24 @@ public class WorldGen
 			saveMap(c);
 		}
 		islandCache = new HashMap<Integer, CachedIsland>();
+	}
+
+	public void trimCache()
+	{
+		long now = System.currentTimeMillis();
+		Set<Integer> keys = islandCache.keySet();
+
+		for(Iterator<Integer> iter = keys.iterator(); iter.hasNext();)
+		{
+			int key = iter.next();
+			CachedIsland c = islandCache.get(key);
+			if(now-c.lastAccess > 12000)//12 seconds of no access will trim the map
+			{
+				saveMap(c);
+				islandCache.remove(key);
+			}
+
+		}
 	}
 
 	public void saveMap(CachedIsland island)
