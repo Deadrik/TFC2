@@ -1,0 +1,8 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "particle": "tfc2:blocks/soil/Dirt Andesite"	
+        "down": "tfc2:blocks/soil/Dirt Andesite"
+		"up": "tfc2:blocks/GrassTop"
+    }
+}

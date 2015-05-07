@@ -14,8 +14,7 @@ public class ItemSoil extends ItemTerraBlock
 	public ItemSoil(Block b)
 	{
 		super(b);
-		MetaNames = new String[Global.STONE_ALL.length];
-		System.arraycopy(Global.STONE_ALL, 0, MetaNames, 0, Global.STONE_ALL.length);
+		MetaNames = Global.STONE_ALL;
 	}
 
 	@Override

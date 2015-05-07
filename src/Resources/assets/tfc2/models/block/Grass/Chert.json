@@ -1,0 +1,9 @@
+{
+    "parent": "tfc2:block/Grass/Base",
+    "textures": {
+    	"particle": "tfc2:blocks/soil/Dirt Chert",
+        "side": "tfc2:blocks/soil/Dirt Chert",
+        "top": "tfc2:blocks/GrassTop",
+        "overlay": "tfc2:blocks/GrassSide"
+    }
+}
