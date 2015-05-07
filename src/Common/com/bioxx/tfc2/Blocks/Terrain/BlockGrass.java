@@ -22,7 +22,7 @@ import com.bioxx.tfc2.Blocks.BlockTerra;
 
 public class BlockGrass extends BlockTerra
 {
-	static PropertyInteger META_PROPERTY = PropertyInteger.create("meta", 0, 20);
+	static PropertyInteger META_PROPERTY = PropertyInteger.create("meta", 0, 15);
 	public BlockGrass()
 	{
 		super(Material.ground, META_PROPERTY);

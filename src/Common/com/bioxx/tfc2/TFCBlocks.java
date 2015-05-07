@@ -31,8 +31,8 @@ public class TFCBlocks
 
 		for(String name : Global.STONE_ALL)
 		{
-			ModelBakery.addVariantName(Item.getItemFromBlock(Dirt), Reference.ModID + ":" + name);
-			ModelBakery.addVariantName(Item.getItemFromBlock(Grass), Reference.ModID + ":" + name);
+			ModelBakery.addVariantName(Item.getItemFromBlock(Dirt), Reference.ModID + ":Dirt/" + name);
+			ModelBakery.addVariantName(Item.getItemFromBlock(Grass), Reference.ModID + ":Grass/" + name);
 		}
 	}
 }

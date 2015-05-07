@@ -33,9 +33,9 @@ public class Global
 
 	/* Stone Types */
 	public static final String[] STONE_IGIN = {"Granite", "Diorite", "Gabbro"};
-	public static final String[] STONE_SED  = {"Shale", "Claystone", "Rock Salt", "Limestone", "Conglomerate", "Dolomite", "Chert", "Chalk"};
+	public static final String[] STONE_SED  = {"Shale", "Claystone", "Limestone", "Dolomite", "Chert"};
 	public static final String[] STONE_IGEX = {"Rhyolite", "Basalt", "Andesite", "Dacite"};
-	public static final String[] STONE_MM   = {"Quartzite", "Slate", "Phyllite", "Schist", "Gneiss", "Marble"};
+	public static final String[] STONE_MM   = {"Blueschist", "Schist", "Gneiss", "Marble"};
 
 	// Used for loose rocks and other places where the stone list is combined
 	public static final int STONE_IGIN_START = 0;

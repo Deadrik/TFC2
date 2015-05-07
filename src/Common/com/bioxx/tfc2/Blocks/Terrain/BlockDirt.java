@@ -15,7 +15,7 @@ import com.bioxx.tfc2.Blocks.BlockTerra;
 
 public class BlockDirt extends BlockTerra
 {
-	static PropertyInteger META_PROPERTY = PropertyInteger.create("meta", 0, 20);
+	static PropertyInteger META_PROPERTY = PropertyInteger.create("meta", 0, 15);
 
 	public BlockDirt()
 	{

@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "tfc2:blocks/soil/Dirt Phyllite"
+        "all": "tfc2:blocks/soil/Dirt Blueschist"
     }
 }
