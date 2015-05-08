@@ -1,8 +1,6 @@
 package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
@@ -28,11 +26,5 @@ public class TFCBlocks
 
 		GameRegistry.registerBlock(Dirt, ItemSoil.class, "Dirt");
 		GameRegistry.registerBlock(Grass, ItemSoil.class, "Grass");
-
-		for(String name : Global.STONE_ALL)
-		{
-			ModelBakery.addVariantName(Item.getItemFromBlock(Dirt), Reference.ModID + ":Dirt/" + name);
-			ModelBakery.addVariantName(Item.getItemFromBlock(Grass), Reference.ModID + ":Grass/" + name);
-		}
 	}
 }

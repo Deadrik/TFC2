@@ -1,6 +1,0 @@
-{
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "tfc2:blocks/soil/Dirt Limestone"
-    }
-}

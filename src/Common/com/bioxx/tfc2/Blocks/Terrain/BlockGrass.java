@@ -2,8 +2,10 @@ package com.bioxx.tfc2.Blocks.Terrain;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -18,22 +20,33 @@ import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.Blocks.BlockTerra;
 
 public class BlockGrass extends BlockTerra
 {
-	static PropertyInteger META_PROPERTY = PropertyInteger.create("meta", 0, 15);
+	public static final PropertyInteger META_PROPERTY = PropertyInteger.create("meta", 0, 15);
+	/** Whether this fence connects in the northern direction */
+	public static final PropertyBool NORTH = PropertyBool.create("north");
+	/** Whether this fence connects in the eastern direction */
+	public static final PropertyBool EAST = PropertyBool.create("east");
+	/** Whether this fence connects in the southern direction */
+	public static final PropertyBool SOUTH = PropertyBool.create("south");
+	/** Whether this fence connects in the western direction */
+	public static final PropertyBool WEST = PropertyBool.create("west");
+
 	public BlockGrass()
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setTickRandomly(true);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, 0).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
 	}
 
 	@Override
 	protected BlockState createBlockState()
 	{
-		return new BlockState(this, new IProperty[] { META_PROPERTY });
+		return new BlockState(this, new IProperty[] { META_PROPERTY, NORTH, SOUTH, EAST, WEST });
 	}
 
 	@Override
@@ -46,6 +59,16 @@ public class BlockGrass extends BlockTerra
 	public int tickRate(World worldIn)
 	{
 		return 3;
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		Block block = world.getBlockState(pos.offsetUp()).getBlock();
+		return state.withProperty(NORTH, world.getBlockState(pos.offsetNorth().offsetDown()).getBlock() == TFCBlocks.Grass).withProperty(
+				SOUTH, world.getBlockState(pos.offsetSouth().offsetDown()).getBlock() == TFCBlocks.Grass).withProperty(
+						EAST, world.getBlockState(pos.offsetEast().offsetDown()).getBlock() == TFCBlocks.Grass).withProperty(
+								WEST, world.getBlockState(pos.offsetWest().offsetDown()).getBlock() == TFCBlocks.Grass);
 	}
 
 	@Override

@@ -1,9 +1,0 @@
-{
-    "parent": "tfc2:block/Grass/Base",
-    "textures": {
-    	"particle": "tfc2:blocks/soil/Dirt Andesite",
-        "side": "tfc2:blocks/GrassSide",
-        "top": "tfc2:blocks/GrassTop",
-        "overlay": "tfc2:blocks/GrassTop"
-    }
-}

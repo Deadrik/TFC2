@@ -1,0 +1,8 @@
+{
+    "parent": "tfc2:block/Grass/Base",
+    "textures": {
+        "soil": "tfc2:blocks/soil/Dirt Blueschist",
+        "overlaypartial": "tfc2:blocks/GrassSide",
+        "top": "tfc2:blocks/GrassTop"
+    }
+}
