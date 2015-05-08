@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,14 +14,17 @@ import net.minecraft.item.ItemStack;
 
 public abstract class BlockTerra extends Block
 {
-	public final PropertyInteger META_PROP;
+	/**
+	 * This is the internal Property for metadata
+	 */
+	private final PropertyHelper META_PROP;
 
 	protected BlockTerra()
 	{
 		this(Material.rock, null);
 	}
 
-	protected BlockTerra(Material material, PropertyInteger meta)
+	protected BlockTerra(Material material, PropertyHelper meta)
 	{
 		super(material);
 		this.META_PROP = meta;
