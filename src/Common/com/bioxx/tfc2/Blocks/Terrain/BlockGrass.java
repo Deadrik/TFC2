@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,10 +22,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.Blocks.BlockTerra;
+import com.bioxx.tfc2.Blocks.Terrain.BlockStone.StoneType;
 
 public class BlockGrass extends BlockTerra
 {
-	public static final PropertyInteger META_PROPERTY = PropertyInteger.create("meta", 0, 15);
+	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 	/** Whether this fence connects in the northern direction */
 	public static final PropertyBool NORTH = PropertyBool.create("north");
 	/** Whether this fence connects in the eastern direction */
@@ -40,7 +41,7 @@ public class BlockGrass extends BlockTerra
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setTickRandomly(true);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, 0).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
 	}
 
 	@Override
@@ -69,6 +70,18 @@ public class BlockGrass extends BlockTerra
 				SOUTH, world.getBlockState(pos.offsetSouth().offsetDown()).getBlock() == TFCBlocks.Grass).withProperty(
 						EAST, world.getBlockState(pos.offsetEast().offsetDown()).getBlock() == TFCBlocks.Grass).withProperty(
 								WEST, world.getBlockState(pos.offsetWest().offsetDown()).getBlock() == TFCBlocks.Grass);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(META_PROPERTY, StoneType.getStoneTypeFromMeta(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
 	}
 
 	@Override

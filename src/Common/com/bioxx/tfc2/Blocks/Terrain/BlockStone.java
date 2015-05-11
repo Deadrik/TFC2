@@ -1,16 +1,11 @@
 package com.bioxx.tfc2.Blocks.Terrain;
 
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 
 import com.bioxx.tfc2.Blocks.BlockTerra;
@@ -26,30 +21,9 @@ public class BlockStone extends BlockTerra
 	}
 
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list)
-	{
-		for(int l = 0; l < META_PROPERTY.getAllowedValues().size(); l++)
-			list.add(new ItemStack(itemIn, 1, l));
-	}
-
-	@Override
 	protected BlockState createBlockState()
 	{
-		return new BlockState(this, new IProperty[] { META_PROPERTY });
-	}
-
-	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune)
-	{
-		return Item.getItemFromBlock(this);
-	}
-
-	@Override
-	public int damageDropped(IBlockState state)
-	{
-		if (META_PROPERTY != null)
-			return getMetaFromState(state);
-		return super.damageDropped(state);
+		return new BlockState(this, new IProperty[]{META_PROPERTY});
 	}
 
 	@Override

@@ -10,11 +10,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import com.bioxx.tfc2.Blocks.BlockTerra;
 import com.bioxx.tfc2.Blocks.Terrain.BlockStone.StoneType;
 
-public class BlockDirt extends BlockTerra
+public class BlockGravel extends BlockTerra
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
-	public BlockDirt()
+	public BlockGravel()
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
@@ -23,7 +23,7 @@ public class BlockDirt extends BlockTerra
 	@Override
 	protected BlockState createBlockState()
 	{
-		return new BlockState(this, new IProperty[] { META_PROPERTY });
+		return new BlockState(this, new IProperty[]{META_PROPERTY});
 	}
 
 	@Override
@@ -37,6 +37,4 @@ public class BlockDirt extends BlockTerra
 	{
 		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
 	}
-
-
 }
