@@ -22,6 +22,10 @@ import com.bioxx.tfc2.Handlers.ServerTickHandler;
 import com.bioxx.tfc2.Handlers.WorldLoadHandler;
 import com.bioxx.tfc2.Networking.PacketPipeline;
 import com.bioxx.tfc2.World.WorldProviderSurface;
+import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.Trees.TreeConfiguration;
+import com.bioxx.tfc2.api.Trees.TreeRegistry;
+import com.bioxx.tfc2.api.Trees.TreeSchematic;
 
 @Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, dependencies = Reference.ModDependencies)
 public class TFC

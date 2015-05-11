@@ -8,7 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 
 import com.bioxx.tfc2.Blocks.BlockTerra;
-import com.bioxx.tfc2.Blocks.Terrain.BlockStone.StoneType;
+import com.bioxx.tfc2.api.Types.StoneType;
 
 public class BlockGravel extends BlockTerra
 {

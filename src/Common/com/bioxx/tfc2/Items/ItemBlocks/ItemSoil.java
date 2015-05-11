@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
-import com.bioxx.tfc2.Global;
+import com.bioxx.tfc2.api.Global;
 
 public class ItemSoil extends ItemTerraBlock
 {

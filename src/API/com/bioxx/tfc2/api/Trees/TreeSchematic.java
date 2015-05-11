@@ -1,4 +1,4 @@
-package com.bioxx.tfc2;
+package com.bioxx.tfc2.api.Trees;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

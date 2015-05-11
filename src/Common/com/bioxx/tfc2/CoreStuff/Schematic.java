@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.bioxx.tfc2.TFC;
-import com.bioxx.tfc2.Interfaces.ISchematic;
+import com.bioxx.tfc2.api.Interfaces.ISchematic;
 
 public class Schematic implements ISchematic
 {

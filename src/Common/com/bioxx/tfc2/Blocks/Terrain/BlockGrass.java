@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.Blocks.BlockTerra;
-import com.bioxx.tfc2.Blocks.Terrain.BlockStone.StoneType;
+import com.bioxx.tfc2.api.Types.StoneType;
 
 public class BlockGrass extends BlockTerra
 {

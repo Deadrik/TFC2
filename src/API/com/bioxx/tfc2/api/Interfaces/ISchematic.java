@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Interfaces;
+package com.bioxx.tfc2.api.Interfaces;
 
 import net.minecraft.nbt.NBTTagList;
 

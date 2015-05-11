@@ -1,4 +1,4 @@
-package com.bioxx.tfc2;
+package com.bioxx.tfc2.api.Trees;
 
 import java.util.HashMap;
 import java.util.Random;

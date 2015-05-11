@@ -11,9 +11,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
-import com.bioxx.tfc2.TreeRegistry;
 import com.bioxx.tfc2.CoreStuff.Schematic;
 import com.bioxx.tfc2.World.ChunkManager;
+import com.bioxx.tfc2.api.Trees.TreeRegistry;
 
 public class WorldGenTreeTest implements IWorldGenerator
 {

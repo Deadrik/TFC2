@@ -1,5 +1,7 @@
 package com.bioxx.tfc2;
 
+import com.bioxx.tfc2.api.Global;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
