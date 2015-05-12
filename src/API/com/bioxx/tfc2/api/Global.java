@@ -67,11 +67,11 @@ public class Global
 	};
 	public static final String[] ORE_MINERAL2 = {"Borax", "Olivine", "Lapis Lazuli"};
 
-	public static final String[] WOOD_ALL = {
-		"Oak","Aspen","Birch","Chestnut",
-		"Douglas Fir","Hickory","Maple","Ash",
+	public static final String[] WOOD_STANDARD = {
+		"Ash","Aspen","Birch","Chestnut",
+		"Douglas Fir","Hickory","Maple","Oak",
 		"Pine","Sequoia","Spruce","Sycamore",
-		"White Cedar","White Elm","Willow","Kapok","Acacia"
+		"White Cedar","White Elm","Willow"
 	};
 
 	public static final String SKILL_GENERAL_SMITHING = "skill.gensmith";

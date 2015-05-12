@@ -1,12 +1,12 @@
 package com.bioxx.tfc2;
 
-import com.bioxx.tfc2.api.Global;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
+
+import com.bioxx.tfc2.api.Global;
 
 public class ClientProxy extends CommonProxy
 {
@@ -29,6 +29,13 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + Global.STONE_ALL[l]);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + Global.STONE_ALL[l]);
 		}
+		for(int l = 0; l < Global.WOOD_STANDARD.length; l++)
+		{
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Planks), l, new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + Global.WOOD_STANDARD[l], "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks), Reference.ModID + ":Wood/Planks/" + Global.WOOD_STANDARD[l]);
+
+		}
+
 	}
 
 	private void registerItemMesh(Item i, int meta, ModelResourceLocation mrl)

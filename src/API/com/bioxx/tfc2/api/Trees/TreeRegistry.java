@@ -7,7 +7,7 @@ import java.util.Vector;
 public class TreeRegistry
 {
 	public static TreeRegistry instance = new TreeRegistry();
-	private HashMap<String, TreeConfiguration> treeTypeHash = new HashMap<String, TreeConfiguration>();
+	private HashMap<String, TreeConfig> treeTypeHash = new HashMap<String, TreeConfig>();
 	private Vector<TreeSchemManager> treeList;
 
 	public TreeRegistry()
@@ -58,7 +58,7 @@ public class TreeRegistry
 		return treeList.get(treeID).getSchematic(schemID, growthStage);
 	}
 
-	public void addWoodType(TreeConfiguration configuration)
+	public void addWoodType(TreeConfig configuration)
 	{
 		if(!treeTypeHash.containsKey(configuration.name))
 		{
@@ -80,7 +80,7 @@ public class TreeRegistry
 	public int indexFromString(String n)
 	{
 		if(treeTypeHash.containsKey(n))
-			return ((TreeConfiguration) treeTypeHash.get(n)).index;
+			return ((TreeConfig) treeTypeHash.get(n)).index;
 		return -1;
 	}
 
@@ -88,28 +88,28 @@ public class TreeRegistry
 	 * @param n Name of the Tree type. Used as the Key in the hash map for lookups.
 	 * @return Full TreeConfiguration file
 	 */
-	public TreeConfiguration treeFromString(String n)
+	public TreeConfig treeFromString(String n)
 	{
 		if(treeTypeHash.containsKey(n))
-			return ((TreeConfiguration) treeTypeHash.get(n));
+			return ((TreeConfig) treeTypeHash.get(n));
 		return null;
 	}
 	/**
 	 * @param id The tree type ID.
 	 * @return Full TreeConfiguration file
 	 */
-	public TreeConfiguration treeFromID(int id)
+	public TreeConfig treeFromID(int id)
 	{
 		for(;treeTypeHash.values().iterator().hasNext();)
 		{
-			TreeConfiguration config = (TreeConfiguration)treeTypeHash.values().iterator().next();
+			TreeConfig config = (TreeConfig)treeTypeHash.values().iterator().next();
 			if(config.index == id)
 				return config;
 		}
 		return null;
 	}
 
-	public TreeConfiguration getRandomTree()
+	public TreeConfig getRandomTree()
 	{
 		int id = new Random().nextInt(treeTypeHash.values().toArray().length);
 		return treeFromID(id);

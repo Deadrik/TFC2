@@ -9,11 +9,11 @@ import net.minecraft.creativetab.CreativeTabs;
 
 import com.bioxx.tfc2.api.Types.WoodType;
 
-public class BlockRubble extends BlockTerra
+public class BlockPlanks extends BlockTerra
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", WoodType.class);
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class);
 
-	public BlockRubble()
+	public BlockPlanks()
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);

@@ -3,12 +3,14 @@ package com.bioxx.tfc2;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import com.bioxx.tfc2.Blocks.BlockPlanks;
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGravel;
 import com.bioxx.tfc2.Blocks.Terrain.BlockRubble;
 import com.bioxx.tfc2.Blocks.Terrain.BlockSand;
 import com.bioxx.tfc2.Blocks.Terrain.BlockStone;
+import com.bioxx.tfc2.Items.ItemBlocks.ItemPlanks;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemSoil;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemStone;
 
@@ -20,6 +22,7 @@ public class TFCBlocks
 	public static Block Rubble;
 	public static Block Sand;
 	public static Block Gravel;
+	public static Block Planks;
 
 	public static void LoadBlocks()
 	{
@@ -31,6 +34,7 @@ public class TFCBlocks
 		Rubble = new BlockRubble().setHardness(10F).setStepSound(Block.soundTypeStone).setUnlocalizedName("rubble");
 		Sand = new BlockSand().setHardness(1F).setStepSound(Block.soundTypeSand).setUnlocalizedName("sand");
 		Gravel = new BlockGravel().setHardness(1F).setStepSound(Block.soundTypeGravel).setUnlocalizedName("gravel");
+		Planks = new BlockPlanks().setHardness(4F).setStepSound(Block.soundTypeWood).setUnlocalizedName("planks");
 	}
 
 	public static void RegisterBlocks()
@@ -43,5 +47,6 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Rubble, ItemStone.class, "Rubble");
 		GameRegistry.registerBlock(Sand, ItemStone.class, "Sand");
 		GameRegistry.registerBlock(Gravel, ItemStone.class, "Gravel");
+		GameRegistry.registerBlock(Planks, ItemPlanks.class, "Planks");
 	}
 }

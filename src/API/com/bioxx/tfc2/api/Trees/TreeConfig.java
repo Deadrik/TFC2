@@ -1,6 +1,6 @@
 package com.bioxx.tfc2.api.Trees;
 
-public class TreeConfiguration 
+public class TreeConfig 
 {
 	public String name;
 	/**
@@ -29,7 +29,7 @@ public class TreeConfiguration
 	public float maxEVT;
 	public boolean isEvergreen;
 
-	public TreeConfiguration(String n, int i, float minR, float maxR, float minT, float maxT, float minEVT, float maxEVT, boolean eg)
+	public TreeConfig(String n, int i, float minR, float maxR, float minT, float maxT, float minEVT, float maxEVT, boolean eg)
 	{
 		name = n;
 		index = i;
@@ -39,4 +39,6 @@ public class TreeConfiguration
 		maxTemp = maxT;
 		isEvergreen = eg;
 	}
+	
+	
 }
