@@ -32,7 +32,7 @@ public class IslandParameters
 	 * 0x128 = Large Crater
 	 */
 
-	private EnumSet<Feature> features = EnumSet.of(null);
+	private EnumSet<Feature> features = EnumSet.of(Feature.Default);
 
 	public IslandParameters() 
 	{
