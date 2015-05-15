@@ -122,7 +122,7 @@ public class IslandParameters
 
 	public boolean shouldGenCanyons()
 	{
-		return features.contains(Feature.Canyons);
+		return features.contains(Feature.Gorges);
 		//return (features & 1) > 0;
 	}
 
@@ -163,6 +163,6 @@ public class IslandParameters
 	public enum Feature
 	{
 		//Important not to change this order if it can be helped.
-		Default, Canyons, Volcano, Cliffs, SharperMountains, EvenSharperMountains, Valleys, SmallCraters, LargeCrater;
+		Default, Gorges, Volcano, Cliffs, SharperMountains, EvenSharperMountains, Valleys, SmallCraters, LargeCrater;
 	}
 }

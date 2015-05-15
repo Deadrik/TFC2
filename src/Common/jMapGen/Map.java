@@ -124,7 +124,7 @@ public class Map
 
 		createValleys(getCentersAboveElevation(0.4));
 
-		createCanyons();
+		createGorges();
 
 		// Determine downslope paths.
 		calculateDownslopesCenter();
@@ -1120,7 +1120,7 @@ public class Map
 		return out;
 	}
 
-	private void createCanyons()
+	private void createGorges()
 	{
 		if(!this.islandParams.shouldGenCanyons())
 			return;
