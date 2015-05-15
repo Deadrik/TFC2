@@ -5,6 +5,8 @@ import jMapGen.IslandParameters.Feature;
 import jMapGen.Map;
 import jMapGen.Point;
 import jMapGen.Spline2D;
+import jMapGen.attributes.Attribute;
+import jMapGen.attributes.RiverAttribute;
 import jMapGen.graph.Center;
 
 import java.util.ArrayList;
@@ -299,54 +301,56 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		for(Center c : centersInChunk)
 		{
 			riverDepth = 0;
-			if(c.getRiver() > 0)
+			RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+			if(attrib != null && attrib.getRiver() > 0)
 			{
 				//If the river has multiple Up River locations then we need to handle the splines in two parts.
-				if(c.upriver != null && c.upriver.size() > 1)
+				if(attrib.upriver != null && attrib.upriver.size() > 1)
 				{
-					for(Center u : c.upriver)
+					for(Center u : attrib.upriver)
 					{
+						RiverAttribute uAttrib = ((RiverAttribute)u.getAttribute(Attribute.riverUUID));
 						riverDepth = 0;
 						riverPoints = new ArrayList<Point>();
 						riverPoints.add(c.getSharedEdge(u).midpoint);
 						riverPoints.add(c.point);
-						riverPoints.add(c.getSharedEdge(c.downriver).midpoint);
+						riverPoints.add(c.getSharedEdge(attrib.getDownRiver()).midpoint);
 						//if(!c.water)
 						{
-							processRiverSpline(chunkprimer, c, u, new Spline2D(riverPoints.toArray()), u.getRiver()+1, bankStates);
+							processRiverSpline(chunkprimer, c, u, new Spline2D(riverPoints.toArray()), uAttrib.getRiver()+1, bankStates);
 							riverDepth--;
 						}
 
-						processRiverSpline(chunkprimer, c, u, new Spline2D(riverPoints.toArray()), u.getRiver(), riverStates);
+						processRiverSpline(chunkprimer, c, u, new Spline2D(riverPoints.toArray()), uAttrib.getRiver(), riverStates);
 					}
 				}
-				else if(c.upriver != null && c.upriver.size() == 1)
+				else if(attrib.upriver != null && attrib.upriver.size() == 1)
 				{
 					riverPoints = new ArrayList<Point>();
-					Point upPoint = c.getSharedEdge(c.upriver.get(0)).midpoint;
-					Point downPoint = c.getSharedEdge(c.downriver).midpoint;
+					Point upPoint = c.getSharedEdge(attrib.upriver.get(0)).midpoint;
+					Point downPoint = c.getSharedEdge(attrib.getDownRiver()).midpoint;
 					riverPoints.add(upPoint);
 					riverPoints.add(c.point);
 					riverPoints.add(downPoint);
 					//if(c.river > 0 && !c.water)
 					{
-						processRiverSpline(chunkprimer, c, c.upriver.get(0), new Spline2D(riverPoints.toArray()), c.getRiver()+1, bankStates);
+						processRiverSpline(chunkprimer, c, attrib.upriver.get(0), new Spline2D(riverPoints.toArray()), attrib.getRiver()+1, bankStates);
 						riverDepth--;
 
 					}
-					processRiverSpline(chunkprimer, c, c.upriver.get(0), new Spline2D(riverPoints.toArray()), c.getRiver(), riverStates);
+					processRiverSpline(chunkprimer, c, attrib.upriver.get(0), new Spline2D(riverPoints.toArray()), attrib.getRiver(), riverStates);
 				}
 				else
 				{
 					riverPoints = new ArrayList<Point>();
 					riverPoints.add(c.point);
-					riverPoints.add(c.getSharedEdge(c.downriver).midpoint);
+					riverPoints.add(c.getSharedEdge(attrib.getDownRiver()).midpoint);
 					//if(c.river > 0 && !c.water)
 					{
-						processRiverSpline(chunkprimer, c, null, new Spline2D(riverPoints.toArray()), c.getRiver()+1, bankStates);
+						processRiverSpline(chunkprimer, c, null, new Spline2D(riverPoints.toArray()), attrib.getRiver()+1, bankStates);
 						riverDepth--;
 					}
-					processRiverSpline(chunkprimer, c, null, new Spline2D(riverPoints.toArray()), c.getRiver(), riverStates);
+					processRiverSpline(chunkprimer, c, null, new Spline2D(riverPoints.toArray()), attrib.getRiver(), riverStates);
 				}
 
 			}
@@ -360,6 +364,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		int waterLevel = SEA_LEVEL;
 		//if(c.water)
 		waterLevel = convertElevation(c.elevation);
+
+		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+
 		//This loop moves in increments of X% and attempts to carve the river at each point
 		for(double m = 0; m < 1; m+= 0.03)
 		{
@@ -390,7 +397,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						continue;
 
 					//This makes sure that when we're carving a lake border, we dont carve below the water level
-					if(c.downriver != null && c.downriver.isWater() && yC == convertElevation(c.downriver.elevation))
+					if(attrib.getDownRiver() != null && attrib.getDownRiver().isWater() && yC == convertElevation(attrib.getDownRiver().elevation))
 						yC++;
 
 					if(yC > waterLevel && m > 0.5)

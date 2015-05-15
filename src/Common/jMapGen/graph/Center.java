@@ -3,10 +3,15 @@ package jMapGen.graph;
 import jMapGen.BiomeType;
 import jMapGen.Map;
 import jMapGen.Point;
+import jMapGen.attributes.Attribute;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.UUID;
 import java.util.Vector;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 
 public class Center 
@@ -31,14 +36,13 @@ public class Center
 	public double elevation = 0; // 0.0-1.0
 	public double moisture = 0; // 0.0-1.0
 
-	private double river = 0;
-	public Vector<Center> upriver; // pointer to adjacent corner most uphill
-	public Center downriver; // pointer to the downriver hex if this hex is a river
 	public Center downslope; // pointer to adjacent center most downhill
 
 	public Vector<Center> neighbors;
 	public Vector<Edge> borders;
 	public Vector<Corner> corners;
+
+	public HashMap<UUID, Attribute> attribMap;
 
 	public Center()
 	{
@@ -46,6 +50,7 @@ public class Center
 		neighbors = new  Vector<Center>();
 		borders = new Vector<Edge>();
 		corners = new Vector<Corner>();
+		attribMap = new HashMap<UUID, Attribute>();
 	}
 
 	public Center(int i)
@@ -54,19 +59,18 @@ public class Center
 		index = i;
 	}
 
-	public void addRiver(double d)
+	public Attribute getAttribute(UUID id)
 	{
-		river = Math.min(river + d, 4.0);
+		return attribMap.get(id);
 	}
 
-	public void setRiver(double d)
+	public boolean addAttribute(Attribute a)
 	{
-		river = Math.min(d, 4.0);
-	}
+		if(attribMap.containsKey(a.id))
+			return false;
 
-	public double getRiver()
-	{
-		return river;
+		attribMap.put(a.id, a);
+		return true;
 	}
 
 	public boolean isWater()
@@ -173,14 +177,6 @@ public class Center
 			flags ^= 128;
 	}
 
-	public void addUpRiverCenter(Center c)
-	{
-		if(upriver == null)
-			upriver = new Vector<Center>();
-		if(!upriver.contains(c))
-			upriver.add(c);
-	}
-
 	public Center getClosestNeighbor(Point p)
 	{
 		double angle = (Math.atan2((p.y - point.y) , (p.x - point.x)) * 180 / Math.PI) - 30;
@@ -282,9 +278,6 @@ public class Center
 		nbt.setInteger("flags", flags);
 		nbt.setDouble("elevation", elevation);
 		nbt.setDouble("moisture", moisture);
-		nbt.setDouble("river", river);
-		if(downriver != null)
-			nbt.setInteger("downriver", downriver.index);
 		if(downslope != null)
 			nbt.setInteger("downslope", downslope.index);
 
@@ -309,15 +302,17 @@ public class Center
 		}
 		nbt.setIntArray("borders", nArray);
 
-		if(upriver != null && upriver.size() > 0)
+		Iterator<Attribute> iter = attribMap.values().iterator();
+		NBTTagList attribList = new NBTTagList();
+		while(iter.hasNext())
 		{
-			nArray = new int[upriver.size()];
-			for(int i = 0; i < nArray.length; i++)
-			{
-				nArray[i] = upriver.get(i).index;
-			}
-			nbt.setIntArray("upriver", nArray);
+			Attribute a = iter.next();
+			NBTTagCompound attribNBT = new NBTTagCompound();
+			attribNBT.setString("class", a.getClass().getName());
+			a.writeToNBT(attribNBT);
+			attribList.appendTag(attribNBT);
 		}
+		nbt.setTag("attribMap", attribList);
 	}
 
 	public void readFromNBT(NBTTagCompound nbt, Map m)
@@ -329,9 +324,7 @@ public class Center
 			flags = nbt.getInteger("flags");
 			elevation = nbt.getDouble("elevation");
 			moisture = nbt.getDouble("moisture");
-			river = nbt.getDouble("river");
-			if(nbt.hasKey("downriver"))
-				downriver = m.centers.get(nbt.getInteger("downriver"));
+
 			if(nbt.hasKey("downslope"))
 				downslope = m.centers.get(nbt.getInteger("downslope"));
 			int[] nArray = nbt.getIntArray("neighbors");
@@ -349,13 +342,16 @@ public class Center
 			{
 				this.borders.add(m.edges.get(nArray[i]));
 			}
-			if(nbt.hasKey("upriver"))
+
+			if(nbt.hasKey("attribMap"))
 			{
-				nArray = nbt.getIntArray("upriver");
-				upriver = new Vector<Center>();
-				for(int i = 0; i < nArray.length; i++)
+				NBTTagList list = nbt.getTagList("attribMap", 10);
+				for(int i = 0; i < list.tagCount(); i++)
 				{
-					this.upriver.add(m.centers.get(nArray[i]));
+					NBTTagCompound aNBT = list.getCompoundTagAt(i);
+					Object o = Class.forName(aNBT.getString("class")).newInstance();
+					((Attribute)o).readFromNBT(aNBT, m);
+					this.attribMap.put(((Attribute)o).id, (Attribute)o);
 				}
 			}
 

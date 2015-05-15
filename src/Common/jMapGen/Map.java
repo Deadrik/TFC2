@@ -4,6 +4,8 @@
 package jMapGen;
 
 import jMapGen.IslandParameters.Feature;
+import jMapGen.attributes.Attribute;
+import jMapGen.attributes.RiverAttribute;
 import jMapGen.com.nodename.Delaunay.DelaunayUtil;
 import jMapGen.com.nodename.Delaunay.Voronoi;
 import jMapGen.com.nodename.geom.LineSegment;
@@ -157,7 +159,7 @@ public class Map
 		double lowestElev = 1.0;
 		for(Center c : caldera)
 		{
-			c.setRiver(0);
+			((RiverAttribute)c.getAttribute(Attribute.riverUUID)).setRiver(0);
 			c.setWater(false);
 			c.setLava(true);
 			if(c.elevation < lowestElev)
@@ -252,7 +254,7 @@ public class Map
 		{
 			Center center = (Center)centerIter.next();
 			//10% change of any hex being selected as long as it is not a water or canyon hex, and does not contain a river.
-			if(!center.isCanyon() && !center.isCoast() && this.mapRandom.nextInt(100) < 10 && !center.isWater() && center.getRiver() == 0)
+			if(!center.isCanyon() && !center.isCoast() && this.mapRandom.nextInt(100) < 10 && !center.isWater() && center.getAttribute(Attribute.riverUUID) == null)
 			{
 				Center highest = this.getHighestNeighbor(center);
 				highest = this.getHighestNeighbor(highest);
@@ -272,7 +274,7 @@ public class Map
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(!center2.isLava() && !center2.isCanyon() && !center2.isCoast() && center2.getRiver() == 0 && !center2.isWater())
+					if(!center2.isLava() && !center2.isCanyon() && !center2.isCoast() && center2.getAttribute(Attribute.riverUUID) == null && !center2.isWater())
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
 						if(center2.elevation <= 0)
@@ -291,7 +293,7 @@ public class Map
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.isCanyon() && !center.isCoast() && !center.isWater() && center.getRiver() == 0)
+			if(!center.isCanyon() && !center.isCoast() && !center.isWater() && center.getAttribute(Attribute.riverUUID) ==  null)
 			{
 				boolean nearWater = false;
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
@@ -300,7 +302,12 @@ public class Map
 					if(center2.isWater())
 						nearWater  = true;
 				}
-				if(!center.isLava() && !nearWater && this.mapRandom.nextInt(100) < 50 && center.getRiver() < 1.5)
+				if(center.getAttribute(Attribute.riverUUID) != null && ((RiverAttribute)center.getAttribute(Attribute.riverUUID)).getRiver() >= 1.5)
+				{
+					continue;
+				}
+
+				if(!center.isLava() && !nearWater && this.mapRandom.nextInt(100) < 50)
 				{
 					Center lowest = getLowestNeighbor(center);
 					Center highest = getHighestNeighbor(center);
@@ -327,9 +334,10 @@ public class Map
 			if(highest == null || center2.elevation > highest.elevation)
 				highest = center2;
 		}
-		if(c.upriver != null)
+		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+		if(attrib != null && attrib.upriver != null)
 		{
-			highest = getLowestFromGroup(c.upriver);
+			highest = getLowestFromGroup(attrib.upriver);
 		}
 		return highest;
 	}
@@ -343,8 +351,9 @@ public class Map
 			if(lowest == null || center2.elevation < lowest.elevation)
 				lowest = center2;
 		}
-		if(c.downriver != null)
-			lowest = c.downriver;
+		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+		if(attrib != null && attrib.getDownRiver() != null)
+			lowest = attrib.getDownRiver();
 		return lowest;
 	}
 
@@ -1270,8 +1279,8 @@ public class Map
 		for (int i = 0; i < possibleStarts.size(); i++) 
 		{
 			c = possibleStarts.get(i);
-
-			if (c.isOcean() || c.elevation > 0.85 || c.getRiver() > 0) continue;
+			RiverAttribute cAttrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+			if (c.isOcean() || c.elevation > 0.85 || (cAttrib != null && cAttrib.getRiver() > 0)) continue;
 
 			River r = new River();
 			RiverNode curNode = new RiverNode(c);
@@ -1288,6 +1297,8 @@ public class Map
 				curNode = nextNode;
 				//calculate the next rivernode
 				nextNode = getNextRiverNode(r, curNode);
+				RiverAttribute nextAttrib = ((RiverAttribute)nextNode.center.getAttribute(Attribute.riverUUID));
+
 				//set the downriver center for this node to the next center
 				curNode.setDownRiver(nextNode.center);
 				nextNode.setUpRiver(curNode.center);
@@ -1298,7 +1309,7 @@ public class Map
 					break;
 
 				//Keep track of the length of a river before it joins another river or reaches its end
-				if(nextNode.center.getRiver() == 0)
+				if(nextAttrib == null || nextAttrib.getRiver() == 0)
 					r.lengthToMerge++;
 				//set the current working center to our next node before starting over
 				c = nextNode.center;
@@ -1311,8 +1322,8 @@ public class Map
 				isValid = true;
 			if(r.lengthToMerge > 3 && r.nodes.lastElement().center.isWater())
 				isValid = true;
-
-			if(r.riverStart == null || r.riverStart.center.getRiver() != 0 || r.nodes.size() < 4)
+			RiverAttribute startAttrib = (RiverAttribute)r.riverStart.center.getAttribute(Attribute.riverUUID);
+			if(r.riverStart == null || (startAttrib != null && startAttrib.getRiver() != 0) || r.nodes.size() < 4)
 				isValid = false;
 
 			if(isValid)
@@ -1332,7 +1343,8 @@ public class Map
 					{
 						for(Center n :r.riverStart.center.neighbors)
 						{
-							if(n.getRiver() > 0)
+							if(n.getAttribute(Attribute.riverUUID) != null && 
+									((RiverAttribute)n.getAttribute(Attribute.riverUUID)).getRiver() > 0)
 							{
 								rivers.remove(rivers.size()-1);
 								cancelRiver = true;
@@ -1343,10 +1355,25 @@ public class Map
 					else
 					{
 						nextNode = r.nodes.get(j);
+						//Sanity
+						RiverAttribute riverAttrib = ((RiverAttribute)curNode.center.getAttribute(Attribute.riverUUID));
+						if(riverAttrib == null)
+						{
+							riverAttrib = new RiverAttribute(Attribute.riverUUID);
+							curNode.center.addAttribute(riverAttrib);
+						}
+						riverAttrib.addRiver(r.riverWidth);
+						riverAttrib.setDownRiver(nextNode.center);
 
-						curNode.center.addRiver(r.riverWidth);
-						curNode.center.downriver = nextNode.center;
-						nextNode.center.addUpRiverCenter(curNode.center);
+						//Sanity
+						RiverAttribute nextAttrib = ((RiverAttribute)nextNode.center.getAttribute(Attribute.riverUUID));
+						if(nextAttrib == null)
+						{
+							nextAttrib = new RiverAttribute(Attribute.riverUUID);
+							nextNode.center.addAttribute(nextAttrib);
+						}
+
+						nextAttrib.addUpRiverCenter(curNode.center);
 						curNode = nextNode;
 					}
 				}
@@ -1356,14 +1383,15 @@ public class Map
 
 	public RiverNode getNextRiverNode(River river, RiverNode curNode)
 	{
-		Center next = curNode.center.downriver;
+		RiverAttribute curAttrib = (RiverAttribute)curNode.center.getAttribute(Attribute.riverUUID);
+		Center next = (curAttrib!= null ? curAttrib.getDownRiver() : null);
 		if(next != null)
 			return new RiverNode(next);
 
 		Vector<Center> possibles = new Vector<Center>();
 
 		//The river will attempt to meander if we aren't propagating down an existing river
-		if(curNode.center.getRiver() == 0)
+		if(curAttrib == null || curAttrib.getRiver() == 0)
 		{
 			//Go through each neighbor and find all possible hexes at the same elevation or lower
 			for(Center n : curNode.center.neighbors)
@@ -1388,7 +1416,7 @@ public class Map
 					}
 
 					//If one of the neighbors is also a river then we want to join it
-					if(n.getRiver() > 0)
+					if(n.getAttribute(Attribute.riverUUID) != null && ((RiverAttribute)n.getAttribute(Attribute.riverUUID)).getRiver() > 0)
 						return new RiverNode(n);
 
 					if(curNode.center.elevation - n.elevation > 0.06)
@@ -1429,10 +1457,15 @@ public class Map
 		// Fresh water
 		for(Center cr : centers)
 		{
-			if ((cr.isWater() || cr.getRiver() > 0) && !cr.isOcean()) {
-				cr.moisture = cr.getRiver() > 0? Math.min(3.0, (0.1 * cr.getRiver())) : 1.0;
+			RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.riverUUID);
+			if ((cr.isWater() || (attrib != null && attrib.getRiver() > 0)) && !cr.isOcean()) 
+			{
+				double rivermult = attrib != null ? attrib.getRiver() : 0;
+				cr.moisture = (attrib != null && attrib.getRiver() > 0) ? Math.min(3.0, (0.1 * rivermult)) : 1.0;
 				queue.push(cr);
-			} else {
+			} 
+			else 
+			{
 				cr.moisture = 0.0;
 			}
 		}

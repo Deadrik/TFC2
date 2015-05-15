@@ -2,6 +2,8 @@ package com.bioxx.tfc2;
 
 import jMapGen.Map;
 import jMapGen.Point;
+import jMapGen.attributes.Attribute;
+import jMapGen.attributes.RiverAttribute;
 import jMapGen.graph.Center;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -24,6 +26,9 @@ public class RenderOverlayHandler
 		Center hex = map.getSelectedHexagon(new Point(mc.thePlayer.posX, mc.thePlayer.posZ));
 		event.left.add("Elevation: "+hex.elevation);
 		event.left.add("Biome: "+hex.biome.name() + " | Canyon: " + hex.isCanyon() + " | Lava: " + hex.isLava() + " | Valley: " + hex.isValley());
-		event.left.add("River: "+hex.getRiver()+" | "+(hex.upriver != null ? hex.upriver.size() : 0));
+
+		RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.riverUUID);
+		if(attrib != null)
+			event.left.add("River: " + attrib.getRiver() + " | " + (attrib.upriver != null ?  attrib.upriver.size() : 0));
 	}
 }
