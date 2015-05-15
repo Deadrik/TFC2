@@ -3,6 +3,7 @@
 // License: MIT
 package jMapGen;
 
+import jMapGen.IslandParameters.Feature;
 import jMapGen.com.nodename.Delaunay.DelaunayUtil;
 import jMapGen.com.nodename.Delaunay.Voronoi;
 import jMapGen.com.nodename.geom.LineSegment;
@@ -146,7 +147,7 @@ public class Map
 
 	private void createVolcano(Vector<Center> candidates)
 	{
-		if(!this.islandParams.shouldGenVolcano())
+		if(!this.islandParams.hasFeature(Feature.Volcano))
 			return;
 		Center mid = candidates.get(mapRandom.nextInt(candidates.size()));
 		System.out.println("Volcano: X" + mid.point.x + " Z"+ mid.point.y);
@@ -171,7 +172,7 @@ public class Map
 
 	private void createValleys(Vector<Center> candidates)
 	{
-		if(!this.islandParams.shouldGenValleys())
+		if(!this.islandParams.hasFeature(Feature.Valleys))
 			return;
 
 		int totalValleys = 1+mapRandom.nextInt(5);
@@ -860,11 +861,11 @@ public class Map
 			c = locations.get(i);
 			double y = (double)i/(double)(locationsSize-1);
 			double x = y;
-			if(this.islandParams.shouldGenSharperMountians() && y >= 0.05)
+			if(this.islandParams.hasFeature(Feature.SharperMountains) && y >= 0.05)
 			{
 				x = Math.pow(y, 2);	
 			}
-			else if(this.islandParams.shouldGenEvenSharperMountians() && y >= 0.05)
+			else if(this.islandParams.hasFeature(Feature.EvenSharperMountains) && y >= 0.05)
 			{
 				x = Math.pow(y, 3);
 			}
@@ -1014,7 +1015,7 @@ public class Map
 			}
 			p.elevation = sumElevation / p.corners.size();
 			//If we are generating cliffs then we multiply the elevation by .85 to keep it <= 1.0 and add 0.15
-			if(this.islandParams.shouldGenCliffs() && !p.isOcean() && !p.isCoast() && p.elevation >= 0)
+			if(this.islandParams.hasFeature(Feature.Cliffs) && !p.isOcean() && !p.isCoast() && p.elevation >= 0)
 				p.elevation = Math.max((p.elevation * 0.85) + 0.15, 0.15);
 		}
 	}

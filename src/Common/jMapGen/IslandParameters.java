@@ -1,5 +1,7 @@
 package jMapGen;
 
+import java.util.EnumSet;
+
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.bioxx.libnoise.NoiseQuality;
@@ -9,11 +11,6 @@ import com.bioxx.libnoise.module.source.Perlin;
 
 public class IslandParameters 
 {
-	// This class has factory functions for generating islands of
-	// different shapes. The factory returns a function that takes a
-	// normalized point (x and y are -1 to +1) and returns true if the
-	// point should be on the island, and false if it should be water
-	// (lake or ocean).
 	protected Module shapeModule;
 	double oceanRatio = 0.5;
 	public double lakeThreshold = 0.3;
@@ -31,10 +28,11 @@ public class IslandParameters
 	 * 0x8 = Sharper Mountains
 	 * 0x16 = Even Sharper Mountains
 	 * 0x32 = Valleys
-	 * 0x64 = Craters
-	 * 0x128
+	 * 0x64 = Small Craters
+	 * 0x128 = Large Crater
 	 */
-	private int features = 0;
+
+	private EnumSet<Feature> features = EnumSet.of(null);
 
 	public IslandParameters() 
 	{
@@ -98,39 +96,34 @@ public class IslandParameters
 		return this.zCoord;
 	}
 
-	public void setFeatures(int f)
+	public void setFeatures(Feature... f)
 	{
-		features = f;
+		features = EnumSet.of(Feature.Default, f);
+	}
+
+	/**
+	 * Used for reading stored nbt information
+	 */
+	private void setFeatures(int i)
+	{
+		for(Feature f : Feature.values())
+		{
+			if((i & f.ordinal()) > 0)
+			{
+				features.add(f);
+			}
+		}
+	}
+
+	public boolean hasFeature(Feature feat)
+	{
+		return features.contains(feat);
 	}
 
 	public boolean shouldGenCanyons()
 	{
-		return (features & 1) > 0;
-	}
-
-	public boolean shouldGenVolcano()
-	{
-		return (features & 2) > 0;
-	}
-
-	public boolean shouldGenCliffs()
-	{
-		return (features & 4) > 0;
-	}
-
-	public boolean shouldGenSharperMountians()
-	{
-		return (features & 8) > 0;
-	}
-
-	public boolean shouldGenEvenSharperMountians()
-	{
-		return (features & 16) > 0;
-	}
-
-	public boolean shouldGenValleys()
-	{
-		return (features & 32) > 0;
+		return features.contains(Feature.Canyons);
+		//return (features & 1) > 0;
 	}
 
 	public void setCoords(int x, int z) 
@@ -142,6 +135,8 @@ public class IslandParameters
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		this.setFeatures(nbt.getInteger("features"));
+
+
 		this.setCoords(nbt.getInteger("xCoord"), nbt.getInteger("zCoord"));
 		this.oceanRatio = nbt.getDouble("oceanRatio");
 		this.lakeThreshold = nbt.getDouble("lakeThreshold");
@@ -151,12 +146,23 @@ public class IslandParameters
 
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setInteger("features", features);
+		int feat = 0;
+		for(Feature ff : features)
+		{
+			feat += ff.ordinal();
+		}
+		nbt.setInteger("features", feat);
 		nbt.setInteger("xCoord", xCoord);
 		nbt.setInteger("zCoord", zCoord);
 		nbt.setDouble("oceanRatio", oceanRatio);
 		nbt.setDouble("lakeThreshold", lakeThreshold);
 		nbt.setDouble("islandMaxHeight", islandMaxHeight);
 		nbt.setDouble("moistureMultiplier", moistureMultiplier);
+	}
+
+	public enum Feature
+	{
+		//Important not to change this order if it can be helped.
+		Default, Canyons, Volcano, Cliffs, SharperMountains, EvenSharperMountains, Valleys, SmallCraters, LargeCrater;
 	}
 }

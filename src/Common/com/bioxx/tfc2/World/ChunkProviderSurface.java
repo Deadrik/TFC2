@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.World;
 
 import jMapGen.BiomeType;
+import jMapGen.IslandParameters.Feature;
 import jMapGen.Map;
 import jMapGen.Point;
 import jMapGen.Spline2D;
@@ -232,7 +233,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	protected int getHexElevation(Center c, Point p)
 	{
-		if(this.islandMap.islandParams.shouldGenCliffs())
+		if(this.islandMap.islandParams.hasFeature(Feature.Cliffs))
 			return convertElevation(getSmoothHeightHex(c, p, 2));
 		return convertElevation(getSmoothHeightHex(c, p, 5));
 	}

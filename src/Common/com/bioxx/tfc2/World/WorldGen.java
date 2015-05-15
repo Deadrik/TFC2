@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.World;
 
 import jMapGen.IslandParameters;
+import jMapGen.IslandParameters.Feature;
 import jMapGen.Map;
 
 import java.io.File;
@@ -63,7 +64,7 @@ public class WorldGen
 	{
 		long seed = world.getSeed()+Helper.cantorize(x, z);
 		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
-		id.setFeatures(32);
+		id.setFeatures(Feature.SmallCraters, Feature.LargeCrater);
 		id.setCoords(x, z);
 		Map mapgen = new Map(4096, seed);
 		mapgen.newIsland(id);
