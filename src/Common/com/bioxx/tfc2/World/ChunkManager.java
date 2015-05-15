@@ -50,4 +50,20 @@ public class ChunkManager extends WorldChunkManager
 		blockpos = new BlockPos((int)c.point.x, 0, (int)c.point.y);
 		return blockpos;
 	}
+
+	@Override
+	public float[] getRainfall(float[] array, int x, int z, int sizeX, int sizeZ)
+	{
+		if (array == null || array.length < sizeX * sizeZ)
+		{
+			array = new float[sizeX * sizeZ];
+		}
+		for (int i1 = 0; i1 < sizeX * sizeZ; ++i1)
+		{
+
+			array[i1] = 0.5f;
+		}
+
+		return array;
+	}
 }

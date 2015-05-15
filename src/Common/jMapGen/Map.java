@@ -121,6 +121,8 @@ public class Map
 
 		createVolcano(getCentersAboveElevation(0.8));
 
+		createValleys(getCentersAboveElevation(0.4));
+
 		createCanyons();
 
 		// Determine downslope paths.
@@ -167,6 +169,78 @@ public class Map
 		}
 	}
 
+	private void createValleys(Vector<Center> candidates)
+	{
+		if(!this.islandParams.shouldGenValleys())
+			return;
+
+		int totalValleys = 1+mapRandom.nextInt(5);
+
+		for(int count = 0; count < totalValleys; count++)
+		{
+			int minSize = 20+mapRandom.nextInt(30);
+			Center mid = candidates.get(mapRandom.nextInt(candidates.size()));
+
+			LinkedList<Center> valleyQueue = new LinkedList<Center>();
+			Vector<Center> valleyFinal = new Vector<Center>();
+			Vector<Lake> lakesToDrop = new Vector<Lake>();
+
+
+			if(mid.isWater())
+				continue;
+
+			valleyFinal.add(mid);
+			valleyQueue.addAll(mid.neighbors);
+			double minElevation = Float.MAX_VALUE;
+			while(!valleyQueue.isEmpty())
+			{
+				Center c = valleyQueue.pop();
+				//Make sure that we aren't readding a center that is already in the valley.
+				if(valleyFinal.contains(c))
+					continue;
+				if(valleyFinal.size() <= minSize || mapRandom.nextInt(1+valleyFinal.size()-minSize) == 0 )
+				{
+					//If we hit a lake center, then we just drop the entire lake into the valley.
+					if(c.isWater() && !c.isOcean())
+					{
+						Lake l = centerInExistingLake(c);
+						if(l != null && !lakesToDrop.contains(l))
+						{
+							lakesToDrop.add(l);
+						}
+					}
+					else if(c.isOcean()) continue;
+
+					valleyFinal.add(c);
+					if(c.elevation < minElevation)
+						minElevation = c.elevation;
+					for(Center n : c.neighbors)
+					{
+						if(!valleyQueue.contains(n) && !valleyFinal.contains(n))
+							valleyQueue.add(n);
+					}
+				}
+
+			}
+			if(valleyFinal.size() >= minSize)
+			{
+				System.out.println("Valley: X" + mid.point.x + " Z"+ mid.point.y);
+				for(Center n : valleyFinal)
+				{
+					n.elevation = minElevation*0.8 + (-convertMCToHeight(2) + mapRandom.nextDouble()*convertMCToHeight(5));//Math.max(minElevation, n.elevation*0.8);
+					n.setValley(true);
+				}
+				for(Lake l : lakesToDrop)
+				{
+					for(Center c : l.centers)
+					{
+						c.elevation = minElevation*0.79;
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * This method chooses a random hex and raises it by a random amount, no higher than the highest hex within 4 hexes.
 	 * All neighboring hexes are also elevated to a lesser degree.
@@ -185,7 +259,14 @@ public class Map
 				highest = this.getHighestNeighbor(highest);
 
 				double diff = highest.elevation - center.elevation;
-				center.elevation += diff * (0.5 + 0.5*mapRandom.nextDouble());
+				double mult = 0.5;
+
+				if(center.isValley())
+					mult = 0.1;
+
+				center.elevation += diff * (mult + mult*mapRandom.nextDouble());
+				if(center.elevation <= 0)
+					return;
 
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
@@ -193,6 +274,8 @@ public class Map
 					if(!center2.isLava() && !center2.isCanyon() && !center2.isCoast() && center2.getRiver() == 0 && !center2.isWater())
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
+						if(center2.elevation <= 0)
+							return;
 					}
 				}
 			}
@@ -227,6 +310,8 @@ public class Map
 						center.elevation += mapRandom.nextDouble() * (center.elevation - highest.elevation);
 
 					center.elevation = Math.min(Math.max(0, center.elevation), 1.0);
+					if(center.elevation <= 0)
+						return;
 				}
 			}
 		}
@@ -978,6 +1063,17 @@ public class Map
 			for(Center c : lake.centers)
 			{
 				c.elevation = lake.lowestCenter.elevation;
+				//Here we try to smooth the centers around lakes a bit
+				for(Center n : c.neighbors)
+				{
+					if(!n.isWater())
+					{
+						if(n.elevation < c.elevation)
+							n.elevation += (c.elevation - n.elevation)/2;
+						else if(c.elevation < n.elevation)
+							n.elevation -= (n.elevation - c.elevation)/2;
+					}
+				}
 			}
 		}
 	}
@@ -1151,10 +1247,13 @@ public class Map
 			if(c.elevation < 0.2)
 				continue;
 
-			if(this.islandParams.shouldGenCanyons() && c.isCanyon())
-				possibleStarts.add(c);
-			else if(!this.islandParams.shouldGenCanyons())
-				possibleStarts.add(c);
+			if(c.isValley())
+				continue;
+
+			if(this.islandParams.shouldGenCanyons() && !c.isCanyon())
+				continue;
+
+			possibleStarts.add(c);
 		}
 
 		for (int i = 0; i < lakes.size(); i++) 
@@ -1217,8 +1316,10 @@ public class Map
 
 			if(isValid)
 			{
-				if(r.riverStart.center.isWater())
+				if(r.riverStart.center.isWater() && this.centerInExistingLake(r.riverStart.center).centers.size() > 8)
 					r.riverWidth = 4 - 3 * r.riverStart.center.elevation;
+				else
+					r.riverWidth = 1;
 				//Add this river to the river collection
 				rivers.add(r);
 				curNode = r.nodes.get(0);
@@ -1311,6 +1412,11 @@ public class Map
 	private int convertHeightToMC(double d)
 	{
 		return (int)Math.floor(this.islandParams.islandMaxHeight * d);
+	}
+
+	private double convertMCToHeight(int i)
+	{
+		return i/this.islandParams.islandMaxHeight;
 	}
 
 	// Calculate moisture. Freshwater sources spread moisture: rivers

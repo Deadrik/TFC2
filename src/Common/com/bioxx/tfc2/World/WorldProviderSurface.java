@@ -43,6 +43,13 @@ public class WorldProviderSurface extends WorldProvider
 	}
 
 	@Override
+	public boolean canBlockFreeze(BlockPos pos, boolean byWater)
+	{
+		//TODO: Expand on this later
+		return false;
+	}
+
+	@Override
 	public double getHorizon()
 	{
 		return 64D;

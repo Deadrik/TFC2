@@ -259,7 +259,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 				int hexElev = getHexElevation(closestCenter, p);
 				elevationMap[x][z] = hexElev;
-				for(int y = Math.max(hexElev, SEA_LEVEL); y >= 0; y--)
+				for(int y = Math.min(Math.max(hexElev, SEA_LEVEL), 255); y >= 0; y--)
 				{
 					Block b = Blocks.air;
 					if(!closestCenter.isOcean() && y < hexElev)
