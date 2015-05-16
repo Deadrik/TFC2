@@ -134,7 +134,7 @@ public class Map
 		calculateDownslopesCenter();
 
 		// Create rivers.
-		createRiversCenter();
+		createRivers(getCentersAboveElevation(0.1));
 
 		assignSlopedNoise();
 
@@ -256,7 +256,7 @@ public class Map
 		{
 			Center center = (Center)centerIter.next();
 			//10% change of any hex being selected as long as it is not a water or canyon hex, and does not contain a river.
-			if(!center.hasAttribute(Attribute.canyonUUID) && !center.hasMarker(Marker.Coast) && this.mapRandom.nextInt(100) < 10 && !center.hasMarker(Marker.Water) && center.getAttribute(Attribute.riverUUID) == null)
+			if(!center.hasAttribute(Attribute.gorgeUUID) && !center.hasMarker(Marker.Coast) && this.mapRandom.nextInt(100) < 10 && !center.hasMarker(Marker.Water) && center.getAttribute(Attribute.riverUUID) == null)
 			{
 				Center highest = this.getHighestNeighbor(center);
 				highest = this.getHighestNeighbor(highest);
@@ -276,7 +276,7 @@ public class Map
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(!center2.hasMarker(Marker.Lava) && !center.hasAttribute(Attribute.canyonUUID) && !center2.hasMarker(Marker.Coast) && center2.getAttribute(Attribute.riverUUID) == null && !center2.hasMarker(Marker.Water))
+					if(!center2.hasMarker(Marker.Lava) && !center.hasAttribute(Attribute.gorgeUUID) && !center2.hasMarker(Marker.Coast) && center2.getAttribute(Attribute.riverUUID) == null && !center2.hasMarker(Marker.Water))
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
 						if(center2.elevation <= 0)
@@ -295,7 +295,7 @@ public class Map
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.hasAttribute(Attribute.canyonUUID) && !center.hasMarker(Marker.Coast) && !center.hasMarker(Marker.Water) && !center.hasAttribute(Attribute.riverUUID))
+			if(!center.hasAttribute(Attribute.gorgeUUID) && !center.hasMarker(Marker.Coast) && !center.hasMarker(Marker.Water) && !center.hasAttribute(Attribute.riverUUID))
 			{
 				boolean nearWater = false;
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
@@ -1135,7 +1135,7 @@ public class Map
 
 	private void createGorges()
 	{
-		if(!this.islandParams.shouldGenCanyons())
+		if(!this.islandParams.hasFeature(Feature.Gorges))
 			return;
 
 		Vector<Center> possibleStarts = new Vector<Center>();
@@ -1193,11 +1193,13 @@ public class Map
 				for(CanyonNode cn : canyon.nodes)
 				{
 					double diff = cn.center.elevation - canyon.minElev;
-					if(!cn.center.hasAttribute(Attribute.canyonUUID))
+					if(!cn.center.hasAttribute(Attribute.gorgeUUID))
 						cn.center.elevation = Math.max(canyon.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2));
-					CanyonAttribute a = new CanyonAttribute(Attribute.canyonUUID);
-					a.setUp(cn.getUp().center);
-					a.setDown(cn.getDown().center);
+					CanyonAttribute a = new CanyonAttribute(Attribute.gorgeUUID);
+					if(cn.getUp() != null)
+						a.setUp(cn.getUp().center);
+					if(cn.getDown() != null)
+						a.setDown(cn.getDown().center);
 					cn.center.addAttribute(a);
 				}
 			}
@@ -1228,7 +1230,7 @@ public class Map
 			if(convertHeightToMC(n.elevation) < convertHeightToMC(cur.center.elevation))
 			{
 				//If next to a water hex then we move to it instead of anything else
-				if(n.hasAttribute(Attribute.canyonUUID))
+				if(n.hasAttribute(Attribute.gorgeUUID))
 					return new CanyonNode(n);
 				if(n.hasMarker(Marker.Ocean) || n.hasMarker(Marker.Water))
 				{
@@ -1251,26 +1253,44 @@ public class Map
 		return new CanyonNode(cur.center.downslope);
 	}
 
-	public void createRiversCenter() 
+	public void createRivers(Vector<Center> land) 
 	{
 		Center c;
 		Center prev;
 
 		Vector<Center> possibleStarts = new Vector<Center>();
-
-		for (int i = 0; i < SIZE/6; i++) 
+		int starts = 50;
+		if(this.islandParams.hasFeature(Feature.Gorges))
 		{
-			c = centers.get(mapRandom.nextInt(centers.size()-1));
+			starts = 15;
+		}
+
+		for (int i = 0; i < starts; i++) 
+		{
+			c = land.get(mapRandom.nextInt(land.size()-1));
 			if(c.elevation < 0.2)
 				continue;
 
+			//We dont want rivers to start inside of valleys
 			if(c.hasMarker(Marker.Valley))
 				continue;
 
-			if(this.islandParams.shouldGenCanyons() && !c.hasAttribute(Attribute.canyonUUID))
-				continue;
-
 			possibleStarts.add(c);
+		}
+
+
+		if(this.islandParams.hasFeature(Feature.Gorges))
+		{
+			for(Center cn : centers)
+			{
+				if(cn.hasAttribute(Attribute.gorgeUUID))
+				{
+					if(((CanyonAttribute)cn.getAttribute(Attribute.gorgeUUID)).getUp() == null && mapRandom.nextFloat() > 0.25)
+					{
+						possibleStarts.add(cn);
+					}
+				}
+			}
 		}
 
 		for (int i = 0; i < lakes.size(); i++) 
@@ -1283,6 +1303,11 @@ public class Map
 			}
 		}
 
+		buildRiver(possibleStarts);
+	}
+
+	private void buildRiver(Vector<Center> possibleStarts) {
+		Center c;
 		for (int i = 0; i < possibleStarts.size(); i++) 
 		{
 			c = possibleStarts.get(i);

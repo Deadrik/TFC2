@@ -64,7 +64,7 @@ public class WorldGen
 	{
 		long seed = world.getSeed()+Helper.cantorize(x, z);
 		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
-		id.setFeatures(Feature.SmallCraters, Feature.LargeCrater);
+		id.setFeatures(Feature.SmallCraters, Feature.LargeCrater, Feature.Gorges);
 		id.setCoords(x, z);
 		Map mapgen = new Map(4096, seed);
 		mapgen.newIsland(id);

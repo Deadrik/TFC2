@@ -121,12 +121,6 @@ public class IslandParameters
 		return features.contains(feat);
 	}
 
-	public boolean shouldGenCanyons()
-	{
-		return features.contains(Feature.Gorges);
-		//return (features & 1) > 0;
-	}
-
 	public void setCoords(int x, int z) 
 	{
 		this.xCoord = x;

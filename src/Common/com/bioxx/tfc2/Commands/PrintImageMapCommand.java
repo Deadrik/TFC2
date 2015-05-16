@@ -95,7 +95,7 @@ public class PrintImageMapCommand extends CommandBase
 							p = new Point(x,z);
 							count++;
 							c = map.getSelectedHexagon(p);
-							if(c.hasAttribute(Attribute.canyonUUID))
+							if(c.hasAttribute(Attribute.gorgeUUID))
 								graphics.setColor(Color.white);	
 							else
 								graphics.setColor(Color.black);	
