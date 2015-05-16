@@ -61,6 +61,14 @@ public class Center
 		return flags.contains(m);
 	}
 
+	public boolean hasAnyMarkersOf(Marker... m)
+	{
+		for(Marker mk : m)
+			if(flags.contains(mk))
+				return true;
+		return false;
+	}
+
 	public void removeMarkers(Marker... m)
 	{
 		for(Marker mk : m)

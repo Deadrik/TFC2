@@ -16,6 +16,7 @@ import jMapGen.graph.Corner;
 import jMapGen.graph.CornerElevationSorter;
 import jMapGen.graph.Edge;
 import jMapGen.graph.MoistureComparator;
+import jMapGen.pathfinding.PathFinder;
 
 import java.awt.Rectangle;
 import java.util.Collections;
@@ -57,6 +58,8 @@ public class Map
 	public Vector<Lake> lakes;
 	public long seed;
 
+	public PathFinder pathfinder;
+
 	public Map(int size, long s) 
 	{
 		SIZE = size;
@@ -67,6 +70,7 @@ public class Map
 		corners = new Vector<Corner>();
 		lakes = new Vector<Lake>();
 		rivers = new Vector<River>();
+		pathfinder = new PathFinder(this);
 	}
 
 	// Random parameters governing the overall shape of the island
@@ -1634,6 +1638,8 @@ public class Map
 		//Form the best guess coordinates
 		int x = (int)Math.floor((p.x /(SIZE/NUM_POINTS_SQ)));
 		int y = (int)Math.floor((p.y /(SIZE/NUM_POINTS_SQ)));
+		if(NUM_POINTS_SQ*x+y >= centers.size())
+			return centers.get(0);
 
 		Center orig = this.centers.get( NUM_POINTS_SQ*x+y);
 		//Get the inCircle radius
@@ -1759,5 +1765,24 @@ public class Map
 		{
 			edges.get(i).readFromNBT(edgeList.getCompoundTagAt(i), this);
 		}
+
+		//Rebuild the river list
+		/*for(Center c : centers)
+		{
+			if(c.hasAttribute(Attribute.riverUUID) && ((RiverAttribute)c.getAttribute(Attribute.riverUUID)).upriver == null)
+			{
+				River r = new River();
+				r.addCenter(c);
+				Center next = ((RiverAttribute)c.getAttribute(Attribute.riverUUID)).getDownRiver();
+				while(next != null)
+				{
+					r.addCenter(next);
+				}
+
+				rivers.add(r);
+			}
+		}*/
 	}
+
+
 }

@@ -4,11 +4,16 @@ import jMapGen.Map;
 import jMapGen.Point;
 import jMapGen.attributes.Attribute;
 import jMapGen.graph.Center;
+import jMapGen.graph.Corner;
+import jMapGen.pathfinding.Path;
+import jMapGen.pathfinding.PathNode;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -119,6 +124,55 @@ public class PrintImageMapCommand extends CommandBase
 			{
 				int size = params.length >= 3 ? Integer.parseInt(params[2]) : 512;
 				drawNoiseImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), size, world, name);
+			}
+			else if(params[0].equals("path"))
+			{
+				int size = 4096;
+				try 
+				{
+					File outFile = new File(name+".bmp");
+					BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
+					Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
+					graphics.clearRect(0, 0, size, size);
+					System.out.println(name+".bmp");
+					float perc = 0.1f;
+					float count = 0;
+					int xM = ((int)Math.floor(player.posX) >> 12);
+					int zM = ((int)Math.floor(player.posZ) >> 12);
+					Map map = WorldGen.instance.getIslandMap(xM, zM);
+					Center closest = map.getSelectedHexagon(new Point((int)Math.floor(player.posX) & 4095, (int)Math.floor(player.posZ) & 4095));
+					Vector<Center> land = map.landCenters(map.centers);
+					Center end = land.get(world.rand.nextInt(land.size()));
+					Path path = map.pathfinder.findPath(closest, end);
+					if(path == null)
+					{
+						System.out.println("Failed to find path");
+						return;
+					}
+					for(PathNode pn : path.path)
+					{
+						count++;
+						graphics.setColor(Color.white);		
+						if(pn.center == closest)
+							graphics.setColor(Color.red);	
+						if(pn.center == end)
+							graphics.setColor(Color.blue);	
+						Polygon poly = new Polygon();
+
+						for(Corner cn : pn.center.corners)
+						{
+							poly.addPoint((int)cn.point.x, (int)cn.point.y);
+						}
+						graphics.fillPolygon(poly);
+
+					}
+					System.out.println(name+".bmp Done!");
+					ImageIO.write(outBitmap, "BMP", outFile);
+				}
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
