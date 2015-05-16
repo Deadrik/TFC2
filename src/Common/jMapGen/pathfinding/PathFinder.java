@@ -47,10 +47,10 @@ public class PathFinder
 			{
 				if(!reachable.contains(n))
 					reachable.add(n);
-				if(node.nodeCost + 1 < n.nodeCost)
+				if(node.nodeCost + n.transitCost < n.nodeCost)
 				{
 					n.prev = node;
-					n.nodeCost = node.nodeCost + 1;
+					n.nodeCost = node.nodeCost + n.transitCost;
 				}
 			}
 
@@ -87,7 +87,6 @@ public class PathFinder
 			if( min_cost > total_cost)
 			{
 				min_cost = total_cost;
-			best_node = node;
 				best_node = node;
 			}
 		}
