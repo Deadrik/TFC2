@@ -21,4 +21,14 @@ public class CanyonNode
 	{
 		downCanyon = d;
 	}
+
+	public CanyonNode getUp()
+	{
+		return this.upCanyon;
+	}
+
+	public CanyonNode getDown()
+	{
+		return this.downCanyon;
+	}
 }

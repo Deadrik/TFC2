@@ -2,6 +2,7 @@ package com.bioxx.tfc2.Commands;
 
 import jMapGen.Map;
 import jMapGen.Point;
+import jMapGen.attributes.Attribute;
 import jMapGen.graph.Center;
 
 import java.awt.Color;
@@ -94,7 +95,7 @@ public class PrintImageMapCommand extends CommandBase
 							p = new Point(x,z);
 							count++;
 							c = map.getSelectedHexagon(p);
-							if(c.isCanyon())
+							if(c.hasAttribute(Attribute.canyonUUID))
 								graphics.setColor(Color.white);	
 							else
 								graphics.setColor(Color.black);	

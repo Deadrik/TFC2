@@ -2,6 +2,7 @@ package jMapGen.graph;
 
 import jMapGen.Map;
 import jMapGen.Point;
+import jMapGen.graph.Center.Marker;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Edge 
@@ -68,7 +69,7 @@ public class Edge
 
 	public boolean isShoreline()
 	{
-		if((dCenter0.isWater() && !dCenter1.isWater()) || (!dCenter0.isWater() && dCenter1.isWater()))
+		if((dCenter0.hasMarker(Marker.Water) && !dCenter1.hasMarker(Marker.Water)) || (!dCenter0.hasMarker(Marker.Water) && dCenter1.hasMarker(Marker.Water)))
 			return true;
 
 		return false;

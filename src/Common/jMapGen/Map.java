@@ -5,11 +5,13 @@ package jMapGen;
 
 import jMapGen.IslandParameters.Feature;
 import jMapGen.attributes.Attribute;
+import jMapGen.attributes.CanyonAttribute;
 import jMapGen.attributes.RiverAttribute;
 import jMapGen.com.nodename.Delaunay.DelaunayUtil;
 import jMapGen.com.nodename.Delaunay.Voronoi;
 import jMapGen.com.nodename.geom.LineSegment;
 import jMapGen.graph.Center;
+import jMapGen.graph.Center.Marker;
 import jMapGen.graph.Corner;
 import jMapGen.graph.CornerElevationSorter;
 import jMapGen.graph.Edge;
@@ -108,7 +110,7 @@ public class Map
 		for(Iterator<Corner> i = corners.iterator(); i.hasNext();)
 		{
 			Corner q = (Corner)i.next();
-			if (q.isOcean() || q.isCoast()) 
+			if (q.hasMarker(Marker.Ocean) || q.hasMarker(Marker.Coast)) 
 			{
 				q.elevation = 0.0;
 			}
@@ -160,8 +162,8 @@ public class Map
 		for(Center c : caldera)
 		{
 			((RiverAttribute)c.getAttribute(Attribute.riverUUID)).setRiver(0);
-			c.setWater(false);
-			c.setLava(true);
+			c.removeMarkers(Marker.Water);
+			c.setMarkers(Marker.Lava);
 			if(c.elevation < lowestElev)
 				lowestElev = c.elevation;
 		}
@@ -189,7 +191,7 @@ public class Map
 			Vector<Lake> lakesToDrop = new Vector<Lake>();
 
 
-			if(mid.isWater())
+			if(mid.hasMarker(Marker.Water))
 				continue;
 
 			valleyFinal.add(mid);
@@ -204,7 +206,7 @@ public class Map
 				if(valleyFinal.size() <= minSize || mapRandom.nextInt(1+valleyFinal.size()-minSize) == 0 )
 				{
 					//If we hit a lake center, then we just drop the entire lake into the valley.
-					if(c.isWater() && !c.isOcean())
+					if(c.hasMarker(Marker.Water) && !c.hasMarker(Marker.Ocean))
 					{
 						Lake l = centerInExistingLake(c);
 						if(l != null && !lakesToDrop.contains(l))
@@ -212,7 +214,7 @@ public class Map
 							lakesToDrop.add(l);
 						}
 					}
-					else if(c.isOcean()) continue;
+					else if(c.hasMarker(Marker.Ocean)) continue;
 
 					valleyFinal.add(c);
 					if(c.elevation < minElevation)
@@ -231,7 +233,7 @@ public class Map
 				for(Center n : valleyFinal)
 				{
 					n.elevation = minElevation*0.8 + (-convertMCToHeight(2) + mapRandom.nextDouble()*convertMCToHeight(5));//Math.max(minElevation, n.elevation*0.8);
-					n.setValley(true);
+					n.setMarkers(Marker.Valley);
 				}
 				for(Lake l : lakesToDrop)
 				{
@@ -254,7 +256,7 @@ public class Map
 		{
 			Center center = (Center)centerIter.next();
 			//10% change of any hex being selected as long as it is not a water or canyon hex, and does not contain a river.
-			if(!center.isCanyon() && !center.isCoast() && this.mapRandom.nextInt(100) < 10 && !center.isWater() && center.getAttribute(Attribute.riverUUID) == null)
+			if(!center.hasAttribute(Attribute.canyonUUID) && !center.hasMarker(Marker.Coast) && this.mapRandom.nextInt(100) < 10 && !center.hasMarker(Marker.Water) && center.getAttribute(Attribute.riverUUID) == null)
 			{
 				Center highest = this.getHighestNeighbor(center);
 				highest = this.getHighestNeighbor(highest);
@@ -264,7 +266,7 @@ public class Map
 				double diff = highest.elevation - center.elevation;
 				double mult = 0.5;
 
-				if(center.isValley())
+				if(center.hasMarker(Marker.Valley))
 					mult = 0.1;
 
 				center.elevation += diff * (mult + mult*mapRandom.nextDouble());
@@ -274,7 +276,7 @@ public class Map
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(!center2.isLava() && !center2.isCanyon() && !center2.isCoast() && center2.getAttribute(Attribute.riverUUID) == null && !center2.isWater())
+					if(!center2.hasMarker(Marker.Lava) && !center.hasAttribute(Attribute.canyonUUID) && !center2.hasMarker(Marker.Coast) && center2.getAttribute(Attribute.riverUUID) == null && !center2.hasMarker(Marker.Water))
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
 						if(center2.elevation <= 0)
@@ -293,21 +295,17 @@ public class Map
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.isCanyon() && !center.isCoast() && !center.isWater() && center.getAttribute(Attribute.riverUUID) ==  null)
+			if(!center.hasAttribute(Attribute.canyonUUID) && !center.hasMarker(Marker.Coast) && !center.hasMarker(Marker.Water) && !center.hasAttribute(Attribute.riverUUID))
 			{
 				boolean nearWater = false;
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(center2.isWater())
+					if(center2.hasMarker(Marker.Water))
 						nearWater  = true;
 				}
-				if(center.getAttribute(Attribute.riverUUID) != null && ((RiverAttribute)center.getAttribute(Attribute.riverUUID)).getRiver() >= 1.5)
-				{
-					continue;
-				}
 
-				if(!center.isLava() && !nearWater && this.mapRandom.nextInt(100) < 50)
+				if(!center.hasMarker(Marker.Lava) && !nearWater && this.mapRandom.nextInt(100) < 50)
 				{
 					Center lowest = getLowestNeighbor(center);
 					Center highest = getHighestNeighbor(center);
@@ -458,7 +456,7 @@ public class Map
 
 			//If this hex is near the map border we want to count the number of hexes in the connected island.
 			//If there are too few then we will delete this tiny island to make the islands look better
-			if(!center.isWater() && (center.point.x < min || center.point.x > max ||
+			if(!center.hasMarker(Marker.Water) && (center.point.x < min || center.point.x > max ||
 					center.point.y < min || center.point.y > max))
 			{
 				Vector<Center> island = countIsland(center, 25);
@@ -466,16 +464,15 @@ public class Map
 				{
 					for(Center n : island)
 					{
-						n.setWater(true);
-						n.setOcean(true);
+						n.setMarkers(Marker.Water, Marker.Ocean);
 						n.biome = BiomeType.OCEAN;
 					}
 				}
 			}
 
-			if(center.isCoastWater())
+			if(center.hasMarker(Marker.CoastWater))
 				center.elevation = -0.01 - mapRandom.nextDouble()*0.03;
-			else if(center.isOcean())
+			else if(center.hasMarker(Marker.Ocean))
 				center.elevation = -0.1 - mapRandom.nextDouble()*0.25;
 
 
@@ -498,7 +495,7 @@ public class Map
 			Center c = checkList.pollFirst();
 			for(Center n : c.neighbors)
 			{
-				if(!checkList.contains(n) && !outList.contains(n) && !n.isWater())
+				if(!checkList.contains(n) && !outList.contains(n) && !n.hasMarker(Marker.Water))
 				{
 					outList.add(n);
 					checkList.addLast(n);
@@ -536,7 +533,7 @@ public class Map
 		Vector<Corner> locations = new Vector<Corner>();
 		for (int i = 0; i < corners.size(); i++) {
 			q = corners.get(i);
-			if (!q.isOcean() && !q.isCoast()) {
+			if (!q.hasMarker(Marker.Ocean) && !q.hasMarker(Marker.Coast)) {
 				locations.add(q);
 			}
 		}
@@ -548,7 +545,7 @@ public class Map
 		Vector<Center> locations = new Vector<Center>();
 		for (int i = 0; i < centers.size(); i++) {
 			q = centers.get(i);
-			if (!q.isOcean() && !q.isCoast()) {
+			if (!q.hasMarker(Marker.Ocean) && !q.hasMarker(Marker.Coast)) {
 				locations.add(q);
 			}
 		}
@@ -560,7 +557,7 @@ public class Map
 		Vector<Center> locations = new Vector<Center>();
 		for (int i = 0; i < centers2.size(); i++) {
 			q = centers2.get(i);
-			if (!q.isOcean() && q.isWater()) {
+			if (!q.hasMarker(Marker.Ocean) && q.hasMarker(Marker.Water)) {
 				locations.add(q);
 			}
 		}
@@ -720,8 +717,8 @@ public class Map
 		corners.add(q);
 
 		q.point = point;
-		q.setBorder(point.x == 0 || point.x == SIZE
-				|| point.y == 0 || point.y == SIZE);	
+		if(point.x == 0 || point.x == SIZE
+				|| point.y == 0 || point.y == SIZE) q.setMarkers(Marker.Border);	
 
 		_cornerMap.get(bucket).add(q);
 
@@ -757,9 +754,10 @@ public class Map
 		 * */
 		for(Corner c : corners)
 		{
-			c.setWater(!inside(c.point));
+			if(!inside(c.point))
+				c.setMarkers(Marker.Water);
 
-			if (c.isBorder()) 
+			if (c.hasMarker(Marker.Border)) 
 			{
 				c.elevation = 0;
 				queue.add(c);
@@ -783,18 +781,18 @@ public class Map
 
 				adjacentCorner = baseCorner.adjacent.get(i);
 
-				if(!adjacentCorner.isBorder())
+				if(!adjacentCorner.hasMarker(Marker.Border))
 				{
 					// Every step up is epsilon over water or 1 over land. The
 					// number doesn't matter because we'll rescale the
 					// elevations later.				
 					double newElevation = 0.000000001 + baseCorner.elevation;
 
-					if (!baseCorner.isWater() && !adjacentCorner.isWater() && newElevation < 0.20) 
+					if (!baseCorner.hasMarker(Marker.Water) && !adjacentCorner.hasMarker(Marker.Water) && newElevation < 0.20) 
 					{
 						newElevation += 0.05;
 					}
-					else if (!baseCorner.isWater() && !adjacentCorner.isWater()) 
+					else if (!baseCorner.hasMarker(Marker.Water) && !adjacentCorner.hasMarker(Marker.Water)) 
 					{
 						newElevation += 1;
 					}
@@ -897,7 +895,7 @@ public class Map
 				x = 1.0;
 
 			c.elevation = x;
-			if(!c.isWater() && !c.isShoreline())
+			if(!c.hasMarker(Marker.Water) && !c.isShoreline())
 				c.elevation +=0.01;
 		}
 	}
@@ -935,17 +933,18 @@ public class Map
 			for(int j = 0; j < p.corners.size(); j++)
 			{
 				q = p.corners.get(j);
-				if (q.isBorder()) {
-					p.setBorder(true);
-					p.setOcean(true);
-					q.setWater(true);
+				if (q.hasMarker(Marker.Border)) {
+					p.setMarkers(Marker.Border, Marker.Ocean);
+					q.setMarkers(Marker.Water);
 					queue.add(p);
 				}
-				if (q.isWater()) {
+				if (q.hasMarker(Marker.Water)) {
 					numWater += 1;
 				}
 			}
-			p.setWater((p.isOcean() || numWater >= p.corners.size() * this.islandParams.lakeThreshold));
+
+			if((p.hasMarker(Marker.Ocean) || numWater >= p.corners.size() * this.islandParams.lakeThreshold))
+				p.setMarkers(Marker.Water);
 		}
 		while (queue.size() > 0) 
 		{
@@ -954,8 +953,8 @@ public class Map
 			for(int j = 0; j < p.neighbors.size(); j++)
 			{
 				r = p.neighbors.get(j);
-				if (r.isWater() && !r.isOcean()) {
-					r.setOcean(true);;
+				if (r.hasMarker(Marker.Water) && !r.hasMarker(Marker.Ocean)) {
+					r.setMarkers(Marker.Ocean);
 					queue.add(r);
 				}
 			}
@@ -976,12 +975,14 @@ public class Map
 			for(int j = 0; j < p.neighbors.size(); j++)
 			{
 				r = p.neighbors.get(j);
-				numOcean += (r.isOcean() ? 1 : 0);
-				numLand += (!r.isWater() ? 1 : 0);
+				numOcean += (r.hasMarker(Marker.Ocean) ? 1 : 0);
+				numLand += (!r.hasMarker(Marker.Water) ? 1 : 0);
 			}
 
-			p.setCoast((numOcean > 0) && !p.isOcean());
-			p.setCoastWater(p.isOcean() && (numLand > 0));
+			if((numOcean > 0) && !p.hasMarker(Marker.Ocean))
+				p.setMarkers(Marker.Coast);
+			if(p.hasMarker(Marker.Ocean) && (numLand > 0))
+				p.setMarkers(Marker.CoastWater);
 		}
 
 
@@ -997,12 +998,15 @@ public class Map
 			for(int i = 0; i < q.touches.size(); i++)
 			{
 				p = q.touches.get(i);
-				numOcean += (p.isOcean() ? 1 : 0);
-				numLand += (!p.isWater() ? 1 : 0);
+				numOcean += (p.hasMarker(Marker.Ocean) ? 1 : 0);
+				numLand += (!p.hasMarker(Marker.Water) ? 1 : 0);
 			}
-			q.setOcean(numOcean == q.touches.size());
-			q.setCoast((numOcean > 0) && (numLand > 0));
-			q.setWater(q.isBorder() || ((numLand != q.touches.size()) && !q.isCoast()));
+			if(numOcean == q.touches.size())
+				q.setMarkers(Marker.Ocean);
+			if((numOcean > 0) && (numLand > 0))
+				q.setMarkers(Marker.Coast);
+			if(q.hasMarker(Marker.Border) || ((numLand != q.touches.size()) && !q.hasMarker(Marker.Coast)))
+				q.setMarkers(Marker.Water);
 
 		}
 	}
@@ -1024,7 +1028,7 @@ public class Map
 			}
 			p.elevation = sumElevation / p.corners.size();
 			//If we are generating cliffs then we multiply the elevation by .85 to keep it <= 1.0 and add 0.15
-			if(this.islandParams.hasFeature(Feature.Cliffs) && !p.isOcean() && !p.isCoast() && p.elevation >= 0)
+			if(this.islandParams.hasFeature(Feature.Cliffs) && !p.hasMarker(Marker.Ocean) && !p.hasMarker(Marker.Coast) && p.elevation >= 0)
 				p.elevation = Math.max((p.elevation * 0.85) + 0.15, 0.15);
 		}
 	}
@@ -1057,7 +1061,7 @@ public class Map
 
 					for(Center adj : baseCenter.neighbors)
 					{
-						if(!lake.hasCenter(adj) && adj.isWater() && !adj.isOcean())
+						if(!lake.hasCenter(adj) && adj.hasMarker(Marker.Water) && !adj.hasMarker(Marker.Ocean))
 						{
 							lake.addCenter(adj);
 							centersToCheck.add(adj);
@@ -1076,7 +1080,7 @@ public class Map
 				//Here we try to smooth the centers around lakes a bit
 				for(Center n : c.neighbors)
 				{
-					if(!n.isWater())
+					if(!n.hasMarker(Marker.Water))
 					{
 						if(n.elevation < c.elevation)
 							n.elevation += (c.elevation - n.elevation)/2;
@@ -1157,7 +1161,7 @@ public class Map
 
 		for(Center c : possibleStarts)
 		{
-			if(c.isWater())
+			if(c.hasMarker(Marker.Water))
 				continue;
 			canyon = new Canyon();
 			CanyonNode curNode = new CanyonNode(c);
@@ -1165,7 +1169,7 @@ public class Map
 			int count = 0;
 			while (true)
 			{
-				if (c == null || count > 250 || curNode == null || curNode.center.isWater()) 
+				if (c == null || count > 250 || curNode == null || curNode.center.hasMarker(Marker.Water)) 
 				{
 					break;
 				}
@@ -1189,9 +1193,12 @@ public class Map
 				for(CanyonNode cn : canyon.nodes)
 				{
 					double diff = cn.center.elevation - canyon.minElev;
-					if(!cn.center.isCanyon())
+					if(!cn.center.hasAttribute(Attribute.canyonUUID))
 						cn.center.elevation = Math.max(canyon.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2));
-					cn.center.setCanyon(true);
+					CanyonAttribute a = new CanyonAttribute(Attribute.canyonUUID);
+					a.setUp(cn.getUp().center);
+					a.setDown(cn.getDown().center);
+					cn.center.addAttribute(a);
 				}
 			}
 		}
@@ -1221,9 +1228,9 @@ public class Map
 			if(convertHeightToMC(n.elevation) < convertHeightToMC(cur.center.elevation))
 			{
 				//If next to a water hex then we move to it instead of anything else
-				if(n.isCanyon())
+				if(n.hasAttribute(Attribute.canyonUUID))
 					return new CanyonNode(n);
-				if(n.isOcean() || n.isWater())
+				if(n.hasMarker(Marker.Ocean) || n.hasMarker(Marker.Water))
 				{
 					return null;
 				}
@@ -1257,10 +1264,10 @@ public class Map
 			if(c.elevation < 0.2)
 				continue;
 
-			if(c.isValley())
+			if(c.hasMarker(Marker.Valley))
 				continue;
 
-			if(this.islandParams.shouldGenCanyons() && !c.isCanyon())
+			if(this.islandParams.shouldGenCanyons() && !c.hasAttribute(Attribute.canyonUUID))
 				continue;
 
 			possibleStarts.add(c);
@@ -1271,7 +1278,7 @@ public class Map
 			possibleStarts.add(lakes.get(i).lowestCenter);
 			for(Center cen : lakes.get(i).lowestCenter.neighbors)
 			{
-				if(cen.isWater() && mapRandom.nextBoolean())
+				if(cen.hasMarker(Marker.Water) && mapRandom.nextBoolean())
 					possibleStarts.add(cen);
 			}
 		}
@@ -1280,7 +1287,7 @@ public class Map
 		{
 			c = possibleStarts.get(i);
 			RiverAttribute cAttrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
-			if (c.isOcean() || c.elevation > 0.85 || (cAttrib != null && cAttrib.getRiver() > 0)) continue;
+			if (c.hasMarker(Marker.Ocean) || c.elevation > 0.85 || (cAttrib != null && cAttrib.getRiver() > 0)) continue;
 
 			River r = new River();
 			RiverNode curNode = new RiverNode(c);
@@ -1289,7 +1296,7 @@ public class Map
 			int count = 0;
 			while (true)
 			{
-				if (c == null || c == c.downslope || count > 250 || (curNode.center.isWater() && curNode != r.riverStart)) 
+				if (c == null || c == c.downslope || count > 250 || (curNode.center.hasMarker(Marker.Water) && curNode != r.riverStart)) 
 				{
 					break;
 				}
@@ -1305,7 +1312,7 @@ public class Map
 				//add the next node to the river graph
 				r.addNode(nextNode);
 				//If the current hex is water then we exit early unless this is the first node in the river
-				if((c.isWater() && curNode != r.riverStart) && (curNode.downRiver == null || curNode.downRiver.isWater()))
+				if((c.hasMarker(Marker.Water) && curNode != r.riverStart) && (curNode.downRiver == null || curNode.downRiver.hasMarker(Marker.Water)))
 					break;
 
 				//Keep track of the length of a river before it joins another river or reaches its end
@@ -1317,10 +1324,10 @@ public class Map
 
 			//If this river is long enough to be acceptable and it eventually empties into a water hex then we process the river into the map
 			boolean isValid = false;
-			if(r.riverStart != null && r.riverStart.center.isWater() && r.nodes.lastElement().center.isWater() &&(r.riverStart != r.nodes.lastElement()) &&
+			if(r.riverStart != null && r.riverStart.center.hasMarker(Marker.Water) && r.nodes.lastElement().center.hasMarker(Marker.Water) &&(r.riverStart != r.nodes.lastElement()) &&
 					r.nodes.lastElement().center.elevation < r.riverStart.center.elevation)
 				isValid = true;
-			if(r.lengthToMerge > 3 && r.nodes.lastElement().center.isWater())
+			if(r.lengthToMerge > 3 && r.nodes.lastElement().center.hasMarker(Marker.Water))
 				isValid = true;
 			RiverAttribute startAttrib = (RiverAttribute)r.riverStart.center.getAttribute(Attribute.riverUUID);
 			if(r.riverStart == null || (startAttrib != null && startAttrib.getRiver() != 0) || r.nodes.size() < 4)
@@ -1328,7 +1335,7 @@ public class Map
 
 			if(isValid)
 			{
-				if(r.riverStart.center.isWater() && this.centerInExistingLake(r.riverStart.center).centers.size() > 8)
+				if(r.riverStart.center.hasMarker(Marker.Water) && this.centerInExistingLake(r.riverStart.center).centers.size() > 8)
 					r.riverWidth = 4 - 3 * r.riverStart.center.elevation;
 				else
 					r.riverWidth = 1;
@@ -1407,10 +1414,10 @@ public class Map
 				if(convertHeightToMC(n.elevation) <= convertHeightToMC(curNode.center.elevation))
 				{
 					//If next to a water hex then we move to it instead of anything else
-					if(n.isOcean() || n.isWater())
+					if(n.hasMarker(Marker.Ocean) || n.hasMarker(Marker.Water))
 					{
 						//Unless we are dealing with a lake tile and this is the first River node
-						if(river.riverStart == curNode && !n.isOcean())
+						if(river.riverStart == curNode && !n.hasMarker(Marker.Ocean))
 							continue;
 						return new RiverNode(n);
 					}
@@ -1458,7 +1465,7 @@ public class Map
 		for(Center cr : centers)
 		{
 			RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.riverUUID);
-			if ((cr.isWater() || (attrib != null && attrib.getRiver() > 0)) && !cr.isOcean()) 
+			if ((cr.hasMarker(Marker.Water) || (attrib != null && attrib.getRiver() > 0)) && !cr.hasMarker(Marker.Ocean)) 
 			{
 				double rivermult = attrib != null ? attrib.getRiver() : 0;
 				cr.moisture = (attrib != null && attrib.getRiver() > 0) ? Math.min(3.0, (0.1 * rivermult)) : 1.0;
@@ -1485,7 +1492,7 @@ public class Map
 		// Salt water
 		for(Center cr : centers)
 		{
-			if (cr.isOcean() || cr.isCoast()) 
+			if (cr.hasMarker(Marker.Ocean) || cr.hasMarker(Marker.Coast)) 
 			{
 				cr.moisture = 1.0;
 			}
@@ -1514,13 +1521,13 @@ public class Map
 	// needs of the island map generator.
 	public BiomeType getBiome(Center p) 
 	{
-		if (p.isOcean()) {
+		if (p.hasMarker(Marker.Ocean)) {
 			return BiomeType.OCEAN;
-		} else if (p.isWater()) {
+		} else if (p.hasMarker(Marker.Water)) {
 			if (p.elevation < 0.1) return BiomeType.MARSH;
 			//if (p.elevation > 0.8) return BiomeType.ICE;
 			return BiomeType.LAKE;
-		} else if (p.isCoast()) {
+		} else if (p.hasMarker(Marker.Coast)) {
 			return BiomeType.BEACH;
 		} else if (p.elevation > 0.8) {
 			if (p.moisture > 0.50) return BiomeType.SNOW;
@@ -1574,7 +1581,7 @@ public class Map
 
 	double elevationBucket(Center p) 
 	{
-		if (p.isOcean()) return -1;
+		if (p.hasMarker(Marker.Ocean)) return -1;
 		else return Math.floor(p.elevation*10);
 	}
 

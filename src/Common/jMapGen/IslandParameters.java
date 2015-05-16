@@ -32,7 +32,7 @@ public class IslandParameters
 	 * 0x128 = Large Crater
 	 */
 
-	private EnumSet<Feature> features = EnumSet.of(Feature.Default);
+	private EnumSet<Feature> features = EnumSet.noneOf(Feature.class);
 
 	public IslandParameters() 
 	{
@@ -98,7 +98,8 @@ public class IslandParameters
 
 	public void setFeatures(Feature... f)
 	{
-		features = EnumSet.of(Feature.Default, f);
+		for(Feature fe : f)
+			features.add(fe);
 	}
 
 	/**
@@ -135,8 +136,6 @@ public class IslandParameters
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		this.setFeatures(nbt.getInteger("features"));
-
-
 		this.setCoords(nbt.getInteger("xCoord"), nbt.getInteger("zCoord"));
 		this.oceanRatio = nbt.getDouble("oceanRatio");
 		this.lakeThreshold = nbt.getDouble("lakeThreshold");
@@ -163,6 +162,6 @@ public class IslandParameters
 	public enum Feature
 	{
 		//Important not to change this order if it can be helped.
-		Default, Gorges, Volcano, Cliffs, SharperMountains, EvenSharperMountains, Valleys, SmallCraters, LargeCrater;
+		Gorges, Volcano, Cliffs, SharperMountains, EvenSharperMountains, Valleys, SmallCraters, LargeCrater;
 	}
 }

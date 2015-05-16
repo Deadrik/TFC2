@@ -8,6 +8,7 @@ import jMapGen.Spline2D;
 import jMapGen.attributes.Attribute;
 import jMapGen.attributes.RiverAttribute;
 import jMapGen.graph.Center;
+import jMapGen.graph.Center.Marker;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -181,7 +182,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 					}
 
-					if(closestCenter.isOcean() && block == Blocks.stone.getDefaultState() && blockUp == Blocks.water.getDefaultState())
+					if(closestCenter.hasMarker(Marker.Ocean) && block == Blocks.stone.getDefaultState() && blockUp == Blocks.water.getDefaultState())
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
 					}
@@ -197,31 +198,31 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		double width = 3;
 		Point pt = p.plus(0, width);
 		Center c2 = getHex(pt);
-		if(c2 != c && !c2.isWater())
+		if(c2 != c && !c2.hasMarker(Marker.Water))
 			return true;
 		pt = p.plus(0, -width);
 		c2 = getHex(pt);
-		if(c2 != c && !c2.isWater())
+		if(c2 != c && !c2.hasMarker(Marker.Water))
 			return true;
 		pt = p.plus(width, 0);
 		c2 = getHex(pt);
-		if(c2 != c && !c2.isWater())
+		if(c2 != c && !c2.hasMarker(Marker.Water))
 			return true;
 		pt = p.plus(-width, width);
 		c2 = getHex(pt);
-		if(c2 != c && !c2.isWater())
+		if(c2 != c && !c2.hasMarker(Marker.Water))
 			return true;
 		pt = p.plus(-width, -width);
 		c2 = getHex(pt);
-		if(c2 != c && !c2.isWater())
+		if(c2 != c && !c2.hasMarker(Marker.Water))
 			return true;
 		pt = p.plus(width, width);
 		c2 = getHex(pt);
-		if(c2 != c && !c2.isWater())
+		if(c2 != c && !c2.hasMarker(Marker.Water))
 			return true;
 		pt = p.plus(width, -width);
 		c2 = getHex(pt);
-		if(c2 != c && !c2.isWater())
+		if(c2 != c && !c2.hasMarker(Marker.Water))
 			return true;
 		return false;
 	}
@@ -265,7 +266,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				for(int y = Math.min(Math.max(hexElev, SEA_LEVEL), 255); y >= 0; y--)
 				{
 					Block b = Blocks.air;
-					if(!closestCenter.isOcean() && y < hexElev)
+					if(!closestCenter.hasMarker(Marker.Ocean) && y < hexElev)
 					{
 						b = Blocks.stone;
 					}
@@ -389,15 +390,15 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					closest = this.getHex(temp);
 					//grab the local elevation from our elevation map
 					int yC = elevationMap[xC][zC];
-					if(yC < convertElevation(closest.elevation) && closest.isWater() && this.isLakeBorder(temp, closest))
+					if(yC < convertElevation(closest.elevation) && closest.hasMarker(Marker.Water) && this.isLakeBorder(temp, closest))
 						yC = convertElevation(c.elevation);
 
 					//This prevents our river from attempting to carve into a lake unless we're carving out a border section
-					if(closest.isWater() && !this.isLakeBorder(temp, closest))
+					if(closest.hasMarker(Marker.Water) && !this.isLakeBorder(temp, closest))
 						continue;
 
 					//This makes sure that when we're carving a lake border, we dont carve below the water level
-					if(attrib.getDownRiver() != null && attrib.getDownRiver().isWater() && yC == convertElevation(attrib.getDownRiver().elevation))
+					if(attrib.getDownRiver() != null && attrib.getDownRiver().hasMarker(Marker.Water) && yC == convertElevation(attrib.getDownRiver().elevation))
 						yC++;
 
 					if(yC > waterLevel && m > 0.5)
@@ -431,7 +432,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		double h = c.elevation;
 		boolean isLakeBorder = false;
-		boolean isLake = c.isWater() && !c.isOcean();
+		boolean isLake = c.hasMarker(Marker.Water) && !c.hasMarker(Marker.Ocean);
 
 		if(isLake)
 			isLakeBorder = isLakeBorder(p, c);
@@ -450,7 +451,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 		double outH = c.elevation - (c.elevation - h);
 		//If this hex is a water hex and the smoothed elevation is lower than the hex elevation than we do not want to lower this cell
-		if(c.isWater() && isLakeBorder && outH < c.elevation)
+		if(c.hasMarker(Marker.Water) && isLakeBorder && outH < c.elevation)
 			return c.elevation;
 		return outH;
 	}

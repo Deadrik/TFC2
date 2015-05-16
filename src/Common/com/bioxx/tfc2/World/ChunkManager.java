@@ -2,6 +2,7 @@ package com.bioxx.tfc2.World;
 
 import jMapGen.Map;
 import jMapGen.graph.Center;
+import jMapGen.graph.Center.Marker;
 
 import java.util.Random;
 import java.util.Vector;
@@ -33,7 +34,7 @@ public class ChunkManager extends WorldChunkManager
 		Center c = land.get(random.nextInt(land.size()));
 		for(int i = 0; i < 10000; i++)
 		{
-			if(c.isCoast())
+			if(c.hasMarker(Marker.Coast))
 			{
 				blockpos = new BlockPos((int)c.point.x, 0, (int)c.point.y);
 				return blockpos;

@@ -5,6 +5,7 @@ import jMapGen.Point;
 import jMapGen.attributes.Attribute;
 import jMapGen.attributes.RiverAttribute;
 import jMapGen.graph.Center;
+import jMapGen.graph.Center.Marker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -25,7 +26,7 @@ public class RenderOverlayHandler
 		Map map = WorldGen.instance.getIslandMap(xM, zM);
 		Center hex = map.getSelectedHexagon(new Point(mc.thePlayer.posX, mc.thePlayer.posZ));
 		event.left.add("Elevation: "+hex.elevation);
-		event.left.add("Biome: "+hex.biome.name() + " | Canyon: " + hex.isCanyon() + " | Lava: " + hex.isLava() + " | Valley: " + hex.isValley());
+		event.left.add("Biome: "+hex.biome.name() + " | Canyon: " + hex.hasAttribute(Attribute.canyonUUID) + " | Lava: " + hex.hasMarker(Marker.Lava) + " | Valley: " + hex.hasMarker(Marker.Valley));
 
 		RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.riverUUID);
 		if(attrib != null)

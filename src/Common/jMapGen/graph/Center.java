@@ -5,6 +5,7 @@ import jMapGen.Map;
 import jMapGen.Point;
 import jMapGen.attributes.Attribute;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
@@ -20,17 +21,7 @@ public class Center
 
 	public Point point;  // location
 
-	/**
-	 * 1 = water
-	 * 2 = ocean
-	 * 4 = coast
-	 * 8 = coastwater
-	 * 16 = border
-	 * 32 = canyon
-	 * 64 = lava
-	 * 128 = valley
-	 */
-	private int flags = 0;
+	private EnumSet<Marker> flags = EnumSet.noneOf(Marker.class);
 
 	public BiomeType biome;
 	public double elevation = 0; // 0.0-1.0
@@ -59,9 +50,31 @@ public class Center
 		index = i;
 	}
 
+	public void setMarkers(Marker... m)
+	{
+		for(Marker mk : m)
+			flags.add(mk);
+	}
+
+	public boolean hasMarker(Marker m)
+	{
+		return flags.contains(m);
+	}
+
+	public void removeMarkers(Marker... m)
+	{
+		for(Marker mk : m)
+			flags.remove(mk);
+	}
+
 	public Attribute getAttribute(UUID id)
 	{
 		return attribMap.get(id);
+	}
+
+	public boolean hasAttribute(UUID id)
+	{
+		return attribMap.containsKey(id);
 	}
 
 	public boolean addAttribute(Attribute a)
@@ -71,110 +84,6 @@ public class Center
 
 		attribMap.put(a.id, a);
 		return true;
-	}
-
-	public boolean isWater()
-	{
-		return (flags & 1) > 0;
-	}
-
-	public void setWater(boolean b)
-	{
-		if(b)
-			flags |= 1;
-		else if(isWater())
-			flags ^= 1;
-	}
-
-	public boolean isOcean()
-	{
-		return (flags & 2) > 0;
-	}
-
-	public void setOcean(boolean b)
-	{
-		if(b)
-			flags |= 2;
-		else if(isOcean())
-			flags ^= 2;
-	}
-
-	public boolean isCoast()
-	{
-		return (flags & 4) > 0;
-	}
-
-	public void setCoast(boolean b)
-	{
-		if(b)
-			flags |= 4;
-		else if(isCoast())
-			flags ^= 4;
-	}
-
-	public boolean isCoastWater()
-	{
-		return (flags & 8) > 0;
-	}
-
-	public void setCoastWater(boolean b)
-	{
-		if(b)
-			flags |= 8;
-		else if(isCoastWater())
-			flags ^= 8;
-	}
-
-	public boolean isBorder()
-	{
-		return (flags & 16) > 0;
-	}
-
-	public void setBorder(boolean b)
-	{
-		if(b)
-			flags |= 16;
-		else if(isBorder())
-			flags ^= 16;
-	}
-
-	public boolean isCanyon()
-	{
-		return (flags & 32) > 0;
-	}
-
-	public void setCanyon(boolean b)
-	{
-		if(b)
-			flags |= 32;
-		else if(isCanyon())
-			flags ^= 32;
-	}
-
-	public boolean isLava()
-	{
-		return (flags & 64) > 0;
-	}
-
-	public void setLava(boolean b)
-	{
-		if(b)
-			flags |= 64;
-		else if(isCanyon())
-			flags ^= 64;
-	}
-
-	public boolean isValley()
-	{
-		return (flags & 128) > 0;
-	}
-
-	public void setValley(boolean b)
-	{
-		if(b)
-			flags |= 128;
-		else if(isCanyon())
-			flags ^= 128;
 	}
 
 	public Center getClosestNeighbor(Point p)
@@ -275,7 +184,12 @@ public class Center
 		nbt.setInteger("biome", biome.ordinal());
 		nbt.setDouble("xCoord", point.x);
 		nbt.setDouble("yCoord", point.y);
-		nbt.setInteger("flags", flags);
+		int f = 0;
+		for(Marker ff : flags)
+		{
+			f += ff.ordinal();
+		}
+		nbt.setInteger("flags", f);
 		nbt.setDouble("elevation", elevation);
 		nbt.setDouble("moisture", moisture);
 		if(downslope != null)
@@ -321,7 +235,7 @@ public class Center
 		{
 			biome = BiomeType.values()[nbt.getInteger("biome")];
 			point = new Point(nbt.getDouble("xCoord"), nbt.getDouble("yCoord"));
-			flags = nbt.getInteger("flags");
+			setMarkers(nbt.getInteger("flags"));
 			elevation = nbt.getDouble("elevation");
 			moisture = nbt.getDouble("moisture");
 
@@ -360,5 +274,25 @@ public class Center
 		{
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Used for reading stored nbt information
+	 */
+	private void setMarkers(int i)
+	{
+		for(Marker f : Marker.values())
+		{
+			if((i & f.ordinal()) > 0)
+			{
+				flags.add(f);
+			}
+		}
+	}
+
+	public enum Marker
+	{
+		//Important not to change this order if it can be helped.
+		Water, Ocean, Coast, CoastWater, Border, Lava, Valley;
 	}
 }
