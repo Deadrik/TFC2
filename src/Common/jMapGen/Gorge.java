@@ -2,19 +2,19 @@ package jMapGen;
 
 import java.util.Vector;
 
-public class Canyon 
+public class Gorge 
 {
-	public Vector<CanyonNode> nodes;
-	public CanyonNode start;
+	public Vector<GorgeNode> nodes;
+	public GorgeNode start;
 	public double maxElev = Double.MIN_VALUE;
 	public double minElev = Double.MAX_VALUE;
 
-	public Canyon()
+	public Gorge()
 	{
-		nodes = new Vector<CanyonNode>();
+		nodes = new Vector<GorgeNode>();
 	}
 
-	public void addNode(CanyonNode c)
+	public void addNode(GorgeNode c)
 	{
 		if(c.center.elevation < minElev)
 			minElev = c.center.elevation;
@@ -25,7 +25,7 @@ public class Canyon
 			start = c;
 	}
 
-	public boolean hasCenter(CanyonNode c)
+	public boolean hasCenter(GorgeNode c)
 	{
 		return nodes.contains(c);
 	}

@@ -66,12 +66,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			double c = i;
 			double a = 0.5*c;
 			double b = Math.sin(60)*c;
-			hexSamplePoints[i][0] = new Point(0, b);
-			hexSamplePoints[i][1] = new Point(a, 0);
-			hexSamplePoints[i][2] = new Point(a+c, 0);
-			hexSamplePoints[i][3] = new Point(2*c, b);
-			hexSamplePoints[i][4] = new Point(a+c, 2*b);
-			hexSamplePoints[i][5] = new Point(a, 2*b);
+
+			for(int j = 0; j < 6; j++)
+			{
+				hexSamplePoints[i][j] = hex_corner(i, j);
+			}
 		}
 
 		/**
@@ -97,6 +96,14 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	}
 
+	private Point hex_corner(double size, int i)
+	{
+		double angle_deg = 60 * i   + 30;
+		double angle_rad = Math.PI / 180 * angle_deg;
+		return new Point(size * Math.cos(angle_rad),
+				size * Math.sin(angle_rad));
+	}
+
 	@Override
 	public Chunk provideChunk(int chunkX, int chunkZ)
 	{
@@ -107,17 +114,17 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		islandX = worldX % MAP_SIZE;
 		islandZ = worldZ % MAP_SIZE;
 		mapX = worldX >> 12;
-		mapZ = worldZ >> 12;
-		islandMap = WorldGen.instance.getIslandMap(mapX, mapZ);
-		centersInChunk = new Vector<Center>();
+			mapZ = worldZ >> 12;
+			islandMap = WorldGen.instance.getIslandMap(mapX, mapZ);
+			centersInChunk = new Vector<Center>();
 
-		this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
-		ChunkPrimer chunkprimer = new ChunkPrimer();
-		generateTerrain(chunkprimer, chunkX, chunkZ);
-		decorate(chunkprimer, chunkX, chunkZ);
-		Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
-		chunk.generateSkylightMap();
-		return chunk;  
+			this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
+			ChunkPrimer chunkprimer = new ChunkPrimer();
+			generateTerrain(chunkprimer, chunkX, chunkZ);
+			decorate(chunkprimer, chunkX, chunkZ);
+			Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
+			chunk.generateSkylightMap();
+			return chunk;  
 	}
 
 	/**

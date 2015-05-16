@@ -5,7 +5,7 @@ package jMapGen;
 
 import jMapGen.IslandParameters.Feature;
 import jMapGen.attributes.Attribute;
-import jMapGen.attributes.CanyonAttribute;
+import jMapGen.attributes.GorgeAttribute;
 import jMapGen.attributes.RiverAttribute;
 import jMapGen.com.nodename.Delaunay.DelaunayUtil;
 import jMapGen.com.nodename.Delaunay.Voronoi;
@@ -1139,8 +1139,8 @@ public class Map
 			return;
 
 		Vector<Center> possibleStarts = new Vector<Center>();
-		Vector<Canyon> canyons = new Vector<Canyon>();
-		Canyon canyon = null;
+		Vector<Gorge> gorges = new Vector<Gorge>();
+		Gorge gorge = null;
 
 		Vector<Center> highCenters = this.getCentersAboveElevation(0.5);
 		for (int i = 0; i < 100; i++) 
@@ -1163,9 +1163,9 @@ public class Map
 		{
 			if(c.hasMarker(Marker.Water))
 				continue;
-			canyon = new Canyon();
-			CanyonNode curNode = new CanyonNode(c);
-			CanyonNode nextNode = curNode;
+			gorge = new Gorge();
+			GorgeNode curNode = new GorgeNode(c);
+			GorgeNode nextNode = curNode;
 			int count = 0;
 			while (true)
 			{
@@ -1176,26 +1176,26 @@ public class Map
 				count++;
 
 				//calculate the next node
-				nextNode = getNextCanyonNode(curNode);
+				nextNode = getNextGorgeNode(curNode);
 				if(nextNode != null)
 					nextNode.setUp(curNode);
 				//set the downriver center for this node to the next center
 				curNode.setDown(nextNode);
-				canyon.addNode(curNode);
+				gorge.addNode(curNode);
 
 				//set the current working center to our next node before starting over
 				curNode = nextNode;
 			}
 
-			if(canyon != null && canyon.nodes.size() > 2)
+			if(gorge != null && gorge.nodes.size() > 2)
 			{
-				canyons.add(canyon);
-				for(CanyonNode cn : canyon.nodes)
+				gorges.add(gorge);
+				for(GorgeNode cn : gorge.nodes)
 				{
-					double diff = cn.center.elevation - canyon.minElev;
+					double diff = cn.center.elevation - gorge.minElev;
 					if(!cn.center.hasAttribute(Attribute.gorgeUUID))
-						cn.center.elevation = Math.max(canyon.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2));
-					CanyonAttribute a = new CanyonAttribute(Attribute.gorgeUUID);
+						cn.center.elevation = Math.max(gorge.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2));
+					GorgeAttribute a = new GorgeAttribute(Attribute.gorgeUUID);
 					if(cn.getUp() != null)
 						a.setUp(cn.getUp().center);
 					if(cn.getDown() != null)
@@ -1204,22 +1204,9 @@ public class Map
 				}
 			}
 		}
-
-
-
-		/*for(Canyon c : canyons)
-		{
-			for(CanyonNode cn : c.nodes)
-			{
-				double diff = cn.center.elevation - c.minElev;
-				if(!cn.center.isCanyon())
-					cn.center.elevation = Math.max(c.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2));
-				cn.center.setCanyon(true);
-			}
-		}*/
 	}
 
-	public CanyonNode getNextCanyonNode(CanyonNode cur)
+	public GorgeNode getNextGorgeNode(GorgeNode cur)
 	{
 		Vector<Center> possibles = new Vector<Center>();
 
@@ -1231,7 +1218,7 @@ public class Map
 			{
 				//If next to a water hex then we move to it instead of anything else
 				if(n.hasAttribute(Attribute.gorgeUUID))
-					return new CanyonNode(n);
+					return new GorgeNode(n);
 				if(n.hasMarker(Marker.Ocean) || n.hasMarker(Marker.Water))
 				{
 					return null;
@@ -1245,12 +1232,12 @@ public class Map
 		if(possibles.size() > 1)
 		{
 			Center p = possibles.get(mapRandom.nextInt(possibles.size()));
-			return new CanyonNode(p);
+			return new GorgeNode(p);
 		}
 		else if(possibles.size() == 1)
-			return new CanyonNode(possibles.get(0));
+			return new GorgeNode(possibles.get(0));
 
-		return new CanyonNode(cur.center.downslope);
+		return new GorgeNode(cur.center.downslope);
 	}
 
 	public void createRivers(Vector<Center> land) 
@@ -1285,7 +1272,7 @@ public class Map
 			{
 				if(cn.hasAttribute(Attribute.gorgeUUID))
 				{
-					if(((CanyonAttribute)cn.getAttribute(Attribute.gorgeUUID)).getUp() == null && mapRandom.nextFloat() > 0.25)
+					if(((GorgeAttribute)cn.getAttribute(Attribute.gorgeUUID)).getUp() == null && mapRandom.nextFloat() > 0.25)
 					{
 						possibleStarts.add(cn);
 					}

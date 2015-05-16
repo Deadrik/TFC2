@@ -6,17 +6,17 @@ import java.util.UUID;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CanyonAttribute extends Attribute 
+public class GorgeAttribute extends Attribute 
 {
 	Center up;
 	Center down;
 
-	public CanyonAttribute() 
+	public GorgeAttribute() 
 	{
 		super();
 	}
 
-	public CanyonAttribute(UUID i) 
+	public GorgeAttribute(UUID i) 
 	{
 		super(i);
 	}
