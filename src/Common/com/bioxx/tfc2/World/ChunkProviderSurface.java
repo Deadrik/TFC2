@@ -6,6 +6,7 @@ import jMapGen.Map;
 import jMapGen.Point;
 import jMapGen.Spline2D;
 import jMapGen.attributes.Attribute;
+import jMapGen.attributes.CanyonAttribute;
 import jMapGen.attributes.RiverAttribute;
 import jMapGen.graph.Center;
 import jMapGen.graph.Center.Marker;
@@ -243,9 +244,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	protected int getHexElevation(Center c, Point p)
 	{
-		if(this.islandMap.islandParams.hasFeature(Feature.Cliffs))
-			return convertElevation(getSmoothHeightHex(c, p, 2));
-		return convertElevation(getSmoothHeightHex(c, p, 5));
+		return convertElevation(getSmoothHeightHex(c, p));
 	}
 
 	protected int convertElevation(double height)
@@ -465,7 +464,49 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	protected double getSmoothHeightHex(Center c, Point p)
 	{
+		if(this.islandMap.islandParams.hasFeature(Feature.Cliffs))
+			return getSmoothHeightHex(c, p, 2);
+
+		if(islandMap.islandParams.hasFeature(Feature.Canyons) || islandMap.islandParams.hasFeature(Feature.Gorges))
+		{
+			//If this block is in a gorge hex
+			if(c.hasAttribute(Attribute.gorgeUUID))
+			{
+				return getSmoothHeightHex(c, p, 2);
+			}
+			//If this block is in a canyon hex
+			if(c.hasAttribute(Attribute.canyonUUID))
+			{
+				CanyonAttribute a = (CanyonAttribute) c.getAttribute(Attribute.canyonUUID);
+				if(a.nodeNum < 10)
+					return getSmoothHeightHex(c, p, 5);
+				return getSmoothHeightHex(c, p, 2);
+			}
+			//If we're in any other hex then we need to see if we are smoothing into a gorge or canyon hex. If so,
+			//we want to limit the smoothing, otherwise we smooth this block like normal.
+			Vector<Center> nearList = getCentersNear(p, 5);
+			for(Center n : nearList)
+			{
+				if(n.hasAttribute(Attribute.canyonUUID) || n.hasAttribute(Attribute.gorgeUUID))
+					return getSmoothHeightHex(c, p, 2);
+			}
+		}
+
+
 		return getSmoothHeightHex(c, p, 5);
+	}
+
+	private Vector<Center> getCentersNear(Point p, int range)
+	{
+		Vector<Center> outList = new Vector<Center>();
+		for(int i = 0; i < 6; i++)
+		{
+			Center c = getHex(hexSamplePoints[range][i].plus(p));
+			if(!outList.contains(c))
+				outList.add(c);
+		}
+
+		return outList;
 	}
 
 	@Override

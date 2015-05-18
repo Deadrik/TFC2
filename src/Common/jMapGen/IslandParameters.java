@@ -156,6 +156,6 @@ public class IslandParameters
 	public enum Feature
 	{
 		//Important not to change this order if it can be helped.
-		Gorges, Volcano, Cliffs, SharperMountains, EvenSharperMountains, Valleys, SmallCraters, LargeCrater;
+		Gorges, Volcano, Cliffs, SharperMountains, EvenSharperMountains, Valleys, SmallCraters, LargeCrater, Canyons;
 	}
 }

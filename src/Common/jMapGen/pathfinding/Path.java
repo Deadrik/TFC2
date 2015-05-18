@@ -2,12 +2,12 @@ package jMapGen.pathfinding;
 
 import jMapGen.graph.Center;
 
-import java.util.Vector;
+import java.util.LinkedList;
 
 public class Path 
 {
 	int totalCost = 0;
-	public Vector<PathNode> path = new Vector<PathNode>();
+	public LinkedList<PathNode> path = new LinkedList<PathNode>();
 
 	public void addNode(PathNode c)
 	{

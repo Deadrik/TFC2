@@ -3,6 +3,7 @@ package com.bioxx.tfc2.Commands;
 import jMapGen.Map;
 import jMapGen.Point;
 import jMapGen.attributes.Attribute;
+import jMapGen.attributes.RiverAttribute;
 import jMapGen.graph.Center;
 import jMapGen.graph.Corner;
 import jMapGen.pathfinding.Path;
@@ -67,10 +68,9 @@ public class PrintImageMapCommand extends CommandBase
 		if(params.length >= 2)
 		{
 			String name = params[1];
-			if(params[0].equals("terrain"))
+			if(params[0].equals("elev"))
 			{
-				int size = params.length >= 3 ? Integer.parseInt(params[2]) : 512;
-				//drawTerrainImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), size, world, name);
+				drawElevImage((int)Math.floor(player.posX), (int)Math.floor(player.posZ), world, name);
 			}
 			else if(params[0].equals("biome"))
 			{
@@ -192,21 +192,71 @@ public class PrintImageMapCommand extends CommandBase
 			int xM = (xCoord >> 12);
 			int zM = (zCoord >> 12);
 			Map map = WorldGen.instance.getIslandMap(xM, zM);
-			Point p;
-			for(int z = 0; z < size; z++)
+			Polygon poly;
+			for(Center c : map.centers)
 			{
-				for(int x = 0; x < size; x++)
+				count++;
+				graphics.setColor(c.biome.color);		
+				poly = new Polygon();
+				for(Corner cn : c.corners)
 				{
-					p = new Point(x,z);
-					count++;
-					graphics.setColor(map.getSelectedHexagon(p).biome.color);	
-					graphics.drawRect(x, z, 1, 1);
-					if(count / (size*size) > perc)
+					poly.addPoint((int)cn.point.x, (int)cn.point.y);
+				}
+				graphics.fillPolygon(poly);
+				graphics.setColor(Color.black);	
+				graphics.drawPolygon(poly);
+			}
+
+			for(Center c : map.centers)
+			{
+				if(c.hasAttribute(Attribute.riverUUID))
+				{
+					RiverAttribute a = (RiverAttribute) c.getAttribute(Attribute.riverUUID);
+					if(a.getDownRiver() != null)
 					{
-						System.out.println((int)(perc*100)+"%");
-						perc+=0.1f;
+						graphics.setColor(Color.cyan);	
+						graphics.drawLine((int)c.point.x, (int)c.point.y, (int)a.getDownRiver().point.x, (int)a.getDownRiver().point.y);
 					}
 				}
+
+			}
+			System.out.println(name+".bmp Done!");
+			ImageIO.write(outBitmap, "BMP", outFile);
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void drawElevImage(int xCoord, int zCoord, World world, String name)
+	{
+		int size = 4096;
+		try 
+		{
+			File outFile = new File(name+".bmp");
+			BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
+			Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
+			graphics.clearRect(0, 0, size, size);
+			System.out.println(name+".bmp");
+			float perc = 0.1f;
+			float count = 0;
+			int xM = (xCoord >> 12);
+			int zM = (zCoord >> 12);
+			Map map = WorldGen.instance.getIslandMap(xM, zM);
+			Polygon poly;
+			for(Center c : map.centers)
+			{
+				count++;
+				int elev = Math.max((int)(c.getElevation()*255), 0);
+				graphics.setColor(colorMap[elev]);		
+				poly = new Polygon();
+				for(Corner cn : c.corners)
+				{
+					poly.addPoint((int)cn.point.x, (int)cn.point.y);
+				}
+				graphics.fillPolygon(poly);
+
 			}
 			System.out.println(name+".bmp Done!");
 			ImageIO.write(outBitmap, "BMP", outFile);

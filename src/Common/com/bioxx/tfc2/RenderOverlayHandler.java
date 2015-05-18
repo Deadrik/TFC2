@@ -26,7 +26,7 @@ public class RenderOverlayHandler
 		Map map = WorldGen.instance.getIslandMap(xM, zM);
 		Center hex = map.getSelectedHexagon(new Point(mc.thePlayer.posX, mc.thePlayer.posZ));
 		event.left.add("Elevation: "+hex.elevation);
-		event.left.add("Biome: "+hex.biome.name() + " | Canyon: " + hex.hasAttribute(Attribute.gorgeUUID) + " | Lava: " + hex.hasMarker(Marker.Lava) + " | Valley: " + hex.hasMarker(Marker.Valley));
+		event.left.add("Biome: "+hex.biome.name() + " | Gorge: " + hex.hasAttribute(Attribute.gorgeUUID) + " | Lava: " + hex.hasMarker(Marker.Lava) + " | Valley: " + hex.hasMarker(Marker.Valley)+ " | Canyon: " + hex.hasAttribute(Attribute.canyonUUID));
 
 		RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.riverUUID);
 		if(attrib != null)

@@ -50,6 +50,16 @@ public class Center
 		index = i;
 	}
 
+	public double getElevation()
+	{
+		return this.elevation;
+	}
+
+	public void setElevation(double d)
+	{
+		this.elevation = d;
+	}
+
 	public void setMarkers(Marker... m)
 	{
 		for(Marker mk : m)

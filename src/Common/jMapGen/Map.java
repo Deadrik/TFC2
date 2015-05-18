@@ -5,6 +5,7 @@ package jMapGen;
 
 import jMapGen.IslandParameters.Feature;
 import jMapGen.attributes.Attribute;
+import jMapGen.attributes.CanyonAttribute;
 import jMapGen.attributes.GorgeAttribute;
 import jMapGen.attributes.RiverAttribute;
 import jMapGen.com.nodename.Delaunay.DelaunayUtil;
@@ -23,7 +24,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NavigableMap;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -128,17 +131,19 @@ public class Map
 		// Determine downslope paths.
 		calculateDownslopesCenter();
 
-		createVolcano(getCentersAboveElevation(0.8));
+		createVolcano(getCentersAbove(0.8));
 
-		createValleys(getCentersAboveElevation(0.4));
+		createValleys(getCentersAbove(0.4));
 
+		createCanyons();
+		calculateDownslopesCenter();
 		createGorges();
 
 		// Determine downslope paths.
 		calculateDownslopesCenter();
 
 		// Create rivers.
-		createRivers(getCentersAboveElevation(0.1));
+		createRivers(getCentersAbove(0.1));
 
 		assignSlopedNoise();
 
@@ -151,6 +156,129 @@ public class Map
 
 		sortClockwise();
 		setupBiomeInfo();
+	}
+
+	private void createCanyons()
+	{
+		if(!this.islandParams.hasFeature(Feature.Canyons))
+			return;
+
+		Vector<Center> highCenters = getCentersAbove(0.8);
+		Vector<Center> startCenters = new Vector<Center>();
+
+		int maxCanyons = 5;
+
+		for(int i = 0; i < maxCanyons; i++)
+		{
+			Center start = null;
+			boolean found = false;
+			int count = 0;
+			while(found == false && count < 100)
+			{
+				found = true;
+				start = highCenters.get(mapRandom.nextInt(highCenters.size()));
+
+				if(start.hasAttribute(Attribute.canyonUUID) || startCenters.contains(start))
+					found = false;
+
+				for(Center c : startCenters)
+				{
+					if(start.point.distance(c.point) < 200)
+						found = false;
+				}
+				count++;
+			}
+			startCenters.add(start);
+
+
+			Vector<GenericNode> canyon = new Vector<GenericNode>();
+
+			GenericNode curNode = new GenericNode(start);
+			GenericNode nextNode = null;
+			double minElevation = curNode.getCenter().getElevation();
+			while(curNode != null)
+			{
+				canyon.add(curNode);
+				nextNode = getCanyonNextNode(curNode);
+				curNode.setDown(nextNode);
+				if(nextNode != null)
+				{
+					nextNode.setUp(curNode);
+					nextNode.nodeNum = curNode.nodeNum + 1;
+				}
+				minElevation = curNode.getCenter().getElevation();
+
+				//Dont manipulate curNode after this, it may be null.
+				curNode = nextNode;
+			}
+			System.out.println("Canyon " +i + ": " + start.point.x + "," + start.point.y);
+
+			//First we process the middle centers themselves
+			for(GenericNode gn : canyon)
+			{
+				Center curCenter = gn.getCenter();
+
+				double elevMult = Math.min(0.5, gn.nodeNum* 0.05);
+
+				if(!curCenter.hasAttribute(Attribute.canyonUUID))
+					curCenter.setElevation(Math.max(minElevation, gn.getCenter().getElevation()*(1-elevMult)));
+
+				//Create a canyon attribute for the node center
+				CanyonAttribute a = new CanyonAttribute(Attribute.canyonUUID, gn.nodeNum);
+				//set the down center in the canyon attribute to the down node for this node
+				if(gn.getDown() != null)
+					a.setDown(gn.getDown().getCenter());
+				if(gn.getUp() != null)
+					a.setUp(gn.getUp().getCenter());
+
+				curCenter.addAttribute(a);
+			}
+			//Next we go back through and process the neighbor centers
+			for(GenericNode gn : canyon)
+			{
+				for(Center n : gn.getCenter().neighbors)
+				{
+					//If this center already has a canyon attribute than it must have already been processed.
+					if(!n.hasAttribute(Attribute.canyonUUID) && !n.hasMarker(Marker.Water))
+					{
+						CanyonAttribute c = new CanyonAttribute(Attribute.canyonUUID, gn.nodeNum);
+						c.setDown(gn.getCenter());
+						if(n.addAttribute(c))
+							n.setElevation(Math.max(minElevation, gn.getCenter().getElevation()));
+					}
+				}
+			}
+		}
+	}
+
+	private GenericNode getCanyonNextNode(GenericNode curNode)
+	{
+
+		if(curNode.getCenter().downslope == null || curNode.getCenter().downslope.hasMarker(Marker.Water))
+			return null;
+
+		RandomCollection<Center> possibles = new RandomCollection<Center>(this.mapRandom);
+		for(Center n : curNode.getCenter().neighbors)
+		{
+			if(curNode.getUp() != null && n == curNode.getUp().getCenter())
+				continue;
+
+			if(n.hasAttribute(Attribute.canyonUUID))
+				return null;
+
+			if(n.hasMarker(Marker.Water))
+			{
+				return null;
+			}
+			else if(n.getElevation() < curNode.getCenter().getElevation())
+				possibles.add(0.5, n);
+			else
+				possibles.add(0.1, n);
+
+		}
+		if(possibles.size() > 0)
+			return new GenericNode(possibles.next());
+		return null;
 	}
 
 	private void createVolcano(Vector<Center> candidates)
@@ -260,7 +388,9 @@ public class Map
 		{
 			Center center = (Center)centerIter.next();
 			//10% change of any hex being selected as long as it is not a water or canyon hex, and does not contain a river.
-			if(!center.hasAttribute(Attribute.gorgeUUID) && !center.hasMarker(Marker.Coast) && this.mapRandom.nextInt(100) < 10 && !center.hasMarker(Marker.Water) && center.getAttribute(Attribute.riverUUID) == null)
+			if(!center.hasAttribute(Attribute.canyonUUID) && !center.hasAttribute(Attribute.gorgeUUID) && 
+					!center.hasMarker(Marker.Coast) && this.mapRandom.nextInt(100) < 10 && !center.hasMarker(Marker.Water) && 
+					center.getAttribute(Attribute.riverUUID) == null)
 			{
 				Center highest = this.getHighestNeighbor(center);
 				highest = this.getHighestNeighbor(highest);
@@ -1126,12 +1256,23 @@ public class Map
 		}
 	}
 
-	public Vector<Center> getCentersAboveElevation(double elev)
+	public Vector<Center> getCentersAbove(double elev)
 	{
 		Vector<Center> out = new Vector<Center>();
 		for(Center c : centers)
 		{
 			if (c.elevation >= elev)
+				out.add(c);
+		}
+		return out;
+	}
+
+	public Vector<Center> getCentersBelow(double elev, boolean allowWater)
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if (c.elevation <= elev && (!allowWater && !c.hasMarker(Marker.Water)))
 				out.add(c);
 		}
 		return out;
@@ -1146,14 +1287,24 @@ public class Map
 		Vector<Gorge> gorges = new Vector<Gorge>();
 		Gorge gorge = null;
 
-		Vector<Center> highCenters = this.getCentersAboveElevation(0.5);
+		Vector<Center> highCenters = this.getCentersAbove(0.5);
+		for(Center c : centers)
+		{
+			if(c.hasAttribute(Attribute.canyonUUID))
+			{
+				CanyonAttribute a = (CanyonAttribute) c.getAttribute(Attribute.canyonUUID);
+				if(a.isNode)
+					possibleStarts.add(c);
+			}
+		}
+
 		for (int i = 0; i < 100; i++) 
 		{
 			boolean flag = true;
 			Center c = highCenters.get(mapRandom.nextInt(highCenters.size()-1));
 			for(Center n : c.neighbors)
 			{
-				if(possibleStarts.contains(n))
+				if(possibleStarts.contains(n) || n.hasAttribute(Attribute.canyonUUID))
 				{
 					flag = false;
 					break;
@@ -1162,7 +1313,7 @@ public class Map
 			if(flag)
 				possibleStarts.add(c);
 		}
-
+		int id = 0;
 		for(Center c : possibleStarts)
 		{
 			if(c.hasMarker(Marker.Water))
@@ -1171,6 +1322,7 @@ public class Map
 			GorgeNode curNode = new GorgeNode(c);
 			GorgeNode nextNode = curNode;
 			int count = 0;
+			id++;
 			while (true)
 			{
 				if (c == null || count > 250 || curNode == null || curNode.center.hasMarker(Marker.Water)) 
@@ -1198,13 +1350,16 @@ public class Map
 				{
 					double diff = cn.center.elevation - gorge.minElev;
 					if(!cn.center.hasAttribute(Attribute.gorgeUUID))
+					{
 						cn.center.elevation = Math.max(gorge.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2));
-					GorgeAttribute a = new GorgeAttribute(Attribute.gorgeUUID);
-					if(cn.getUp() != null)
-						a.setUp(cn.getUp().center);
-					if(cn.getDown() != null)
-						a.setDown(cn.getDown().center);
-					cn.center.addAttribute(a);
+						GorgeAttribute a = new GorgeAttribute(Attribute.gorgeUUID);
+						if(cn.getUp() != null)
+							a.setUp(cn.getUp().center);
+						if(cn.getDown() != null)
+							a.setDown(cn.getDown().center);
+						a.gorgeID = id;
+						cn.center.addAttribute(a);
+					}
 				}
 			}
 		}
@@ -1384,6 +1539,7 @@ public class Map
 						{
 							riverAttrib = new RiverAttribute(Attribute.riverUUID);
 							curNode.center.addAttribute(riverAttrib);
+							curNode.center.setElevation(curNode.center.getElevation() * 0.96);
 						}
 						riverAttrib.addRiver(r.riverWidth);
 						riverAttrib.setDownRiver(nextNode.center);
@@ -1784,5 +1940,34 @@ public class Map
 		}*/
 	}
 
+	private class RandomCollection<E> 
+	{
+		private final NavigableMap<Double, E> map = new TreeMap<Double, E>();
+		private final Random random;
+		private double total = 0;
 
+		public RandomCollection() {
+			this(new Random());
+		}
+
+		public RandomCollection(Random random) {
+			this.random = random;
+		}
+
+		public void add(double weight, E result) {
+			if (weight <= 0) return;
+			total += weight;
+			map.put(total, result);
+		}
+
+		public E next() {
+			double value = random.nextDouble() * total;
+			return map.ceilingEntry(value).getValue();
+		}
+
+		public int size()
+		{
+			return map.size();
+		}
+	}
 }

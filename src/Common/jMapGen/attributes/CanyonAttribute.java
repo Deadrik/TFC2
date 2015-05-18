@@ -6,20 +6,22 @@ import java.util.UUID;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public class GorgeAttribute extends Attribute 
+public class CanyonAttribute extends Attribute 
 {
 	Center up;
 	Center down;
-	public int gorgeID = 0;
+	public boolean isNode = false;
+	public int nodeNum = 0;
 
-	public GorgeAttribute() 
+	public CanyonAttribute() 
 	{
 		super();
 	}
 
-	public GorgeAttribute(UUID i) 
+	public CanyonAttribute(UUID i, int num) 
 	{
 		super(i);
+		nodeNum = num;
 	}
 
 	public Center getDown()
@@ -51,9 +53,8 @@ public class GorgeAttribute extends Attribute
 
 		if(up != null)
 			nbt.setInteger("up", up.index);
-
-		nbt.setInteger("gorgeID", gorgeID);
-
+		nbt.setBoolean("isNode", isNode);
+		nbt.setInteger("nodeNum", nodeNum);
 	}
 
 	@Override
@@ -64,7 +65,8 @@ public class GorgeAttribute extends Attribute
 			down = m.centers.get(nbt.getInteger("down"));
 		if(nbt.hasKey("up"))
 			up = m.centers.get(nbt.getInteger("up"));
-		gorgeID = nbt.getInteger("gorgeID");
+		isNode = nbt.getBoolean("isNode");
+		nodeNum = nbt.getInteger("nodeNum");
 	}
 
 }
