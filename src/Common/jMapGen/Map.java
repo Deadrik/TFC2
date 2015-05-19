@@ -410,7 +410,7 @@ public class Map
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(!center2.hasMarker(Marker.Lava) && !center.hasAttribute(Attribute.gorgeUUID) && !center2.hasMarker(Marker.Coast) && center2.getAttribute(Attribute.riverUUID) == null && !center2.hasMarker(Marker.Water))
+					if(!center2.hasMarker(Marker.Lava) && !center2.hasAttribute(Attribute.gorgeUUID) && !center2.hasMarker(Marker.Coast) && center2.getAttribute(Attribute.riverUUID) == null && !center2.hasMarker(Marker.Water))
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
 						if(center2.elevation <= 0)
@@ -1293,7 +1293,7 @@ public class Map
 			if(c.hasAttribute(Attribute.canyonUUID))
 			{
 				CanyonAttribute a = (CanyonAttribute) c.getAttribute(Attribute.canyonUUID);
-				if(a.isNode)
+				if(a.isNode && a.nodeNum < 10)
 					possibleStarts.add(c);
 			}
 		}
@@ -1348,10 +1348,16 @@ public class Map
 				gorges.add(gorge);
 				for(GorgeNode cn : gorge.nodes)
 				{
-					double diff = cn.center.elevation - gorge.minElev;
+					double diff = cn.center.getElevation() - gorge.minElev;
+					double elev = cn.center.getElevation();
 					if(!cn.center.hasAttribute(Attribute.gorgeUUID))
 					{
-						cn.center.elevation = Math.max(gorge.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2));
+						cn.center.setElevation(Math.max(gorge.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2)));
+						if(cn.getUp() != null && cn.center.getElevation() > cn.getUp().center.getElevation())
+						{
+							cn.center.setElevation(cn.getUp().center.getElevation());
+						}
+
 						GorgeAttribute a = new GorgeAttribute(Attribute.gorgeUUID);
 						if(cn.getUp() != null)
 							a.setUp(cn.getUp().center);
@@ -1367,7 +1373,7 @@ public class Map
 
 	public GorgeNode getNextGorgeNode(GorgeNode cur)
 	{
-		Vector<Center> possibles = new Vector<Center>();
+		RandomCollection<Center> possibles = new RandomCollection<Center>(this.mapRandom);
 
 		//Go through each neighbor and find all possible hexes at the same elevation or lower
 		for(Center n : cur.center.neighbors)
@@ -1375,28 +1381,29 @@ public class Map
 			//If the elevations are the same or lower then this might be an ok location
 			if(convertHeightToMC(n.elevation) < convertHeightToMC(cur.center.elevation))
 			{
-				//If next to a water hex then we move to it instead of anything else
+				//If next to a gorge hex then we finish here
 				if(n.hasAttribute(Attribute.gorgeUUID))
-					return new GorgeNode(n);
+					return null;
 				if(n.hasMarker(Marker.Ocean) || n.hasMarker(Marker.Water))
 				{
 					return null;
 				}
 
 				//If the elevation is <= our current cell elevation then we allow this cell to be selected
-				possibles.add(n);
+				possibles.add(0.5, n);
+			}
+			else if(convertHeightToMC(n.elevation) == convertHeightToMC(cur.center.elevation))
+			{
+				possibles.add(0.1, n);
 			}
 		}
 
-		if(possibles.size() > 1)
+		if(possibles.size() > 0)
 		{
-			Center p = possibles.get(mapRandom.nextInt(possibles.size()));
-			return new GorgeNode(p);
+			return new GorgeNode(possibles.next());
 		}
-		else if(possibles.size() == 1)
-			return new GorgeNode(possibles.get(0));
 
-		return new GorgeNode(cur.center.downslope);
+		return null;
 	}
 
 	public void createRivers(Vector<Center> land) 
@@ -1431,7 +1438,8 @@ public class Map
 			{
 				if(cn.hasAttribute(Attribute.gorgeUUID))
 				{
-					if(((GorgeAttribute)cn.getAttribute(Attribute.gorgeUUID)).getUp() == null && mapRandom.nextFloat() > 0.25)
+					if(((GorgeAttribute)cn.getAttribute(Attribute.gorgeUUID)).getUp() == null && 
+							(mapRandom.nextFloat() > 0.25 || cn.hasAttribute(Attribute.canyonUUID)))
 					{
 						possibleStarts.add(cn);
 					}
@@ -1467,7 +1475,7 @@ public class Map
 			int count = 0;
 			while (true)
 			{
-				if (c == null || c == c.downslope || count > 250 || (curNode.center.hasMarker(Marker.Water) && curNode != r.riverStart)) 
+				if (c == null || c == c.downslope || count > 250 || (c.hasMarker(Marker.Water) && curNode != r.riverStart)) 
 				{
 					break;
 				}
@@ -1475,6 +1483,8 @@ public class Map
 				curNode = nextNode;
 				//calculate the next rivernode
 				nextNode = getNextRiverNode(r, curNode);
+				if(nextNode == null)
+					break;
 				RiverAttribute nextAttrib = ((RiverAttribute)nextNode.center.getAttribute(Attribute.riverUUID));
 
 				//set the downriver center for this node to the next center
@@ -1495,11 +1505,14 @@ public class Map
 
 			//If this river is long enough to be acceptable and it eventually empties into a water hex then we process the river into the map
 			boolean isValid = false;
-			if(r.riverStart != null && r.riverStart.center.hasMarker(Marker.Water) && r.nodes.lastElement().center.hasMarker(Marker.Water) &&(r.riverStart != r.nodes.lastElement()) &&
-					r.nodes.lastElement().center.elevation < r.riverStart.center.elevation)
+			//Is the riverstart valid
+			if(r.riverStart != null && r.riverStart.center.hasMarker(Marker.Water) && r.nodes.lastElement().center.hasMarker(Marker.Water) &&
+					(r.riverStart != r.nodes.lastElement()) && r.nodes.lastElement().center.elevation < r.riverStart.center.elevation)
 				isValid = true;
-			if(r.lengthToMerge > 3 && r.nodes.lastElement().center.hasMarker(Marker.Water))
+			if(r.lengthToMerge > 4 && r.nodes.lastElement().center.hasMarker(Marker.Water))
 				isValid = true;
+			else
+				isValid = false;
 			RiverAttribute startAttrib = (RiverAttribute)r.riverStart.center.getAttribute(Attribute.riverUUID);
 			if(r.riverStart == null || (startAttrib != null && startAttrib.getRiver() != 0) || r.nodes.size() < 4)
 				isValid = false;
@@ -1563,18 +1576,20 @@ public class Map
 	public RiverNode getNextRiverNode(River river, RiverNode curNode)
 	{
 		RiverAttribute curAttrib = (RiverAttribute)curNode.center.getAttribute(Attribute.riverUUID);
-		Center next = (curAttrib!= null ? curAttrib.getDownRiver() : null);
+		Center next = (curAttrib != null ? curAttrib.getDownRiver() : null);
 		if(next != null)
 			return new RiverNode(next);
 
-		Vector<Center> possibles = new Vector<Center>();
+		RandomCollection<Center> possibles = new RandomCollection<Center>();
 
 		//The river will attempt to meander if we aren't propagating down an existing river
 		if(curAttrib == null || curAttrib.getRiver() == 0)
 		{
+			int curMCElev = convertHeightToMC(curNode.center.elevation);
 			//Go through each neighbor and find all possible hexes at the same elevation or lower
 			for(Center n : curNode.center.neighbors)
 			{
+				int nMCElev = convertHeightToMC(n.elevation);
 				//Make sure that we aren't trying to flow backwards if the hexes are on the same level
 				if(n == curNode.upRiver)
 					continue;
@@ -1583,7 +1598,7 @@ public class Map
 					continue;
 
 				//If the elevations are the same or lower then this might be an ok location
-				if(convertHeightToMC(n.elevation) <= convertHeightToMC(curNode.center.elevation))
+				if(nMCElev <= curMCElev)
 				{
 					//If next to a water hex then we move to it instead of anything else
 					if(n.hasMarker(Marker.Ocean) || n.hasMarker(Marker.Water))
@@ -1602,19 +1617,22 @@ public class Map
 						return new RiverNode(n);
 
 					//If the elevation is <= our current cell elevation then we allow this cell to be selected
-					possibles.add(n);
+					if(nMCElev == curMCElev)
+						possibles.add(0.2, n);
+					else if(nMCElev < curMCElev-5)
+						possibles.add(1.0,n);
+					else
+						possibles.add(0.5,n);
 				}
 			}
 		}
-		if(possibles.size() > 1)
+		if(possibles.size() > 0)
 		{
-			Center p = possibles.get(mapRandom.nextInt(possibles.size()));
+			Center p = possibles.next();
 			return new RiverNode(p);
 		}
-		else if(possibles.size() == 1)
-			return new RiverNode(possibles.get(0));
 
-		return new RiverNode(curNode.center.downslope);
+		return null;
 	}
 
 	private int convertHeightToMC(double d)
