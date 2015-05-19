@@ -311,6 +311,6 @@ public class Center
 	public enum Marker
 	{
 		//Important not to change this order if it can be helped.
-		Water, Ocean, Coast, CoastWater, Border, Lava, Valley;
+		Water, Ocean, Coast, CoastWater, Border, Lava, Valley, SmallCrater;
 	}
 }
