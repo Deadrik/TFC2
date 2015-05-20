@@ -1,16 +1,5 @@
 package com.bioxx.tfc2.World;
 
-import jMapGen.BiomeType;
-import jMapGen.IslandParameters.Feature;
-import jMapGen.Map;
-import jMapGen.Point;
-import jMapGen.Spline2D;
-import jMapGen.attributes.Attribute;
-import jMapGen.attributes.CanyonAttribute;
-import jMapGen.attributes.RiverAttribute;
-import jMapGen.graph.Center;
-import jMapGen.graph.Center.Marker;
-
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
@@ -24,6 +13,16 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 
+import com.bioxx.jMapGen.BiomeType;
+import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.Point;
+import com.bioxx.jMapGen.Spline2D;
+import com.bioxx.jMapGen.IslandParameters.Feature;
+import com.bioxx.jMapGen.attributes.Attribute;
+import com.bioxx.jMapGen.attributes.CanyonAttribute;
+import com.bioxx.jMapGen.attributes.RiverAttribute;
+import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jMapGen.graph.Center.Marker;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;

@@ -1,9 +1,5 @@
 package com.bioxx.tfc2.World;
 
-import jMapGen.IslandParameters;
-import jMapGen.IslandParameters.Feature;
-import jMapGen.Map;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,6 +11,9 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import com.bioxx.jMapGen.IslandParameters;
+import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.tfc2.api.Util.Helper;
 
 

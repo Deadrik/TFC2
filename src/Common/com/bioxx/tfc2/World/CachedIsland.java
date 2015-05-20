@@ -1,6 +1,6 @@
 package com.bioxx.tfc2.World;
 
-import jMapGen.Map;
+import com.bioxx.jMapGen.Map;
 
 public class CachedIsland 
 {

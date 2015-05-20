@@ -1,14 +1,5 @@
 package com.bioxx.tfc2.Commands;
 
-import jMapGen.Map;
-import jMapGen.Point;
-import jMapGen.attributes.Attribute;
-import jMapGen.attributes.RiverAttribute;
-import jMapGen.graph.Center;
-import jMapGen.graph.Corner;
-import jMapGen.pathfinding.Path;
-import jMapGen.pathfinding.PathNode;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -26,6 +17,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.Point;
+import com.bioxx.jMapGen.attributes.Attribute;
+import com.bioxx.jMapGen.attributes.RiverAttribute;
+import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jMapGen.graph.Corner;
+import com.bioxx.jMapGen.pathfinding.Path;
+import com.bioxx.jMapGen.pathfinding.PathNode;
 import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.Cache;

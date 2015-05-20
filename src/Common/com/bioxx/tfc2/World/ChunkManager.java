@@ -1,11 +1,11 @@
 package com.bioxx.tfc2.World;
 
-import jMapGen.Map;
-import jMapGen.graph.Center;
-import jMapGen.graph.Center.Marker;
-
 import java.util.Random;
 import java.util.Vector;
+
+import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jMapGen.graph.Center.Marker;
 
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;

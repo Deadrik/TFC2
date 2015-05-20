@@ -1,16 +1,16 @@
 package com.bioxx.tfc2;
 
-import jMapGen.Map;
-import jMapGen.Point;
-import jMapGen.attributes.Attribute;
-import jMapGen.attributes.RiverAttribute;
-import jMapGen.graph.Center;
-import jMapGen.graph.Center.Marker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.Point;
+import com.bioxx.jMapGen.attributes.Attribute;
+import com.bioxx.jMapGen.attributes.RiverAttribute;
+import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jMapGen.graph.Center.Marker;
 import com.bioxx.tfc2.World.WorldGen;
 
 public class RenderOverlayHandler
