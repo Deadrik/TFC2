@@ -155,7 +155,7 @@ public class Center
 		return null;
 	}
 
-	boolean SameSide(pythagoras.d.Vector p1, pythagoras.d.Vector p2, pythagoras.d.Vector a, pythagoras.d.Vector b)
+	/*boolean SameSide(pythagoras.d.Vector p1, pythagoras.d.Vector p2, pythagoras.d.Vector a, pythagoras.d.Vector b)
 	{
 		pythagoras.d.Vector cp1 = b.subtract(a).cross(p1.subtract(a));
 		pythagoras.d.Vector cp2 = b.subtract(a).cross(p2.subtract(a));
@@ -194,7 +194,7 @@ public class Center
 		// Check if point is in triangle
 		return (u >= 0) && (v >= 0) && (u + v < 1);
 
-	}
+	}*/
 
 	public void writeToNBT(NBTTagCompound nbt)
 	{

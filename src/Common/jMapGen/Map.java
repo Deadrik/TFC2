@@ -31,8 +31,6 @@ import java.util.Vector;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import za.co.iocom.math.MathUtil;
-
 
 public class Map 
 {
@@ -81,14 +79,12 @@ public class Map
 	{
 		islandParams = new IslandParameters(seed, SIZE, 0.5);
 		mapRandom.setSeed(seed);
-		MathUtil.random = mapRandom;
 	}
 
 	public void newIsland(IslandParameters is) 
 	{
 		islandParams = is;
 		mapRandom.setSeed(seed);
-		MathUtil.random = mapRandom;
 		NUM_POINTS = is.SIZE*4;
 		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 	}
