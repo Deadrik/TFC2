@@ -8,10 +8,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NavigableMap;
 import java.util.Random;
-import java.util.TreeMap;
 import java.util.Vector;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.attributes.Attribute;
@@ -22,15 +23,12 @@ import com.bioxx.jMapGen.com.nodename.Delaunay.DelaunayUtil;
 import com.bioxx.jMapGen.com.nodename.Delaunay.Voronoi;
 import com.bioxx.jMapGen.com.nodename.geom.LineSegment;
 import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jMapGen.graph.Center.Marker;
 import com.bioxx.jMapGen.graph.Corner;
 import com.bioxx.jMapGen.graph.CornerElevationSorter;
 import com.bioxx.jMapGen.graph.Edge;
 import com.bioxx.jMapGen.graph.MoistureComparator;
-import com.bioxx.jMapGen.graph.Center.Marker;
 import com.bioxx.jMapGen.pathfinding.PathFinder;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 public class Map 
 {
@@ -1952,36 +1950,5 @@ public class Map
 				rivers.add(r);
 			}
 		}*/
-	}
-
-	private class RandomCollection<E> 
-	{
-		private final NavigableMap<Double, E> map = new TreeMap<Double, E>();
-		private final Random random;
-		private double total = 0;
-
-		public RandomCollection() {
-			this(new Random());
-		}
-
-		public RandomCollection(Random random) {
-			this.random = random;
-		}
-
-		public void add(double weight, E result) {
-			if (weight <= 0) return;
-			total += weight;
-			map.put(total, result);
-		}
-
-		public E next() {
-			double value = random.nextDouble() * total;
-			return map.ceilingEntry(value).getValue();
-		}
-
-		public int size()
-		{
-			return map.size();
-		}
 	}
 }

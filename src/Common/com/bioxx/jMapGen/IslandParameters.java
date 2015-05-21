@@ -156,6 +156,19 @@ public class IslandParameters
 	public enum Feature
 	{
 		//Important not to change this order if it can be helped.
-		Gorges, Volcano, Cliffs, SharperMountains, EvenSharperMountains, Valleys, SmallCraters, LargeCrater, Canyons;
+		Gorges(0.3), Volcano(0.1), Cliffs(0.3), SharperMountains(0.3), EvenSharperMountains(0.3), Valleys(0.6), SmallCraters(0.2), LargeCrater(0.2), Canyons(0.3);
+
+		public final double rarity;
+		private static final RandomCollection<Feature> pot = new RandomCollection<Feature>();
+
+		private Feature(double r)
+		{
+			rarity = r;
+		}
+
+		public static Feature getRandomFeature()
+		{
+			return pot.next();
+		}
 	}
 }

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.nbt.CompressedStreamTools;
@@ -12,8 +13,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import com.bioxx.jMapGen.IslandParameters;
-import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.IslandParameters.Feature;
+import com.bioxx.jMapGen.Map;
 import com.bioxx.tfc2.api.Util.Helper;
 
 
@@ -62,14 +63,31 @@ public class WorldGen
 	private Map createIsland(int x, int z)
 	{
 		long seed = world.getSeed()+Helper.cantorize(x, z);
-		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
-		id.setFeatures(Feature.Canyons, Feature.Gorges, Feature.SmallCraters);
-		id.setCoords(x, z);
+		IslandParameters id = createParams(seed, x, z);
 		Map mapgen = new Map(4096, seed);
 		mapgen.newIsland(id);
 		mapgen.go();
 		islandCache.put(Helper.cantorize(x, z), new CachedIsland(mapgen));
 		return mapgen;
+	}
+
+	private IslandParameters createParams(long seed, int x, int z)
+	{
+		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
+		Random r = new Random(seed);
+		id.setCoords(x, z);
+		int fcount = 1+r.nextInt(3);
+		//Choose Features
+		for(int i = 0; i < fcount; i++)
+		{
+			Feature f = Feature.getRandomFeature();
+			if(f == Feature.Canyons)
+				id.setFeatures(Feature.Gorges);
+
+			if(id.hasFeature(f)){i--; continue;}
+			else id.setFeatures(f);
+		}
+		return id;
 	}
 
 	public void resetCache()
