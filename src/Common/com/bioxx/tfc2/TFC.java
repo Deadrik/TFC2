@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -23,6 +24,7 @@ import com.bioxx.tfc2.Handlers.WorldLoadHandler;
 import com.bioxx.tfc2.Networking.PacketPipeline;
 import com.bioxx.tfc2.World.WorldProviderSurface;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
 import com.bioxx.tfc2.api.Trees.TreeSchematic;
@@ -93,6 +95,30 @@ public class TFC
 	public void serverStarting(FMLServerStartingEvent evt)
 	{
 		evt.registerServerCommand(new PrintImageMapCommand());
+	}
+
+	public void loadSettings()
+	{
+		Configuration config;
+		try
+		{
+			config = new Configuration(new File(TFC.proxy.getMinecraftDir(), "/config/Options.cfg"));
+			config.load();
+		} catch (Exception e) {
+			System.out.println(new StringBuilder().append("[TFC2] Error while trying to access settings configuration!").toString());
+			config = null;
+		}
+		System.out.println(new StringBuilder().append("[TFC2] Loading Settings").toString());
+		/**Start setup here*/
+		String GAMEL_HEADER = "Game";
+		String ENGINE_HEADER = "Engine";
+
+		//Engine
+		TFCOptions.maxThreadsForIslandGen = TFCOptions.getIntFor(config, ENGINE_HEADER, "maxThreadsForIslandGen", 2, "Maximum number of neighboring islands that can be pregenerated at once. Setting this higher may reduce performance.");
+
+		/**Always end with this*/
+		if (config != null)
+			config.save();
 	}
 
 

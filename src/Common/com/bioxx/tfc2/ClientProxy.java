@@ -1,5 +1,7 @@
 package com.bioxx.tfc2;
 
+import java.io.File;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -41,6 +43,12 @@ public class ClientProxy extends CommonProxy
 	private void registerItemMesh(Item i, int meta, ModelResourceLocation mrl)
 	{
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(i, meta, mrl);
+	}
+
+	@Override
+	public File getMinecraftDir()
+	{
+		return Minecraft.getMinecraft().mcDataDir;
 	}
 
 }

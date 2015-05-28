@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import com.bioxx.jMapGen.IslandParameters;
 import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.Map;
+import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Util.Helper;
 import com.bioxx.tfc2.api.Util.IThreadCompleteListener;
 
@@ -38,7 +39,7 @@ public class WorldGen implements IThreadCompleteListener
 		world = w;
 		islandCache = Collections.synchronizedMap(new ConcurrentHashMap<Integer, CachedIsland>());
 		mapQueue = new PriorityBlockingQueue<Integer>();
-		buildThreads = new ThreadBuild[2];
+		buildThreads = new ThreadBuild[TFCOptions.maxThreadsForIslandGen];
 	}
 
 	public static void initialize(World world)
