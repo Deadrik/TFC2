@@ -25,7 +25,7 @@ public class RenderOverlayHandler
 		int xM = ((int)(mc.thePlayer.posX) >> 12);
 		int zM = ((int)(mc.thePlayer.posZ) >> 12);
 		Map map = WorldGen.instance.getIslandMap(xM, zM);
-		Center hex = map.getSelectedHexagon(new Point(mc.thePlayer.posX, mc.thePlayer.posZ));
+		Center hex = map.getSelectedHexagon(new Point((int)(mc.thePlayer.posX) % 4096, (int)(mc.thePlayer.posZ) % 4096));
 		event.right.add("Elevation: "+hex.elevation);
 
 		event.right.add("Biome:"+hex.biome.name());

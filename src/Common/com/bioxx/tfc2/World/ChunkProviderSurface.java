@@ -113,8 +113,12 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		worldZ = chunkZ * 16;
 		islandX = worldX % MAP_SIZE;
 		islandZ = worldZ % MAP_SIZE;
-		mapX = (worldX >> 12);
-		mapZ = (worldZ >> 12);
+		mapX = (chunkX >> 8);
+		mapZ = (chunkZ >> 8);
+		if(chunkX < 0)
+			mapX -= 1;
+		if(chunkZ < 0)
+			mapZ -= 1;
 		islandMap = WorldGen.instance.getIslandMap(mapX, mapZ);
 		centersInChunk = new Vector<Center>();
 
@@ -320,7 +324,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						riverPoints = new ArrayList<Point>();
 						riverPoints.add(c.getSharedEdge(u).midpoint);
 						riverPoints.add(c.point);
-						riverPoints.add(c.getSharedEdge(attrib.getDownRiver()).midpoint);
+						if(attrib.getDownRiver() != null)
+							riverPoints.add(c.getSharedEdge(attrib.getDownRiver()).midpoint);
 
 						if(uAttrib.getRiver() >= 1)
 						{
@@ -330,14 +335,13 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						processRiverSpline(chunkprimer, c, u, new Spline2D(riverPoints.toArray()), uAttrib.getRiver(), riverStates);
 					}
 				}
-				else if(attrib.upriver != null && attrib.upriver.size() == 1 && attrib.getDownRiver() != null)
+				else if(attrib.upriver != null && attrib.upriver.size() == 1)
 				{
 					riverPoints = new ArrayList<Point>();
-					Point upPoint = c.getSharedEdge(attrib.upriver.get(0)).midpoint;
-					Point downPoint = c.getSharedEdge(attrib.getDownRiver()).midpoint;
-					riverPoints.add(upPoint);
+					riverPoints.add(c.getSharedEdge(attrib.upriver.get(0)).midpoint);
 					riverPoints.add(c.point);
-					riverPoints.add(downPoint);
+					if(attrib.getDownRiver() != null)
+						riverPoints.add(c.getSharedEdge(attrib.getDownRiver()).midpoint);
 
 					if(attrib.getRiver() >= 1)
 					{

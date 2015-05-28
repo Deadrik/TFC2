@@ -48,14 +48,18 @@ public class WorldGen
 		{
 			if(islandCache.containsKey(id))
 			{
-				return islandCache.get(id).getIslandMap();
+				CachedIsland ci = islandCache.get(id);
+				ci.lastAccess = System.currentTimeMillis();
+				return ci.getIslandMap();
 			}
 			else
 			{
 				Map m = loadMap(x, z);
 				if(m != null)
 				{
-					islandCache.put(id, new CachedIsland(m));
+					CachedIsland ci = new CachedIsland(m);
+					ci.lastAccess = System.currentTimeMillis();
+					islandCache.put(id, ci);
 					return m;
 				}
 			}
