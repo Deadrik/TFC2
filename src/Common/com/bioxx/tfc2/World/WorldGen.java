@@ -3,10 +3,11 @@ package com.bioxx.tfc2.World;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,14 +22,14 @@ import com.bioxx.tfc2.api.Util.Helper;
 public class WorldGen
 {
 	public static WorldGen instance;
-	HashMap<Integer, CachedIsland> islandCache;
+	java.util.Map<Integer, CachedIsland> islandCache;
 	World world;
 	public static final int ISLAND_SIZE = 4096;
 
 	public WorldGen(World w) 
 	{
 		world = w;
-		islandCache = new HashMap<Integer, CachedIsland>();
+		islandCache = Collections.synchronizedMap(new ConcurrentHashMap<Integer, CachedIsland>());
 	}
 
 	public static void initialize(World world)
@@ -43,20 +44,22 @@ public class WorldGen
 	public Map getIslandMap(int x, int z)
 	{
 		int id = Helper.cantorize(x, z);
-		if(islandCache.containsKey(id))
+		synchronized(islandCache)
 		{
-			return islandCache.get(id).getIslandMap();
-		}
-		else
-		{
-			Map m = loadMap(x, z);
-			if(m != null)
+			if(islandCache.containsKey(id))
 			{
-				islandCache.put(id, new CachedIsland(m));
-				return m;
+				return islandCache.get(id).getIslandMap();
+			}
+			else
+			{
+				Map m = loadMap(x, z);
+				if(m != null)
+				{
+					islandCache.put(id, new CachedIsland(m));
+					return m;
+				}
 			}
 		}
-
 		return createIsland(x, z);
 	}
 
@@ -67,7 +70,10 @@ public class WorldGen
 		Map mapgen = new Map(4096, seed);
 		mapgen.newIsland(id);
 		mapgen.go();
-		islandCache.put(Helper.cantorize(x, z), new CachedIsland(mapgen));
+		synchronized(islandCache)
+		{
+			islandCache.put(Helper.cantorize(x, z), new CachedIsland(mapgen));
+		}
 		return mapgen;
 	}
 
@@ -84,6 +90,13 @@ public class WorldGen
 			if(f == Feature.Canyons)
 				id.setFeatures(Feature.Gorges);
 
+			if((f == Feature.SharperMountains || f == Feature.EvenSharperMountains) && 
+					(id.hasFeature(Feature.SharperMountains) || id.hasFeature(Feature.EvenSharperMountains)))
+			{
+				i--; 
+				continue;
+			}
+
 			if(id.hasFeature(f)){i--; continue;}
 			else id.setFeatures(f);
 		}
@@ -92,28 +105,34 @@ public class WorldGen
 
 	public void resetCache()
 	{
-		for(CachedIsland c : islandCache.values())
+		synchronized(islandCache)
 		{
-			saveMap(c);
+			for(CachedIsland c : islandCache.values())
+			{
+				saveMap(c);
+			}
+			islandCache.clear();
 		}
-		islandCache = new HashMap<Integer, CachedIsland>();
 	}
 
 	public void trimCache()
 	{
 		long now = System.currentTimeMillis();
-		Set<Integer> keys = islandCache.keySet();
-
-		for(Iterator<Integer> iter = keys.iterator(); iter.hasNext();)
+		synchronized(islandCache)
 		{
-			int key = iter.next();
-			CachedIsland c = islandCache.get(key);
-			if(now-c.lastAccess > 12000)//12 seconds of no access will trim the map
-			{
-				saveMap(c);
-				islandCache.remove(key);
-			}
+			Set<Integer> keys = islandCache.keySet();
 
+			for(Iterator<Integer> iter = keys.iterator(); iter.hasNext();)
+			{
+				int key = iter.next();
+				CachedIsland c = islandCache.get(key);
+				if(now-c.lastAccess > 12000)//12 seconds of no access will trim the map
+				{
+					saveMap(c);
+					islandCache.remove(key);
+				}
+
+			}
 		}
 	}
 

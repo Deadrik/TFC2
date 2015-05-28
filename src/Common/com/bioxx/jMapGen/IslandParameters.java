@@ -129,7 +129,12 @@ public class IslandParameters
 
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		this.setFeatures(nbt.getInteger("features"));
+		NBTTagCompound fnbt = nbt.getCompoundTag("features");
+		for(Feature f : Feature.values())
+		{
+			if(fnbt.hasKey(f.toString()))
+				features.add(f);
+		}
 		this.setCoords(nbt.getInteger("xCoord"), nbt.getInteger("zCoord"));
 		this.oceanRatio = nbt.getDouble("oceanRatio");
 		this.lakeThreshold = nbt.getDouble("lakeThreshold");
@@ -140,11 +145,12 @@ public class IslandParameters
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		int feat = 0;
+		NBTTagCompound fnbt = new NBTTagCompound();
 		for(Feature ff : features)
 		{
-			feat += ff.ordinal();
+			fnbt.setBoolean(ff.toString(), true);
 		}
-		nbt.setInteger("features", feat);
+		nbt.setTag("features", fnbt);
 		nbt.setInteger("xCoord", xCoord);
 		nbt.setInteger("zCoord", zCoord);
 		nbt.setDouble("oceanRatio", oceanRatio);
@@ -156,19 +162,41 @@ public class IslandParameters
 	public enum Feature
 	{
 		//Important not to change this order if it can be helped.
-		Gorges(0.3), Volcano(0.1), Cliffs(0.3), SharperMountains(0.3), EvenSharperMountains(0.3), Valleys(0.6), SmallCraters(0.2), LargeCrater(0.2), Canyons(0.3);
+		Gorges(0.3, "Gorges"), 
+		Volcano(0.1, "Volcano"), 
+		Cliffs(0.3, "Cliffs"), 
+		SharperMountains(0.3, "Sharper Mountians"), 
+		EvenSharperMountains(0.3, "Even Sharper Mountains"), 
+		Valleys(0.6, "Valleys"), 
+		SmallCraters(0.2, "Small Crater"), 
+		LargeCrater(0.2, "Large Crater"), 
+		Canyons(0.3, "Canyons");
 
 		public final double rarity;
+		private String name;
 		private static final RandomCollection<Feature> pot = new RandomCollection<Feature>();
 
-		private Feature(double r)
+		private Feature(double r, String n)
 		{
 			rarity = r;
+			name = n;
 		}
 
 		public static Feature getRandomFeature()
 		{
+			if(pot.size() == 0)
+			{
+				for(Feature f : Feature.values())
+					pot.add(f.rarity, f);
+			}
+
 			return pot.next();
+		}
+
+		@Override
+		public String toString()
+		{
+			return name;
 		}
 	}
 }

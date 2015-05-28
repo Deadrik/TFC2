@@ -287,7 +287,8 @@ public class Map
 		double lowestElev = 1.0;
 		for(Center c : caldera)
 		{
-			((RiverAttribute)c.getAttribute(Attribute.riverUUID)).setRiver(0);
+			if(c.hasAttribute(Attribute.riverUUID))
+				((RiverAttribute)c.getAttribute(Attribute.riverUUID)).setRiver(0);
 			c.removeMarkers(Marker.Water);
 			c.setMarkers(Marker.Lava);
 			if(c.elevation < lowestElev)
@@ -1515,14 +1516,16 @@ public class Map
 			{
 				if(r.riverStart.center.hasMarker(Marker.Water) && this.centerInExistingLake(r.riverStart.center).centers.size() > 8)
 					r.riverWidth = 4 - 3 * r.riverStart.center.elevation;
-				else
+				else if(r.riverStart.center.hasAttribute(Attribute.gorgeUUID))
 					r.riverWidth = 1;
+				else
+					r.riverWidth = 0.5;
 				//Add this river to the river collection
 				rivers.add(r);
 				curNode = r.nodes.get(0);
 				nextNode = curNode;
 				boolean cancelRiver = false;
-				for (int j = 0; j < r.nodes.size() && !cancelRiver; j++) 
+				for (int j = 0; j <= r.nodes.size() && !cancelRiver; j++) 
 				{
 					if(j == 0)
 					{
@@ -1531,7 +1534,7 @@ public class Map
 							if(n.getAttribute(Attribute.riverUUID) != null && 
 									((RiverAttribute)n.getAttribute(Attribute.riverUUID)).getRiver() > 0)
 							{
-								rivers.remove(rivers.size()-1);
+								rivers.remove(r);
 								cancelRiver = true;
 								break;
 							}
@@ -1539,28 +1542,34 @@ public class Map
 					}
 					else
 					{
-						nextNode = r.nodes.get(j);
+						if(j < r.nodes.size())
+							nextNode = r.nodes.get(j);
+						else nextNode = null;
 						//Sanity
 						RiverAttribute riverAttrib = ((RiverAttribute)curNode.center.getAttribute(Attribute.riverUUID));
 						if(riverAttrib == null)
 						{
 							riverAttrib = new RiverAttribute(Attribute.riverUUID);
 							curNode.center.addAttribute(riverAttrib);
-							curNode.center.setElevation(curNode.center.getElevation() * 0.96);
+							//curNode.center.setElevation(Math.max(curNode.center.getElevation() - this.convertMCToHeight(1), 0));
 						}
 						riverAttrib.addRiver(r.riverWidth);
-						riverAttrib.setDownRiver(nextNode.center);
-
-						//Sanity
-						RiverAttribute nextAttrib = ((RiverAttribute)nextNode.center.getAttribute(Attribute.riverUUID));
-						if(nextAttrib == null)
+						if(nextNode != null)
 						{
-							nextAttrib = new RiverAttribute(Attribute.riverUUID);
-							nextNode.center.addAttribute(nextAttrib);
-						}
+							riverAttrib.setDownRiver(nextNode.center);
+							if(nextNode.center.getElevation() > curNode.center.getElevation())
+								nextNode.center.setElevation(curNode.center.getElevation());
+							//Sanity
+							RiverAttribute nextAttrib = ((RiverAttribute)nextNode.center.getAttribute(Attribute.riverUUID));
+							if(nextAttrib == null)
+							{
+								nextAttrib = new RiverAttribute(Attribute.riverUUID);
+								nextNode.center.addAttribute(nextAttrib);
+							}
 
-						nextAttrib.addUpRiverCenter(curNode.center);
-						curNode = nextNode;
+							nextAttrib.addUpRiverCenter(curNode.center);
+							curNode = nextNode;
+						}
 					}
 				}
 			}

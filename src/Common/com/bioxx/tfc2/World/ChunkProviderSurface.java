@@ -14,10 +14,10 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 
 import com.bioxx.jMapGen.BiomeType;
+import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.Spline2D;
-import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.attributes.Attribute;
 import com.bioxx.jMapGen.attributes.CanyonAttribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
@@ -113,18 +113,18 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		worldZ = chunkZ * 16;
 		islandX = worldX % MAP_SIZE;
 		islandZ = worldZ % MAP_SIZE;
-		mapX = worldX >> 12;
-			mapZ = worldZ >> 12;
-			islandMap = WorldGen.instance.getIslandMap(mapX, mapZ);
-			centersInChunk = new Vector<Center>();
+		mapX = (worldX >> 12);
+		mapZ = (worldZ >> 12);
+		islandMap = WorldGen.instance.getIslandMap(mapX, mapZ);
+		centersInChunk = new Vector<Center>();
 
-			this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
-			ChunkPrimer chunkprimer = new ChunkPrimer();
-			generateTerrain(chunkprimer, chunkX, chunkZ);
-			decorate(chunkprimer, chunkX, chunkZ);
-			Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
-			chunk.generateSkylightMap();
-			return chunk;  
+		this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
+		ChunkPrimer chunkprimer = new ChunkPrimer();
+		generateTerrain(chunkprimer, chunkX, chunkZ);
+		decorate(chunkprimer, chunkX, chunkZ);
+		Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
+		chunk.generateSkylightMap();
+		return chunk;  
 	}
 
 	/**
@@ -321,16 +321,16 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						riverPoints.add(c.getSharedEdge(u).midpoint);
 						riverPoints.add(c.point);
 						riverPoints.add(c.getSharedEdge(attrib.getDownRiver()).midpoint);
-						//if(!c.water)
+
+						if(uAttrib.getRiver() >= 1)
 						{
 							processRiverSpline(chunkprimer, c, u, new Spline2D(riverPoints.toArray()), uAttrib.getRiver()+1, bankStates);
 							riverDepth--;
 						}
-
 						processRiverSpline(chunkprimer, c, u, new Spline2D(riverPoints.toArray()), uAttrib.getRiver(), riverStates);
 					}
 				}
-				else if(attrib.upriver != null && attrib.upriver.size() == 1)
+				else if(attrib.upriver != null && attrib.upriver.size() == 1 && attrib.getDownRiver() != null)
 				{
 					riverPoints = new ArrayList<Point>();
 					Point upPoint = c.getSharedEdge(attrib.upriver.get(0)).midpoint;
@@ -338,20 +338,20 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					riverPoints.add(upPoint);
 					riverPoints.add(c.point);
 					riverPoints.add(downPoint);
-					//if(c.river > 0 && !c.water)
+
+					if(attrib.getRiver() >= 1)
 					{
 						processRiverSpline(chunkprimer, c, attrib.upriver.get(0), new Spline2D(riverPoints.toArray()), attrib.getRiver()+1, bankStates);
 						riverDepth--;
-
 					}
 					processRiverSpline(chunkprimer, c, attrib.upriver.get(0), new Spline2D(riverPoints.toArray()), attrib.getRiver(), riverStates);
 				}
-				else
+				else if(attrib.getDownRiver() != null)
 				{
 					riverPoints = new ArrayList<Point>();
 					riverPoints.add(c.point);
 					riverPoints.add(c.getSharedEdge(attrib.getDownRiver()).midpoint);
-					//if(c.river > 0 && !c.water)
+					if(attrib.getRiver() >= 1)
 					{
 						processRiverSpline(chunkprimer, c, null, new Spline2D(riverPoints.toArray()), attrib.getRiver()+1, bankStates);
 						riverDepth--;
@@ -415,7 +415,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					if(yC < SEA_LEVEL+1)
 						yC = SEA_LEVEL+1;
 
-					for(int y = -1, i = 0; i < fillBlocks.length; y--, i++)
+					int y = -1, i = 0;
+					if(attrib.getRiver() < 1)
+						i = 1;
+					for(; i < fillBlocks.length; y--, i++)
 					{
 						IBlockState bs = chunkprimer.getBlockState(xC, yC+y, zC);
 						//We dont want to replace any existing water blocks
