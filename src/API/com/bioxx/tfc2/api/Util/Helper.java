@@ -11,6 +11,11 @@ public class Helper
 	 */
 	public static int cantorize(int x, int y) 
 	{
+		//Here we do some hijinks to handle negative coords
+		if(x < 0)
+			x = x * -1 + 2100000;
+		if(y < 0)
+			y = y * -1 + 2100000;
 		return ((x + y) * (x + y + 1) / 2) + y;
 	}
 
@@ -19,14 +24,22 @@ public class Helper
 	 */
 	public static int cantorX(int c) {
 		int x = (int) Math.floor(Math.sqrt(0.25 + 2 * c) - 0.5);
-		return x - cantorY(c);
+		x = x - cantorY(c);
+
+		if(x > 2100000)
+			x = (x-2100000) * -1;
+
+		return x;
 	}
 
 	/**
 	 * Inverse Y function of Cantor's pairing function.
 	 */
-	private static int cantorY(int c) {
+	public static int cantorY(int c) {
 		int y = (int) Math.floor(Math.sqrt(0.25 + 2 * c) - 0.5);
-		return c - y * (y + 1) / 2;
+		y = c - y * (y + 1) / 2;
+		if(y > 2100000)
+			y = (y-2100000) * -1;
+		return y;
 	}
 }
