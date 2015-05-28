@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import com.bioxx.jMapGen.IslandParameters;
 import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.RandomCollection;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Util.Helper;
 import com.bioxx.tfc2.api.Util.IThreadCompleteListener;
@@ -109,7 +110,8 @@ public class WorldGen implements IThreadCompleteListener
 		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
 		Random r = new Random(seed);
 		id.setCoords(x, z);
-		int fcount = 1+r.nextInt(3);
+		int fcount = 1+r.nextInt(1+r.nextInt(2));
+		Feature.setupFeatures(r);
 		//Choose Features
 		for(int i = 0; i < fcount; i++)
 		{
@@ -127,6 +129,19 @@ public class WorldGen implements IThreadCompleteListener
 			if(id.hasFeature(f)){i--; continue;}
 			else id.setFeatures(f);
 		}
+
+		RandomCollection<Integer> heightPot = new RandomCollection<Integer>();
+		heightPot.add(0.1, 64);
+		heightPot.add(0.8, 96);
+		heightPot.add(0.1, 128);
+		id.islandMaxHeight = heightPot.next();
+
+		RandomCollection<Double> moisturePot = new RandomCollection<Double>();
+		moisturePot.add(0.1, 0.75D);
+		moisturePot.add(0.8, 1D);
+		moisturePot.add(0.1, 1.25D);
+		id.moistureMultiplier = moisturePot.next();
+
 		return id;
 	}
 

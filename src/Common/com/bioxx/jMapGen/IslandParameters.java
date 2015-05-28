@@ -1,6 +1,7 @@
 package com.bioxx.jMapGen;
 
 import java.util.EnumSet;
+import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -174,7 +175,7 @@ public class IslandParameters
 
 		public final double rarity;
 		private String name;
-		private static final RandomCollection<Feature> pot = new RandomCollection<Feature>();
+		private static RandomCollection<Feature> pot = new RandomCollection<Feature>();
 
 		private Feature(double r, String n)
 		{
@@ -182,14 +183,18 @@ public class IslandParameters
 			name = n;
 		}
 
-		public static Feature getRandomFeature()
+		public static void setupFeatures(Random r)
 		{
+			pot = new RandomCollection<Feature>(r);
 			if(pot.size() == 0)
 			{
 				for(Feature f : Feature.values())
 					pot.add(f.rarity, f);
 			}
+		}
 
+		public static Feature getRandomFeature()
+		{
 			return pot.next();
 		}
 
