@@ -205,7 +205,7 @@ public class Map
 				//Dont manipulate curNode after this, it may be null.
 				curNode = nextNode;
 			}
-			System.out.println("Canyon " +i + ": " + start.point.x + "," + start.point.y);
+			//System.out.println("Canyon " +i + ": " + start.point.x + "," + start.point.y);
 
 			//First we process the middle centers themselves
 			for(GenericNode gn : canyon)
@@ -356,7 +356,7 @@ public class Map
 			}
 			if(valleyFinal.size() >= minSize)
 			{
-				System.out.println("Valley: X" + mid.point.x + " Z"+ mid.point.y);
+				//System.out.println("Valley: X" + mid.point.x + " Z"+ mid.point.y);
 				for(Center n : valleyFinal)
 				{
 					n.elevation = minElevation*0.8 + (-convertMCToHeight(2) + mapRandom.nextDouble()*convertMCToHeight(5));//Math.max(minElevation, n.elevation*0.8);

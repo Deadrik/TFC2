@@ -16,6 +16,7 @@ public class ServerTickHandler
 		if(event.phase == Phase.START)
 		{
 			WorldGen.instance.trimCache();
+			WorldGen.instance.buildFromQueue();
 		}
 	}
 }

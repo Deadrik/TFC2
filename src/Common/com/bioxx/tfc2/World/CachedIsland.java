@@ -5,7 +5,7 @@ import com.bioxx.jMapGen.Map;
 public class CachedIsland 
 {
 	public long lastAccess;
-	Map islandData;
+	public Map islandData;
 
 	public CachedIsland(Map island)
 	{
