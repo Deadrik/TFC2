@@ -21,6 +21,7 @@ import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.RandomCollection;
 import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.api.Types.StoneType;
 import com.bioxx.tfc2.api.Util.Helper;
 import com.bioxx.tfc2.api.Util.IThreadCompleteListener;
 
@@ -141,6 +142,25 @@ public class WorldGen implements IThreadCompleteListener
 		moisturePot.add(0.8, 1D);
 		moisturePot.add(0.1, 1.25D);
 		id.moistureMultiplier = moisturePot.next();
+
+		RandomCollection<StoneType> stonePot = new RandomCollection<StoneType>();
+		//If the island has a volcano then we need to make sure that the island is properly volcanic.
+		if(!id.hasFeature(Feature.Volcano))
+		{
+			for(StoneType s : StoneType.values())
+			{
+				stonePot.add(1.0, s);
+			}
+		}
+		else
+		{
+			for(StoneType s : StoneType.getSubTypes(StoneType.SubType.IgneousExtrusive))
+			{
+				stonePot.add(1.0, s);
+			}
+		}
+
+		id.setSurfaceRock(stonePot.next());
 
 		return id;
 	}

@@ -9,6 +9,7 @@ import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.tfc2.api.Types.StoneType;
 
 public class IslandParameters 
 {
@@ -34,6 +35,7 @@ public class IslandParameters
 	 */
 
 	private EnumSet<Feature> features = EnumSet.noneOf(Feature.class);
+	private StoneType surfaceRock = StoneType.Granite;
 
 	public IslandParameters() 
 	{
@@ -128,6 +130,16 @@ public class IslandParameters
 		this.zCoord = z;
 	}
 
+	public StoneType getSurfaceRock()
+	{
+		return this.surfaceRock;
+	}
+
+	public void setSurfaceRock(StoneType s)
+	{
+		surfaceRock = s;
+	}
+
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		NBTTagCompound fnbt = nbt.getCompoundTag("features");
@@ -141,6 +153,7 @@ public class IslandParameters
 		this.lakeThreshold = nbt.getDouble("lakeThreshold");
 		this.islandMaxHeight = nbt.getDouble("islandMaxHeight");
 		this.moistureMultiplier = nbt.getDouble("moistureMultiplier");
+		this.surfaceRock = StoneType.getStoneTypeFromMeta(nbt.getInteger("surfaceRock"));
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
@@ -158,6 +171,7 @@ public class IslandParameters
 		nbt.setDouble("lakeThreshold", lakeThreshold);
 		nbt.setDouble("islandMaxHeight", islandMaxHeight);
 		nbt.setDouble("moistureMultiplier", moistureMultiplier);
+		nbt.setInteger("surfaceRock", this.surfaceRock.getMeta());
 	}
 
 	public enum Feature

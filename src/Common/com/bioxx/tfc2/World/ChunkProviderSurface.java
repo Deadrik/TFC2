@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -26,6 +27,7 @@ import com.bioxx.jMapGen.graph.Center.Marker;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.tfc2.TFCBlocks;
 
 public class ChunkProviderSurface extends ChunkProviderGenerate 
 {
@@ -159,6 +161,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		Point p;
 		Center closestCenter;
+		IBlockState grass = TFCBlocks.Grass.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
+		IBlockState dirt = TFCBlocks.Dirt.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
+		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
 		for(int x = 0; x < 16; x++)
 		{
 			for(int z = 0; z < 16; z++)
@@ -166,19 +171,49 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
 				int hexElev = this.getHexElevation(closestCenter, p);
+
+				boolean isCliff = false;
+
+				int h0 = getHexElevation(getHex(p.plus(1,0)), p.plus(1,0));
+				int h1 = getHexElevation(getHex(p.plus(0,-1)), p.plus(0,-1));
+				int h2 = getHexElevation(getHex(p.plus(-1,0)), p.plus(-1,0));
+				int h3 = getHexElevation(getHex(p.plus(0,1)), p.plus(0,1));
+
+				if(hexElev - h0 > 2 || 
+						hexElev - h1 > 2 ||
+						hexElev - h2 > 2 ||
+						hexElev - h3 > 2)
+				{
+					isCliff = true;
+				}
+
 				for(int y = hexElev; y >= 0; y--)
 				{
 					IBlockState block = chunkprimer.getBlockState(x, y, z);
 					IBlockState blockUp = chunkprimer.getBlockState(x, y+1, z);
 
+
 					if(block == Blocks.stone.getDefaultState() && blockUp == Blocks.air.getDefaultState())
 					{
-						chunkprimer.setBlockState(x, y, z, Blocks.grass.getDefaultState());
+						if(!isCliff || hexElev == convertElevation(closestCenter.getElevation()))
+						{
+							chunkprimer.setBlockState(x, y, z, grass);
+							if(!isCliff)
+							{
+								chunkprimer.setBlockState(x, y-1, z, dirt);
+								chunkprimer.setBlockState(x, y-2, z, dirt);
+							}
+						}
 
 						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= SEA_LEVEL + 3)
 						{
 							chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
 						}
+					}
+
+					if(chunkprimer.getBlockState(x, y, z) == Blocks.stone.getDefaultState())
+					{
+						chunkprimer.setBlockState(x, y, z, stone);
 					}
 
 					if(closestCenter.biome == BiomeType.LAKE && !isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 4)-1)
@@ -193,7 +228,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
 					}
 
-					if(closestCenter.hasMarker(Marker.Ocean) && block == Blocks.stone.getDefaultState() && blockUp == Blocks.water.getDefaultState())
+					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == Blocks.water.getDefaultState())
 					{
 						chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
 					}

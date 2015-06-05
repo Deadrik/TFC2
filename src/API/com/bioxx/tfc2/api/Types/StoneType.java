@@ -1,20 +1,27 @@
 package com.bioxx.tfc2.api.Types;
 
+import java.util.ArrayList;
+
 import net.minecraft.util.IStringSerializable;
 
 public enum StoneType implements IStringSerializable
 {
-	Andesite("Andesite", 10), Basalt("Basalt", 9), Blueschist("Blueschist", 12), Chert("Chert", 7), Claystone("Claystone", 4), Dacite("Dacite", 11), 
-	Diorite("Diorite", 1), Dolomite("Dolomite", 6), Gabbro("Gabbro", 2), Gneiss("Gneiss", 14), Granite("Granite", 0), Limestone("Limestone", 5), 
-	Marble("Marble", 15), Rhyolite("Rhyolite", 8), Schist("Schist", 13), Shale("Shale", 3);
+	Andesite("Andesite", 10, SubType.IgneousExtrusive), Basalt("Basalt", 9, SubType.IgneousExtrusive), Blueschist("Blueschist", 12, SubType.Metamorphic), 
+	Chert("Chert", 7, SubType.Sedimentary), Claystone("Claystone", 4, SubType.Sedimentary), Dacite("Dacite", 11, SubType.IgneousExtrusive), 
+	Diorite("Diorite", 1, SubType.IgneousIntrusive), Dolomite("Dolomite", 6, SubType.Sedimentary), Gabbro("Gabbro", 2, SubType.IgneousIntrusive), 
+	Gneiss("Gneiss", 14, SubType.Metamorphic), Granite("Granite", 0, SubType.IgneousIntrusive), Limestone("Limestone", 5, SubType.Sedimentary), 
+	Marble("Marble", 15, SubType.Metamorphic), Rhyolite("Rhyolite", 8, SubType.IgneousExtrusive), Schist("Schist", 13, SubType.Metamorphic), 
+	Shale("Shale", 3, SubType.Sedimentary);
 
 	private String name;
 	private int meta;
+	private SubType type;
 
-	StoneType(String s, int id)
+	StoneType(String s, int id, SubType su)
 	{
 		name = s;
 		meta = id;
+		type = su;
 	}
 
 	@Override
@@ -35,5 +42,25 @@ public enum StoneType implements IStringSerializable
 				return StoneType.values()[i];
 		}
 		return null;
+	}
+
+	public static StoneType[] getSubTypes(StoneType.SubType s)
+	{
+		ArrayList<StoneType> list = new ArrayList<StoneType>();
+		for(int i = 0; i < StoneType.values().length; i++)
+		{
+			if(StoneType.values()[i].type == s)
+				list.add(StoneType.values()[i]);
+		}
+
+		if(list.size() == 0)
+			return null;
+
+		return (StoneType[])list.toArray();
+	}
+
+	public enum SubType
+	{
+		IgneousIntrusive, IgneousExtrusive, Sedimentary, Metamorphic;
 	}
 }
