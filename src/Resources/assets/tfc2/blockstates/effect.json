@@ -1,0 +1,11 @@
+{
+    "variants": {
+        "effect=fire":  { "model": "tfc2:Effects/Fire" },
+        "effect=water":  { "model": "tfc2:Effects/Water" },
+        "effect=electric":  { "model": "tfc2:Effects/Electric" },
+        "effect=steam":  { "model": "tfc2:Effects/Steam" },
+        "effect=smoke":  { "model": "tfc2:Effects/Smoke" },
+        "effect=acid":  { "model": "tfc2:Effects/Acid" },
+        "effect=char":  { "model": "tfc2:Effects/Char" }
+    }
+}

@@ -16,4 +16,18 @@ public class CommonProxy
 		return FMLCommonHandler.instance().getMinecraftServerInstance().getFile("");/*new File(".");*/
 	}
 
+	public void registerKeys()
+	{
+
+	}
+
+	public void registerKeyBindingHandler()
+	{
+
+	}
+
+	public void uploadKeyBindingsToGame()
+	{
+
+	}
 }

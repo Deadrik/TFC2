@@ -1,0 +1,6 @@
+{
+    "parent": "tfc2:block/Effects/Base",
+    "textures": {
+        "top": "tfc2:blocks/effects/Smoke"
+    }
+}

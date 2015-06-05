@@ -3,6 +3,7 @@ package com.bioxx.tfc2;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import com.bioxx.tfc2.Blocks.BlockEffect;
 import com.bioxx.tfc2.Blocks.BlockPlanks;
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
@@ -23,6 +24,7 @@ public class TFCBlocks
 	public static Block Sand;
 	public static Block Gravel;
 	public static Block Planks;
+	public static Block Effect;
 
 	public static void LoadBlocks()
 	{
@@ -35,6 +37,7 @@ public class TFCBlocks
 		Sand = new BlockSand().setHardness(1F).setStepSound(Block.soundTypeSand).setUnlocalizedName("sand");
 		Gravel = new BlockGravel().setHardness(1F).setStepSound(Block.soundTypeGravel).setUnlocalizedName("gravel");
 		Planks = new BlockPlanks().setHardness(4F).setStepSound(Block.soundTypeWood).setUnlocalizedName("planks");
+		Effect = new BlockEffect().setHardness(0.1F).setStepSound(Block.soundTypeWood).setUnlocalizedName("effect");
 	}
 
 	public static void RegisterBlocks()
@@ -48,5 +51,6 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Sand, ItemStone.class, "Sand");
 		GameRegistry.registerBlock(Gravel, ItemStone.class, "Gravel");
 		GameRegistry.registerBlock(Planks, ItemPlanks.class, "Planks");
+		GameRegistry.registerBlock(Effect, "Effect");
 	}
 }

@@ -5,10 +5,16 @@ import java.io.File;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import com.bioxx.tfc2.Handlers.Client.KeyBindingHandler;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.Util.KeyBindings;
 
 public class ClientProxy extends CommonProxy
 {
@@ -37,7 +43,6 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks), Reference.ModID + ":Wood/Planks/" + Global.WOOD_STANDARD[l]);
 
 		}
-
 	}
 
 	private void registerItemMesh(Item i, int meta, ModelResourceLocation mrl)
@@ -49,6 +54,35 @@ public class ClientProxy extends CommonProxy
 	public File getMinecraftDir()
 	{
 		return Minecraft.getMinecraft().mcDataDir;
+	}
+
+	@Override
+	public void registerKeys()
+	{
+		//KeyBindings.addKeyBinding(KeyBindingHandler.Key_CombatMode);
+		//KeyBindings.addIsRepeating(false);
+		//ClientRegistry.registerKeyBinding(KeyBindingHandler.Key_ToolMode);
+		//ClientRegistry.registerKeyBinding(KeyBindingHandler.Key_LockTool);
+		ClientRegistry.registerKeyBinding(KeyBindingHandler.Key_CombatMode);
+		//uploadKeyBindingsToGame();
+	}
+
+	@Override
+	public void registerKeyBindingHandler()
+	{
+		FMLCommonHandler.instance().bus().register(new KeyBindingHandler());
+	}
+
+	@Override
+	public void uploadKeyBindingsToGame()
+	{
+		GameSettings settings = Minecraft.getMinecraft().gameSettings;
+		KeyBinding[] tfcKeyBindings = KeyBindings.gatherKeyBindings();
+		KeyBinding[] allKeys = new KeyBinding[settings.keyBindings.length + tfcKeyBindings.length];
+		System.arraycopy(settings.keyBindings, 0, allKeys, 0, settings.keyBindings.length);
+		System.arraycopy(tfcKeyBindings, 0, allKeys, settings.keyBindings.length, tfcKeyBindings.length);
+		settings.keyBindings = allKeys;
+		settings.loadOptions();
 	}
 
 }
