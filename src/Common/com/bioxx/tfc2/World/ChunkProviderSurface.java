@@ -164,6 +164,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		IBlockState grass = TFCBlocks.Grass.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
 		IBlockState dirt = TFCBlocks.Dirt.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
 		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
+		IBlockState sand = TFCBlocks.Sand.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
 		for(int x = 0; x < 16; x++)
 		{
 			for(int z = 0; z < 16; z++)
@@ -207,7 +208,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= SEA_LEVEL + 3)
 						{
-							chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
+							chunkprimer.setBlockState(x, y, z, sand);
 						}
 					}
 
@@ -230,7 +231,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == Blocks.water.getDefaultState())
 					{
-						chunkprimer.setBlockState(x, y, z, Blocks.sand.getDefaultState());
+						chunkprimer.setBlockState(x, y, z, sand);
 					}
 				}
 			}
@@ -336,9 +337,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		ArrayList riverPoints;
 		int riverDepth = 0;
-
-		IBlockState[] bankStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.gravel.getDefaultState()};
-		IBlockState[] riverStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.flowing_water.getDefaultState(), Blocks.gravel.getDefaultState()};
+		IBlockState gravel = TFCBlocks.Gravel.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
+		IBlockState[] bankStates = new IBlockState[] {Blocks.air.getDefaultState(), gravel};
+		IBlockState[] riverStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.flowing_water.getDefaultState(), gravel};
 
 		/*if(this.islandMap.islandParams.shouldGenVolcano())
 			riverStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.flowing_lava.getDefaultState(), Blocks.gravel.getDefaultState()};*/
