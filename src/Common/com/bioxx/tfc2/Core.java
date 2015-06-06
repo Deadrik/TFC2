@@ -3,6 +3,7 @@ package com.bioxx.tfc2;
 import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 public class Core 
 {
@@ -16,5 +17,20 @@ public class Core
 		}
 
 		return world.getBlockState(blockpos1).getBlock();
+	}
+
+	public static int getHeight(World world, int worldX, int worldZ)
+	{
+		Chunk c = world.getChunkFromChunkCoords(worldX >> 4, worldZ >> 4); 
+		return c.getHeight(worldX & 15, worldZ & 15);
+	}
+
+	/**
+	 * Sets the block using setActualState for the given block. Helper method to reduce repeated code usage
+	 * @return Returns if the block is successfully set
+	 */
+	public static boolean setBlock(World world, Block b, BlockPos bp)
+	{
+		return world.setBlockState(bp, b.getActualState(b.getDefaultState(), world, bp));
 	}
 }

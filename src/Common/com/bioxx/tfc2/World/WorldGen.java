@@ -131,19 +131,19 @@ public class WorldGen implements IThreadCompleteListener
 			else id.setFeatures(f);
 		}
 
-		RandomCollection<Integer> heightPot = new RandomCollection<Integer>();
+		RandomCollection<Integer> heightPot = new RandomCollection<Integer>(r);
 		heightPot.add(0.1, 64);
 		heightPot.add(0.8, 96);
 		heightPot.add(0.1, 128);
 		id.islandMaxHeight = heightPot.next();
 
-		RandomCollection<Double> moisturePot = new RandomCollection<Double>();
+		RandomCollection<Double> moisturePot = new RandomCollection<Double>(r);
 		moisturePot.add(0.1, 0.75D);
 		moisturePot.add(0.8, 1D);
 		moisturePot.add(0.1, 1.25D);
 		id.moistureMultiplier = moisturePot.next();
 
-		RandomCollection<StoneType> stonePot = new RandomCollection<StoneType>();
+		RandomCollection<StoneType> stonePot = new RandomCollection<StoneType>(r);
 		//If the island has a volcano then we need to make sure that the island is properly volcanic.
 		if(!id.hasFeature(Feature.Volcano))
 		{

@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Commands.PrintImageMapCommand;
 import com.bioxx.tfc2.Handlers.CreateSpawnHandler;
@@ -23,6 +24,7 @@ import com.bioxx.tfc2.Handlers.ServerTickHandler;
 import com.bioxx.tfc2.Handlers.WorldLoadHandler;
 import com.bioxx.tfc2.Networking.PacketPipeline;
 import com.bioxx.tfc2.World.WorldProviderSurface;
+import com.bioxx.tfc2.World.Generators.WorldGenGrass;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
@@ -59,6 +61,7 @@ public class TFC
 		WorldType.AMPLIFIED = new TFCWorldType(3, "TFCAmplified");*/
 
 		//net.minecraftforge.fml.common.registry.GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 0);
 
 		DimensionManager.unregisterDimension(0);
 		DimensionManager.unregisterProviderType(0);

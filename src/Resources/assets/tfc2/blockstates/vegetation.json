@@ -1,0 +1,20 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+		"cross": "blocks/tallgrass",
+		"grassside": "tfc2:blocks/GrassSide",
+		"grasstop": "tfc2:blocks/GrassTop"
+		},
+		"model": "tallgrass"
+	},
+	"variants": {
+		"isonstone": {
+			"true": {"submodel": "tfc2:vegBase"},
+			"false": {}
+		},
+		"veg": {
+			"grass": {}
+		}
+	}
+}

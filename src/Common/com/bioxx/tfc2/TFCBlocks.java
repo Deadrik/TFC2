@@ -11,6 +11,7 @@ import com.bioxx.tfc2.Blocks.Terrain.BlockGravel;
 import com.bioxx.tfc2.Blocks.Terrain.BlockRubble;
 import com.bioxx.tfc2.Blocks.Terrain.BlockSand;
 import com.bioxx.tfc2.Blocks.Terrain.BlockStone;
+import com.bioxx.tfc2.Blocks.Terrain.BlockVegetation;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemPlanks;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemSoil;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemStone;
@@ -25,6 +26,7 @@ public class TFCBlocks
 	public static Block Gravel;
 	public static Block Planks;
 	public static Block Effect;
+	public static Block Vegetation;
 
 	public static void LoadBlocks()
 	{
@@ -38,6 +40,7 @@ public class TFCBlocks
 		Gravel = new BlockGravel().setHardness(1F).setStepSound(Block.soundTypeGravel).setUnlocalizedName("gravel");
 		Planks = new BlockPlanks().setHardness(4F).setStepSound(Block.soundTypeWood).setUnlocalizedName("planks");
 		Effect = new BlockEffect().setHardness(0.1F).setStepSound(Block.soundTypeWood).setUnlocalizedName("effect");
+		Vegetation = new BlockVegetation().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("vegetation");
 	}
 
 	public static void RegisterBlocks()
@@ -52,5 +55,6 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Gravel, ItemStone.class, "Gravel");
 		GameRegistry.registerBlock(Planks, ItemPlanks.class, "Planks");
 		GameRegistry.registerBlock(Effect, "Effect");
+		GameRegistry.registerBlock(Vegetation, "vegetation");
 	}
 }

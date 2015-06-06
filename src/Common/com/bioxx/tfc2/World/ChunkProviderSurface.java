@@ -46,7 +46,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	Map islandMap;
 
 	Vector<Center> centersInChunk;
-	int[][] elevationMap;
+	int[] elevationMap;
 	/**
 	 * Cache for Hex lookup.
 	 */
@@ -110,7 +110,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	public Chunk provideChunk(int chunkX, int chunkZ)
 	{
 		centerCache = new Center[48][48];
-		elevationMap = new int[16][16];
+		elevationMap = new int[256];
 		worldX = chunkX * 16;
 		worldZ = chunkZ * 16;
 		islandX = worldX % MAP_SIZE;
@@ -129,6 +129,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		generateTerrain(chunkprimer, chunkX, chunkZ);
 		decorate(chunkprimer, chunkX, chunkZ);
 		Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
+		chunk.setHeightMap(elevationMap);
 		chunk.generateSkylightMap();
 		return chunk;  
 	}
@@ -307,7 +308,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				closestCenter = this.getHex(p);
 
 				int hexElev = getHexElevation(closestCenter, p);
-				elevationMap[x][z] = hexElev;
+				elevationMap[z << 4 | x] = hexElev;
 				for(int y = Math.min(Math.max(hexElev, SEA_LEVEL), 255); y >= 0; y--)
 				{
 					Block b = Blocks.air;
@@ -434,7 +435,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						continue;
 					closest = this.getHex(temp);
 					//grab the local elevation from our elevation map
-					int yC = elevationMap[xC][zC];
+					int yC = elevationMap[zC << 4 | xC];
 					if(yC < convertElevation(closest.elevation) && closest.hasMarker(Marker.Water) && this.isLakeBorder(temp, closest))
 						yC = convertElevation(c.elevation);
 
