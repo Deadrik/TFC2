@@ -5,13 +5,13 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Blocks.BlockEffect;
 import com.bioxx.tfc2.Blocks.BlockPlanks;
+import com.bioxx.tfc2.Blocks.BlockVegetation;
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGravel;
 import com.bioxx.tfc2.Blocks.Terrain.BlockRubble;
 import com.bioxx.tfc2.Blocks.Terrain.BlockSand;
 import com.bioxx.tfc2.Blocks.Terrain.BlockStone;
-import com.bioxx.tfc2.Blocks.Terrain.BlockVegetation;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemPlanks;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemSoil;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemStone;

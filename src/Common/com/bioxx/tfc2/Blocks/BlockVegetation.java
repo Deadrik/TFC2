@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks.Terrain;
+package com.bioxx.tfc2.Blocks;
 
 import java.util.Random;
 
@@ -22,7 +22,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.Blocks.BlockTerra;
 
 public class BlockVegetation extends BlockTerra
 {
