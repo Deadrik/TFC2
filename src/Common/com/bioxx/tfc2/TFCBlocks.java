@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Blocks.BlockEffect;
+import com.bioxx.tfc2.Blocks.BlockLooseRocks;
 import com.bioxx.tfc2.Blocks.BlockPlanks;
 import com.bioxx.tfc2.Blocks.BlockVegetation;
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
@@ -27,6 +28,7 @@ public class TFCBlocks
 	public static Block Planks;
 	public static Block Effect;
 	public static Block Vegetation;
+	public static Block LooseRocks;
 
 	public static void LoadBlocks()
 	{
@@ -43,6 +45,7 @@ public class TFCBlocks
 		Planks = new BlockPlanks().setHardness(4F).setStepSound(Block.soundTypeWood).setUnlocalizedName("planks");
 		Effect = new BlockEffect().setHardness(0.1F).setStepSound(Block.soundTypeWood).setUnlocalizedName("effect");
 		Vegetation = new BlockVegetation().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("vegetation");
+		LooseRocks = new BlockLooseRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("loose_rock");
 	}
 
 	public static void RegisterBlocks()
@@ -61,5 +64,6 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Planks, ItemPlanks.class, "planks");
 		GameRegistry.registerBlock(Effect, "effect");
 		GameRegistry.registerBlock(Vegetation, "vegetation");
+		GameRegistry.registerBlock(LooseRocks, "loose_rock");
 	}
 }

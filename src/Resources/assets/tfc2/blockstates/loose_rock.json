@@ -1,0 +1,30 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"all": "tfc2:blocks/rocks/Granite Raw"
+		},
+		"uvlock": true,
+		"model": "tfc2:LooseRocks/rock0"
+	},
+	"variants": {
+		"stone": {
+			"granite": {"textures": {"all": "tfc2:blocks/rocks/Granite Raw"}},
+			"diorite": {"textures": {"all": "tfc2:blocks/rocks/Diorite Raw"}},
+			"gabbro": {"textures": {"all": "tfc2:blocks/rocks/Gabbro Raw"}},
+			"shale": {"textures": {"all": "tfc2:blocks/rocks/Shale Raw"}},
+			"claystone": {"textures": {"all": "tfc2:blocks/rocks/Claystone Raw"}},
+			"limestone": {"textures": {"all": "tfc2:blocks/rocks/Limestone Raw"}},
+			"dolomite": {"textures": {"all": "tfc2:blocks/rocks/Dolomite Raw"}},
+			"chert": {"textures": {"all": "tfc2:blocks/rocks/Chert Raw"}},
+			"rhyolite": {"textures": {"all": "tfc2:blocks/rocks/Rhyolite Raw"}},
+			"basalt": {"textures": {"all": "tfc2:blocks/rocks/Basalt Raw"}},
+			"andesite": {"textures": {"all": "tfc2:blocks/rocks/Andesite Raw"}},
+			"dacite": {"textures": {"all": "tfc2:blocks/rocks/Dacite Raw"}},
+			"blueschist": {"textures": {"all": "tfc2:blocks/rocks/Blueschist Raw"}},
+			"schist": {"textures": {"all": "tfc2:blocks/rocks/Schist Raw"}},
+			"gneiss": {"textures": {"all": "tfc2:blocks/rocks/Gneiss Raw"}},
+			"marble": {"textures": {"all": "tfc2:blocks/rocks/Marble Raw"}}
+		}	
+	}
+}
