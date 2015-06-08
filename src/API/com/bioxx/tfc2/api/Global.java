@@ -8,7 +8,7 @@ public class Global
 {
 	/* FruitTree Meta Names, also used for fruit items and FloraManager */
 	public static final String[] FRUIT_META_NAMES = new String[] {
-		"Red Apple", "Banana", "Orange", "Green Apple", "Lemon", "Olive", "Cherry", "Peach", "Plum"
+		"red_apple", "banana", "orange", "green_apple", "lemon", "olive", "cherry", "peach", "plum"
 	};
 
 	/* Flower Meta Names
@@ -26,16 +26,16 @@ public class Global
 	};
 
 	/* Powder */
-	public static final String[] POWDER = {
-		"Flux", "Kaolinite Powder", "Graphite Powder", "Sulfur Powder", "Saltpeter Powder",
-		"Hematite Powder", "Lapis Lazuli Powder", "Limonite Powder", "Malachite Powder", "Salt"
+	public static final String[] POWDER_META_NAMES = {
+		"flux", "kaolinite", "graphite", "sulfur", "saltpeter",
+		"hematite", "lapis_lazuli", "limonite", "malachite", "salt"
 	};
 
 	/* Stone Types */
-	public static final String[] STONE_IGIN = {"Granite", "Diorite", "Gabbro"};
-	public static final String[] STONE_SED  = {"Shale", "Claystone", "Limestone", "Dolomite", "Chert"};
-	public static final String[] STONE_IGEX = {"Rhyolite", "Basalt", "Andesite", "Dacite"};
-	public static final String[] STONE_MM   = {"Blueschist", "Schist", "Gneiss", "Marble"};
+	public static final String[] STONE_IGIN = {"granite", "diorite", "gabbro"};
+	public static final String[] STONE_SED  = {"shale", "claystone", "limestone", "dolomite", "chert"};
+	public static final String[] STONE_IGEX = {"rhyolite", "basalt", "andesite", "dacite"};
+	public static final String[] STONE_MM   = {"blueschist", "schist", "gneiss", "marble"};
 
 	// Used for loose rocks and other places where the stone list is combined
 	public static final int STONE_IGIN_START = 0;
@@ -46,32 +46,31 @@ public class Global
 
 	// Stones that can be turned into flux
 	public static final int[] STONE_FLUXINDEX = {
-		Arrays.asList(STONE_ALL).indexOf("Limestone"),
-		Arrays.asList(STONE_ALL).indexOf("Dolomite"),
-		Arrays.asList(STONE_ALL).indexOf("Chalk"),
-		Arrays.asList(STONE_ALL).indexOf("Marble")
+		Arrays.asList(STONE_ALL).indexOf("limestone"),
+		Arrays.asList(STONE_ALL).indexOf("dolomite"),
+		Arrays.asList(STONE_ALL).indexOf("marble")
 	};
 
 	/* Ore Types */
 	public static final String[] ORE_METAL = {
-		"Native Copper", "Native Gold", "Native Platinum", "Hematite",
-		"Native Silver", "Cassiterite", "Galena", "Bismuthinite",
-		"Garnierite", "Malachite", "Magnetite", "Limonite",
-		"Sphalerite", "Tetrahedrite", "Bituminous Coal", "Lignite"
+		"native_copper", "native_gold", "native_platinum", "hematite",
+		"native_silver", "cassiterite", "galena", "bismuthinite",
+		"garnierite", "malachite", "magnetite", "limonite",
+		"sphalerite", "tetrahedrite", "bituminous_coal", "lignite"
 	};
 	public static final String[] ORE_MINERAL = {
-		"Kaolinite", "Gypsum", "Satinspar", "Selenite",
-		"Graphite", "Kimberlite", "Petrified Wood", "Sulfur",
-		"Jet", "Microcline", "Pitchblende", "Cinnabar",
-		"Cryolite", "Saltpeter", "Serpentine", "Sylvite"
+		"kaolinite", "gypsum", "satinspar", "selenite",
+		"graphite", "kimberlite", "petrified_wood", "sulfur",
+		"jet", "microcline", "pitchblende", "cinnabar",
+		"cryolite", "saltpeter", "serpentine", "sylvite"
 	};
-	public static final String[] ORE_MINERAL2 = {"Borax", "Olivine", "Lapis Lazuli"};
+	public static final String[] ORE_MINERAL2 = {"borax", "olivine", "lapis_lazuli"};
 
 	public static final String[] WOOD_STANDARD = {
-		"Ash","Aspen","Birch","Chestnut",
-		"Douglas Fir","Hickory","Maple","Oak",
-		"Pine","Sequoia","Spruce","Sycamore",
-		"White Cedar","White Elm","Willow"
+		"ash","aspen","birch","chestnut",
+		"douglas_fir","hickory","maple","oak",
+		"pine","sequoia","spruce","sycamore",
+		"white_cedar","white_elm","willow"
 	};
 
 	public static final String SKILL_GENERAL_SMITHING = "skill.gensmith";

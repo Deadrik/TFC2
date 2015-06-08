@@ -2,8 +2,11 @@ package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 public class Core 
 {
@@ -32,5 +35,15 @@ public class Core
 	public static boolean setBlock(World world, Block b, BlockPos bp)
 	{
 		return world.setBlockState(bp, b.getActualState(b.getDefaultState(), world, bp));
+	}
+
+	public static String translate(String s)
+	{
+		return StatCollector.translateToLocal(s);
+	}
+
+	public static String textConvert(String s)
+	{
+		return WordUtils.capitalize(s, '_').replaceAll("_", " ");
 	}
 }

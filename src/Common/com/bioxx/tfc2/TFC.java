@@ -133,33 +133,36 @@ public class TFC
 		TreeRegistry tr = TreeRegistry.instance;
 		String treePath = "assets/tfc2/schematics/trees/";
 		int i = 0;
+		
+		String wood = Core.textConvert(Global.WOOD_STANDARD[i]);
 
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 250F, 16000F, 4F, 24F, 0.5F, 2F, false));i++; //Ash
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 300F, 1600F, -5F, 18F, 0.25F, 1F, false));i++; //Aspen
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 200F, 500F, -10F, 12F, 0F, 1F, false));i++; //Birch
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 250F, 16000F, 3F, 24F, 0F, 1F, false));i++; //Chestnut
+		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, 4F, 24F, 0.5F, 2F, false));i++; //Ash
+		tr.addWoodType(new TreeConfig(wood, i, 300F, 1600F, -5F, 18F, 0.25F, 1F, false));i++; //Aspen
+		tr.addWoodType(new TreeConfig(wood, i, 200F, 500F, -10F, 12F, 0F, 1F, false));i++; //Birch
+		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, 3F, 24F, 0F, 1F, false));i++; //Chestnut
 
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 750F, 16000F, 1F, 14F, 0F, 1F, true));i++; //Douglas Fir
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 250F, 16000F, 4F, 24F, 0F, 1F, false));i++; //Hickory
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 250F, 16000F, 3F, 20F, 0F, 1F, false));i++; //Maple
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 500F, 1200F, 5F, 15F, 0.25F, 2F, false));i++; //Oak
+		tr.addWoodType(new TreeConfig(wood, i, 750F, 16000F, 1F, 14F, 0F, 1F, true));i++; //Douglas Fir
+		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, 4F, 24F, 0F, 1F, false));i++; //Hickory
+		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, 3F, 20F, 0F, 1F, false));i++; //Maple
+		tr.addWoodType(new TreeConfig(wood, i, 500F, 1200F, 5F, 15F, 0.25F, 2F, false));i++; //Oak
 
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 250F, 16000F, -15F, 24F, 0.5F, 2F, true));i++; //Pine
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 4000F, 16000F, 10F, 16F, 0F, 0.5F, true));i++; //Sequoia
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 250F, 16000F, -5F, 24F, 0F, 1F, true));i++; //Spruce
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 400F, 16000F, 6F, 30F, 0F, 1F, false));i++; //Sycamore
+		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, -15F, 24F, 0.5F, 2F, true));i++; //Pine
+		tr.addWoodType(new TreeConfig(wood, i, 4000F, 16000F, 10F, 16F, 0F, 0.5F, true));i++; //Sequoia
+		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, -5F, 24F, 0F, 1F, true));i++; //Spruce
+		tr.addWoodType(new TreeConfig(wood, i, 400F, 16000F, 6F, 30F, 0F, 1F, false));i++; //Sycamore
 
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 250F, 16000F, -5F, 24F, 0F, 2F, true));i++; //White Ceder
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 400F, 16000F, 4F, 30F, 0F, 1F, false));i++; //White Elm
-		tr.addWoodType(new TreeConfig(Global.WOOD_STANDARD[i], i, 4000F, 16000F, 10F, 30F, 0F, 0.5F, false));i++; //Willow
+		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, -5F, 24F, 0F, 2F, true));i++; //White Ceder
+		tr.addWoodType(new TreeConfig(wood, i, 400F, 16000F, 4F, 30F, 0F, 1F, false));i++; //White Elm
+		tr.addWoodType(new TreeConfig(wood, i, 4000F, 16000F, 10F, 30F, 0F, 0.5F, false));i++; //Willow
 		//tr.addWoodType(new TreeConfiguration(Global.WOOD_STANDARD[i], i, 4000F, 16000F, 24F, 44F, 0F, 1F, false));i++; //Kapok
 
 		//tr.addWoodType(new TreeConfiguration(Global.WOOD_STANDARD[i], i, 75F, 1000F, 20F, 50F, 0F, 1F, false));i++; //Acacia
 
 		try
 		{
-			for(String tName : Global.WOOD_STANDARD)
+			for (String s : Global.WOOD_STANDARD)
 			{
+				String tName = Core.textConvert(s);
 				File root = new File(TFC.instance.getClass().getClassLoader().getResource(treePath + tName + "/").toURI());
 				for( File f : root.listFiles())
 				{

@@ -32,6 +32,8 @@ public class TFCBlocks
 	{
 		System.out.println(new StringBuilder().append("[TFC2] Loading Blocks").toString());
 
+		// Unlocalized names should be lowercase, and separated by underscores. "this_is_an_example"
+
 		Dirt = new BlockDirt().setHardness(2F).setStepSound(Block.soundTypeGravel).setUnlocalizedName("dirt");
 		Grass = new BlockGrass().setHardness(2F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("grass");
 		Stone = new BlockStone().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stone");
@@ -47,14 +49,17 @@ public class TFCBlocks
 	{
 		System.out.println(new StringBuilder().append("[TFC2] Registering Blocks").toString());
 
-		GameRegistry.registerBlock(Dirt, ItemSoil.class, "Dirt");
-		GameRegistry.registerBlock(Grass, ItemSoil.class, "Grass");
-		GameRegistry.registerBlock(Stone, ItemStone.class, "Stone");
-		GameRegistry.registerBlock(Rubble, ItemStone.class, "Rubble");
-		GameRegistry.registerBlock(Sand, ItemStone.class, "Sand");
-		GameRegistry.registerBlock(Gravel, ItemStone.class, "Gravel");
-		GameRegistry.registerBlock(Planks, ItemPlanks.class, "Planks");
-		GameRegistry.registerBlock(Effect, "Effect");
+		// Block registration strings should be lowercase, and separated by underscores. "this_is_an_example"
+		// Preferably these strings should be identical to the corresponding unlocalized name.
+
+		GameRegistry.registerBlock(Dirt, ItemSoil.class, "dirt");
+		GameRegistry.registerBlock(Grass, ItemSoil.class, "grass");
+		GameRegistry.registerBlock(Stone, ItemStone.class, "stone");
+		GameRegistry.registerBlock(Rubble, ItemStone.class, "rubble");
+		GameRegistry.registerBlock(Sand, ItemStone.class, "sand");
+		GameRegistry.registerBlock(Gravel, ItemStone.class, "gravel");
+		GameRegistry.registerBlock(Planks, ItemPlanks.class, "planks");
+		GameRegistry.registerBlock(Effect, "effect");
 		GameRegistry.registerBlock(Vegetation, "vegetation");
 	}
 }

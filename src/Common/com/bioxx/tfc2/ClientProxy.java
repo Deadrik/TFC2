@@ -24,23 +24,27 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
 		for(int l = 0; l < Global.STONE_ALL.length; l++)
 		{
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Dirt), l, new ModelResourceLocation(Reference.ModID + ":Dirt/" + Global.STONE_ALL[l], "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Grass), l, new ModelResourceLocation(Reference.ModID + ":Grass/" + Global.STONE_ALL[l]+"/"+Global.STONE_ALL[l], "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Stone), l, new ModelResourceLocation(Reference.ModID + ":Stone/" + Global.STONE_ALL[l], "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Rubble), l, new ModelResourceLocation(Reference.ModID + ":Rubble/" + Global.STONE_ALL[l], "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Sand), l, new ModelResourceLocation(Reference.ModID + ":Sand/" + Global.STONE_ALL[l], "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Gravel), l, new ModelResourceLocation(Reference.ModID + ":Gravel/" + Global.STONE_ALL[l], "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Dirt), Reference.ModID + ":Dirt/" + Global.STONE_ALL[l]);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Grass), Reference.ModID + ":Grass/" + Global.STONE_ALL[l]+"/"+Global.STONE_ALL[l]);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Stone), Reference.ModID + ":Stone/" + Global.STONE_ALL[l]);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Rubble), Reference.ModID + ":Rubble/" + Global.STONE_ALL[l]);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + Global.STONE_ALL[l]);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + Global.STONE_ALL[l]);
+			String stone = Core.textConvert(Global.STONE_ALL[l]);
+
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Dirt), l, new ModelResourceLocation(Reference.ModID + ":Dirt/" + stone, "inventory"));
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Grass), l, new ModelResourceLocation(Reference.ModID + ":Grass/" + stone + "/" + stone, "inventory"));
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Stone), l, new ModelResourceLocation(Reference.ModID + ":Stone/" + stone, "inventory"));
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Rubble), l, new ModelResourceLocation(Reference.ModID + ":Rubble/" + stone, "inventory"));
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Sand), l, new ModelResourceLocation(Reference.ModID + ":Sand/" + stone, "inventory"));
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Gravel), l, new ModelResourceLocation(Reference.ModID + ":Gravel/" + stone, "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Dirt), Reference.ModID + ":Dirt/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Grass), Reference.ModID + ":Grass/" + stone + "/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Stone), Reference.ModID + ":Stone/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Rubble), Reference.ModID + ":Rubble/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + stone);
 		}
 		for(int l = 0; l < Global.WOOD_STANDARD.length; l++)
 		{
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Planks), l, new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + Global.WOOD_STANDARD[l], "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks), Reference.ModID + ":Wood/Planks/" + Global.WOOD_STANDARD[l]);
+			String wood = Core.textConvert(Global.WOOD_STANDARD[l]);
+
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Planks), l, new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks), Reference.ModID + ":Wood/Planks/" + wood);
 
 		}
 	}
