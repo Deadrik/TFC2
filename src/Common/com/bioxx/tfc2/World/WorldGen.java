@@ -271,7 +271,7 @@ public class WorldGen implements IThreadCompleteListener
 
 		for(int i = 0; i < buildThreads.length; i++)
 		{
-			if(buildThreads[i] == null)
+			if(buildThreads[i] == null && mapQueue.size() > 0)
 			{
 				int id = mapQueue.poll();
 				if(doesMapExist(Helper.cantorX(id), Helper.cantorY(id)))
