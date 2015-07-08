@@ -29,6 +29,8 @@ public class TFCBlocks
 	public static Block Effect;
 	public static Block Vegetation;
 	public static Block LooseRocks;
+	public static Block FreshWater;
+	public static Block SaltWater;
 
 	public static void LoadBlocks()
 	{
