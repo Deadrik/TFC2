@@ -6,13 +6,13 @@ import java.util.Iterator;
 import java.util.UUID;
 import java.util.Vector;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+
 import com.bioxx.jMapGen.BiomeType;
 import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.attributes.Attribute;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 
 public class Center 
@@ -205,7 +205,7 @@ public class Center
 		int f = 0;
 		for(Marker ff : flags)
 		{
-			f += ff.ordinal();
+			f += ff.getFlag();
 		}
 		nbt.setInteger("flags", f);
 		nbt.setDouble("elevation", elevation);
@@ -301,7 +301,7 @@ public class Center
 	{
 		for(Marker f : Marker.values())
 		{
-			if((i & f.ordinal()) > 0)
+			if((i & f.getFlag()) > 0)
 			{
 				flags.add(f);
 			}
@@ -312,5 +312,10 @@ public class Center
 	{
 		//Important not to change this order if it can be helped.
 		Water, Ocean, Coast, CoastWater, Border, Lava, Valley, SmallCrater;
+
+		public int getFlag()
+		{
+			return 1 << this.ordinal();
+		}
 	}
 }

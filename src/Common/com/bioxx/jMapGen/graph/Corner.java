@@ -3,11 +3,11 @@ package com.bioxx.jMapGen.graph;
 import java.util.EnumSet;
 import java.util.Vector;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.graph.Center.Marker;
-
-import net.minecraft.nbt.NBTTagCompound;
 
 public class Corner
 {
@@ -102,7 +102,7 @@ public class Corner
 		int f = 0;
 		for(Marker ff : flags)
 		{
-			f += ff.ordinal();
+			f += ff.getFlag();
 		}
 		nbt.setInteger("flags", f);
 		nbt.setDouble("elevation", elevation);
@@ -161,7 +161,7 @@ public class Corner
 	{
 		for(Marker f : Marker.values())
 		{
-			if((i & f.ordinal()) > 0)
+			if((i & f.getFlag()) > 0)
 			{
 				flags.add(f);
 			}
