@@ -218,12 +218,14 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						chunkprimer.setBlockState(x, y, z, stone);
 					}
 
-					if(closestCenter.biome == BiomeType.LAKE && !isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 4)-1)
+					if(closestCenter.biome == BiomeType.LAKE)
 					{
-						/*if(this.islandMap.islandParams.shouldGenVolcano())
-							chunkprimer.setBlockState(x, y, z, Blocks.lava.getDefaultState());
-						else*/
-						chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
+						if(!isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 4)-1)
+							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
+						if(getBlock(chunkprimer, x, y, z).isSolidFullCube() && blockUp == TFCBlocks.FreshWater.getDefaultState())
+						{
+							chunkprimer.setBlockState(x, y, z, sand);
+						}
 					}
 					else if(closestCenter.biome == BiomeType.MARSH && !isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
 					{
@@ -239,6 +241,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		}
 
 		carveRiverSpline(chunkprimer);
+	}
+
+	private Block getBlock(ChunkPrimer chunkprimer, int x, int y, int z)
+	{
+		return chunkprimer.getBlockState(x, y, z).getBlock();
 	}
 
 	protected boolean isLakeBorder(Point p, Center c)
