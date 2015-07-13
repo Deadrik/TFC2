@@ -2,6 +2,7 @@ package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -45,5 +46,13 @@ public class Core
 	public static String textConvert(String s)
 	{
 		return WordUtils.capitalize(s, '_').replaceAll("_", " ");
+	}
+
+	/**
+	 * Creates a new ResourceLocation from an input string. Shortens the code slightly.
+	 */
+	public static ResourceLocation CreateRes(String s)
+	{
+		return new ResourceLocation(s);
 	}
 }

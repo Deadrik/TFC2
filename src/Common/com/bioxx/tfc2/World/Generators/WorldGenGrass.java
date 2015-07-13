@@ -2,6 +2,7 @@ package com.bioxx.tfc2.World.Generators;
 
 import java.util.Random;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -30,10 +31,10 @@ public class WorldGenGrass implements IWorldGenerator
 			for(int z = 0; z < 16; z++)
 			{
 				BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
-				/*if(world.getBlockState(bp.offsetDown()).getBlock().isSolidFullCube())
+				if(world.getBlockState(bp).getBlock() != Blocks.air)
 				{
-					Core.setBlock(world, TFCBlocks.Vegetation, bp);
-				}*/
+					continue;
+				}
 				if(world.getBlockState(bp.offsetDown()).getBlock() == TFCBlocks.Stone || (random.nextInt(5) == 0 && world.getBlockState(bp.offsetDown()).getBlock() == TFCBlocks.Grass))
 				{
 					Core.setBlock(world, TFCBlocks.Vegetation, bp);

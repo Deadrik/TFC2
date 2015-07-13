@@ -18,4 +18,9 @@ public class Reference
 
 	public static final String AssetPath = "/assets/" + ModID + "/";
 	public static final String AssetPathGui = "textures/gui/";
+
+	public static String getResID()
+	{
+		return ModID + ":";
+	}
 }

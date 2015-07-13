@@ -223,14 +223,14 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						/*if(this.islandMap.islandParams.shouldGenVolcano())
 							chunkprimer.setBlockState(x, y, z, Blocks.lava.getDefaultState());
 						else*/
-						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
+						chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
 					}
 					else if(closestCenter.biome == BiomeType.MARSH && !isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
 					{
-						chunkprimer.setBlockState(x, y, z, Blocks.water.getDefaultState());
+						chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
 					}
 
-					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == Blocks.water.getDefaultState())
+					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == TFCBlocks.SaltWater.getDefaultState())
 					{
 						chunkprimer.setBlockState(x, y, z, sand);
 					}
@@ -322,7 +322,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					}
 					else if(y < SEA_LEVEL)
 					{
-						b = Blocks.water;
+						b = TFCBlocks.SaltWater;
 					}
 
 					if(y <= 1)
@@ -340,7 +340,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		int riverDepth = 0;
 		IBlockState gravel = TFCBlocks.Gravel.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
 		IBlockState[] bankStates = new IBlockState[] {Blocks.air.getDefaultState(), gravel};
-		IBlockState[] riverStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.flowing_water.getDefaultState(), gravel};
+		IBlockState[] riverStates = new IBlockState[] {Blocks.air.getDefaultState(), TFCBlocks.FreshWater.getDefaultState(), gravel};
 
 		/*if(this.islandMap.islandParams.shouldGenVolcano())
 			riverStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.flowing_lava.getDefaultState(), Blocks.gravel.getDefaultState()};*/
@@ -463,12 +463,12 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						IBlockState bs = chunkprimer.getBlockState(xC, yC+y, zC);
 						//We dont want to replace any existing water blocks
-						if(bs != Blocks.water.getDefaultState() && bs != Blocks.flowing_water.getDefaultState() && bs != Blocks.flowing_lava.getDefaultState())
+						if(bs != TFCBlocks.FreshWater.getDefaultState() && bs != TFCBlocks.SaltWater.getDefaultState() && bs != Blocks.flowing_lava.getDefaultState())
 						{
 							bs = fillBlocks[i];
 							//This converts 60% of the river water into stationary blocks so that we cut down on the number of required updates.
-							if(bs == Blocks.flowing_water.getDefaultState() && (m < 0.2 || m > 0.8))
-								bs = Blocks.water.getDefaultState();
+							if(bs == TFCBlocks.FreshWater.getDefaultState() && (m < 0.2 || m > 0.8))
+								bs = TFCBlocks.FreshWater.getDefaultState();
 							chunkprimer.setBlockState(xC, yC+y, zC, fillBlocks[i]);
 						}
 					}

@@ -1,11 +1,14 @@
 package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Blocks.BlockEffect;
+import com.bioxx.tfc2.Blocks.BlockFreshWater;
 import com.bioxx.tfc2.Blocks.BlockLooseRocks;
 import com.bioxx.tfc2.Blocks.BlockPlanks;
+import com.bioxx.tfc2.Blocks.BlockSaltWater;
 import com.bioxx.tfc2.Blocks.BlockVegetation;
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
@@ -16,6 +19,7 @@ import com.bioxx.tfc2.Blocks.Terrain.BlockStone;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemPlanks;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemSoil;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemStone;
+import com.bioxx.tfc2.api.TFCFluids;
 
 public class TFCBlocks
 {
@@ -48,6 +52,8 @@ public class TFCBlocks
 		Effect = new BlockEffect().setHardness(0.1F).setStepSound(Block.soundTypeWood).setUnlocalizedName("effect");
 		Vegetation = new BlockVegetation().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("vegetation");
 		LooseRocks = new BlockLooseRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("loose_rock");
+		FreshWater = new BlockFreshWater(TFCFluids.FRESHWATER, Material.water).setUnlocalizedName("freshwater");
+		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater");
 	}
 
 	public static void RegisterBlocks()
@@ -67,5 +73,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Effect, "effect");
 		GameRegistry.registerBlock(Vegetation, "vegetation");
 		GameRegistry.registerBlock(LooseRocks, "loose_rock");
+		GameRegistry.registerBlock(FreshWater, "freshwater");
+		GameRegistry.registerBlock(SaltWater, "saltwater");
 	}
 }

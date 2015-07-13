@@ -9,9 +9,9 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidBlock;
 
-public class BlockFreshWater extends BlockFluidClassic {
+public class BlockSaltWater extends BlockFluidClassic {
 
-	public BlockFreshWater(Fluid fluid, Material material) 
+	public BlockSaltWater(Fluid fluid, Material material) 
 	{
 		super(fluid, material);
 		this.setTickRate(3);
@@ -36,4 +36,5 @@ public class BlockFreshWater extends BlockFluidClassic {
 		}
 		return !here.getBlock().getMaterial().isSolid() && up.getBlock() == this ? 1 : this.getQuantaPercentage(world, pos) * 0.875F;
 	}
+
 }

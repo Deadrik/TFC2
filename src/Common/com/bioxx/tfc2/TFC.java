@@ -49,9 +49,7 @@ public class TFC
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		instance = this;
-
-		TFCBlocks.LoadBlocks();
-		TFCBlocks.RegisterBlocks();
+		proxy.preInit(event);
 		//Register tree types and load tree schematics
 		loadTrees();
 
@@ -133,7 +131,7 @@ public class TFC
 		TreeRegistry tr = TreeRegistry.instance;
 		String treePath = "assets/tfc2/schematics/trees/";
 		int i = 0;
-		
+
 		String wood = Core.textConvert(Global.WOOD_STANDARD[i]);
 
 		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, 4F, 24F, 0.5F, 2F, false));i++; //Ash

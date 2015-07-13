@@ -5,25 +5,31 @@ import java.io.File;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.bioxx.tfc2.CoreStuff.FluidTFC;
 import com.bioxx.tfc2.api.TFCFluids;
 
 public class CommonProxy
 {
+
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		ResourceLocation still = Core.CreateRes(Reference.getResID()+"blocks/water_still");
+		ResourceLocation flow = Core.CreateRes(Reference.getResID()+"blocks/water_flow");
+		TFCFluids.SALTWATER = new FluidTFC("saltwater", still, flow).setBaseColor(0xff001945);
+		TFCFluids.FRESHWATER = new FluidTFC("freshwater", still, flow).setBaseColor(0xff001945);
+		FluidRegistry.registerFluid(TFCFluids.SALTWATER);
+		FluidRegistry.registerFluid(TFCFluids.FRESHWATER);
+		TFCBlocks.LoadBlocks();
+		TFCBlocks.RegisterBlocks();
+		TFCFluids.SALTWATER.setBlock(TFCBlocks.SaltWater).setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());
+		TFCFluids.FRESHWATER.setBlock(TFCBlocks.FreshWater).setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());
+	}
+
 	public void registerRenderInformation()
 	{
 		// NOOP on server
-	}
-
-	public void registerFluids()
-	{
-		TFCFluids.SALTWATER = new FluidTFC("saltwater", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")).setBaseColor(0x354d35);
-		TFCFluids.FRESHWATER = new FluidTFC("freshwater", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")).setBaseColor(0x354d35);
-
-
-		FluidRegistry.registerFluid(TFCFluids.SALTWATER);
-		FluidRegistry.registerFluid(TFCFluids.FRESHWATER);
 	}
 
 	public void setupFluids()

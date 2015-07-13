@@ -2,15 +2,21 @@ package com.bioxx.tfc2;
 
 import java.io.File;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.bioxx.tfc2.Handlers.Client.KeyBindingHandler;
 import com.bioxx.tfc2.api.Global;
@@ -18,6 +24,51 @@ import com.bioxx.tfc2.api.Util.KeyBindings;
 
 public class ClientProxy extends CommonProxy
 {
+	private static ModelResourceLocation freshwaterLocation = new ModelResourceLocation(Reference.getResID() + "liquids", "freshwater");
+	private static ModelResourceLocation saltwaterLocation = new ModelResourceLocation(Reference.getResID() + "liquids", "saltwater");
+
+	@Override
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		super.preInit(event);
+		Item fresh = Item.getItemFromBlock(TFCBlocks.FreshWater);
+		Item salt = Item.getItemFromBlock(TFCBlocks.SaltWater);
+		ModelBakery.addVariantName(fresh);
+		ModelBakery.addVariantName(salt);
+		ModelLoader.setCustomMeshDefinition(fresh, new ItemMeshDefinition()
+		{
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return freshwaterLocation;
+			}
+		});
+		ModelLoader.setCustomMeshDefinition(salt, new ItemMeshDefinition()
+		{
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return saltwaterLocation;
+			}
+		});
+		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWater, new StateMapperBase()
+		{
+			@Override
+			protected ModelResourceLocation func_178132_a(IBlockState state)//getModelResourceLocation
+			{
+				return freshwaterLocation;
+			}
+		});
+		ModelLoader.setCustomStateMapper(TFCBlocks.SaltWater, new StateMapperBase()
+		{
+			@Override
+			protected ModelResourceLocation func_178132_a(IBlockState state)//getModelResourceLocation
+			{
+				return saltwaterLocation;
+			}
+		});
+	}
+
 	@Override
 	public void registerRenderInformation()
 	{
