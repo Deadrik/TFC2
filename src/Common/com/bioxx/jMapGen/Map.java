@@ -1960,7 +1960,7 @@ public class Map
 			if(c.hasAttribute(Attribute.lakeUUID))
 			{
 				int lakeID = ((LakeAttribute)c.getAttribute(Attribute.lakeUUID)).getLakeID();
-				if(lakes.size() < lakeID)
+				if(lakes.size() <= lakeID)
 					lakes.setSize(lakeID+1);
 				if(lakes.get(lakeID) == null)
 				{
