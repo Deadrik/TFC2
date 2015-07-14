@@ -219,11 +219,25 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						chunkprimer.setBlockState(x, y, z, stone);
 					}
 
+					if(closestCenter.hasAttribute(Attribute.riverUUID) && closestCenter.hasAnyMarkersOf(Marker.Pond))
+					{
+						RiverAttribute attrib = (RiverAttribute)closestCenter.getAttribute(Attribute.riverUUID);
+						if(attrib.upriver == null || attrib.upriver.size() == 0)
+						{
+							boolean border = isLakeBorder(p, closestCenter, 7);
+							if(!border && y < this.convertElevation(closestCenter.getElevation()) && y >= this.convertElevation(closestCenter.getElevation())-1)
+							{
+								chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
+								chunkprimer.setBlockState(x, y-1, z, dirt);
+							}
+						}
+					}
+
 					if(closestCenter.biome == BiomeType.LAKE && closestCenter.hasAttribute(Attribute.lakeUUID))
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.lakeUUID);
 						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water
-						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= hexElev-this.getElevation(closestCenter, p, 4)-1)
+						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 4)-1)
 							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
 						if(getBlock(chunkprimer, x, y, z).isSolidFullCube() && blockUp == TFCBlocks.FreshWater.getDefaultState())
 						{
@@ -233,7 +247,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					else if(closestCenter.biome == BiomeType.MARSH)
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.lakeUUID);
-						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= hexElev-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
+						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
 							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
 					}
 
@@ -253,9 +267,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		return chunkprimer.getBlockState(x, y, z).getBlock();
 	}
 
-	protected boolean isLakeBorder(Point p, Center c)
+	protected boolean isLakeBorder(Point p, Center c, double width)
 	{
-		double width = 3;
 		Point pt = p.plus(0, width);
 		Center c2 = getHex(pt);
 		if(c2 != c && !c2.hasMarker(Marker.Water))
@@ -285,6 +298,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		if(c2 != c && !c2.hasMarker(Marker.Water))
 			return true;
 		return false;
+	}
+
+	protected boolean isLakeBorder(Point p, Center c)
+	{
+		return isLakeBorder(p, c, 3);
 	}
 
 	protected int getElevation(Center c, Point p, double scale)
@@ -466,7 +484,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						continue;
 
 					if(yC < SEA_LEVEL+1)
-						yC = SEA_LEVEL+1;
+						yC = SEA_LEVEL;
 
 					int y = -1, i = 0;
 					if(attrib.getRiver() < 1)
@@ -547,6 +565,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			}
 		}
 
+		if(c.hasAnyMarkersOf(Marker.Pond))
+		{
+			getSmoothHeightHex(c, p, 3);
+		}
 
 		return getSmoothHeightHex(c, p, 5);
 	}

@@ -1561,6 +1561,7 @@ public class Map
 								break;
 							}
 						}
+						r.riverStart.center.setMarkers(Marker.Pond);
 					}
 					else
 					{
