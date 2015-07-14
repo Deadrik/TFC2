@@ -8,6 +8,7 @@ public class Lake
 {
 	public Vector<Center> centers;
 	public Center lowestCenter;
+	public int lakeID = 0;
 
 	public Lake()
 	{

@@ -10,6 +10,7 @@ public abstract class Attribute
 	public static UUID gorgeUUID = UUID.fromString("81d18f09-9623-47de-a541-b3fc9f6c1969");
 	public static UUID lavaUUID = UUID.fromString("b53102e2-60c1-4dd8-b48f-1ea8a5801f1f");
 	public static UUID canyonUUID = UUID.fromString("20117943-cd58-4efd-9757-7e0365e5601f");
+	public static UUID lakeUUID = UUID.fromString("ddc68a75-9b5b-4659-aac0-2ec2208c8ffe");
 
 	public UUID id;
 

@@ -21,6 +21,7 @@ import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.Spline2D;
 import com.bioxx.jMapGen.attributes.Attribute;
 import com.bioxx.jMapGen.attributes.CanyonAttribute;
+import com.bioxx.jMapGen.attributes.LakeAttribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
 import com.bioxx.jMapGen.graph.Center;
 import com.bioxx.jMapGen.graph.Center.Marker;
@@ -218,18 +219,22 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						chunkprimer.setBlockState(x, y, z, stone);
 					}
 
-					if(closestCenter.biome == BiomeType.LAKE)
+					if(closestCenter.biome == BiomeType.LAKE && closestCenter.hasAttribute(Attribute.lakeUUID))
 					{
-						if(!isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 4)-1)
+						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.lakeUUID);
+						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water
+						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= hexElev-this.getElevation(closestCenter, p, 4)-1)
 							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
 						if(getBlock(chunkprimer, x, y, z).isSolidFullCube() && blockUp == TFCBlocks.FreshWater.getDefaultState())
 						{
 							chunkprimer.setBlockState(x, y, z, sand);
 						}
 					}
-					else if(closestCenter.biome == BiomeType.MARSH && !isLakeBorder(p, closestCenter) && y < hexElev && y >= hexElev-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
+					else if(closestCenter.biome == BiomeType.MARSH)
 					{
-						chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
+						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.lakeUUID);
+						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= hexElev-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
+							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
 					}
 
 					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == TFCBlocks.SaltWater.getDefaultState())

@@ -18,6 +18,7 @@ import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.attributes.Attribute;
 import com.bioxx.jMapGen.attributes.CanyonAttribute;
 import com.bioxx.jMapGen.attributes.GorgeAttribute;
+import com.bioxx.jMapGen.attributes.LakeAttribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
 import com.bioxx.jMapGen.com.nodename.Delaunay.DelaunayUtil;
 import com.bioxx.jMapGen.com.nodename.Delaunay.Voronoi;
@@ -1200,22 +1201,43 @@ public class Map
 				lakes.add(lake);
 			}
 		}
-		for(int i = 0; i < lakes.size(); i++)
+		for(int lakeID = 0; lakeID < lakes.size(); lakeID++)
 		{
-			Lake lake = lakes.get(i);
+			Lake lake = lakes.get(lakeID);
+			lake.lakeID = lakeID;
 			for(Center c : lake.centers)
 			{
 				c.elevation = lake.lowestCenter.elevation;
+				LakeAttribute attrib = new LakeAttribute(Attribute.lakeUUID);
+				attrib.setLakeElev(lake.lowestCenter.elevation);
+				attrib.setLakeID(lakeID);
 				//Here we try to smooth the centers around lakes a bit
 				for(Center n : c.neighbors)
 				{
+					if(n.hasAttribute(Attribute.lakeUUID))
+					{
+						LakeAttribute nAttrib = (LakeAttribute) n.getAttribute(Attribute.lakeUUID);
+						if(nAttrib.getBorderDistance() < attrib.getBorderDistance())
+							attrib.setBorderDistance(nAttrib.getBorderDistance() + 1);
+						else if (nAttrib.getBorderDistance() > attrib.getBorderDistance())
+							nAttrib.setBorderDistance(attrib.getBorderDistance() + 1);
+					}
 					if(!n.hasMarker(Marker.Water))
 					{
-						if(n.elevation < c.elevation)
+						attrib.setBorderDistance(0);
+						if(n.elevation < c.elevation)//Neighbor is lower than the lake
 							n.elevation += (c.elevation - n.elevation)/2;
-						else if(c.elevation < n.elevation)
+						else if(c.elevation < n.elevation)//Neighbor is higher than the lake
 							n.elevation -= (n.elevation - c.elevation)/2;
 					}
+				}
+				if(c.getElevation() < 0.1)
+					attrib.setMarsh(true);
+				c.addAttribute(attrib);
+				if(attrib.getBorderDistance() > 0)
+				{
+					double total = c.getElevation() - (c.getElevation() * 0.9D);
+					c.setElevation(c.getElevation() - (total * (attrib.getBorderDistance() / 10D)));
 				}
 			}
 		}
@@ -1911,6 +1933,7 @@ public class Map
 		NBTTagList centerList = nbt.getTagList("centers", 10);
 		NBTTagList cornerList = nbt.getTagList("corners", 10);
 		NBTTagList edgeList = nbt.getTagList("edges", 10);
+		Center c;
 
 		//First we create empty centers, corners, and edges that can be referenced from each other
 		for(int i = 0; i < centerList.tagCount(); i++)
@@ -1930,7 +1953,23 @@ public class Map
 
 		for(int i = 0; i < centers.size(); i++)
 		{
-			centers.get(i).readFromNBT(centerList.getCompoundTagAt(i), this);
+			c = centers.get(i);
+			c.readFromNBT(centerList.getCompoundTagAt(i), this);
+
+			//Rebuild the lake list
+			if(c.hasAttribute(Attribute.lakeUUID))
+			{
+				int lakeID = ((LakeAttribute)c.getAttribute(Attribute.lakeUUID)).getLakeID();
+				if(lakes.size() < lakeID)
+					lakes.setSize(lakeID+1);
+				if(lakes.get(lakeID) == null)
+				{
+					lakes.set(lakeID, new Lake());
+					lakes.get(lakeID).lakeID = lakeID;
+				}
+
+				lakes.get(lakeID).addCenter(c);
+			}
 		}
 
 		for(int i = 0; i < corners.size(); i++)
@@ -1942,6 +1981,8 @@ public class Map
 		{
 			edges.get(i).readFromNBT(edgeList.getCompoundTagAt(i), this);
 		}
+
+
 
 		//Rebuild the river list
 		/*for(Center c : centers)
