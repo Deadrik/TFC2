@@ -9,6 +9,7 @@ import com.bioxx.tfc2.Blocks.BlockFreshWater;
 import com.bioxx.tfc2.Blocks.BlockLooseRocks;
 import com.bioxx.tfc2.Blocks.BlockPlanks;
 import com.bioxx.tfc2.Blocks.BlockSaltWater;
+import com.bioxx.tfc2.Blocks.BlockSapling;
 import com.bioxx.tfc2.Blocks.BlockVegetation;
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
@@ -16,7 +17,7 @@ import com.bioxx.tfc2.Blocks.Terrain.BlockGravel;
 import com.bioxx.tfc2.Blocks.Terrain.BlockRubble;
 import com.bioxx.tfc2.Blocks.Terrain.BlockSand;
 import com.bioxx.tfc2.Blocks.Terrain.BlockStone;
-import com.bioxx.tfc2.Items.ItemBlocks.ItemPlanks;
+import com.bioxx.tfc2.Items.ItemBlocks.ItemWood;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemSoil;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemStone;
 import com.bioxx.tfc2.api.TFCFluids;
@@ -35,6 +36,7 @@ public class TFCBlocks
 	public static Block LooseRocks;
 	public static Block FreshWater;
 	public static Block SaltWater;
+	public static Block Sapling;
 
 	public static void LoadBlocks()
 	{
@@ -54,6 +56,7 @@ public class TFCBlocks
 		LooseRocks = new BlockLooseRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("loose_rock");
 		FreshWater = new BlockFreshWater(TFCFluids.FRESHWATER, Material.water).setUnlocalizedName("freshwater");
 		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater");
+		Sapling = new BlockSapling().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling");
 	}
 
 	public static void RegisterBlocks()
@@ -69,11 +72,12 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Rubble, ItemStone.class, "rubble");
 		GameRegistry.registerBlock(Sand, ItemStone.class, "sand");
 		GameRegistry.registerBlock(Gravel, ItemStone.class, "gravel");
-		GameRegistry.registerBlock(Planks, ItemPlanks.class, "planks");
+		GameRegistry.registerBlock(Planks, ItemWood.class, "planks");
 		GameRegistry.registerBlock(Effect, "effect");
 		GameRegistry.registerBlock(Vegetation, "vegetation");
 		GameRegistry.registerBlock(LooseRocks, "loose_rock");
 		GameRegistry.registerBlock(FreshWater, "freshwater");
 		GameRegistry.registerBlock(SaltWater, "saltwater");
+		GameRegistry.registerBlock(Sapling, ItemWood.class, "sapling");
 	}
 }

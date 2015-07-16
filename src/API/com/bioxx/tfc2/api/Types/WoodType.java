@@ -28,7 +28,7 @@ public enum WoodType implements IStringSerializable
 		return meta;
 	}
 
-	public static WoodType getStoneTypeFromMeta(int meta)
+	public static WoodType getTypeFromMeta(int meta)
 	{
 		for(int i = 0; i < WoodType.values().length; i++)
 		{

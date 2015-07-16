@@ -11,34 +11,32 @@ public class TreeConfig
 	/**
 	 * Minimum Allowed Moisture
 	 */
-	public float minRain;
+	public double minMoisture;
 	/**
 	 * Maximum Allowed Moisture
 	 */
-	public float maxRain;
+	public double maxMoisture;
 	/**
 	 * Minimum Allowed Temperature
 	 */
-	public float minTemp;
+	public double minTemp;
 	/**
 	 * Maximum Allowed Temperature
 	 */
-	public float maxTemp;
+	public double maxTemp;
 
-	public float minEVT;
-	public float maxEVT;
 	public boolean isEvergreen;
 
-	public TreeConfig(String n, int i, float minR, float maxR, float minT, float maxT, float minEVT, float maxEVT, boolean eg)
+	public TreeConfig(String n, int i, double minR, double maxR, double minT, double maxT, boolean eg)
 	{
 		name = n;
 		index = i;
-		minRain = minR;
-		maxRain = maxR;
+		minMoisture = minR;
+		maxMoisture = maxR;
 		minTemp = minT;
 		maxTemp = maxT;
 		isEvergreen = eg;
 	}
-	
-	
+
+
 }

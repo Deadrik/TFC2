@@ -96,6 +96,8 @@ public class ClientProxy extends CommonProxy
 
 			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Planks), l, new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory"));
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks), Reference.ModID + ":Wood/Planks/" + wood);
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Sapling), l, new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling), Reference.ModID + ":Wood/Saplings/" + wood);
 
 		}
 	}

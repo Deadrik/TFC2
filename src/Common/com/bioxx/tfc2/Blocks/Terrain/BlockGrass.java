@@ -112,4 +112,25 @@ public class BlockGrass extends BlockTerra
 		return EnumWorldBlockLayer.CUTOUT_MIPPED;
 	}
 
+	/**
+	 * Called when a plant grows on this block, only implemented for saplings using the WorldGen*Trees classes right now.
+	 * Modder may implement this for custom plants.
+	 * This does not use ForgeDirection, because large/huge trees can be located in non-representable direction,
+	 * so the source location is specified.
+	 * Currently this just changes the block to dirt if it was grass.
+	 *
+	 * Note: This happens DURING the generation, the generation may not be complete when this is called.
+	 *
+	 * @param world Current world
+	 * @param pos Block position in world
+	 * @param source Source plant's position in world
+	 */
+	@Override
+	public void onPlantGrow(World world, BlockPos pos, BlockPos source)
+	{
+		IBlockState myState = world.getBlockState(pos);
+		int meta = ((Integer)myState.getValue(BlockGrass.META_PROPERTY)).intValue();
+		world.setBlockState(pos, TFCBlocks.Dirt.getDefaultState().withProperty(META_PROPERTY, meta), 2);
+	}
+
 }

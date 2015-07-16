@@ -10,9 +10,9 @@ import net.minecraft.util.EnumChatFormatting;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.Global;
 
-public class ItemPlanks extends ItemTerraBlock
+public class ItemWood extends ItemTerraBlock
 {
-	public ItemPlanks(Block b)
+	public ItemWood(Block b)
 	{
 		super(b);
 	}

@@ -64,6 +64,10 @@ public class Schematic implements ISchematic
 			int num = path.indexOf('_') + 1;
 			id = Integer.parseInt(path.substring(num, num + 2));
 		}
+		catch (NumberFormatException n)
+		{
+			System.out.println("TFC NFE: " + path); return false;
+		}
 		catch (FileNotFoundException e)
 		{
 			System.out.println("TFC FileNotFound: " + path); return false;

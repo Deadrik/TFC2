@@ -25,6 +25,7 @@ import com.bioxx.tfc2.Handlers.WorldLoadHandler;
 import com.bioxx.tfc2.Networking.PacketPipeline;
 import com.bioxx.tfc2.World.WorldProviderSurface;
 import com.bioxx.tfc2.World.Generators.WorldGenGrass;
+import com.bioxx.tfc2.World.Generators.WorldGenTreeTest;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
@@ -58,7 +59,7 @@ public class TFC
 		WorldType.LARGE_BIOMES = new TFCWorldType(2, "TFCLargeBiomes");
 		WorldType.AMPLIFIED = new TFCWorldType(3, "TFCAmplified");*/
 
-		//net.minecraftforge.fml.common.registry.GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 0);
 		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 0);
 
 		DimensionManager.unregisterDimension(0);
@@ -134,24 +135,24 @@ public class TFC
 
 		String wood = Core.textConvert(Global.WOOD_STANDARD[i]);
 
-		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, 4F, 24F, 0.5F, 2F, false));i++; //Ash
-		tr.addWoodType(new TreeConfig(wood, i, 300F, 1600F, -5F, 18F, 0.25F, 1F, false));i++; //Aspen
-		tr.addWoodType(new TreeConfig(wood, i, 200F, 500F, -10F, 12F, 0F, 1F, false));i++; //Birch
-		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, 3F, 24F, 0F, 1F, false));i++; //Chestnut
+		tr.addWoodType(new TreeConfig(wood, i, 0.1, 1.0, 4F, 24F, false));i++; //Ash
+		tr.addWoodType(new TreeConfig(wood, i, 0.15, 0.5F, -5F, 18F, false));i++; //Aspen
+		tr.addWoodType(new TreeConfig(wood, i, 0.1, 0.25, -10F, 12F, false));i++; //Birch
+		tr.addWoodType(new TreeConfig(wood, i, 0.1, 0.6, 3F, 24F, false));i++; //Chestnut
 
-		tr.addWoodType(new TreeConfig(wood, i, 750F, 16000F, 1F, 14F, 0F, 1F, true));i++; //Douglas Fir
-		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, 4F, 24F, 0F, 1F, false));i++; //Hickory
-		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, 3F, 20F, 0F, 1F, false));i++; //Maple
-		tr.addWoodType(new TreeConfig(wood, i, 500F, 1200F, 5F, 15F, 0.25F, 2F, false));i++; //Oak
+		tr.addWoodType(new TreeConfig(wood, i, 0.3, 0.6, 1F, 14F, true));i++; //Douglas Fir
+		tr.addWoodType(new TreeConfig(wood, i, 0.1, 0.6, 4F, 24F, false));i++; //Hickory
+		tr.addWoodType(new TreeConfig(wood, i, 0.1, 0.6, 3F, 20F, false));i++; //Maple
+		tr.addWoodType(new TreeConfig(wood, i, 0.25, 0.6, 5F, 15F, false));i++; //Oak
 
-		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, -15F, 24F, 0.5F, 2F, true));i++; //Pine
-		tr.addWoodType(new TreeConfig(wood, i, 4000F, 16000F, 10F, 16F, 0F, 0.5F, true));i++; //Sequoia
-		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, -5F, 24F, 0F, 1F, true));i++; //Spruce
-		tr.addWoodType(new TreeConfig(wood, i, 400F, 16000F, 6F, 30F, 0F, 1F, false));i++; //Sycamore
+		tr.addWoodType(new TreeConfig(wood, i, 0.1, 0.5, -15F, 24F, true));i++; //Pine
+		tr.addWoodType(new TreeConfig(wood, i, 0.4, 1.0, 10F, 16F, true));i++; //Sequoia
+		tr.addWoodType(new TreeConfig(wood, i, 0.1, 1.0, -5F, 24F, true));i++; //Spruce
+		tr.addWoodType(new TreeConfig(wood, i, 0.2, 1.0, 6F, 30F, false));i++; //Sycamore
 
-		tr.addWoodType(new TreeConfig(wood, i, 250F, 16000F, -5F, 24F, 0F, 2F, true));i++; //White Ceder
-		tr.addWoodType(new TreeConfig(wood, i, 400F, 16000F, 4F, 30F, 0F, 1F, false));i++; //White Elm
-		tr.addWoodType(new TreeConfig(wood, i, 4000F, 16000F, 10F, 30F, 0F, 0.5F, false));i++; //Willow
+		tr.addWoodType(new TreeConfig(wood, i, 0.1, 1.0, -5F, 24F, true));i++; //White Ceder
+		tr.addWoodType(new TreeConfig(wood, i, 0.2, 1.0, 4F, 30F, false));i++; //White Elm
+		tr.addWoodType(new TreeConfig(wood, i, 0.5, 1.0, 10F, 30F, false));i++; //Willow
 		//tr.addWoodType(new TreeConfiguration(Global.WOOD_STANDARD[i], i, 4000F, 16000F, 24F, 44F, 0F, 1F, false));i++; //Kapok
 
 		//tr.addWoodType(new TreeConfiguration(Global.WOOD_STANDARD[i], i, 75F, 1000F, 20F, 50F, 0F, 1F, false));i++; //Acacia

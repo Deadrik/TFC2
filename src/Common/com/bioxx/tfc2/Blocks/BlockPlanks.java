@@ -28,7 +28,7 @@ public class BlockPlanks extends BlockTerra
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getStoneTypeFromMeta(meta));
+		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta(meta));
 	}
 
 	@Override
