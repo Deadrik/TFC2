@@ -93,7 +93,12 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Sapling, ItemWood.class, "sapling");
 		GameRegistry.registerBlock(LogNatural, ItemWood.class, "log_natural");
 		GameRegistry.registerBlock(LogVertical, ItemWood.class, "log_vertical");
-		GameRegistry.registerBlock(LogHorizontal, "log_horizontal");
-		GameRegistry.registerBlock(LogHorizontal2, "log_horizontal2");
+		GameRegistry.registerBlock(LogHorizontal, ItemWood.class, "log_horizontal");
+		GameRegistry.registerBlock(LogHorizontal2, ItemWood.class, "log_horizontal2");
+
+		LogNatural.setHarvestLevel("axe", 1);
+		LogVertical.setHarvestLevel("axe", 1);
+		LogHorizontal.setHarvestLevel("axe", 1);
+		LogHorizontal2.setHarvestLevel("axe", 1);
 	}
 }

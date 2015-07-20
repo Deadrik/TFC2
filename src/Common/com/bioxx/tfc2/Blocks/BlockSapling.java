@@ -13,13 +13,16 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.api.Types.WoodType;
 
-public class BlockSapling extends BlockTerra implements IGrowable
+public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 {
 	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("type", WoodType.class);
 	public BlockSapling()
@@ -114,5 +117,15 @@ public class BlockSapling extends BlockTerra implements IGrowable
 	public boolean isOpaqueCube()
 	{
 		return false;
+	}
+
+	@Override
+	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
+		return EnumPlantType.Plains;
+	}
+
+	@Override
+	public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
+		return null;
 	}
 }

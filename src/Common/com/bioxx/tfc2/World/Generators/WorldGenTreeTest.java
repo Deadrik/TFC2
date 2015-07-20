@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
+import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.CoreStuff.Schematic;
 import com.bioxx.tfc2.World.ChunkManager;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
@@ -64,7 +65,8 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 			for(int l = 0; l < numTrees; l++)
 			{
-				schem = TreeRegistry.instance.getRandomTreeSchematic(random);
+				treeID = random.nextInt(15);
+				schem = TreeRegistry.instance.getRandomTreeSchematic(random, treeID);
 				xCoord = chunkX + random.nextInt(16);
 				yCoord = world.getHorizon(chunkPos).getY();
 				zCoord = chunkZ + random.nextInt(16);
@@ -156,7 +158,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			localZ = treeZ - schem.getCenterZ() + schemZ;
 		}
 
-		IBlockState block = Blocks.log.getDefaultState();
+		IBlockState block = TFCBlocks.LogNatural.getStateFromMeta(meta);
 		BlockPos blockPos = new BlockPos(localX, localY, localZ);
 		IBlockState leaves = Blocks.leaves.getDefaultState();
 		int localMeta = meta;
@@ -206,7 +208,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 				{
 					ground = world.getBlockState(gPos.add(i, 0, k)).getBlock();
 					above = world.getBlockState(aPos.add(i, 0, k)).getBlock();
-					if(above == Blocks.log || above == Blocks.log2)
+					if(above == TFCBlocks.LogNatural)
 					{
 						ret = false;
 						break outerloop;
@@ -224,7 +226,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 	private boolean isBlockValid(World world, BlockPos pos, Block block)
 	{
-		//return block == Blocks.dirt || block == Blocks.grass;
-		return block.canSustainPlant(world, pos, net.minecraft.util.EnumFacing.UP, (net.minecraft.block.BlockSapling)Blocks.sapling);
+		return block == TFCBlocks.Dirt || block == TFCBlocks.Grass;
+		//return block.canSustainPlant(world, pos, net.minecraft.util.EnumFacing.UP, (BlockSapling)TFCBlocks.Sapling);
 	}
 }
