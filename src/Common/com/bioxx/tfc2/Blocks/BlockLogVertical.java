@@ -57,7 +57,7 @@ public class BlockLogVertical extends BlockTerra
 				}
 				else
 				{
-					return TFCBlocks.LogHorizontal.getStateFromMeta(meta >> 1).withProperty(BlockLogHorizontal.ROT_PROPERTY, 1);
+					return TFCBlocks.LogHorizontal2.getStateFromMeta(meta).withProperty(BlockLogHorizontal.ROT_PROPERTY, 1);
 				}
 			}
 			else
@@ -68,7 +68,7 @@ public class BlockLogVertical extends BlockTerra
 				}
 				else
 				{
-					return TFCBlocks.LogHorizontal.getStateFromMeta(meta >> 1).withProperty(BlockLogHorizontal.ROT_PROPERTY, 0);
+					return TFCBlocks.LogHorizontal2.getStateFromMeta(meta).withProperty(BlockLogHorizontal.ROT_PROPERTY, 0);
 				}
 			}
 		}

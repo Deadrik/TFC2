@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.bioxx.tfc2.Blocks.BlockEffect;
 import com.bioxx.tfc2.Blocks.BlockFreshWater;
 import com.bioxx.tfc2.Blocks.BlockLogHorizontal;
+import com.bioxx.tfc2.Blocks.BlockLogHorizontal2;
 import com.bioxx.tfc2.Blocks.BlockLogNatural;
 import com.bioxx.tfc2.Blocks.BlockLogVertical;
 import com.bioxx.tfc2.Blocks.BlockLooseRocks;
@@ -67,7 +68,7 @@ public class TFCBlocks
 		LogNatural = new BlockLogNatural().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural");
 		LogVertical = new BlockLogVertical().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical");
 		LogHorizontal = new BlockLogHorizontal().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal");
-		LogHorizontal2 = new BlockLogHorizontal(1).setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal");
+		LogHorizontal2 = new BlockLogHorizontal2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal2");
 	}
 
 	public static void RegisterBlocks()

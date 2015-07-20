@@ -25,6 +25,8 @@ public abstract class BlockTerra extends Block
 	 */
 	private final PropertyHelper META_PROP;
 
+	private boolean showInCreative = true;
+
 	protected BlockTerra()
 	{
 		this(Material.rock, null);
@@ -38,20 +40,26 @@ public abstract class BlockTerra extends Block
 			this.setDefaultState(this.getBlockState().getBaseState().withProperty(META_PROP, (Comparable)META_PROP.getAllowedValues().toArray()[0]));
 	}
 
+	public void setShowInCreative(boolean b)
+	{
+		showInCreative = b;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list)
 	{
-		if(hasMeta())
+		if(showInCreative)
 		{
-			for(int l = 0; l < META_PROP.getAllowedValues().size(); l++)
-				list.add(new ItemStack(itemIn, 1, l));
+			if(hasMeta())
+			{
+				for(int l = 0; l < META_PROP.getAllowedValues().size(); l++)
+					list.add(new ItemStack(itemIn, 1, l));
+			}
+			else
+				super.getSubBlocks(itemIn, tab, list);
 		}
-		else
-			super.getSubBlocks(itemIn, tab, list);
 	}
-
-
 
 	@Override
 	public int damageDropped(IBlockState state)

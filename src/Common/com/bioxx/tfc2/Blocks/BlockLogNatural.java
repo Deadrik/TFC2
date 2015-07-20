@@ -21,6 +21,7 @@ public class BlockLogNatural extends BlockTerra
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
+		this.setShowInCreative(false);
 	}
 
 	@Override
