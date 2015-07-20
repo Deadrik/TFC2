@@ -1,6 +1,0 @@
-{
-    "parent": "minecraft:block/cross",
-    "textures": {
-        "cross": "tfc2:blocks/wood/trees/Ash Sapling"
-    }
-}

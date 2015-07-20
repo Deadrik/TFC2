@@ -6,6 +6,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Blocks.BlockEffect;
 import com.bioxx.tfc2.Blocks.BlockFreshWater;
+import com.bioxx.tfc2.Blocks.BlockLogHorizontal;
+import com.bioxx.tfc2.Blocks.BlockLogNatural;
+import com.bioxx.tfc2.Blocks.BlockLogVertical;
 import com.bioxx.tfc2.Blocks.BlockLooseRocks;
 import com.bioxx.tfc2.Blocks.BlockPlanks;
 import com.bioxx.tfc2.Blocks.BlockSaltWater;
@@ -17,9 +20,9 @@ import com.bioxx.tfc2.Blocks.Terrain.BlockGravel;
 import com.bioxx.tfc2.Blocks.Terrain.BlockRubble;
 import com.bioxx.tfc2.Blocks.Terrain.BlockSand;
 import com.bioxx.tfc2.Blocks.Terrain.BlockStone;
-import com.bioxx.tfc2.Items.ItemBlocks.ItemWood;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemSoil;
 import com.bioxx.tfc2.Items.ItemBlocks.ItemStone;
+import com.bioxx.tfc2.Items.ItemBlocks.ItemWood;
 import com.bioxx.tfc2.api.TFCFluids;
 
 public class TFCBlocks
@@ -37,6 +40,10 @@ public class TFCBlocks
 	public static Block FreshWater;
 	public static Block SaltWater;
 	public static Block Sapling;
+	public static Block LogNatural;
+	public static Block LogVertical;
+	public static Block LogHorizontal;
+	public static Block LogHorizontal2;
 
 	public static void LoadBlocks()
 	{
@@ -57,6 +64,10 @@ public class TFCBlocks
 		FreshWater = new BlockFreshWater(TFCFluids.FRESHWATER, Material.water).setUnlocalizedName("freshwater");
 		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater");
 		Sapling = new BlockSapling().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling");
+		LogNatural = new BlockLogNatural().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural");
+		LogVertical = new BlockLogVertical().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical");
+		LogHorizontal = new BlockLogHorizontal().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal");
+		LogHorizontal2 = new BlockLogHorizontal(1).setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal");
 	}
 
 	public static void RegisterBlocks()
@@ -79,5 +90,9 @@ public class TFCBlocks
 		GameRegistry.registerBlock(FreshWater, "freshwater");
 		GameRegistry.registerBlock(SaltWater, "saltwater");
 		GameRegistry.registerBlock(Sapling, ItemWood.class, "sapling");
+		GameRegistry.registerBlock(LogNatural, ItemWood.class, "log_natural");
+		GameRegistry.registerBlock(LogVertical, ItemWood.class, "log_vertical");
+		GameRegistry.registerBlock(LogHorizontal, "log_horizontal");
+		GameRegistry.registerBlock(LogHorizontal2, "log_horizontal2");
 	}
 }
