@@ -159,8 +159,9 @@ public class WorldGen implements IThreadCompleteListener
 				stonePot.add(1.0, s);
 			}
 		}
-
 		id.setSurfaceRock(stonePot.next());
+
+
 
 		return id;
 	}

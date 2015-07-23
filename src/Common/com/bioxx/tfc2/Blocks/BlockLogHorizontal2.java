@@ -17,7 +17,7 @@ import com.bioxx.tfc2.api.Types.WoodType;
 public class BlockLogHorizontal2 extends BlockLogHorizontal
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, 
-			WoodType.Pine, WoodType.Sequoia, WoodType.Spruce, WoodType.Sycamore, WoodType.WhiteCedar, WoodType.WhiteElm, WoodType.Willow);
+			WoodType.Pine, WoodType.Sequoia, WoodType.Spruce, WoodType.Sycamore, WoodType.WhiteCedar, WoodType.Willow, WoodType.Kapok, WoodType.Acacia);
 	public static PropertyInteger ROT_PROPERTY =  PropertyInteger.create("rotation", 0, 1);
 	private int offset = 1;
 

@@ -16,8 +16,11 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import com.bioxx.tfc2.Handlers.Client.ClientRenderHandler;
 import com.bioxx.tfc2.Handlers.Client.KeyBindingHandler;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.Util.KeyBindings;
@@ -70,9 +73,11 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public void registerRenderInformation()
+	public void init(FMLInitializationEvent event)
 	{
+		super.init(event);
 		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
+		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
 		for(int l = 0; l < Global.STONE_ALL.length; l++)
 		{
 			String stone = Core.textConvert(Global.STONE_ALL[l]);
@@ -105,6 +110,13 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural), Reference.ModID + ":Wood/Logs/" + wood);
 
 		}
+	}
+
+	@Override
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		super.postInit(event);
+
 	}
 
 	private void registerItemMesh(Item i, int meta, ModelResourceLocation mrl)

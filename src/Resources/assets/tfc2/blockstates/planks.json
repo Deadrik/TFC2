@@ -4,7 +4,7 @@
         "wood=aspen":  { "model": "tfc2:wood/planks/Aspen" },
         "wood=birch":  { "model": "tfc2:wood/planks/Birch" },
         "wood=chestnut":  { "model": "tfc2:wood/planks/Chestnut" },
-        "wood=douglasfir":  { "model": "tfc2:wood/planks/Douglas Fir" },
+        "wood=douglas_fir":  { "model": "tfc2:wood/planks/Douglas Fir" },
         "wood=hickory":  { "model": "tfc2:wood/planks/Hickory" },
         "wood=maple":  { "model": "tfc2:wood/planks/Maple" },
         "wood=oak":  { "model": "tfc2:wood/planks/Oak" },
@@ -12,8 +12,9 @@
         "wood=sequoia":  { "model": "tfc2:wood/planks/Sequoia" },
         "wood=spruce":  { "model": "tfc2:wood/planks/Spruce" },
         "wood=sycamore":  { "model": "tfc2:wood/planks/Sycamore" },
-        "wood=whitecedar":  { "model": "tfc2:wood/planks/White Cedar" },
-        "wood=whiteelm":  { "model": "tfc2:wood/planks/White Elm" },
-        "wood=willow":  { "model": "tfc2:wood/planks/Willow" }
+        "wood=white_cedar":  { "model": "tfc2:wood/planks/White Cedar" },
+        "wood=willow":  { "model": "tfc2:wood/planks/Willow" },
+        "wood=kapok":  { "model": "tfc2:wood/planks/Kapok" },
+        "wood=acacia":  { "model": "tfc2:wood/planks/Acacia" }
     }
 }

@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "tfc2:blocks/wood/White Elm Plank"
+        "all": "tfc2:blocks/wood/Kapok Plank"
     }
 }

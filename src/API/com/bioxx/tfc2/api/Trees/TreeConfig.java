@@ -1,36 +1,40 @@
 package com.bioxx.tfc2.api.Trees;
 
+import com.bioxx.tfc2.api.Types.Moisture;
+import com.bioxx.tfc2.api.Types.Temp;
+import com.bioxx.tfc2.api.Types.WoodType;
+
 public class TreeConfig 
 {
 	public String name;
 	/**
-	 * The Tree Index. This is used for assigning textures, creating items, and 
+	 * The Tree Wood Type. This is used for assigning textures, creating items, and 
 	 * choosing the correct tree schematics during world generation.
 	 */
-	public int index = -1;
+	public WoodType wood;
 	/**
 	 * Minimum Allowed Moisture
 	 */
-	public double minMoisture;
+	public Moisture minMoisture;
 	/**
 	 * Maximum Allowed Moisture
 	 */
-	public double maxMoisture;
+	public Moisture maxMoisture;
 	/**
 	 * Minimum Allowed Temperature
 	 */
-	public double minTemp;
+	public Temp minTemp;
 	/**
 	 * Maximum Allowed Temperature
 	 */
-	public double maxTemp;
+	public Temp maxTemp;
 
 	public boolean isEvergreen;
 
-	public TreeConfig(String n, int i, double minR, double maxR, double minT, double maxT, boolean eg)
+	public TreeConfig(WoodType i, Moisture minR, Moisture maxR, Temp minT, Temp maxT, boolean eg)
 	{
-		name = n;
-		index = i;
+		name = i.getName();
+		wood = i;
 		minMoisture = minR;
 		maxMoisture = maxR;
 		minTemp = minT;

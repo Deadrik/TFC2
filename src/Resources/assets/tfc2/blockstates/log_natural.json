@@ -9,7 +9,7 @@
         	"aspen":  { "textures": {"all": "tfc2:blocks/wood/trees/Aspen Log"} },
         	"birch":  { "textures": {"all": "tfc2:blocks/wood/trees/Birch Log"} },
         	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/trees/Chestnut Log"} },
-        	"douglasfir":  { "textures": {"all": "tfc2:blocks/wood/trees/Douglas Fir Log"} },
+        	"douglas_fir":  { "textures": {"all": "tfc2:blocks/wood/trees/Douglas Fir Log"} },
      	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/trees/Hickory Log"} },
         	"maple":  { "textures": {"all": "tfc2:blocks/wood/trees/Maple Log"} },
         	"oak":  { "textures": {"all": "tfc2:blocks/wood/trees/Oak Log"} },
@@ -17,9 +17,10 @@
    	     	"sequoia":  { "textures": {"all": "tfc2:blocks/wood/trees/Sequoia Log"} },
         	"spruce":  { "textures": {"all": "tfc2:blocks/wood/trees/Spruce Log"} },
  	       	"sycamore":  { "textures": {"all": "tfc2:blocks/wood/trees/Sycamore Log"} },
-   		    "whitecedar":  { "textures": {"all": "tfc2:blocks/wood/trees/White Cedar Log"} },
-    	    "whiteelm":  { "textures": {"all": "tfc2:blocks/wood/trees/White Elm Log"} },
-    	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/Willow Log"} }
+   		    "white_cedar":  { "textures": {"all": "tfc2:blocks/wood/trees/White Cedar Log"} },
+    	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/Willow Log"} },
+    	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/Kapok Log"} },
+    	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/Acacia Log"} }
         }
     }
 }

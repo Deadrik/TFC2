@@ -1,5 +1,5 @@
 {
-    "parent": "tfc2:block/Wood/Planks/White Elm",
+    "parent": "tfc2:block/Wood/Planks/Acacia",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

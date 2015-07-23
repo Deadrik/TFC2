@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Blocks.BlockEffect;
 import com.bioxx.tfc2.Blocks.BlockFreshWater;
+import com.bioxx.tfc2.Blocks.BlockLeaves;
 import com.bioxx.tfc2.Blocks.BlockLogHorizontal;
 import com.bioxx.tfc2.Blocks.BlockLogHorizontal2;
 import com.bioxx.tfc2.Blocks.BlockLogNatural;
@@ -45,6 +46,8 @@ public class TFCBlocks
 	public static Block LogVertical;
 	public static Block LogHorizontal;
 	public static Block LogHorizontal2;
+	public static Block Leaves;
+	public static Block Ore;
 
 	public static void LoadBlocks()
 	{
@@ -69,6 +72,7 @@ public class TFCBlocks
 		LogVertical = new BlockLogVertical().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical");
 		LogHorizontal = new BlockLogHorizontal().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal");
 		LogHorizontal2 = new BlockLogHorizontal2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal2");
+		Leaves = new BlockLeaves().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves");
 	}
 
 	public static void RegisterBlocks()
@@ -95,6 +99,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(LogVertical, ItemWood.class, "log_vertical");
 		GameRegistry.registerBlock(LogHorizontal, ItemWood.class, "log_horizontal");
 		GameRegistry.registerBlock(LogHorizontal2, ItemWood.class, "log_horizontal2");
+		GameRegistry.registerBlock(Leaves, ItemWood.class, "leaves");
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogVertical.setHarvestLevel("axe", 1);

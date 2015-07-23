@@ -10,17 +10,10 @@
         	"aspen":  { "textures": {"side": "tfc2:blocks/wood/trees/Aspen Log", "end": "tfc2:blocks/wood/trees/Aspen Log Top"} },
         	"birch":  { "textures": {"side": "tfc2:blocks/wood/trees/Birch Log", "end": "tfc2:blocks/wood/trees/Birch Log Top"} },
         	"chestnut":  { "textures": {"side": "tfc2:blocks/wood/trees/Chestnut Log", "end": "tfc2:blocks/wood/trees/Chestnut Log Top"} },
-        	"douglasfir":  { "textures": {"side": "tfc2:blocks/wood/trees/Douglas Fir Log", "end": "tfc2:blocks/wood/trees/Douglas Fir Log Top"} },
+        	"douglas_fir":  { "textures": {"side": "tfc2:blocks/wood/trees/Douglas Fir Log", "end": "tfc2:blocks/wood/trees/Douglas Fir Log Top"} },
      	   	"hickory":  { "textures": {"side": "tfc2:blocks/wood/trees/Hickory Log", "end": "tfc2:blocks/wood/trees/Hickory Log Top"} },
         	"maple":  { "textures": {"side": "tfc2:blocks/wood/trees/Maple Log", "end": "tfc2:blocks/wood/trees/Maple Log Top"} },
-        	"oak":  { "textures": {"side": "tfc2:blocks/wood/trees/Oak Log", "end": "tfc2:blocks/wood/trees/Oak Log Top"} },
-        	"pine":  { "textures": {"side": "tfc2:blocks/wood/trees/Pine Log", "end": "tfc2:blocks/wood/trees/Pine Log Top"} },
-   	     	"sequoia":  { "textures": {"side": "tfc2:blocks/wood/trees/Sequoia Log", "end": "tfc2:blocks/wood/trees/Sequoia Log Top"} },
-        	"spruce":  { "textures": {"side": "tfc2:blocks/wood/trees/Spruce Log", "end": "tfc2:blocks/wood/trees/Spruce Log Top"} },
- 	       	"sycamore":  { "textures": {"side": "tfc2:blocks/wood/trees/Sycamore Log", "end": "tfc2:blocks/wood/trees/Sycamore Log Top"} },
-   		    "whitecedar":  { "textures": {"side": "tfc2:blocks/wood/trees/White Cedar Log", "end": "tfc2:blocks/wood/trees/White Cedar Log Top"} },
-    	    "whiteelm":  { "textures": {"side": "tfc2:blocks/wood/trees/White Elm Log", "end": "tfc2:blocks/wood/trees/White Elm Log Top"} },
-    	    "willow":  { "textures": {"side": "tfc2:blocks/wood/trees/Willow Log", "end": "tfc2:blocks/wood/trees/Willow Log Top"} }
+        	"oak":  { "textures": {"side": "tfc2:blocks/wood/trees/Oak Log", "end": "tfc2:blocks/wood/trees/Oak Log Top"} }
         },
     	"rotation": {
     		"0":{"x": 90, "y": 90},

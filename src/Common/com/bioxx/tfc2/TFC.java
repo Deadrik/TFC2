@@ -3,11 +3,8 @@ package com.bioxx.tfc2;
 import java.io.File;
 import java.net.URISyntaxException;
 
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeModContainer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -16,21 +13,16 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Commands.PrintImageMapCommand;
-import com.bioxx.tfc2.Handlers.CreateSpawnHandler;
-import com.bioxx.tfc2.Handlers.ServerTickHandler;
-import com.bioxx.tfc2.Handlers.WorldLoadHandler;
 import com.bioxx.tfc2.Networking.PacketPipeline;
-import com.bioxx.tfc2.World.WorldProviderSurface;
-import com.bioxx.tfc2.World.Generators.WorldGenGrass;
-import com.bioxx.tfc2.World.Generators.WorldGenTreeTest;
-import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
 import com.bioxx.tfc2.api.Trees.TreeSchematic;
+import com.bioxx.tfc2.api.Types.Moisture;
+import com.bioxx.tfc2.api.Types.Temp;
+import com.bioxx.tfc2.api.Types.WoodType;
 
 @Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, dependencies = Reference.ModDependencies)
 public class TFC
@@ -53,19 +45,6 @@ public class TFC
 		proxy.preInit(event);
 		//Register tree types and load tree schematics
 		loadTrees();
-
-		/*WorldType.DEFAULT = new WorldType(0, "TFCDefault");
-		WorldType.FLAT = new TFCWorldType(1, "TFCFlat");
-		WorldType.LARGE_BIOMES = new TFCWorldType(2, "TFCLargeBiomes");
-		WorldType.AMPLIFIED = new TFCWorldType(3, "TFCAmplified");*/
-
-		GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 0);
-		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 0);
-
-		DimensionManager.unregisterDimension(0);
-		DimensionManager.unregisterProviderType(0);
-		DimensionManager.registerProviderType(0, WorldProviderSurface.class, true);
-		DimensionManager.registerDimension(0, 0);
 	}
 
 	@EventHandler
@@ -73,18 +52,14 @@ public class TFC
 	{
 		// Register Packet Handler
 		packetPipeline.initalise();
-
-		// Register all the render stuff for the client
-		proxy.registerRenderInformation();
+		proxy.init(event);
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		packetPipeline.postInitialise();
-		MinecraftForge.EVENT_BUS.register(new CreateSpawnHandler());
-		MinecraftForge.EVENT_BUS.register(new WorldLoadHandler());
-		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
+		proxy.postInit(event);
 	}
 
 	@EventHandler
@@ -131,33 +106,30 @@ public class TFC
 	{
 		TreeRegistry tr = TreeRegistry.instance;
 		String treePath = "assets/tfc2/schematics/trees/";
-		int i = 0;
 
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.1, 1.0, 4F, 24F, false));i++; //Ash
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.15, 0.5F, -5F, 18F, false));i++; //Aspen
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.1, 0.25, -10F, 12F, false));i++; //Birch
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.1, 0.6, 3F, 24F, false));i++; //Chestnut
+		tr.addTreeType(new TreeConfig(WoodType.Ash, Moisture.LOW, Moisture.MAX, Temp.POLAR, Temp.TEMPERATE, false)); //Ash
+		tr.addTreeType(new TreeConfig(WoodType.Aspen, Moisture.MEDIUM, Moisture.HIGH, Temp.POLAR, Temp.TEMPERATE, false)); //Aspen
+		tr.addTreeType(new TreeConfig(WoodType.Birch, Moisture.LOW, Moisture.MEDIUM, Temp.SUBPOLAR, Temp.TEMPERATE, false)); //Birch
+		tr.addTreeType(new TreeConfig(WoodType.Chestnut, Moisture.LOW, Moisture.HIGH, Temp.TEMPERATE, Temp.TEMPERATE, false)); //Chestnut
 
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.3, 0.6, 1F, 14F, true));i++; //Douglas Fir
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.1, 0.6, 4F, 24F, false));i++; //Hickory
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.1, 0.6, 3F, 20F, false));i++; //Maple
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.25, 0.6, 5F, 15F, false));i++; //Oak
+		tr.addTreeType(new TreeConfig(WoodType.DouglasFir, Moisture.MEDIUM, Moisture.HIGH, Temp.SUBPOLAR, Temp.TEMPERATE, true)); //Douglas Fir
+		tr.addTreeType(new TreeConfig(WoodType.Hickory, Moisture.LOW, Moisture.HIGH, Temp.TEMPERATE, Temp.TEMPERATE, false)); //Hickory
+		tr.addTreeType(new TreeConfig(WoodType.Maple, Moisture.LOW, Moisture.HIGH, Temp.TEMPERATE, Temp.TEMPERATE, false)); //Maple
+		tr.addTreeType(new TreeConfig(WoodType.Oak, Moisture.MEDIUM, Moisture.HIGH, Temp.TEMPERATE, Temp.TEMPERATE, false)); //Oak
 
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.1, 0.5, -15F, 24F, true));i++; //Pine
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.4, 1.0, 10F, 16F, true));i++; //Sequoia
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.1, 1.0, -5F, 24F, true));i++; //Spruce
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.2, 1.0, 6F, 30F, false));i++; //Sycamore
+		tr.addTreeType(new TreeConfig(WoodType.Pine, Moisture.LOW, Moisture.HIGH, Temp.POLAR, Temp.TEMPERATE, true)); //Pine
+		tr.addTreeType(new TreeConfig(WoodType.Sequoia, Moisture.HIGH, Moisture.MAX, Temp.SUBPOLAR, Temp.TEMPERATE, true)); //Sequoia
+		tr.addTreeType(new TreeConfig(WoodType.Spruce, Moisture.LOW, Moisture.MAX, Temp.POLAR, Temp.SUBTROPICAL, true)); //Spruce
+		tr.addTreeType(new TreeConfig(WoodType.Sycamore, Moisture.MEDIUM, Moisture.MAX, Temp.TEMPERATE, Temp.SUBTROPICAL, false)); //Sycamore
 
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.1, 1.0, -5F, 24F, true));i++; //White Ceder
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.2, 1.0, 4F, 30F, false));i++; //White Elm
-		tr.addWoodType(new TreeConfig(Core.textConvert(Global.WOOD_STANDARD[i]), i, 0.5, 1.0, 10F, 30F, false));i++; //Willow
-		//tr.addWoodType(new TreeConfiguration(Global.WOOD_STANDARD[i], i, 4000F, 16000F, 24F, 44F, 0F, 1F, false));i++; //Kapok
-
-		//tr.addWoodType(new TreeConfiguration(Global.WOOD_STANDARD[i], i, 75F, 1000F, 20F, 50F, 0F, 1F, false));i++; //Acacia
+		tr.addTreeType(new TreeConfig(WoodType.WhiteCedar, Moisture.LOW, Moisture.MAX, Temp.POLAR, Temp.SUBTROPICAL, true)); //White Cedar
+		tr.addTreeType(new TreeConfig(WoodType.Willow, Moisture.HIGH, Moisture.MAX, Temp.TEMPERATE, Temp.SUBTROPICAL, false)); //Willow
+		tr.addTreeType(new TreeConfig(WoodType.Kapok, Moisture.HIGH, Moisture.MAX, Temp.SUBTROPICAL, Temp.TROPICAL, false)); //Kapok
+		tr.addTreeType(new TreeConfig(WoodType.Acacia, Moisture.LOW, Moisture.VERYHIGH, Temp.SUBTROPICAL, Temp.TROPICAL, false)); //Acacia
 
 		try
 		{
-			for (String s : Global.WOOD_STANDARD)
+			for (String s : tr.getTreeNames())
 			{
 				String tName = Core.textConvert(s);
 				File root = new File(TFC.instance.getClass().getClassLoader().getResource(treePath + tName + "/").toURI());
@@ -169,7 +141,7 @@ public class TFC
 					{
 						TreeSchematic schem = new TreeSchematic(treePath + tName + "/" + f.getName());
 						if(schem.Load())
-							TreeRegistry.instance.RegisterTree(schem, schemType);
+							TreeRegistry.instance.RegisterSchematic(schem, s);
 					}
 				}
 			}

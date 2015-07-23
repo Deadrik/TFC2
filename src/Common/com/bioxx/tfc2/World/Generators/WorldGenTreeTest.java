@@ -12,6 +12,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.Blocks.BlockSapling;
 import com.bioxx.tfc2.CoreStuff.Schematic;
 import com.bioxx.tfc2.World.ChunkManager;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
@@ -40,21 +41,13 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		if(world.getWorldChunkManager() instanceof ChunkManager)
 		{
-			growthStage = random.nextInt(4) + 1;
-			if(random.nextInt(100) < 5)
-				growthStage = 6;
+			growthStage = random.nextInt(1) + 5;
 
 			//Get a random tree schematic
 			/*Schematic schem = TreeRegistry.instance.getRandomTreeSchematic(random);//, treeID, growthStage);
 			if(schem == null) return;*/
 
 			BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
-			/*BiomeGenBase biome = world.getBiomeGenForCoords(chunkPos);
-			if(biome != BiomeGenBase.plains
-					|| biome != BiomeGenBase.extremeHills
-					|| biome != BiomeGenBase.extremeHillsEdge
-					|| biome != BiomeGenBase.forest
-					|| biome != BiomeGenBase.forestHills) return;*/
 
 			int xCoord = 0;
 			int zCoord = 0;
@@ -111,7 +104,6 @@ public class WorldGenTreeTest implements IWorldGenerator
 		int rot = world.rand.nextInt(4);
 		int index;
 		int id;
-		boolean doBase = false;
 
 		this.baseX = pos.getX() - 1;
 		this.baseY = pos.getY();
@@ -125,9 +117,8 @@ public class WorldGenTreeTest implements IWorldGenerator
 				{
 					index = x + schem.getSizeX() * (z + schem.getSizeZ() * y);
 					id = schem.getBlockArray()[index];
-					doBase = (y == 0 && x == schem.getCenterX() - 1 && z == schem.getCenterZ() - 1);
-					if(id != 0 || doBase)
-						Process(world, baseX, baseY, baseZ, meta, schem, x + 1, y, z + 1, rot, doBase, Block.getBlockById(id));
+					if(id != Block.getIdFromBlock(Blocks.air))
+						Process(world, baseX, baseY, baseZ, meta, schem, x + 1, y, z + 1, rot, Block.getBlockById(id));
 				}
 			}
 		}
@@ -136,7 +127,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 	}
 
 	private void Process(World world, int treeX, int treeY, int treeZ, int meta,
-			Schematic schem, int schemX, int schemY, int schemZ, int rot, boolean doBase, Block b)
+			Schematic schem, int schemX, int schemY, int schemZ, int rot, Block b)
 	{
 		int localX = treeX + schem.getCenterX() - schemX;
 		int localZ = treeZ + schem.getCenterZ() - schemZ;
@@ -160,35 +151,17 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		IBlockState block = TFCBlocks.LogNatural.getStateFromMeta(meta);
 		BlockPos blockPos = new BlockPos(localX, localY, localZ);
-		IBlockState leaves = Blocks.leaves.getDefaultState();
-		int localMeta = meta;
+		IBlockState leaves = TFCBlocks.Leaves.getStateFromMeta(meta);
 
-		if(localX == treeX && schemY == 0 && localZ == treeZ || doBase)
+		if(b.getMaterial() == Material.wood)
 		{
 			world.setBlockState(blockPos, block, 2);
-			/*TETreeLog te = (TETreeLog) world.getTileEntity(blockPos);
-			te.isBase = true;
-			te.schemIndex = (byte) schem.getIndex();
-			te.treeID = (byte) meta;
-			te.rotation = (byte) rot;
-			te.growthStage = (byte) ((TreeSchematic) schem).getGrowthStage();*/
 		}
 		else
 		{
-			if(b.getMaterial() == Material.wood)
+			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
 			{
-				world.setBlockState(blockPos, block, 2);
-				/*TETreeLog te = (TETreeLog) world.getTileEntity(blockPos);
-				te.Setup(baseX, baseY, baseZ);*/
-			}
-			else
-			{
-				if(world.getBlockState(blockPos).getBlock().isAir(world, blockPos))
-				{
-					world.setBlockState(blockPos, leaves, 2);
-					/*TETreeLog te = (TETreeLog) world.getTileEntity(blockPos);
-					te.Setup(baseX, baseY, baseZ);*/
-				}
+				world.setBlockState(blockPos, leaves, 2);
 			}
 		}
 	}
@@ -201,32 +174,29 @@ public class WorldGenTreeTest implements IWorldGenerator
 		BlockPos gPos = pos;
 		BlockPos aPos = pos.offsetUp();
 
-		outerloop:
-			for(int i = -rad; i <= rad; i++)
+		for(int i = -rad; i <= rad; i++)
+		{
+			for(int k = -rad; k <= rad; k++)
 			{
-				for(int k = -rad; k <= rad; k++)
+				ground = world.getBlockState(gPos.add(i, 0, k)).getBlock();
+				above = world.getBlockState(aPos.add(i, 0, k)).getBlock();
+				if(above == TFCBlocks.LogNatural)
 				{
-					ground = world.getBlockState(gPos.add(i, 0, k)).getBlock();
-					above = world.getBlockState(aPos.add(i, 0, k)).getBlock();
-					if(above == TFCBlocks.LogNatural)
-					{
-						ret = false;
-						break outerloop;
-					}
-					if(!isBlockValid(world, gPos, ground))
-					{
-						ret = false;
-						break outerloop;
-					}
+					return false;
+				}
+				if(!isBlockValid(world, gPos, ground))
+				{
+					return false;
 				}
 			}
+		}
 
-		return ret;
+		return true;
 	}
 
 	private boolean isBlockValid(World world, BlockPos pos, Block block)
 	{
-		return block == TFCBlocks.Dirt || block == TFCBlocks.Grass;
-		//return block.canSustainPlant(world, pos, net.minecraft.util.EnumFacing.UP, (BlockSapling)TFCBlocks.Sapling);
+		//return block == TFCBlocks.Dirt || block == TFCBlocks.Grass;
+		return block.canSustainPlant(world, pos, net.minecraft.util.EnumFacing.UP, (BlockSapling)TFCBlocks.Sapling);
 	}
 }

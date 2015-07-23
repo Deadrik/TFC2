@@ -4,10 +4,10 @@ import net.minecraft.util.IStringSerializable;
 
 public enum WoodType implements IStringSerializable
 {
-	Ash("Ash", 0),Aspen("Aspen", 1),Birch("Birch", 2),Chestnut("Chestnut", 3),
-	DouglasFir("DouglasFir", 4),Hickory("Hickory", 5),Maple("Maple", 6),Oak("Oak", 7),
-	Pine("Pine", 8),Sequoia("Sequoia", 9),Spruce("Spruce", 10),Sycamore("Sycamore", 11),
-	WhiteCedar("WhiteCedar", 12),WhiteElm("WhiteElm", 13),Willow("Willow", 14);
+	Ash("ash", 0),Aspen("aspen", 1),Birch("birch", 2),Chestnut("chestnut", 3),
+	DouglasFir("douglas_fir", 4),Hickory("hickory", 5),Maple("maple", 6),Oak("oak", 7),
+	Pine("pine", 8),Sequoia("sequoia", 9),Spruce("spruce", 10),Sycamore("sycamore", 11),
+	WhiteCedar("white_cedar", 12),Willow("willow", 13),Kapok("kapok",14),Acacia("acacia",15);
 
 	private String name;
 	private int meta;
