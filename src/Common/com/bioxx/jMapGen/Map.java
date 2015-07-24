@@ -1744,14 +1744,14 @@ public class Map
 			{
 				cr.moisture = 1.0;
 			}
-			else
+			/*else
 			{
 				RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.riverUUID);
 				if (attrib != null && attrib.getRiver() > 0) 
 				{
 					cr.moisture = Math.max(Math.min(1.0, attrib.getRiver()), cr.moisture);
 				}
-			}
+			}*/
 		}
 	}
 
