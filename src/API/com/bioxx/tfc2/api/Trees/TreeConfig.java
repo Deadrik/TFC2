@@ -3,7 +3,7 @@ package com.bioxx.tfc2.api.Trees;
 import net.minecraft.block.state.IBlockState;
 
 import com.bioxx.tfc2.api.Types.Moisture;
-import com.bioxx.tfc2.api.Types.Temp;
+import com.bioxx.tfc2.api.Types.ClimateTemp;
 
 public class TreeConfig 
 {
@@ -23,15 +23,15 @@ public class TreeConfig
 	/**
 	 * Minimum Allowed Temperature
 	 */
-	public Temp minTemp;
+	public ClimateTemp minTemp;
 	/**
 	 * Maximum Allowed Temperature
 	 */
-	public Temp maxTemp;
+	public ClimateTemp maxTemp;
 
 	public boolean isEvergreen;
 
-	public TreeConfig(String n, IBlockState w, IBlockState l, Moisture minR, Moisture maxR, Temp minT, Temp maxT, boolean eg)
+	public TreeConfig(String n, IBlockState w, IBlockState l, Moisture minR, Moisture maxR, ClimateTemp minT, ClimateTemp maxT, boolean eg)
 	{
 		name = n;
 		minMoisture = minR;

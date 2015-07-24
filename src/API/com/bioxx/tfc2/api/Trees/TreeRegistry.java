@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Types.Moisture;
-import com.bioxx.tfc2.api.Types.Temp;
 
 public class TreeRegistry
 {
@@ -21,7 +21,6 @@ public class TreeRegistry
 
 	public void RegisterSchematic(TreeSchematic treeSchematic, String name)
 	{
-
 		if(!treeList.containsKey(name))
 			treeList.put(name, new TreeSchemManager());
 
@@ -97,7 +96,7 @@ public class TreeRegistry
 		return treeTypeHash.get(treeTypeHash.keySet().toArray(new String[treeTypeHash.keySet().size()])[id]);
 	}
 
-	public String getRandomTreeTypeForIsland(Random r, Temp temp, Moisture moisture)
+	public String getRandomTreeTypeForIsland(Random r, ClimateTemp temp, Moisture moisture)
 	{
 		ArrayList<String> list = new ArrayList<String>();
 		Iterator iter = treeTypeHash.keySet().iterator();

@@ -1,10 +1,14 @@
 package com.bioxx.tfc2.World;
 
+import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFCBlocks;
 
 public class WorldProviderSurface extends WorldProvider 
 {
@@ -34,16 +38,42 @@ public class WorldProviderSurface extends WorldProvider
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z)
 	{
-		//Block b = Core.getGroundAboveSeaLevel(this.worldObj, new BlockPos(x, 0, z));
-		return true;
-		//return b == Blocks.grass;
+		Block b = Core.getGroundAboveSeaLevel(this.worldObj, new BlockPos(x, 0, z));
+		return b == TFCBlocks.Sand;
 	}
 
 	@Override
 	public boolean canBlockFreeze(BlockPos pos, boolean byWater)
 	{
-		//TODO: Expand on this later
+		int x = pos.getX() << 12;
+		int z = pos.getZ() << 12;
+
+		if(WorldGen.instance == null)
+			return false;
+
+		/*Map m = WorldGen.instance.getIslandMap(x, z);
+
+		if(m.islandParams.getIslandTemp() == ClimateTemp.SUBTROPICAL || m.islandParams.getIslandTemp() == ClimateTemp.TROPICAL)
+			return false;*/
+
 		return false;
+	}
+
+	@Override
+	public boolean canSnowAt(BlockPos pos, boolean checkLight)
+	{
+		int x = pos.getX() << 12;
+		int z = pos.getZ() << 12;
+
+		if(WorldGen.instance == null)
+			return false;
+
+		/*Map m = WorldGen.instance.getIslandMap(x, z);
+
+		if(m.islandParams.getIslandTemp() == ClimateTemp.SUBTROPICAL || m.islandParams.getIslandTemp() == ClimateTemp.TROPICAL)
+			return false;*/
+
+		return worldObj.canSnowAtBody(pos, checkLight);
 	}
 
 	@Override

@@ -21,7 +21,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.Point;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.World.WorldGen;
 
 public class BlockVegetation extends BlockTerra
 {
@@ -87,7 +90,12 @@ public class BlockVegetation extends BlockTerra
 	@SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
 	{
-		return worldIn.getBiomeGenForCoords(pos).func_180627_b(pos);
+		int x = pos.getX() >> 12;
+		int z = pos.getZ() >> 12;
+		Map m = WorldGen.instance.getIslandMap(x, z);
+		double d0 = m.islandParams.getIslandTemp().getTemp();
+		double d1 = m.getSelectedHexagon(new Point(pos.getX(), pos.getZ())).moisture;
+		return ColorizerGrass.getGrassColor(d0, d1);
 	}
 
 	@Override

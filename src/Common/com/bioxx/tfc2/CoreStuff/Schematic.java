@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.Interfaces.ISchematic;
 
 public class Schematic implements ISchematic
@@ -23,11 +22,13 @@ public class Schematic implements ISchematic
 	protected NBTTagList te;
 	protected NBTTagList entities;
 	protected String path;
+	protected String filename;
 	protected int id;
 
-	public Schematic(String p)
+	public Schematic(String p, String f)
 	{
 		path = p;
+		filename = f;
 	}
 
 	@Override
@@ -36,7 +37,9 @@ public class Schematic implements ISchematic
 		NBTTagCompound tree;
 		try
 		{
-			InputStream fis = TFC.instance.getClass().getClassLoader().getResourceAsStream(path);
+			InputStream fis = getClass().getResourceAsStream(path);
+			if(fis == null)
+				return false;
 			tree = CompressedStreamTools.readCompressed(fis);
 			height = tree.getShort("Height");
 			width = tree.getShort("Width");
@@ -70,11 +73,13 @@ public class Schematic implements ISchematic
 		}
 		catch (FileNotFoundException e)
 		{
-			System.out.println("TFC FileNotFound: " + path); return false;
+			//System.out.println("TFC FileNotFound: " + path); 
+			return false;
 		}
 		catch (IOException e)
 		{
-			System.out.println("TFC IOException: " + path); return false;
+			//System.out.println("TFC IOException: " + path); 
+			return false;
 		}
 		return true;
 	}

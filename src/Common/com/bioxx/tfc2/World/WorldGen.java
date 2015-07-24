@@ -24,7 +24,7 @@ import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
 import com.bioxx.tfc2.api.Types.Moisture;
 import com.bioxx.tfc2.api.Types.StoneType;
-import com.bioxx.tfc2.api.Types.Temp;
+import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Util.Helper;
 import com.bioxx.tfc2.api.Util.IThreadCompleteListener;
 
@@ -174,27 +174,27 @@ public class WorldGen implements IThreadCompleteListener
 			}
 		}
 		id.setSurfaceRock(stonePot.next());
-		Temp t = Temp.TEMPERATE;
+		ClimateTemp t = ClimateTemp.TEMPERATE;
 		//Tropical or Temperate
 		if(Math.abs(z) == 0)
 		{
-			t = Temp.TROPICAL;
+			t = ClimateTemp.TROPICAL;
 		}
 		else if(Math.abs(z) == 1)
 		{
-			t = r.nextBoolean() ? Temp.TEMPERATE : Temp.SUBTROPICAL;
+			t = r.nextBoolean() ? ClimateTemp.TEMPERATE : ClimateTemp.SUBTROPICAL;
 		}
 		else if(Math.abs(z) == 2)
 		{
-			t = Temp.TEMPERATE;
+			t = ClimateTemp.TEMPERATE;
 		}
 		else if(Math.abs(z) == 3)
 		{
-			t = r.nextBoolean() ? Temp.TEMPERATE : Temp.SUBPOLAR;
+			t = r.nextBoolean() ? ClimateTemp.TEMPERATE : ClimateTemp.SUBPOLAR;
 		}
 		else if(Math.abs(z) == 4)
 		{
-			t = Temp.POLAR;
+			t = ClimateTemp.POLAR;
 		}
 
 		id.setIslandTemp(t);

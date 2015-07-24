@@ -1,7 +1,6 @@
 package com.bioxx.tfc2;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.common.ForgeModContainer;
@@ -26,8 +25,8 @@ import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
 import com.bioxx.tfc2.api.Trees.TreeSchematic;
+import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Types.Moisture;
-import com.bioxx.tfc2.api.Types.Temp;
 import com.bioxx.tfc2.api.Types.WoodType;
 
 @Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, dependencies = Reference.ModDependencies)
@@ -52,6 +51,8 @@ public class TFC
 		instance = this;
 		loadSettings();
 		proxy.preInit(event);
+		//Register tree types and load tree schematics
+		loadTrees();
 
 	}
 
@@ -61,8 +62,7 @@ public class TFC
 		// Register Packet Handler
 		packetPipeline.initalise();
 		proxy.init(event);
-		//Register tree types and load tree schematics
-		loadTrees();
+
 	}
 
 	@EventHandler
@@ -115,51 +115,64 @@ public class TFC
 	private void loadTrees()
 	{
 		TreeRegistry tr = TreeRegistry.instance;
-		String treePath = "assets/tfc2/schematics/trees/";
+		String treePath = "/assets/tfc2/schematics/trees/";
 		log.info("Loading Trees");
-		tr.addTreeType(new TreeConfig(WoodType.Ash.getName(), getNaturalLog(WoodType.Ash), getLeaves(WoodType.Ash), Moisture.LOW, Moisture.MAX, Temp.POLAR, Temp.TEMPERATE, false)); //Ash
-		tr.addTreeType(new TreeConfig(WoodType.Aspen.getName(), getNaturalLog(WoodType.Aspen), getLeaves(WoodType.Aspen), Moisture.MEDIUM, Moisture.HIGH, Temp.POLAR, Temp.TEMPERATE, false)); //Aspen
-		tr.addTreeType(new TreeConfig(WoodType.Birch.getName(), getNaturalLog(WoodType.Birch), getLeaves(WoodType.Birch), Moisture.LOW, Moisture.MEDIUM, Temp.SUBPOLAR, Temp.TEMPERATE, false)); //Birch
-		tr.addTreeType(new TreeConfig(WoodType.Chestnut.getName(), getNaturalLog(WoodType.Chestnut), getLeaves(WoodType.Chestnut), Moisture.LOW, Moisture.HIGH, Temp.TEMPERATE, Temp.SUBTROPICAL, false)); //Chestnut
+		tr.addTreeType(new TreeConfig(WoodType.Ash.getName(), getNaturalLog(WoodType.Ash), getLeaves(WoodType.Ash), Moisture.LOW, Moisture.MAX, ClimateTemp.POLAR, ClimateTemp.TEMPERATE, false)); //Ash
+		tr.addTreeType(new TreeConfig(WoodType.Aspen.getName(), getNaturalLog(WoodType.Aspen), getLeaves(WoodType.Aspen), Moisture.MEDIUM, Moisture.HIGH, ClimateTemp.POLAR, ClimateTemp.TEMPERATE, false)); //Aspen
+		tr.addTreeType(new TreeConfig(WoodType.Birch.getName(), getNaturalLog(WoodType.Birch), getLeaves(WoodType.Birch), Moisture.LOW, Moisture.MEDIUM, ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, false)); //Birch
+		tr.addTreeType(new TreeConfig(WoodType.Chestnut.getName(), getNaturalLog(WoodType.Chestnut), getLeaves(WoodType.Chestnut), Moisture.LOW, Moisture.HIGH, ClimateTemp.TEMPERATE, ClimateTemp.SUBTROPICAL, false)); //Chestnut
 
-		tr.addTreeType(new TreeConfig(WoodType.DouglasFir.getName(), getNaturalLog(WoodType.DouglasFir), getLeaves(WoodType.DouglasFir), Moisture.MEDIUM, Moisture.HIGH, Temp.SUBPOLAR, Temp.TEMPERATE, true)); //Douglas Fir
-		tr.addTreeType(new TreeConfig(WoodType.Hickory.getName(), getNaturalLog(WoodType.Hickory), getLeaves(WoodType.Hickory), Moisture.LOW, Moisture.HIGH, Temp.SUBPOLAR, Temp.TEMPERATE, false)); //Hickory
-		tr.addTreeType(new TreeConfig(WoodType.Maple.getName(), getNaturalLog(WoodType.Maple), getLeaves(WoodType.Maple), Moisture.LOW, Moisture.HIGH, Temp.SUBPOLAR, Temp.TEMPERATE, false)); //Maple
-		tr.addTreeType(new TreeConfig(WoodType.Oak.getName(), getNaturalLog(WoodType.Oak), getLeaves(WoodType.Oak), Moisture.MEDIUM, Moisture.HIGH, Temp.SUBPOLAR, Temp.SUBTROPICAL, false)); //Oak
+		tr.addTreeType(new TreeConfig(WoodType.DouglasFir.getName(), getNaturalLog(WoodType.DouglasFir), getLeaves(WoodType.DouglasFir), Moisture.MEDIUM, Moisture.HIGH, ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, true)); //Douglas Fir
+		tr.addTreeType(new TreeConfig(WoodType.Hickory.getName(), getNaturalLog(WoodType.Hickory), getLeaves(WoodType.Hickory), Moisture.LOW, Moisture.HIGH, ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, false)); //Hickory
+		tr.addTreeType(new TreeConfig(WoodType.Maple.getName(), getNaturalLog(WoodType.Maple), getLeaves(WoodType.Maple), Moisture.LOW, Moisture.HIGH, ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, false)); //Maple
+		tr.addTreeType(new TreeConfig(WoodType.Oak.getName(), getNaturalLog(WoodType.Oak), getLeaves(WoodType.Oak), Moisture.MEDIUM, Moisture.HIGH, ClimateTemp.SUBPOLAR, ClimateTemp.SUBTROPICAL, false)); //Oak
 
-		tr.addTreeType(new TreeConfig(WoodType.Pine.getName(), getNaturalLog(WoodType.Pine), getLeaves(WoodType.Pine), Moisture.LOW, Moisture.VERYHIGH, Temp.POLAR, Temp.TEMPERATE, true)); //Pine
-		tr.addTreeType(new TreeConfig(WoodType.Sequoia.getName(), getNaturalLog(WoodType.Sequoia), getLeaves(WoodType.Sequoia), Moisture.HIGH, Moisture.MAX, Temp.SUBPOLAR, Temp.TEMPERATE, true)); //Sequoia
-		tr.addTreeType(new TreeConfig(WoodType.Spruce.getName(), getNaturalLog(WoodType.Spruce), getLeaves(WoodType.Spruce), Moisture.LOW, Moisture.MAX, Temp.POLAR, Temp.SUBTROPICAL, true)); //Spruce
-		tr.addTreeType(new TreeConfig(WoodType.Sycamore.getName(), getNaturalLog(WoodType.Sycamore), getLeaves(WoodType.Sycamore), Moisture.MEDIUM, Moisture.MAX, Temp.TEMPERATE, Temp.SUBTROPICAL, false)); //Sycamore
+		tr.addTreeType(new TreeConfig(WoodType.Pine.getName(), getNaturalLog(WoodType.Pine), getLeaves(WoodType.Pine), Moisture.LOW, Moisture.VERYHIGH, ClimateTemp.POLAR, ClimateTemp.TEMPERATE, true)); //Pine
+		tr.addTreeType(new TreeConfig(WoodType.Sequoia.getName(), getNaturalLog(WoodType.Sequoia), getLeaves(WoodType.Sequoia), Moisture.HIGH, Moisture.MAX, ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, true)); //Sequoia
+		tr.addTreeType(new TreeConfig(WoodType.Spruce.getName(), getNaturalLog(WoodType.Spruce), getLeaves(WoodType.Spruce), Moisture.LOW, Moisture.MAX, ClimateTemp.POLAR, ClimateTemp.SUBTROPICAL, true)); //Spruce
+		tr.addTreeType(new TreeConfig(WoodType.Sycamore.getName(), getNaturalLog(WoodType.Sycamore), getLeaves(WoodType.Sycamore), Moisture.MEDIUM, Moisture.MAX, ClimateTemp.TEMPERATE, ClimateTemp.SUBTROPICAL, false)); //Sycamore
 
-		tr.addTreeType(new TreeConfig(WoodType.WhiteCedar.getName(), getNaturalLog(WoodType.WhiteCedar), getLeaves(WoodType.WhiteCedar), Moisture.LOW, Moisture.MAX, Temp.POLAR, Temp.SUBTROPICAL, true)); //White Cedar
-		tr.addTreeType(new TreeConfig(WoodType.Willow.getName(), getNaturalLog(WoodType.Willow), getLeaves(WoodType.Willow), Moisture.HIGH, Moisture.MAX, Temp.TEMPERATE, Temp.SUBTROPICAL, false)); //Willow
-		tr.addTreeType(new TreeConfig(WoodType.Kapok.getName(), getNaturalLog(WoodType.Kapok), getLeaves(WoodType.Kapok), Moisture.HIGH, Moisture.MAX, Temp.SUBTROPICAL, Temp.TROPICAL, false)); //Kapok
-		tr.addTreeType(new TreeConfig(WoodType.Acacia.getName(), getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.NONE, Moisture.VERYHIGH, Temp.SUBTROPICAL, Temp.TROPICAL, false)); //Acacia
+		tr.addTreeType(new TreeConfig(WoodType.WhiteCedar.getName(), getNaturalLog(WoodType.WhiteCedar), getLeaves(WoodType.WhiteCedar), Moisture.LOW, Moisture.MAX, ClimateTemp.POLAR, ClimateTemp.SUBTROPICAL, true)); //White Cedar
+		tr.addTreeType(new TreeConfig(WoodType.Willow.getName(), getNaturalLog(WoodType.Willow), getLeaves(WoodType.Willow), Moisture.HIGH, Moisture.MAX, ClimateTemp.TEMPERATE, ClimateTemp.SUBTROPICAL, false)); //Willow
+		tr.addTreeType(new TreeConfig(WoodType.Kapok.getName(), getNaturalLog(WoodType.Kapok), getLeaves(WoodType.Kapok), Moisture.HIGH, Moisture.MAX, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Kapok
+		tr.addTreeType(new TreeConfig(WoodType.Acacia.getName(), getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.NONE, Moisture.VERYHIGH, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Acacia
 
-		tr.addTreeType(new TreeConfig("acacia_umbrella", getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.NONE, Moisture.LOW, Temp.TEMPERATE, Temp.TROPICAL, false)); //Acacia Umbrella
+		tr.addTreeType(new TreeConfig("acacia_umbrella", getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.NONE, Moisture.LOW, ClimateTemp.TEMPERATE, ClimateTemp.TROPICAL, false)); //Acacia Umbrella
 
 		try
 		{
 			for (String s : tr.getTreeNames())
 			{
 				String tName = Core.textConvert(s);
-				File root = new File(TFC.instance.getClass().getClassLoader().getResource(treePath + tName + "/").toURI());
+				//FileSystem fs = FileSystems.newFileSystem(FileSystems.getDefault().getPath(treePath + tName + "/"), TFC.instance.getClass().getClassLoader());
+				/*File root = new File(TFC.instance.getClass().getClassLoader().getResource(treePath + tName + "/").toURI());
 				for( File f : root.listFiles())
 				{
 					if(f.isFile())
 					{
-						TreeSchematic schem = new TreeSchematic(treePath + tName + "/" + f.getName());
+						TreeSchematic schem = new TreeSchematic(treePath + tName + "/" + f.getName(), f.getName());
 						if(schem.Load())
 							TreeRegistry.instance.RegisterSchematic(schem, s);
 					}
+				}*/
+				for(int i = 0; i < 3; i++)
+				{
+					String size = i == 0 ? "Small" : i == 1 ? "Normal" : "Large";
+					for(int j = 0; j < 99; j++)
+					{
+						String p = treePath + tName + "/"+size+"_"+String.format("%02d", j)+".schematic";
+
+						TreeSchematic schem = new TreeSchematic(p, size+"_"+String.format("%02d", j));
+						if(schem.Load())
+							TreeRegistry.instance.RegisterSchematic(schem, s);
+						else
+							break;
+					}
 				}
+
 			}
 		}
-		catch (URISyntaxException e)
-		{
-			e.printStackTrace();
-		}
+		finally{}
 	}
 
 	private IBlockState getNaturalLog(WoodType w)

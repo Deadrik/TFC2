@@ -26,6 +26,9 @@ import com.bioxx.tfc2.api.Trees.TreeSchemManager;
 public class WorldGenTreeTest implements IWorldGenerator
 {
 
+	TreeSchemManager tsm;
+	TreeConfig tc;
+
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
 	{
@@ -41,7 +44,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
 			Center c = m.getClosestCenter(new Point(chunkX+8, chunkZ+8));
 
-			gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getCommonTree(), (int)((random.nextInt(6)+4)*c.getMoisture().getMoisture()));
+			gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getCommonTree(), (int)((random.nextInt(10)+5)*c.getMoisture().getMoisture()));
 			gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getUncommonTree(), (int)(3*c.getMoisture().getMoisture()));
 			if(random.nextBoolean())
 				gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getRareTree(), (int)(1*c.getMoisture().getMoisture()));
@@ -50,22 +53,18 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 	private void gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, String wood, int numTrees) 
 	{
-		int xCoord = 0;
-		int zCoord = 0;
-		int yCoord = 0;
+		BlockPos treePos;
 		boolean isAirAbove = false;
 		Schematic schem;
 		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(wood);
 		TreeConfig tc = TreeRegistry.instance.treeFromString(wood);
+		IBlockState groundState;
 		for(int l = 0; l < numTrees; l++)
 		{
-			int growthStage = random.nextInt(3);
+			int growthStage = random.nextInt(2);
 			schem = tsm.getRandomSchematic(random);
-			xCoord = chunkX + random.nextInt(16);
-			yCoord = world.getHorizon(chunkPos).getY();
-			zCoord = chunkZ + random.nextInt(16);
-			BlockPos treePos = new BlockPos(xCoord, yCoord, zCoord);
-			IBlockState b = world.getBlockState(treePos.offsetDown());
+			treePos = new BlockPos(chunkX + random.nextInt(16), world.getHorizon(chunkPos).getY(), chunkZ + random.nextInt(16));
+			groundState = world.getBlockState(treePos.offsetDown());
 			isAirAbove = world.isAirBlock(treePos);
 
 			if(canGrowHere(world, treePos.offsetDown(), 2)

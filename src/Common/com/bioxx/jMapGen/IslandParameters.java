@@ -11,7 +11,7 @@ import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.api.Types.Moisture;
 import com.bioxx.tfc2.api.Types.StoneType;
-import com.bioxx.tfc2.api.Types.Temp;
+import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Types.WoodType;
 
 public class IslandParameters 
@@ -42,7 +42,7 @@ public class IslandParameters
 	private String treeUncommon = WoodType.Ash.getName();
 	private String treeRare = WoodType.Ash.getName();
 	private Moisture moisture = Moisture.MEDIUM;
-	private Temp temp = Temp.TEMPERATE;
+	private ClimateTemp temp = ClimateTemp.TEMPERATE;
 
 	public IslandParameters() 
 	{
@@ -182,12 +182,12 @@ public class IslandParameters
 		return moisture;
 	}
 
-	public Temp getIslandTemp()
+	public ClimateTemp getIslandTemp()
 	{
 		return temp;
 	}
 
-	public void setIslandTemp(Temp t)
+	public void setIslandTemp(ClimateTemp t)
 	{
 		temp = t;
 	}
@@ -214,7 +214,7 @@ public class IslandParameters
 		this.treeUncommon = nbt.getString("treeUncommon");
 		this.treeRare = nbt.getString("treeRare");
 		this.moisture = Moisture.values()[nbt.getInteger("moisture")];
-		this.temp = Temp.values()[nbt.getInteger("temp")];
+		this.temp = ClimateTemp.values()[nbt.getInteger("temp")];
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
