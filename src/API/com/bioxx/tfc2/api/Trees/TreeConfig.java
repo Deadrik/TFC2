@@ -1,17 +1,17 @@
 package com.bioxx.tfc2.api.Trees;
 
+import net.minecraft.block.state.IBlockState;
+
 import com.bioxx.tfc2.api.Types.Moisture;
 import com.bioxx.tfc2.api.Types.Temp;
-import com.bioxx.tfc2.api.Types.WoodType;
 
 public class TreeConfig 
 {
 	public String name;
-	/**
-	 * The Tree Wood Type. This is used for assigning textures, creating items, and 
-	 * choosing the correct tree schematics during world generation.
-	 */
-	public WoodType wood;
+
+	public IBlockState wood;
+	public IBlockState leaves;
+
 	/**
 	 * Minimum Allowed Moisture
 	 */
@@ -31,16 +31,15 @@ public class TreeConfig
 
 	public boolean isEvergreen;
 
-	public TreeConfig(WoodType i, Moisture minR, Moisture maxR, Temp minT, Temp maxT, boolean eg)
+	public TreeConfig(String n, IBlockState w, IBlockState l, Moisture minR, Moisture maxR, Temp minT, Temp maxT, boolean eg)
 	{
-		name = i.getName();
-		wood = i;
+		name = n;
 		minMoisture = minR;
 		maxMoisture = maxR;
 		minTemp = minT;
 		maxTemp = maxT;
 		isEvergreen = eg;
+		wood = w;
+		leaves = l;
 	}
-
-
 }

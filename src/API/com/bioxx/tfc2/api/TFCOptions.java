@@ -5,7 +5,7 @@ import net.minecraftforge.common.config.Property;
 
 public class TFCOptions
 {
-	public static int maxThreadsForIslandGen = 2;
+	public static int maxThreadsForIslandGen = 1;
 
 	public static boolean getBooleanFor(Configuration config,String heading, String item, boolean value)
 	{

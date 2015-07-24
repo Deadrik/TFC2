@@ -51,7 +51,7 @@ public class TFCBlocks
 
 	public static void LoadBlocks()
 	{
-		System.out.println(new StringBuilder().append("[TFC2] Loading Blocks").toString());
+		TFC.log.info(new StringBuilder().append("[TFC2] Loading Blocks").toString());
 
 		// Unlocalized names should be lowercase, and separated by underscores. "this_is_an_example"
 
@@ -77,7 +77,7 @@ public class TFCBlocks
 
 	public static void RegisterBlocks()
 	{
-		System.out.println(new StringBuilder().append("[TFC2] Registering Blocks").toString());
+		TFC.log.info(new StringBuilder().append("[TFC2] Registering Blocks").toString());
 
 		// Block registration strings should be lowercase, and separated by underscores. "this_is_an_example"
 		// Preferably these strings should be identical to the corresponding unlocalized name.

@@ -12,6 +12,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
@@ -131,6 +132,19 @@ public class BlockGrass extends BlockTerra
 		IBlockState myState = world.getBlockState(pos);
 		int meta = ((Integer)myState.getValue(BlockGrass.META_PROPERTY)).intValue();
 		world.setBlockState(pos, TFCBlocks.Dirt.getDefaultState().withProperty(META_PROPERTY, meta), 2);
+	}
+
+	@Override
+	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
+	{
+		IBlockState state = world.getBlockState(pos);
+		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
+		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
+
+		if(plantable == TFCBlocks.Sapling)
+			return true;
+
+		return false;
 	}
 
 }

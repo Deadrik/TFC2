@@ -37,4 +37,14 @@ public enum WoodType implements IStringSerializable
 		}
 		return null;
 	}
+
+	public static WoodType getTypeFromString(String s)
+	{
+		for(int i = 0; i < WoodType.values().length; i++)
+		{
+			if(WoodType.values()[i].getName().equals(s))
+				return WoodType.values()[i];
+		}
+		return null;
+	}
 }

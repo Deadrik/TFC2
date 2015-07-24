@@ -11,27 +11,20 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
+import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.Point;
+import com.bioxx.jMapGen.graph.Center;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.Blocks.BlockSapling;
 import com.bioxx.tfc2.CoreStuff.Schematic;
 import com.bioxx.tfc2.World.ChunkManager;
+import com.bioxx.tfc2.World.WorldGen;
+import com.bioxx.tfc2.api.Trees.TreeConfig;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
+import com.bioxx.tfc2.api.Trees.TreeSchemManager;
 
 public class WorldGenTreeTest implements IWorldGenerator
 {
-	private int treeID = 0;
-	private int growthStage = 0;
-	private int baseX = 0;
-	private int baseY = 0;
-	private int baseZ = 0;
-
-	public WorldGenTreeTest()
-	{}
-
-	public WorldGenTreeTest(int gs)
-	{
-		growthStage = gs;
-	}
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
@@ -41,73 +34,62 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		if(world.getWorldChunkManager() instanceof ChunkManager)
 		{
-			growthStage = random.nextInt(1) + 5;
 
-			//Get a random tree schematic
-			/*Schematic schem = TreeRegistry.instance.getRandomTreeSchematic(random);//, treeID, growthStage);
-			if(schem == null) return;*/
-
+			int xM = (chunkX >> 12);
+			int zM = (chunkZ >> 12);
+			Map m = WorldGen.instance.getIslandMap(xM, zM);
 			BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
+			Center c = m.getClosestCenter(new Point(chunkX+8, chunkZ+8));
 
-			int xCoord = 0;
-			int zCoord = 0;
-			int yCoord = 0;
-			boolean isAirAbove = false;
-			Schematic schem;
-			int numTrees = 7;
-
-			for(int l = 0; l < numTrees; l++)
-			{
-				treeID = random.nextInt(15);
-				schem = TreeRegistry.instance.getRandomTreeSchematic(random, treeID);
-				xCoord = chunkX + random.nextInt(16);
-				yCoord = world.getHorizon(chunkPos).getY();
-				zCoord = chunkZ + random.nextInt(16);
-				BlockPos treePos = new BlockPos(xCoord, yCoord, zCoord);
-				IBlockState b = world.getBlockState(treePos.offsetDown());
-				isAirAbove = world.isAirBlock(treePos);
-
-				if(growthStage <= 5
-						&& canGrowHere(world, treePos.offsetDown(), 2)
-						&& isAirAbove
-						&& schem != null)
-				{
-					genTree(schem, treeID, world, treePos);
-				}
-				else if(growthStage == 6
-						&& canGrowHere(world, treePos.offsetDown(), 3)
-						&& isAirAbove
-						&& schem != null)
-				{
-					genTree(schem, treeID, world, treePos);
-				}
-			}
+			gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getCommonTree(), (int)((random.nextInt(6)+4)*c.getMoisture().getMoisture()));
+			gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getUncommonTree(), (int)(3*c.getMoisture().getMoisture()));
+			if(random.nextBoolean())
+				gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getRareTree(), (int)(1*c.getMoisture().getMoisture()));
 		}
 	}
 
-	public boolean forceGen(World world, BlockPos pos)
+	private void gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, String wood, int numTrees) 
 	{
-		//Get a random tree schematic
-		Schematic schem = TreeRegistry.instance.getRandomTreeSchematic(world.rand, treeID, growthStage);
-		if(schem == null) return false;
+		int xCoord = 0;
+		int zCoord = 0;
+		int yCoord = 0;
+		boolean isAirAbove = false;
+		Schematic schem;
+		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(wood);
+		TreeConfig tc = TreeRegistry.instance.treeFromString(wood);
+		for(int l = 0; l < numTrees; l++)
+		{
+			int growthStage = random.nextInt(3);
+			schem = tsm.getRandomSchematic(random);
+			xCoord = chunkX + random.nextInt(16);
+			yCoord = world.getHorizon(chunkPos).getY();
+			zCoord = chunkZ + random.nextInt(16);
+			BlockPos treePos = new BlockPos(xCoord, yCoord, zCoord);
+			IBlockState b = world.getBlockState(treePos.offsetDown());
+			isAirAbove = world.isAirBlock(treePos);
 
-		return genTree(schem, treeID, world, pos.offsetUp());
+			if(canGrowHere(world, treePos.offsetDown(), 2)
+					&& isAirAbove
+					&& schem != null)
+			{
+				genTree(schem, tc, world, treePos);
+			}
+		}
 	}
-
 
 
 	//*****************
 	// Private methods
 	//*****************
-	private boolean genTree(Schematic schem, int meta, World world, BlockPos pos)
+	private boolean genTree(Schematic schem, TreeConfig tc, World world, BlockPos pos)
 	{
 		int rot = world.rand.nextInt(4);
 		int index;
 		int id;
 
-		this.baseX = pos.getX() - 1;
-		this.baseY = pos.getY();
-		this.baseZ = pos.getZ() - 1;
+		int baseX = pos.getX() - 1;
+		int baseY = pos.getY();
+		int baseZ = pos.getZ() - 1;
 
 		for(int y = 0; y < schem.getSizeY(); y++)
 		{
@@ -118,7 +100,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 					index = x + schem.getSizeX() * (z + schem.getSizeZ() * y);
 					id = schem.getBlockArray()[index];
 					if(id != Block.getIdFromBlock(Blocks.air))
-						Process(world, baseX, baseY, baseZ, meta, schem, x + 1, y, z + 1, rot, Block.getBlockById(id));
+						Process(world, baseX, baseY, baseZ, tc, schem, x + 1, y, z + 1, rot, Block.getBlockById(id));
 				}
 			}
 		}
@@ -126,7 +108,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		return true;
 	}
 
-	private void Process(World world, int treeX, int treeY, int treeZ, int meta,
+	private void Process(World world, int treeX, int treeY, int treeZ, TreeConfig tc,
 			Schematic schem, int schemX, int schemY, int schemZ, int rot, Block b)
 	{
 		int localX = treeX + schem.getCenterX() - schemX;
@@ -149,9 +131,9 @@ public class WorldGenTreeTest implements IWorldGenerator
 			localZ = treeZ - schem.getCenterZ() + schemZ;
 		}
 
-		IBlockState block = TFCBlocks.LogNatural.getStateFromMeta(meta);
+		IBlockState block = tc.wood;
 		BlockPos blockPos = new BlockPos(localX, localY, localZ);
-		IBlockState leaves = TFCBlocks.Leaves.getStateFromMeta(meta);
+		IBlockState leaves = tc.leaves;
 
 		if(b.getMaterial() == Material.wood)
 		{
@@ -196,7 +178,6 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 	private boolean isBlockValid(World world, BlockPos pos, Block block)
 	{
-		//return block == TFCBlocks.Dirt || block == TFCBlocks.Grass;
 		return block.canSustainPlant(world, pos, net.minecraft.util.EnumFacing.UP, (BlockSapling)TFCBlocks.Sapling);
 	}
 }

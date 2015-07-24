@@ -6,7 +6,11 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 
+import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.Blocks.BlockTerra;
 import com.bioxx.tfc2.api.Types.StoneType;
 
@@ -38,5 +42,16 @@ public class BlockDirt extends BlockTerra
 		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
 	}
 
+	@Override
+	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
+	{
+		IBlockState state = world.getBlockState(pos);
+		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
+		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
 
+		if(plantable == TFCBlocks.Sapling)
+			return true;
+
+		return false;
+	}
 }

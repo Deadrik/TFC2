@@ -80,11 +80,11 @@ public class PrintImageMapCommand extends CommandBase
 				int size = 4096;
 				try 
 				{
-					File outFile = new File(name+".bmp");
+					File outFile = new File(name+".png");
 					BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
 					Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
 					graphics.clearRect(0, 0, size, size);
-					System.out.println(name+".bmp");
+					System.out.println(name+".png");
 					float perc = 0.1f;
 					float count = 0;
 					int xM = ((int)Math.floor(player.posX) >> 12);
@@ -111,8 +111,8 @@ public class PrintImageMapCommand extends CommandBase
 							}
 						}
 					}
-					System.out.println(name+".bmp Done!");
-					ImageIO.write(outBitmap, "BMP", outFile);
+					System.out.println(name+".png Done!");
+					ImageIO.write(outBitmap, "PNG", outFile);
 				}
 				catch (Exception e) 
 				{
@@ -129,11 +129,11 @@ public class PrintImageMapCommand extends CommandBase
 				int size = 4096;
 				try 
 				{
-					File outFile = new File(name+".bmp");
+					File outFile = new File(name+".png");
 					BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
 					Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
 					graphics.clearRect(0, 0, size, size);
-					System.out.println(name+".bmp");
+					System.out.println(name+".png");
 					float perc = 0.1f;
 					float count = 0;
 					int xM = ((int)Math.floor(player.posX) >> 12);
@@ -165,8 +165,60 @@ public class PrintImageMapCommand extends CommandBase
 						graphics.fillPolygon(poly);
 
 					}
-					System.out.println(name+".bmp Done!");
-					ImageIO.write(outBitmap, "BMP", outFile);
+					System.out.println(name+".png Done!");
+					ImageIO.write(outBitmap, "PNG", outFile);
+				}
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+				}
+			}
+			else if(params[0].equals("moisture"))
+			{
+				int size = 4096;
+				try 
+				{
+					File outFile = new File(name+".png");
+					BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
+					Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
+					graphics.clearRect(0, 0, size, size);
+					System.out.println(name+".png");
+					float perc = 0.1f;
+					float count = 0;
+					int xM = ((int)Math.floor(player.posX) >> 12);
+					int zM = ((int)Math.floor(player.posZ) >> 12);
+					Map map = WorldGen.instance.getIslandMap(xM, zM);
+					Polygon poly;
+					for(Center c : map.centers)
+					{
+						count++;
+						int color = (int)(c.moisture * 255);
+						graphics.setColor(colorMap[color]);		
+						poly = new Polygon();
+						for(Corner cn : c.corners)
+						{
+							poly.addPoint((int)cn.point.x, (int)cn.point.y);
+						}
+						graphics.fillPolygon(poly);
+						graphics.setColor(Color.black);	
+						graphics.drawPolygon(poly);
+					}
+
+					for(Center c : map.centers)
+					{
+						if(c.hasAttribute(Attribute.riverUUID))
+						{
+							RiverAttribute a = (RiverAttribute) c.getAttribute(Attribute.riverUUID);
+							if(a.getDownRiver() != null)
+							{
+								graphics.setColor(Color.cyan);	
+								graphics.drawLine((int)c.point.x, (int)c.point.y, (int)a.getDownRiver().point.x, (int)a.getDownRiver().point.y);
+							}
+						}
+
+					}
+					System.out.println(name+".png Done!");
+					ImageIO.write(outBitmap, "PNG", outFile);
 				}
 				catch (Exception e) 
 				{
@@ -181,11 +233,11 @@ public class PrintImageMapCommand extends CommandBase
 		int size = 4096;
 		try 
 		{
-			File outFile = new File(name+".bmp");
+			File outFile = new File(name+".png");
 			BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
 			Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
 			graphics.clearRect(0, 0, size, size);
-			System.out.println(name+".bmp");
+			System.out.println(name+".png");
 			float perc = 0.1f;
 			float count = 0;
 			int xM = (xCoord >> 12);
@@ -219,8 +271,8 @@ public class PrintImageMapCommand extends CommandBase
 				}
 
 			}
-			System.out.println(name+".bmp Done!");
-			ImageIO.write(outBitmap, "BMP", outFile);
+			System.out.println(name+".png Done!");
+			ImageIO.write(outBitmap, "PNG", outFile);
 		}
 		catch (Exception e) 
 		{
@@ -233,11 +285,11 @@ public class PrintImageMapCommand extends CommandBase
 		int size = 4096;
 		try 
 		{
-			File outFile = new File(name+".bmp");
+			File outFile = new File(name+".png");
 			BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
 			Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
 			graphics.clearRect(0, 0, size, size);
-			System.out.println(name+".bmp");
+			System.out.println(name+".png");
 			float perc = 0.1f;
 			float count = 0;
 			int xM = (xCoord >> 12);
@@ -257,8 +309,8 @@ public class PrintImageMapCommand extends CommandBase
 				graphics.fillPolygon(poly);
 
 			}
-			System.out.println(name+".bmp Done!");
-			ImageIO.write(outBitmap, "BMP", outFile);
+			System.out.println(name+".png Done!");
+			ImageIO.write(outBitmap, "PNG", outFile);
 		}
 		catch (Exception e) 
 		{
@@ -270,11 +322,11 @@ public class PrintImageMapCommand extends CommandBase
 	{
 		try 
 		{
-			File outFile = new File(name+".bmp");
+			File outFile = new File(name+".png");
 			BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
 			Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
 			graphics.clearRect(0, 0, size, size);
-			System.out.println(name+".bmp");
+			System.out.println(name+".png");
 			float perc = 0.1f;
 			float count = 0;
 
@@ -335,8 +387,8 @@ public class PrintImageMapCommand extends CommandBase
 					}
 				}
 			}
-			System.out.println(name+".bmp Done!");
-			ImageIO.write(outBitmap, "BMP", outFile);
+			System.out.println(name+".png Done!");
+			ImageIO.write(outBitmap, "PNG", outFile);
 		}
 		catch (Exception e) 
 		{

@@ -1,14 +1,10 @@
 package com.bioxx.tfc2.api.Trees;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-
 import com.bioxx.tfc2.CoreStuff.Schematic;
 
 public class TreeSchematic extends Schematic
 {
-	private int growthStage;
-	private int logCount;
+	private int size;
 
 	public TreeSchematic(String p)
 	{
@@ -19,39 +15,19 @@ public class TreeSchematic extends Schematic
 	public boolean Load()
 	{
 		super.Load();
-		int num = path.indexOf('-') + 1;
-		growthStage = Integer.parseInt(path.substring(num, num + 1));
-		countLogs();
+		int num = path.indexOf('-');
+		String s = path.substring(0, num);
+		if(s.equals("Large"))
+			size = 2;
+		else if(s.equals("Normal"))
+			size = 1;
+		else
+			size = 0;
 		return true;
 	}
 
 	public int getGrowthStage()
 	{
-		return growthStage;
-	}
-	@Deprecated
-	public int getLogCount()
-	{
-		return logCount;
-	}
-
-	@Deprecated
-	private void countLogs()
-	{
-		int index;
-		int id;
-		for(int y = 0; y < height; y++)
-		{
-			for(int z = 0; z < length; z++)
-			{
-				for(int x = 0; x < width; x++)
-				{
-					index = x + width * (z + length * y);
-					id = blockArray[index];
-					if(Block.getBlockById(id).getMaterial() == Material.wood)
-						logCount++;
-				}
-			}
-		}
+		return size;
 	}
 }

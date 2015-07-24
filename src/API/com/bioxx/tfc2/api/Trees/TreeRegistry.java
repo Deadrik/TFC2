@@ -4,41 +4,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.Vector;
 
 import com.bioxx.tfc2.api.Types.Moisture;
 import com.bioxx.tfc2.api.Types.Temp;
-import com.bioxx.tfc2.api.Types.WoodType;
 
 public class TreeRegistry
 {
 	public static TreeRegistry instance = new TreeRegistry();
 	private HashMap<String, TreeConfig> treeTypeHash = new HashMap<String, TreeConfig>();
-	private Vector<TreeSchemManager> treeList;
+	private HashMap<String, TreeSchemManager> treeList;
 
 	public TreeRegistry()
 	{
-		treeList = new Vector<TreeSchemManager>();
+		treeList  = new HashMap<String, TreeSchemManager>();
 	}
 
 	public void RegisterSchematic(TreeSchematic treeSchematic, String name)
 	{
-		WoodType index = checkValidity(name);
 
-		if(index == null)
-		{
-			System.out.println("[TFC2] Registering Tree Type \"" + name + "\" Failed! There are no trees registered with that name.");
-		}
-		else
-		{
-			if(treeList.size() < treeTypeHash.size())
-				treeList.setSize(treeTypeHash.size());
+		if(!treeList.containsKey(name))
+			treeList.put(name, new TreeSchemManager());
 
-			if(treeList.get(index.getMeta()) == null)
-				treeList.set(index.getMeta(), new TreeSchemManager(index.getMeta()));
-
-			treeList.get(index.getMeta()).addSchem(treeSchematic);
-		}
+		treeList.get(name).addSchem(treeSchematic);
 	}
 
 	public String[] getTreeNames()
@@ -86,21 +73,10 @@ public class TreeRegistry
 		}
 	}
 
-	public WoodType checkValidity(String n)
+	public TreeSchemManager managerFromString(String n)
 	{
-		WoodType type = indexFromString(n);
-		if(type != null ) return type;
-		return null;
-	}
-
-	/**
-	 * @param n Name of the Tree type. Used as the Key in the hash map for lookups.
-	 * @return Tree index that is unique to that tree
-	 */
-	public WoodType indexFromString(String n)
-	{
-		if(treeTypeHash.containsKey(n))
-			return ((TreeConfig) treeTypeHash.get(n)).wood;
+		if(treeList.containsKey(n))
+			return ((TreeSchemManager) treeList.get(n));
 		return null;
 	}
 
@@ -114,26 +90,11 @@ public class TreeRegistry
 			return ((TreeConfig) treeTypeHash.get(n));
 		return null;
 	}
-	/**
-	 * @param id The tree type ID.
-	 * @return Full TreeConfig object
-	 */
-	public TreeConfig treeFromID(int id)
-	{
-		WoodType wood = WoodType.getTypeFromMeta(id);
-		for(;treeTypeHash.values().iterator().hasNext();)
-		{
-			TreeConfig config = (TreeConfig)treeTypeHash.values().iterator().next();
-			if(config.wood == wood)
-				return config;
-		}
-		return null;
-	}
 
 	public TreeConfig getRandomTree()
 	{
-		int id = new Random().nextInt(treeTypeHash.values().toArray().length);
-		return treeFromID(id);
+		int id = new Random().nextInt(treeTypeHash.keySet().toArray().length);
+		return treeTypeHash.get(treeTypeHash.keySet().toArray(new String[treeTypeHash.keySet().size()])[id]);
 	}
 
 	public String getRandomTreeTypeForIsland(Random r, Temp temp, Moisture moisture)

@@ -5,15 +5,13 @@ import java.util.Vector;
 
 public class TreeSchemManager
 {
-	private int ID;
 	/**
 	 * Vector of Vectors. List of schematics is sorted first by growth stage, then schem ID
 	 */
 	private Vector<Vector<TreeSchematic>> treeList;
 
-	public TreeSchemManager(int id)
+	public TreeSchemManager()
 	{
-		this.ID = id;
 		this.treeList = new Vector<Vector<TreeSchematic>>();
 	}
 

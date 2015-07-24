@@ -3,14 +3,14 @@ package com.bioxx.tfc2.World;
 import java.util.Random;
 import java.util.Vector;
 
-import com.bioxx.jMapGen.Map;
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.jMapGen.graph.Center.Marker;
-
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
+
+import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jMapGen.graph.Center.Marker;
 
 public class ChunkManager extends WorldChunkManager 
 {
@@ -45,7 +45,7 @@ public class ChunkManager extends WorldChunkManager
 			}
 			else
 			{
-				c = land.get(random.nextInt(land.size()));
+				c = c.neighbors.get(4);
 			}
 		}
 		blockpos = new BlockPos((int)c.point.x, 0, (int)c.point.y);

@@ -29,6 +29,7 @@ import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.Types.Moisture;
 
 public class ChunkProviderSurface extends ChunkProviderGenerate 
 {
@@ -167,6 +168,12 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		IBlockState dirt = TFCBlocks.Dirt.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
 		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
 		IBlockState sand = TFCBlocks.Sand.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
+
+		if(islandMap.islandParams.getIslandMoisture() == Moisture.NONE)
+		{
+			grass = sand;
+			dirt = sand;
+		}
 		for(int x = 0; x < 16; x++)
 		{
 			for(int z = 0; z < 16; z++)

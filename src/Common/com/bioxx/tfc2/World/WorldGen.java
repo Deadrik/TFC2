@@ -21,7 +21,10 @@ import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.RandomCollection;
 import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.api.Trees.TreeRegistry;
+import com.bioxx.tfc2.api.Types.Moisture;
 import com.bioxx.tfc2.api.Types.StoneType;
+import com.bioxx.tfc2.api.Types.Temp;
 import com.bioxx.tfc2.api.Util.Helper;
 import com.bioxx.tfc2.api.Util.IThreadCompleteListener;
 
@@ -120,6 +123,9 @@ public class WorldGen implements IThreadCompleteListener
 			if(f == Feature.Canyons)
 				id.setFeatures(Feature.Gorges);
 
+			if(f == Feature.NoLand && x == 0 && z == 0)
+				continue;
+
 			if((f == Feature.SharperMountains || f == Feature.EvenSharperMountains) && 
 					(id.hasFeature(Feature.SharperMountains) || id.hasFeature(Feature.EvenSharperMountains)))
 			{
@@ -131,17 +137,25 @@ public class WorldGen implements IThreadCompleteListener
 			else id.setFeatures(f);
 		}
 
+		//Remove all other features if this is supposed to be open ocean.
+		if(id.hasFeature(Feature.NoLand))
+		{
+			id.clearFeatures();
+			id.setFeatures(Feature.NoLand);
+		}
+
+		//All plots too far north or south will be water. The world is only 9 islands tall.
+		if(z > 4 || z < -4)
+		{
+			id.clearFeatures();
+			id.setFeatures(Feature.NoLand);
+		}
+
 		RandomCollection<Integer> heightPot = new RandomCollection<Integer>(r);
 		heightPot.add(0.1, 64);
 		heightPot.add(0.8, 96);
 		heightPot.add(0.1, 128);
 		id.islandMaxHeight = heightPot.next();
-
-		RandomCollection<Double> moisturePot = new RandomCollection<Double>(r);
-		moisturePot.add(0.1, 0.75D);
-		moisturePot.add(0.8, 1D);
-		moisturePot.add(0.1, 1.25D);
-		id.moistureMultiplier = moisturePot.next();
 
 		RandomCollection<StoneType> stonePot = new RandomCollection<StoneType>(r);
 		//If the island has a volcano then we need to make sure that the island is properly volcanic.
@@ -160,8 +174,39 @@ public class WorldGen implements IThreadCompleteListener
 			}
 		}
 		id.setSurfaceRock(stonePot.next());
+		Temp t = Temp.TEMPERATE;
+		//Tropical or Temperate
+		if(Math.abs(z) == 0)
+		{
+			t = Temp.TROPICAL;
+		}
+		else if(Math.abs(z) == 1)
+		{
+			t = r.nextBoolean() ? Temp.TEMPERATE : Temp.SUBTROPICAL;
+		}
+		else if(Math.abs(z) == 2)
+		{
+			t = Temp.TEMPERATE;
+		}
+		else if(Math.abs(z) == 3)
+		{
+			t = r.nextBoolean() ? Temp.TEMPERATE : Temp.SUBPOLAR;
+		}
+		else if(Math.abs(z) == 4)
+		{
+			t = Temp.POLAR;
+		}
+
+		id.setIslandTemp(t);
 
 
+		Moisture m = Moisture.fromVal(r.nextDouble());
+		id.setIslandMoisture(m);
+
+		String common = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
+		String uncommon = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
+		String rare = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
+		id.setTrees(common, uncommon, rare);
 
 		return id;
 	}

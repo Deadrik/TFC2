@@ -9,7 +9,10 @@ import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.tfc2.api.Types.Moisture;
 import com.bioxx.tfc2.api.Types.StoneType;
+import com.bioxx.tfc2.api.Types.Temp;
+import com.bioxx.tfc2.api.Types.WoodType;
 
 public class IslandParameters 
 {
@@ -18,7 +21,6 @@ public class IslandParameters
 	public double lakeThreshold = 0.3;
 	int SIZE = 4096;
 	public double islandMaxHeight = 100.0;
-	public double moistureMultiplier = 1.0;
 
 	private int xCoord = 0;
 	private int zCoord = 0;
@@ -36,6 +38,11 @@ public class IslandParameters
 
 	private EnumSet<Feature> features = EnumSet.noneOf(Feature.class);
 	private StoneType surfaceRock = StoneType.Granite;
+	private String treeCommon = WoodType.Ash.getName();
+	private String treeUncommon = WoodType.Ash.getName();
+	private String treeRare = WoodType.Ash.getName();
+	private Moisture moisture = Moisture.MEDIUM;
+	private Temp temp = Temp.TEMPERATE;
 
 	public IslandParameters() 
 	{
@@ -106,6 +113,14 @@ public class IslandParameters
 	}
 
 	/**
+	 * Removes all Island Features. Should not be used outside of island generation.
+	 */
+	public void clearFeatures()
+	{
+		features.clear();
+	}
+
+	/**
 	 * Used for reading stored nbt information
 	 */
 	private void setFeatures(int i)
@@ -140,6 +155,48 @@ public class IslandParameters
 		surfaceRock = s;
 	}
 
+	public String getCommonTree()
+	{
+		return this.treeCommon;
+	}
+
+	public String getUncommonTree()
+	{
+		return this.treeUncommon;
+	}
+
+	public String getRareTree()
+	{
+		return this.treeRare;
+	}
+
+	public void setTrees(String t0, String t1, String t2)
+	{
+		treeCommon = t0;
+		treeUncommon = t1;
+		treeRare = t2;
+	}
+
+	public Moisture getIslandMoisture()
+	{
+		return moisture;
+	}
+
+	public Temp getIslandTemp()
+	{
+		return temp;
+	}
+
+	public void setIslandTemp(Temp t)
+	{
+		temp = t;
+	}
+
+	public void setIslandMoisture(Moisture m)
+	{
+		moisture = m;
+	}
+
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		NBTTagCompound fnbt = nbt.getCompoundTag("features");
@@ -152,8 +209,12 @@ public class IslandParameters
 		this.oceanRatio = nbt.getDouble("oceanRatio");
 		this.lakeThreshold = nbt.getDouble("lakeThreshold");
 		this.islandMaxHeight = nbt.getDouble("islandMaxHeight");
-		this.moistureMultiplier = nbt.getDouble("moistureMultiplier");
 		this.surfaceRock = StoneType.getStoneTypeFromMeta(nbt.getInteger("surfaceRock"));
+		this.treeCommon = nbt.getString("treeCommon");
+		this.treeUncommon = nbt.getString("treeUncommon");
+		this.treeRare = nbt.getString("treeRare");
+		this.moisture = Moisture.values()[nbt.getInteger("moisture")];
+		this.temp = Temp.values()[nbt.getInteger("temp")];
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
@@ -170,8 +231,12 @@ public class IslandParameters
 		nbt.setDouble("oceanRatio", oceanRatio);
 		nbt.setDouble("lakeThreshold", lakeThreshold);
 		nbt.setDouble("islandMaxHeight", islandMaxHeight);
-		nbt.setDouble("moistureMultiplier", moistureMultiplier);
 		nbt.setInteger("surfaceRock", this.surfaceRock.getMeta());
+		nbt.setString("treeCommon", treeCommon);
+		nbt.setString("treeUncommon", treeUncommon);
+		nbt.setString("treeRare", treeRare);
+		nbt.setInteger("moisture", moisture.ordinal());
+		nbt.setInteger("temp", temp.ordinal());
 	}
 
 	public enum Feature
@@ -185,7 +250,8 @@ public class IslandParameters
 		Valleys(0.6, "Valleys"), 
 		SmallCraters(0.2, "Small Crater"), 
 		LargeCrater(0.2, "Large Crater"), 
-		Canyons(0.3, "Canyons");
+		Canyons(0.3, "Canyons"),
+		NoLand(0.3,"NO LAND");
 
 		public final double rarity;
 		private String name;

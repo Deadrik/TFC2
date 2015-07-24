@@ -126,6 +126,6 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 
 	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
-		return null;
+		return this.getDefaultState();
 	}
 }

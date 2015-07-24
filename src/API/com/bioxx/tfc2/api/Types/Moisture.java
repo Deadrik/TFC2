@@ -16,4 +16,19 @@ public enum Moisture
 	{
 		return val;
 	}
+
+	public static Moisture fromVal(double d)
+	{
+		if(d < 0.1)
+			return NONE;
+		else if(d < 0.3)
+			return LOW;
+		else if(d < 0.5)
+			return MEDIUM;
+		else if(d < 0.7)
+			return HIGH;
+		else if(d < 0.9)
+			return VERYHIGH;
+		else return MAX;
+	}
 }

@@ -30,6 +30,7 @@ import com.bioxx.jMapGen.graph.CornerElevationSorter;
 import com.bioxx.jMapGen.graph.Edge;
 import com.bioxx.jMapGen.graph.MoistureComparator;
 import com.bioxx.jMapGen.pathfinding.PathFinder;
+import com.bioxx.tfc2.TFC;
 
 public class Map 
 {
@@ -103,7 +104,16 @@ public class Map
 		assignCornerElevations();
 
 		// Determine polygon and corner type: ocean, coast, land.
-		assignOceanCoastAndLand();
+		int borderCount = assignOceanCoastAndLand();
+
+		//If there is too much land on the borders then toss this island and start fresh
+		if(borderCount > 20)
+		{
+			seed += 1234567;
+			newIsland(islandParams);
+			TFC.log.info("Tossed Island Shape");
+
+		}
 
 		redistributeElevations(landCorners(corners));
 		//fixElevations(landCorners(corners));
@@ -118,33 +128,47 @@ public class Map
 			}
 		}
 
-		// Polygon elevations are the average of their corners
-		assignPolygonElevations();
+		if(!this.islandParams.hasFeature(Feature.NoLand))
+		{
 
-		assignLakeElevations(lakeCenters(centers));
+			// Polygon elevations are the average of their corners
+			assignPolygonElevations();
 
-		// Determine downslope paths.
-		calculateDownslopesCenter();
+			assignLakeElevations(lakeCenters(centers));
 
-		createVolcano(getCentersAbove(0.8));
+			// Determine downslope paths.
+			calculateDownslopesCenter();
 
-		createValleys(getCentersAbove(0.4));
+			createVolcano(getCentersAbove(0.8));
 
-		createCanyons();
-		calculateDownslopesCenter();
-		createGorges();
+			createValleys(getCentersAbove(0.4));
 
-		// Determine downslope paths.
-		calculateDownslopesCenter();
+			createCanyons();
+			calculateDownslopesCenter();
+			createGorges();
 
-		// Create rivers.
-		createRivers(getCentersAbove(0.1));
+			// Determine downslope paths.
+			calculateDownslopesCenter();
 
-		assignSlopedNoise();
+			// Create rivers.
+			createRivers(getCentersAbove(0.1));
 
-		assignHillyNoise();
+			assignSlopedNoise();
 
-		calculateDownslopesCenter();
+			assignHillyNoise();
+
+			calculateDownslopesCenter();
+		}
+		else
+		{
+			// Assign elevations to non-land corners
+			for(Iterator<Center> i = centers.iterator(); i.hasNext();)
+			{
+				Center q = (Center)i.next();
+				q.setMarkers(Marker.Ocean, Marker.Water);
+				q.setElevation(0);
+			}
+		}
 
 		assignMoisture();
 		redistributeMoisture(landCenters(centers));
@@ -1044,7 +1068,7 @@ public class Map
 	}
 
 	// Determine polygon and corner types: ocean, coast, land.
-	public void assignOceanCoastAndLand() {
+	public int assignOceanCoastAndLand() {
 		// Compute polygon attributes 'ocean' and 'water' based on the
 		// corner attributes. Count the water corners per
 		// polygon. Oceans are all polygons connected to the edge of the
@@ -1055,6 +1079,7 @@ public class Map
 		Center p = null, r = null; 
 		Corner q; 
 		int numWater;
+		int numBorderLand = 0;
 
 		for(int i = 0; i < centers.size(); i++)
 		{
@@ -1063,12 +1088,16 @@ public class Map
 			for(int j = 0; j < p.corners.size(); j++)
 			{
 				q = p.corners.get(j);
-				if (q.hasMarker(Marker.Border)) {
+				if (q.hasMarker(Marker.Border)) 
+				{
+					if(p.elevation > 0)
+						numBorderLand++;
 					p.setMarkers(Marker.Border, Marker.Ocean);
 					q.setMarkers(Marker.Water);
 					queue.add(p);
 				}
-				if (q.hasMarker(Marker.Water)) {
+				if (q.hasMarker(Marker.Water)) 
+				{
 					numWater += 1;
 				}
 			}
@@ -1139,6 +1168,8 @@ public class Map
 				q.setMarkers(Marker.Water);
 
 		}
+
+		return numBorderLand;
 	}
 
 	// Polygon elevations are the average of the elevations of their corners.
@@ -1429,10 +1460,10 @@ public class Map
 		Center prev;
 
 		Vector<Center> possibleStarts = new Vector<Center>();
-		int starts = 50;
+		int starts = (int)(100 * this.islandParams.getIslandMoisture().getMoisture());
 		if(this.islandParams.hasFeature(Feature.Gorges))
 		{
-			starts = 15;
+			starts = (int)(15 * this.islandParams.getIslandMoisture().getMoisture());
 		}
 
 		for (int i = 0; i < starts; i++) 
@@ -1698,8 +1729,9 @@ public class Map
 
 			for(Center adjacent : q.neighbors)
 			{
-				double newMoisture = q.moisture * 0.9;
-				if (newMoisture > adjacent.moisture) {
+				double newMoisture = q.moisture * 0.75;
+				if (newMoisture > adjacent.moisture) 
+				{
 					adjacent.moisture = newMoisture;
 					queue.push(adjacent);
 				}
@@ -1712,21 +1744,14 @@ public class Map
 			{
 				cr.moisture = 1.0;
 			}
-		}
-	}
-
-	// Polygon moisture is the average of the moisture at corners
-	public void assignPolygonMoisture() {
-		double sumMoisture;
-		for(Center p : centers)
-		{
-			sumMoisture = 0.0;
-			for(Corner q : p.corners)
+			else
 			{
-				if (q.moisture > 1.0) q.moisture = 1.0;
-				sumMoisture += q.moisture;
+				RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.riverUUID);
+				if (attrib != null && attrib.getRiver() > 0) 
+				{
+					cr.moisture = Math.max(Math.min(1.0, attrib.getRiver()), cr.moisture);
+				}
 			}
-			p.moisture = sumMoisture / p.corners.size();
 		}
 	}
 
