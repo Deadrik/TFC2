@@ -139,40 +139,24 @@ public class TFC
 
 		tr.addTreeType(new TreeConfig("acacia_umbrella", getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.NONE, Moisture.LOW, ClimateTemp.TEMPERATE, ClimateTemp.TROPICAL, false)); //Acacia Umbrella
 
-		try
+		for (String s : tr.getTreeNames())
 		{
-			for (String s : tr.getTreeNames())
+			String tName = Core.textConvert(s);
+			for(int i = 0; i < 3; i++)
 			{
-				String tName = Core.textConvert(s);
-				//FileSystem fs = FileSystems.newFileSystem(FileSystems.getDefault().getPath(treePath + tName + "/"), TFC.instance.getClass().getClassLoader());
-				/*File root = new File(TFC.instance.getClass().getClassLoader().getResource(treePath + tName + "/").toURI());
-				for( File f : root.listFiles())
+				String size = i == 0 ? "Small" : i == 1 ? "Normal" : "Large";
+				for(int j = 0; j < 99; j++)
 				{
-					if(f.isFile())
-					{
-						TreeSchematic schem = new TreeSchematic(treePath + tName + "/" + f.getName(), f.getName());
-						if(schem.Load())
-							TreeRegistry.instance.RegisterSchematic(schem, s);
-					}
-				}*/
-				for(int i = 0; i < 3; i++)
-				{
-					String size = i == 0 ? "Small" : i == 1 ? "Normal" : "Large";
-					for(int j = 0; j < 99; j++)
-					{
-						String p = treePath + tName + "/"+size+"_"+String.format("%02d", j)+".schematic";
+					String p = treePath + tName + "/"+size+"_"+String.format("%02d", j)+".schematic";
 
-						TreeSchematic schem = new TreeSchematic(p, size+"_"+String.format("%02d", j));
-						if(schem.Load())
-							TreeRegistry.instance.RegisterSchematic(schem, s);
-						else
-							break;
-					}
+					TreeSchematic schem = new TreeSchematic(p, size+"_"+String.format("%02d", j));
+					if(schem.Load())
+						TreeRegistry.instance.RegisterSchematic(schem, s);
+					else
+						break;
 				}
-
 			}
 		}
-		finally{}
 	}
 
 	private IBlockState getNaturalLog(WoodType w)

@@ -13,6 +13,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
+import net.minecraft.world.gen.MapGenBase;
 
 import com.bioxx.jMapGen.BiomeType;
 import com.bioxx.jMapGen.IslandParameters.Feature;
@@ -58,6 +59,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	 */
 	private static Point[][] hexSamplePoints;
 
+	private MapGenBase caveGenerator;
+
 	public ChunkProviderSurface(World worldIn, long seed, boolean enableMapFeatures, String rules) 
 	{
 		super(worldIn, seed, enableMapFeatures, rules);
@@ -97,7 +100,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 		turbMap = new Plane(sb2);
 
-
+		this.caveGenerator = new MapGenCaves();
 	}
 
 	private Point hex_corner(double size, int i)
@@ -130,6 +133,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		ChunkPrimer chunkprimer = new ChunkPrimer();
 		generateTerrain(chunkprimer, chunkX, chunkZ);
 		decorate(chunkprimer, chunkX, chunkZ);
+
+		this.caveGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
+
 		Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
 		chunk.setHeightMap(elevationMap);
 		chunk.generateSkylightMap();
