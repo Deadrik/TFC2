@@ -172,6 +172,7 @@ public class Map
 
 		assignMoisture();
 		redistributeMoisture(landCenters(centers));
+		assignMoisturePostRedist();
 
 		sortClockwise();
 		setupBiomeInfo();
@@ -1067,6 +1068,55 @@ public class Map
 		}
 	}
 
+	public void assignMoisture() 
+	{
+		LinkedList<Center> queue = new LinkedList<Center>();
+		// Fresh water
+		for(Center cr : centers)
+		{
+			RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.riverUUID);
+			if ((cr.hasMarker(Marker.Water) || (attrib != null && attrib.getRiver() > 0)) && !cr.hasMarker(Marker.Ocean)) 
+			{
+				double rivermult = attrib != null ? attrib.getRiver() : 0;
+				cr.moisture = (attrib != null && attrib.getRiver() > 0) ? Math.min(3.0, (0.1 * rivermult)) : 1.0;
+				queue.push(cr);
+			} 
+			else 
+			{
+				cr.moisture = 0.0;
+			}
+		}
+		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
+		double moistureMult = 1 - (0.5 * this.islandParams.getIslandMoisture().getMoisture());
+
+		while (queue.size() > 0) 
+		{
+			Center q = queue.pop();
+
+			for(Center adjacent : q.neighbors)
+			{
+				double newMoisture = q.moisture * moistureMult;
+				if (newMoisture > adjacent.moisture) 
+				{
+					adjacent.moisture = newMoisture;
+					queue.push(adjacent);
+				}
+			}
+		}
+		// Salt water
+		for(Center cr : centers)
+		{
+			if (cr.hasMarker(Marker.Ocean)) 
+			{
+				cr.moisture = 1.0;
+			}
+			if (cr.hasMarker(Marker.Coast)) 
+			{
+				cr.moisture = Math.max(0.5, cr.moisture);
+			}
+		}
+	}
+
 	// Determine polygon and corner types: ocean, coast, land.
 	public int assignOceanCoastAndLand() {
 		// Compute polygon attributes 'ocean' and 'water' based on the
@@ -1702,29 +1752,17 @@ public class Map
 		return i/this.islandParams.islandMaxHeight;
 	}
 
-	// Calculate moisture. Freshwater sources spread moisture: rivers
-	// and lakes (not oceans). Saltwater sources have moisture but do
-	// not spread it (we set it at the end, after propagation).
-	public void assignMoisture() 
+	public void assignMoisturePostRedist() 
 	{
 		LinkedList<Center> queue = new LinkedList<Center>();
 		// Fresh water
 		for(Center cr : centers)
 		{
-			RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.riverUUID);
-			if ((cr.hasMarker(Marker.Water) || (attrib != null && attrib.getRiver() > 0)) && !cr.hasMarker(Marker.Ocean)) 
+			if (cr.hasMarker(Marker.Coast)) 
 			{
-				double rivermult = attrib != null ? attrib.getRiver() : 0;
-				cr.moisture = (attrib != null && attrib.getRiver() > 0) ? Math.min(3.0, (0.1 * rivermult)) : 1.0;
 				queue.push(cr);
 			} 
-			else 
-			{
-				cr.moisture = 0.0;
-			}
 		}
-		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
-		double moistureMult = 1 - (0.5 * this.islandParams.getIslandMoisture().getMoisture());
 
 		while (queue.size() > 0) 
 		{
@@ -1732,29 +1770,17 @@ public class Map
 
 			for(Center adjacent : q.neighbors)
 			{
-				double newMoisture = q.moisture * moistureMult;
-				if (newMoisture > adjacent.moisture) 
+				if(!adjacent.hasMarker(Marker.Ocean) && adjacent.getElevation() - q.getElevation() < 0.08)
 				{
-					adjacent.moisture = newMoisture;
-					queue.push(adjacent);
+					double moistureMult = Math.max(1 - adjacent.getElevation() / 0.25, 0);
+					double newMoisture = q.moisture * moistureMult;
+					if (newMoisture > adjacent.moisture) 
+					{
+						adjacent.moisture = newMoisture;
+						queue.push(adjacent);
+					}
 				}
 			}
-		}
-		// Salt water
-		for(Center cr : centers)
-		{
-			if (cr.hasMarker(Marker.Ocean)) 
-			{
-				cr.moisture = 1.0;
-			}
-			/*else
-			{
-				RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.riverUUID);
-				if (attrib != null && attrib.getRiver() > 0) 
-				{
-					cr.moisture = Math.max(Math.min(1.0, attrib.getRiver()), cr.moisture);
-				}
-			}*/
 		}
 	}
 
