@@ -135,9 +135,9 @@ public class TFC
 		tr.addTreeType(new TreeConfig(WoodType.WhiteCedar.getName(), getNaturalLog(WoodType.WhiteCedar), getLeaves(WoodType.WhiteCedar), Moisture.LOW, Moisture.MAX, ClimateTemp.POLAR, ClimateTemp.SUBTROPICAL, true)); //White Cedar
 		tr.addTreeType(new TreeConfig(WoodType.Willow.getName(), getNaturalLog(WoodType.Willow), getLeaves(WoodType.Willow), Moisture.HIGH, Moisture.MAX, ClimateTemp.TEMPERATE, ClimateTemp.SUBTROPICAL, false)); //Willow
 		tr.addTreeType(new TreeConfig(WoodType.Kapok.getName(), getNaturalLog(WoodType.Kapok), getLeaves(WoodType.Kapok), Moisture.HIGH, Moisture.MAX, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Kapok
-		tr.addTreeType(new TreeConfig(WoodType.Acacia.getName(), getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.NONE, Moisture.VERYHIGH, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Acacia
+		tr.addTreeType(new TreeConfig(WoodType.Acacia.getName(), getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.MEDIUM, Moisture.VERYHIGH, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Acacia
 
-		tr.addTreeType(new TreeConfig("acacia_umbrella", getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.NONE, Moisture.LOW, ClimateTemp.TEMPERATE, ClimateTemp.TROPICAL, false)); //Acacia Umbrella
+		tr.addTreeType(new TreeConfig("acacia_umbrella", getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.LOW, Moisture.LOW, ClimateTemp.TEMPERATE, ClimateTemp.TROPICAL, false)); //Acacia Umbrella
 
 		for (String s : tr.getTreeNames())
 		{

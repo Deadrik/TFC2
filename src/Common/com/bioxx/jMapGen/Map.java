@@ -1723,13 +1723,16 @@ public class Map
 				cr.moisture = 0.0;
 			}
 		}
+		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
+		double moistureMult = 1 - (0.5 * this.islandParams.getIslandMoisture().getMoisture());
+
 		while (queue.size() > 0) 
 		{
 			Center q = queue.pop();
 
 			for(Center adjacent : q.neighbors)
 			{
-				double newMoisture = q.moisture * 0.75;
+				double newMoisture = q.moisture * moistureMult;
 				if (newMoisture > adjacent.moisture) 
 				{
 					adjacent.moisture = newMoisture;
