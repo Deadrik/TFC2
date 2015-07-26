@@ -30,7 +30,6 @@ import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.api.Types.Moisture;
 
 public class ChunkProviderSurface extends ChunkProviderGenerate 
 {
@@ -175,11 +174,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
 		IBlockState sand = TFCBlocks.Sand.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
 
-		if(islandMap.islandParams.getIslandMoisture() == Moisture.NONE)
+		/*if(islandMap.islandParams.getIslandMoisture() == Moisture.NONE)
 		{
 			grass = sand;
 			dirt = sand;
-		}
+		}*/
 		for(int x = 0; x < 16; x++)
 		{
 			for(int z = 0; z < 16; z++)
@@ -460,7 +459,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		//This loop moves in increments of X% and attempts to carve the river at each point
 		for(double m = 0; m < 1; m+= 0.03)
 		{
-			interval = spline.getPoint(m).floor().minus(new Point(worldX, worldZ));
+			interval = spline.getPoint(m).floor().minus(new Point(islandX, islandZ));
 
 			for(double x = -width; x <= width; x+=0.25)
 			{
