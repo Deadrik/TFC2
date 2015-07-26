@@ -29,4 +29,24 @@ public enum Moisture
 			return VERYHIGH;
 		else return MAX;
 	}
+
+	public boolean isLessThan(Moisture m)
+	{
+		return val < m.getMoisture();
+	}
+
+	public boolean isLessThanOrEqual(Moisture m)
+	{
+		return val <= m.getMoisture();
+	}
+
+	public boolean isGreaterThan(Moisture m)
+	{
+		return val > m.getMoisture();
+	}
+
+	public boolean isGreaterThanOrEqual(Moisture m)
+	{
+		return val >= m.getMoisture();
+	}
 }

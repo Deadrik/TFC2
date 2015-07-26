@@ -1743,7 +1743,7 @@ public class Map
 		// Salt water
 		for(Center cr : centers)
 		{
-			if (cr.hasMarker(Marker.Ocean) || cr.hasMarker(Marker.Coast)) 
+			if (cr.hasMarker(Marker.Ocean)) 
 			{
 				cr.moisture = 1.0;
 			}

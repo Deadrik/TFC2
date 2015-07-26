@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jMapGen.graph.Center.Marker;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.Blocks.BlockSapling;
 import com.bioxx.tfc2.CoreStuff.Schematic;
@@ -22,6 +23,7 @@ import com.bioxx.tfc2.World.WorldGen;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
 import com.bioxx.tfc2.api.Trees.TreeSchemManager;
+import com.bioxx.tfc2.api.Types.Moisture;
 
 public class WorldGenTreeTest implements IWorldGenerator
 {
@@ -44,35 +46,67 @@ public class WorldGenTreeTest implements IWorldGenerator
 			BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
 			Center c = m.getClosestCenter(new Point(chunkX+8, chunkZ+8));
 
-			gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getCommonTree(), (int)((random.nextInt(10)+5)*c.getMoisture().getMoisture()));
-			gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getUncommonTree(), (int)(3*c.getMoisture().getMoisture()));
-			if(random.nextBoolean())
-				gen(random, chunkX, chunkZ, world, chunkPos, m.islandParams.getRareTree(), (int)(1*c.getMoisture().getMoisture()));
+			if(c.hasMarker(Marker.Ocean))
+			{
+				return;
+			}
+
+			int baseTrees = (int)(8 * c.getMoisture().getMoisture());
+			int numTrees = random.nextInt(baseTrees+1)+1;
+			//numTrees = (int)(numTrees * c.getMoisture().getMoisture());
+
+			if(c.getMoisture() == Moisture.LOW)
+				numTrees = random.nextInt(2);
+
+
+			for(int l = 0; l < numTrees; l++)
+			{
+				double rarity = random.nextDouble();
+				if(rarity > 0.9)
+					gen(random, chunkX, chunkZ, world, chunkPos, m, m.islandParams.getRareTree());
+				else if(rarity > 0.6)
+					gen(random, chunkX, chunkZ, world, chunkPos, m, m.islandParams.getUncommonTree());
+				else
+					gen(random, chunkX, chunkZ, world, chunkPos, m, m.islandParams.getCommonTree());
+			}
 		}
 	}
 
-	private void gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, String wood, int numTrees) 
+	private void gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, Map m, String wood) 
 	{
-		BlockPos treePos;
-		boolean isAirAbove = false;
-		Schematic schem;
 		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(wood);
 		TreeConfig tc = TreeRegistry.instance.treeFromString(wood);
-		IBlockState groundState;
-		for(int l = 0; l < numTrees; l++)
-		{
-			int growthStage = random.nextInt(2);
-			schem = tsm.getRandomSchematic(random);
-			treePos = new BlockPos(chunkX + random.nextInt(16), world.getHorizon(chunkPos).getY(), chunkZ + random.nextInt(16));
-			groundState = world.getBlockState(treePos.offsetDown());
-			isAirAbove = world.isAirBlock(treePos);
 
-			if(canGrowHere(world, treePos.offsetDown(), 2)
-					&& isAirAbove
-					&& schem != null)
-			{
-				genTree(schem, tc, world, treePos);
-			}
+		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
+		treePos = treePos.add(0, world.getHorizon(treePos).getY(), 0);
+		Center c = m.getClosestCenter(new Point(treePos.getX(), treePos.getZ()));
+
+		if(c.hasMarker(Marker.Ocean))
+		{
+			return;
+		}
+
+		int growthStage = 0;
+		if(c.getMoisture().isGreaterThan(Moisture.MEDIUM))
+		{
+			growthStage = random.nextInt(3);
+		}
+		else if(c.getMoisture().isGreaterThan(Moisture.LOW))
+		{
+			growthStage = random.nextInt(2);
+		}
+
+		Schematic schem = tsm.getRandomSchematic(random, growthStage);
+
+
+		IBlockState groundState = world.getBlockState(treePos.offsetDown());
+		boolean isAirAbove = world.isAirBlock(treePos);
+
+		if(canGrowHere(world, treePos.offsetDown(), 1)
+				&& isAirAbove
+				&& schem != null)
+		{
+			genTree(schem, tc, world, treePos);
 		}
 	}
 
