@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import com.bioxx.tfc2.Handlers.Client.BackgroundMusicHandler;
 import com.bioxx.tfc2.Handlers.Client.ClientRenderHandler;
 import com.bioxx.tfc2.Handlers.Client.KeyBindingHandler;
 import com.bioxx.tfc2.api.Global;
@@ -78,6 +79,7 @@ public class ClientProxy extends CommonProxy
 		super.init(event);
 		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
 		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
+		MinecraftForge.EVENT_BUS.register(new BackgroundMusicHandler());
 		for(int l = 0; l < Global.STONE_ALL.length; l++)
 		{
 			String stone = Core.textConvert(Global.STONE_ALL[l]);

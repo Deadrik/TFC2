@@ -1,0 +1,31 @@
+package com.bioxx.tfc2.Handlers.Client;
+
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import com.bioxx.tfc2.Reference;
+
+public class BackgroundMusicHandler
+{
+	private ISound iSound;
+	
+	@SubscribeEvent
+	public void onBGMusic(PlaySoundEvent event)
+	{
+		if(event.sound != null && event.category != null && event.category.getCategoryName().equalsIgnoreCase("music"))
+		{
+			if(event.manager.isSoundPlaying(iSound))
+			{
+				event.result = null;
+			}
+			else
+			{
+				iSound = PositionedSoundRecord.create(new ResourceLocation(Reference.ModID + ":music.tfc"));
+				event.result = iSound;
+			}
+		}
+	}
+}
