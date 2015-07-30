@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.Blocks;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
@@ -24,7 +25,7 @@ import com.bioxx.tfc2.api.Types.WoodType;
 
 public class BlockLeaves extends BlockTerra
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class);
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 16));
 	private boolean isTransparent = true;
 
 	public BlockLeaves()
@@ -66,6 +67,14 @@ public class BlockLeaves extends BlockTerra
 		Map m = WorldGen.instance.getIslandMap(x, z);
 		double d0 = m.islandParams.getIslandTemp().getTemp();
 		double d1 = m.getSelectedHexagon(new Point(pos.getX(), pos.getZ())).moisture;
+
+		if(d1 < 0.25)
+		{
+			IBlockState state = worldIn.getBlockState(pos);
+			if(state.getValue(META_PROPERTY) == WoodType.Acacia)
+				d1 = 0.25;
+		}
+
 		return ColorizerGrass.getGrassColor(d0, d1);
 	}
 

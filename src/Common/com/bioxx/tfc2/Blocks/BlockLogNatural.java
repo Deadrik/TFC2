@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.Blocks;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
@@ -15,7 +16,7 @@ import com.bioxx.tfc2.api.Types.WoodType;
 
 public class BlockLogNatural extends BlockTerra
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class);
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 16));
 
 	public BlockLogNatural()
 	{

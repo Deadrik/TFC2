@@ -15,6 +15,7 @@ import com.bioxx.tfc2.Blocks.BlockLooseRocks;
 import com.bioxx.tfc2.Blocks.BlockPlanks;
 import com.bioxx.tfc2.Blocks.BlockSaltWater;
 import com.bioxx.tfc2.Blocks.BlockSapling;
+import com.bioxx.tfc2.Blocks.BlockSapling2;
 import com.bioxx.tfc2.Blocks.BlockVegetation;
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
@@ -42,6 +43,7 @@ public class TFCBlocks
 	public static Block FreshWater;
 	public static Block SaltWater;
 	public static Block Sapling;
+	public static Block Sapling2;
 	public static Block LogNatural;
 	public static Block LogVertical;
 	public static Block LogHorizontal;
@@ -68,6 +70,7 @@ public class TFCBlocks
 		FreshWater = new BlockFreshWater(TFCFluids.FRESHWATER, Material.water).setUnlocalizedName("freshwater");
 		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater");
 		Sapling = new BlockSapling().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling");
+		Sapling2 = new BlockSapling2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling2");
 		LogNatural = new BlockLogNatural().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural");
 		LogVertical = new BlockLogVertical().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical");
 		LogHorizontal = new BlockLogHorizontal().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal");
@@ -95,6 +98,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(FreshWater, "freshwater");
 		GameRegistry.registerBlock(SaltWater, "saltwater");
 		GameRegistry.registerBlock(Sapling, ItemWood.class, "sapling");
+		GameRegistry.registerBlock(Sapling2, ItemWood.class, "sapling2");
 		GameRegistry.registerBlock(LogNatural, ItemWood.class, "log_natural");
 		GameRegistry.registerBlock(LogVertical, ItemWood.class, "log_vertical");
 		GameRegistry.registerBlock(LogHorizontal, ItemWood.class, "log_horizontal");

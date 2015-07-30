@@ -1,5 +1,7 @@
 package com.bioxx.tfc2.Blocks;
 
+import java.util.Arrays;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -11,7 +13,7 @@ import com.bioxx.tfc2.api.Types.WoodType;
 
 public class BlockPlanks extends BlockTerra
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class);
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 16));
 
 	public BlockPlanks()
 	{

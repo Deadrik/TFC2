@@ -1,0 +1,13 @@
+{
+	"forge_marker" : 1,
+	"defaults": {
+		"model": "cross"
+	},
+    "variants": {
+    "type":{
+        	"rosewood":  { "textures": {"cross": "tfc2:blocks/wood/trees/Rosewood Sapling"} },
+        	"blackwood":  { "textures": {"cross": "tfc2:blocks/wood/trees/Blackwood Sapling"} },
+    	    "palm":  { "textures": {"cross": "tfc2:blocks/wood/trees/Palm Sapling"} }
+        }
+    }
+}

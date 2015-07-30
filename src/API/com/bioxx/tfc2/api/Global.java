@@ -70,7 +70,8 @@ public class Global
 		"ash","aspen","birch","chestnut",
 		"douglas_fir","hickory","maple","oak",
 		"pine","sequoia","spruce","sycamore",
-		"white_cedar","willow","kapok","acacia"
+		"white_cedar","willow","kapok","acacia",
+		"rosewood","blackwood","palm"
 	};
 
 	public static final String SKILL_GENERAL_SMITHING = "skill.gensmith";

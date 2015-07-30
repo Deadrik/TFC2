@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.Blocks;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -7,6 +8,7 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -24,10 +26,16 @@ import com.bioxx.tfc2.api.Types.WoodType;
 
 public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 {
-	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("type", WoodType.class);
+	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("type", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 16));
 	public BlockSapling()
 	{
 		super(Material.plants, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.tabBlock);
+	}
+
+	protected BlockSapling(PropertyHelper ph)
+	{
+		super(Material.plants, ph);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
 
