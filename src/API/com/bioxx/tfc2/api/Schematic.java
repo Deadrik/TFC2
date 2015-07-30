@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.CoreStuff;
+package com.bioxx.tfc2.api;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

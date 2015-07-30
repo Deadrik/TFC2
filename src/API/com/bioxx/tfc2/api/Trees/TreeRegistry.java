@@ -40,27 +40,27 @@ public class TreeRegistry
 	/**
 	 * @return Returns a random schematic for a specific tree type at any growth stage
 	 */
-	public TreeSchematic getRandomTreeSchematic(Random R, int treeID)
+	public TreeSchematic getRandomTreeSchematic(Random R, String treeID)
 	{
-		if(treeID > treeList.size() - 1) return null;
+		if(!treeList.containsKey(treeID)) return null;
 		return treeList.get(treeID).getRandomSchematic(R);
 	}
 
 	/**
 	 * @return Returns a random schematic for a specific tree type at a specific growth stage
 	 */
-	public TreeSchematic getRandomTreeSchematic(Random R, int treeID, int growthStage)
+	public TreeSchematic getRandomTreeSchematic(Random R, String treeID, int growthStage)
 	{
-		if(treeID > treeList.size() - 1) return null;
+		if(!treeList.containsKey(treeID)) return null;
 		return treeList.get(treeID).getRandomSchematic(R, growthStage);
 	}
 
 	/**
 	 * @return Returns a specific schematic
 	 */
-	public TreeSchematic getTreeSchematic(int treeID, int schemID, int growthStage)
+	public TreeSchematic getTreeSchematic(String treeID, int schemID, int growthStage)
 	{
-		if(treeID > treeList.size() - 1) return null;
+		if(!treeList.containsKey(treeID)) return null;
 		return treeList.get(treeID).getSchematic(schemID, growthStage);
 	}
 

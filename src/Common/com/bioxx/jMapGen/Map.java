@@ -151,7 +151,7 @@ public class Map
 			calculateDownslopesCenter();
 
 			// Create rivers.
-			createRivers(getCentersAbove(0.1));
+			createRivers(getCentersAbove(0.25));
 
 			assignSlopedNoise();
 
@@ -1087,8 +1087,7 @@ public class Map
 			}
 		}
 		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
-		double moistureMult = 1 - (0.5 * this.islandParams.getIslandMoisture().getMoisture());
-
+		double moistureMult = 1 - (0.6 * this.islandParams.getIslandMoisture().getMoisture());
 		while (queue.size() > 0) 
 		{
 			Center q = queue.pop();
@@ -1510,17 +1509,15 @@ public class Map
 		Center prev;
 
 		Vector<Center> possibleStarts = new Vector<Center>();
-		int starts = (int)(100 * this.islandParams.getIslandMoisture().getMoisture());
+		int starts = (int)Math.floor(100 * this.islandParams.getIslandMoisture().getMoisture());
 		if(this.islandParams.hasFeature(Feature.Gorges))
 		{
-			starts = (int)(15 * this.islandParams.getIslandMoisture().getMoisture());
+			starts = (int)Math.floor(15 * this.islandParams.getIslandMoisture().getMoisture());
 		}
 
 		for (int i = 0; i < starts; i++) 
 		{
 			c = land.get(mapRandom.nextInt(land.size()-1));
-			if(c.elevation < 0.2)
-				continue;
 
 			//We dont want rivers to start inside of valleys
 			if(c.hasMarker(Marker.Valley))

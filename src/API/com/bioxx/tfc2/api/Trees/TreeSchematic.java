@@ -1,6 +1,6 @@
 package com.bioxx.tfc2.api.Trees;
 
-import com.bioxx.tfc2.CoreStuff.Schematic;
+import com.bioxx.tfc2.api.Schematic;
 
 public class TreeSchematic extends Schematic
 {

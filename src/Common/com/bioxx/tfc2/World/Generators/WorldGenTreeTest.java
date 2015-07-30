@@ -17,9 +17,9 @@ import com.bioxx.jMapGen.graph.Center;
 import com.bioxx.jMapGen.graph.Center.Marker;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.Blocks.BlockSapling;
-import com.bioxx.tfc2.CoreStuff.Schematic;
 import com.bioxx.tfc2.World.ChunkManager;
 import com.bioxx.tfc2.World.WorldGen;
+import com.bioxx.tfc2.api.Schematic;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
 import com.bioxx.tfc2.api.Trees.TreeSchemManager;
@@ -51,12 +51,15 @@ public class WorldGenTreeTest implements IWorldGenerator
 				return;
 			}
 
-			int baseTrees = (int)(8 * c.getMoisture().getMoisture());
+			//The theoretical max number of trees per chunk is 8.
+			//We mult this by whichever is lower, the hex moisture or the island moisture.
+			//This way base dry islands still feature less trees overall.
+			int baseTrees = (int)(8 * Math.min(c.getMoisture().getMoisture(), m.islandParams.getIslandMoisture().getMoisture()));
 			int numTrees = random.nextInt(baseTrees+1)+1;
 			//numTrees = (int)(numTrees * c.getMoisture().getMoisture());
 
 			if(c.getMoisture() == Moisture.LOW)
-				numTrees = random.nextInt(2);
+				numTrees = random.nextDouble() < 0.25 ? 1 : 0;
 
 
 			for(int l = 0; l < numTrees; l++)
@@ -100,11 +103,8 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 
 		IBlockState groundState = world.getBlockState(treePos.offsetDown());
-		boolean isAirAbove = world.isAirBlock(treePos);
 
-		if(canGrowHere(world, treePos.offsetDown(), 1)
-				&& isAirAbove
-				&& schem != null)
+		if( schem != null && canGrowHere(world, treePos.offsetDown(), schem))
 		{
 			genTree(schem, tc, world, treePos);
 		}
@@ -181,21 +181,21 @@ public class WorldGenTreeTest implements IWorldGenerator
 		}
 	}
 
-	private boolean canGrowHere(World world, BlockPos pos, int rad)
+	private boolean canGrowHere(World world, BlockPos pos, Schematic schem)
 	{
-		boolean ret = true;
 		Block ground;
-		Block above;
+		IBlockState above;
 		BlockPos gPos = pos;
 		BlockPos aPos = pos.offsetUp();
+		int count = 0;
 
-		for(int i = -rad; i <= rad; i++)
+		for(int i = -1; i <= 1; i++)
 		{
-			for(int k = -rad; k <= rad; k++)
+			for(int k = -1; k <= 1; k++)
 			{
 				ground = world.getBlockState(gPos.add(i, 0, k)).getBlock();
-				above = world.getBlockState(aPos.add(i, 0, k)).getBlock();
-				if(above == TFCBlocks.LogNatural)
+				above = world.getBlockState(aPos.add(i, 0, k));
+				if(above.getBlock() == TFCBlocks.LogNatural)
 				{
 					return false;
 				}
@@ -204,6 +204,25 @@ public class WorldGenTreeTest implements IWorldGenerator
 					return false;
 				}
 			}
+		}
+
+		//Scan to the tree height to make sure there is enough room for the tree
+		for(int i = 0; i <= schem.getSizeY(); i++)
+		{
+			aPos = aPos.add(0, i, 0);
+			above = world.getBlockState(aPos);
+			if(!above.getBlock().isReplaceable(world, aPos))
+			{
+				return false;
+			}
+			if(above.getBlock().isLeaves(world, aPos))
+			{
+				count++;
+			}
+			//If we run into too many leaves, then don't place the tree here. This is not perfect as it
+			//can not account for wide trees, but at least trees with a small radius will not stack.
+			if(count > 2)
+				return false;
 		}
 
 		return true;

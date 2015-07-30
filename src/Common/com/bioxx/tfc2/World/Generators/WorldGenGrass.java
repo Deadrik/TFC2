@@ -35,7 +35,7 @@ public class WorldGenGrass implements IWorldGenerator
 				{
 					continue;
 				}
-				if(world.getBlockState(bp.offsetDown()).getBlock() == TFCBlocks.Stone || (random.nextInt(5) == 0 && world.getBlockState(bp.offsetDown()).getBlock() == TFCBlocks.Grass))
+				if((world.getBlockState(bp.offsetDown()).getBlock() == TFCBlocks.Stone && random.nextInt(3) == 0) || (world.getBlockState(bp.offsetDown()).getBlock() == TFCBlocks.Grass && random.nextInt(5) == 0))
 				{
 					Core.setBlock(world, TFCBlocks.Vegetation, bp);
 				}
