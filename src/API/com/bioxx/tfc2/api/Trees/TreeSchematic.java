@@ -1,14 +1,17 @@
 package com.bioxx.tfc2.api.Trees;
 
 import com.bioxx.tfc2.api.Schematic;
+import com.bioxx.tfc2.api.Types.WoodType;
 
 public class TreeSchematic extends Schematic
 {
 	private int size;
+	private WoodType type;
 
-	public TreeSchematic(String p, String f)
+	public TreeSchematic(String p, String f, WoodType w)
 	{
 		super(p, f);
+		type = w;
 	}
 
 	@Override
@@ -32,5 +35,10 @@ public class TreeSchematic extends Schematic
 	public int getGrowthStage()
 	{
 		return size;
+	}
+
+	public WoodType getWoodType()
+	{
+		return type;
 	}
 }

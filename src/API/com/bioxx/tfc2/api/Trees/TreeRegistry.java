@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Types.Moisture;
+import com.bioxx.tfc2.api.Types.WoodType;
 
 public class TreeRegistry
 {
@@ -103,6 +104,9 @@ public class TreeRegistry
 		while(iter.hasNext())
 		{
 			String tree = (String) iter.next();
+			//Palm trees are a special case and will always exist on subtropical and tropical islands.
+			if(tree.equals(WoodType.Palm))
+				continue;
 			TreeConfig tc = treeFromString(tree);
 			if(tc.minTemp.getTemp() <= temp.getTemp() && tc.maxTemp.getTemp() >= temp.getTemp() && 
 					tc.minMoisture.getMoisture() <= moisture.getMoisture() && tc.maxMoisture.getMoisture() >= moisture.getMoisture())

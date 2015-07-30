@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.Blocks;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
@@ -17,10 +18,8 @@ import com.bioxx.tfc2.api.Types.WoodType;
 
 public class BlockLogHorizontal extends BlockTerra
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, 
-			WoodType.Ash, WoodType.Aspen, WoodType.Birch, WoodType.Chestnut, WoodType.DouglasFir, WoodType.Hickory, WoodType.Maple, WoodType.Oak);
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 8));
 	public static PropertyInteger ROT_PROPERTY =  PropertyInteger.create("rotation", 0, 1);
-	private int offset = 0;
 
 	public BlockLogHorizontal()
 	{
@@ -43,13 +42,13 @@ public class BlockLogHorizontal extends BlockTerra
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta((meta & 7) << offset)).withProperty(ROT_PROPERTY, (meta & 8) >> 3);
+		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta((meta & 7))).withProperty(ROT_PROPERTY, (meta & 8) >> 3);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		int wood = ((((WoodType)state.getValue(META_PROPERTY)).getMeta() >> offset) & 7);
+		int wood = (((WoodType)state.getValue(META_PROPERTY)).getMeta() & 7);
 		int rot = (((Integer)state.getValue(ROT_PROPERTY)) << 3);
 		return wood + rot;
 	}

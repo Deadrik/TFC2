@@ -153,6 +153,8 @@ public class BlockGrass extends BlockTerra
 
 		if(plantable == TFCBlocks.Sapling)
 			return true;
+		if(plantable == TFCBlocks.Sapling2)
+			return true;
 
 		return false;
 	}

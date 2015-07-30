@@ -7,12 +7,17 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.bioxx.tfc2.Blocks.BlockEffect;
 import com.bioxx.tfc2.Blocks.BlockFreshWater;
 import com.bioxx.tfc2.Blocks.BlockLeaves;
+import com.bioxx.tfc2.Blocks.BlockLeaves2;
 import com.bioxx.tfc2.Blocks.BlockLogHorizontal;
 import com.bioxx.tfc2.Blocks.BlockLogHorizontal2;
+import com.bioxx.tfc2.Blocks.BlockLogHorizontal3;
 import com.bioxx.tfc2.Blocks.BlockLogNatural;
+import com.bioxx.tfc2.Blocks.BlockLogNatural2;
 import com.bioxx.tfc2.Blocks.BlockLogVertical;
+import com.bioxx.tfc2.Blocks.BlockLogVertical2;
 import com.bioxx.tfc2.Blocks.BlockLooseRocks;
 import com.bioxx.tfc2.Blocks.BlockPlanks;
+import com.bioxx.tfc2.Blocks.BlockPlanks2;
 import com.bioxx.tfc2.Blocks.BlockSaltWater;
 import com.bioxx.tfc2.Blocks.BlockSapling;
 import com.bioxx.tfc2.Blocks.BlockSapling2;
@@ -37,6 +42,7 @@ public class TFCBlocks
 	public static Block Sand;
 	public static Block Gravel;
 	public static Block Planks;
+	public static Block Planks2;
 	public static Block Effect;
 	public static Block Vegetation;
 	public static Block LooseRocks;
@@ -45,10 +51,14 @@ public class TFCBlocks
 	public static Block Sapling;
 	public static Block Sapling2;
 	public static Block LogNatural;
+	public static Block LogNatural2;
 	public static Block LogVertical;
+	public static Block LogVertical2;
 	public static Block LogHorizontal;
 	public static Block LogHorizontal2;
+	public static Block LogHorizontal3;
 	public static Block Leaves;
+	public static Block Leaves2;
 	public static Block Ore;
 
 	public static void LoadBlocks()
@@ -64,6 +74,7 @@ public class TFCBlocks
 		Sand = new BlockSand().setHardness(1F).setStepSound(Block.soundTypeSand).setUnlocalizedName("sand");
 		Gravel = new BlockGravel().setHardness(1F).setStepSound(Block.soundTypeGravel).setUnlocalizedName("gravel");
 		Planks = new BlockPlanks().setHardness(4F).setStepSound(Block.soundTypeWood).setUnlocalizedName("planks");
+		Planks2 = new BlockPlanks2().setHardness(4F).setStepSound(Block.soundTypeWood).setUnlocalizedName("planks2");
 		Effect = new BlockEffect().setHardness(0.1F).setStepSound(Block.soundTypeWood).setUnlocalizedName("effect");
 		Vegetation = new BlockVegetation().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("vegetation");
 		LooseRocks = new BlockLooseRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("loose_rock");
@@ -72,10 +83,14 @@ public class TFCBlocks
 		Sapling = new BlockSapling().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling");
 		Sapling2 = new BlockSapling2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling2");
 		LogNatural = new BlockLogNatural().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural");
+		LogNatural2 = new BlockLogNatural2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural2");
 		LogVertical = new BlockLogVertical().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical");
+		LogVertical2 = new BlockLogVertical2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical2");
 		LogHorizontal = new BlockLogHorizontal().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal");
 		LogHorizontal2 = new BlockLogHorizontal2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal2");
+		LogHorizontal3 = new BlockLogHorizontal3().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal3");
 		Leaves = new BlockLeaves().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves");
+		Leaves2 = new BlockLeaves2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves2");
 	}
 
 	public static void RegisterBlocks()
@@ -92,6 +107,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Sand, ItemStone.class, "sand");
 		GameRegistry.registerBlock(Gravel, ItemStone.class, "gravel");
 		GameRegistry.registerBlock(Planks, ItemWood.class, "planks");
+		GameRegistry.registerBlock(Planks2, ItemWood.class, "planks2");
 		GameRegistry.registerBlock(Effect, "effect");
 		GameRegistry.registerBlock(Vegetation, "vegetation");
 		GameRegistry.registerBlock(LooseRocks, "loose_rock");
@@ -100,14 +116,21 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Sapling, ItemWood.class, "sapling");
 		GameRegistry.registerBlock(Sapling2, ItemWood.class, "sapling2");
 		GameRegistry.registerBlock(LogNatural, ItemWood.class, "log_natural");
+		GameRegistry.registerBlock(LogNatural2, ItemWood.class, "log_natural2");
 		GameRegistry.registerBlock(LogVertical, ItemWood.class, "log_vertical");
+		GameRegistry.registerBlock(LogVertical2, ItemWood.class, "log_vertical2");
 		GameRegistry.registerBlock(LogHorizontal, ItemWood.class, "log_horizontal");
 		GameRegistry.registerBlock(LogHorizontal2, ItemWood.class, "log_horizontal2");
+		GameRegistry.registerBlock(LogHorizontal3, ItemWood.class, "log_horizontal3");
 		GameRegistry.registerBlock(Leaves, ItemWood.class, "leaves");
+		GameRegistry.registerBlock(Leaves2, ItemWood.class, "leaves2");
 
 		LogNatural.setHarvestLevel("axe", 1);
+		LogNatural2.setHarvestLevel("axe", 1);
 		LogVertical.setHarvestLevel("axe", 1);
+		LogVertical2.setHarvestLevel("axe", 1);
 		LogHorizontal.setHarvestLevel("axe", 1);
 		LogHorizontal2.setHarvestLevel("axe", 1);
+		LogHorizontal3.setHarvestLevel("axe", 1);
 	}
 }

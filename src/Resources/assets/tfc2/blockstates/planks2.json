@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "wood=rosewood":  { "model": "tfc2:wood/planks/Rosewood" },
+        "wood=blackwood":  { "model": "tfc2:wood/planks/Blackwood" },
+        "wood=palm":  { "model": "tfc2:wood/planks/Palm" }
+    }
+}

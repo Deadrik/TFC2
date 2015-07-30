@@ -1,6 +1,7 @@
 package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -54,5 +55,34 @@ public class Core
 	public static ResourceLocation CreateRes(String s)
 	{
 		return new ResourceLocation(s);
+	}
+
+	public static boolean isGrass(IBlockState state)
+	{
+		if(state.getBlock() == TFCBlocks.Grass)
+			return true;
+
+		return false;
+	}
+
+	public static boolean isDirt(IBlockState state)
+	{
+		if(state.getBlock() == TFCBlocks.Dirt)
+			return true;
+
+		return false;
+	}
+
+	public static boolean isSoil(IBlockState state)
+	{
+		return isGrass(state) || isDirt(state);
+	}
+
+	public static boolean isSand(IBlockState state)
+	{
+		if(state.getBlock() == TFCBlocks.Sand)
+			return true;
+
+		return false;
 	}
 }

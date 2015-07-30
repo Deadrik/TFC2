@@ -18,7 +18,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bioxx.tfc2.Blocks.BlockLeaves;
+import com.bioxx.tfc2.Blocks.BlockLeaves2;
 import com.bioxx.tfc2.Blocks.BlockLogNatural;
+import com.bioxx.tfc2.Blocks.BlockLogNatural2;
 import com.bioxx.tfc2.Commands.PrintImageMapCommand;
 import com.bioxx.tfc2.Networking.PacketPipeline;
 import com.bioxx.tfc2.api.TFCOptions;
@@ -135,9 +137,11 @@ public class TFC
 		tr.addTreeType(new TreeConfig(WoodType.WhiteCedar.getName(), getNaturalLog(WoodType.WhiteCedar), getLeaves(WoodType.WhiteCedar), Moisture.LOW, Moisture.MAX, ClimateTemp.POLAR, ClimateTemp.SUBTROPICAL, true)); //White Cedar
 		tr.addTreeType(new TreeConfig(WoodType.Willow.getName(), getNaturalLog(WoodType.Willow), getLeaves(WoodType.Willow), Moisture.HIGH, Moisture.MAX, ClimateTemp.TEMPERATE, ClimateTemp.SUBTROPICAL, false)); //Willow
 		tr.addTreeType(new TreeConfig(WoodType.Kapok.getName(), getNaturalLog(WoodType.Kapok), getLeaves(WoodType.Kapok), Moisture.HIGH, Moisture.MAX, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Kapok
-		tr.addTreeType(new TreeConfig(WoodType.Acacia.getName(), getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.MEDIUM, Moisture.VERYHIGH, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Acacia
+		tr.addTreeType(new TreeConfig(WoodType.Acacia.getName(), getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.LOW, Moisture.LOW, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Acacia Umbrella
 
-		tr.addTreeType(new TreeConfig("acacia_umbrella", getNaturalLog(WoodType.Acacia), getLeaves(WoodType.Acacia), Moisture.LOW, Moisture.LOW, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Acacia Umbrella
+		tr.addTreeType(new TreeConfig(WoodType.Rosewood.getName(), getNaturalLog(WoodType.Rosewood), getLeaves(WoodType.Rosewood), Moisture.MEDIUM, Moisture.MAX, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Rosewood
+		tr.addTreeType(new TreeConfig(WoodType.Blackwood.getName(), getNaturalLog(WoodType.Blackwood), getLeaves(WoodType.Blackwood), Moisture.LOW, Moisture.VERYHIGH, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Blackwood
+		tr.addTreeType(new TreeConfig(WoodType.Palm.getName(), getNaturalLog(WoodType.Palm), getLeaves(WoodType.Palm), Moisture.LOW, Moisture.MAX, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, false)); //Palm
 
 		for (String s : tr.getTreeNames())
 		{
@@ -149,7 +153,7 @@ public class TFC
 				{
 					String p = treePath + tName + "/"+size+"_"+String.format("%02d", j)+".schematic";
 
-					TreeSchematic schem = new TreeSchematic(p, size+"_"+String.format("%02d", j));
+					TreeSchematic schem = new TreeSchematic(p, size+"_"+String.format("%02d", j), WoodType.getTypeFromString(s));
 					if(schem.Load())
 						TreeRegistry.instance.RegisterSchematic(schem, s);
 					else
@@ -161,11 +165,15 @@ public class TFC
 
 	private IBlockState getNaturalLog(WoodType w)
 	{
+		if(w.getMeta() >= 16)
+			return TFCBlocks.LogNatural2.getDefaultState().withProperty(BlockLogNatural2.META_PROPERTY, w);
 		return TFCBlocks.LogNatural.getDefaultState().withProperty(BlockLogNatural.META_PROPERTY, w);
 	}
 
 	private IBlockState getLeaves(WoodType w)
 	{
+		if(w.getMeta() >= 16)
+			return TFCBlocks.Leaves2.getDefaultState().withProperty(BlockLeaves2.META_PROPERTY, w);
 		return TFCBlocks.Leaves.getDefaultState().withProperty(BlockLeaves.META_PROPERTY, w);
 	}
 

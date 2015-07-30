@@ -15,12 +15,12 @@ import net.minecraft.item.Item;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.Types.WoodType;
 
-public class BlockLogHorizontal2 extends BlockLogHorizontal
+public class BlockLogHorizontal3 extends BlockLogHorizontal
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 8, 16));
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 19));
 	public static PropertyInteger ROT_PROPERTY =  PropertyInteger.create("rotation", 0, 1);
 
-	public BlockLogHorizontal2()
+	public BlockLogHorizontal3()
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
@@ -36,7 +36,7 @@ public class BlockLogHorizontal2 extends BlockLogHorizontal
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta((meta & 7) + 8)).withProperty(ROT_PROPERTY, (meta & 8) >> 3);
+		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta((meta & 7) + 16)).withProperty(ROT_PROPERTY, (meta & 8) >> 3);
 	}
 
 	@Override

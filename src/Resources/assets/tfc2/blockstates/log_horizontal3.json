@@ -1,0 +1,18 @@
+{
+	"forge_marker" : 1,
+	"defaults": {
+		"model": "cube_column",
+		"x": 90
+	},
+    "variants": {
+    	"wood":{
+        	"rosewood":  { "textures": {"side": "tfc2:blocks/wood/trees/Rosewood Log", "end": "tfc2:blocks/wood/trees/Rosewood Log Top"} },
+   	     	"blackwood":  { "textures": {"side": "tfc2:blocks/wood/trees/Blackwood Log", "end": "tfc2:blocks/wood/trees/Blackwood Log Top"} },
+    	    "palm":  { "textures": {"side": "tfc2:blocks/wood/trees/Palm Log", "end": "tfc2:blocks/wood/trees/Palm Log Top"} }
+        },
+    	"rotation": {
+    		"0":{"x": 90, "y": 90},
+    		"1":{}
+    	}
+    }
+}

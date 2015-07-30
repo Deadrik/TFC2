@@ -15,15 +15,17 @@ import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.graph.Center;
 import com.bioxx.jMapGen.graph.Center.Marker;
-import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.Blocks.BlockSapling;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.World.ChunkManager;
 import com.bioxx.tfc2.World.WorldGen;
 import com.bioxx.tfc2.api.Schematic;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
 import com.bioxx.tfc2.api.Trees.TreeSchemManager;
+import com.bioxx.tfc2.api.Trees.TreeSchematic;
+import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Types.Moisture;
+import com.bioxx.tfc2.api.Types.WoodType;
 
 public class WorldGenTreeTest implements IWorldGenerator
 {
@@ -39,7 +41,6 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		if(world.getWorldChunkManager() instanceof ChunkManager)
 		{
-
 			int xM = (chunkX >> 12);
 			int zM = (chunkZ >> 12);
 			Map m = WorldGen.instance.getIslandMap(xM, zM);
@@ -61,6 +62,17 @@ public class WorldGenTreeTest implements IWorldGenerator
 			if(c.getMoisture() == Moisture.LOW)
 				numTrees = random.nextDouble() < 0.25 ? 1 : 0;
 
+			/**
+			 * Do palm tree gen on valid islands
+			 */
+			if(c.getElevation() < 0.2 && c.getMoisture().getMoisture() >= Moisture.HIGH.getMoisture() && 
+					m.islandParams.getIslandTemp().getTemp() >= ClimateTemp.SUBTROPICAL.getTemp())
+			{
+				for(int l = 0; l < 3; l++)
+				{
+					genPalm(random, chunkX, chunkZ, world, chunkPos, m);
+				}
+			}
 
 			for(int l = 0; l < numTrees; l++)
 			{
@@ -79,6 +91,9 @@ public class WorldGenTreeTest implements IWorldGenerator
 	{
 		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(wood);
 		TreeConfig tc = TreeRegistry.instance.treeFromString(wood);
+
+		if(tsm == null || tc == null)
+			return;
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
 		treePos = treePos.add(0, world.getHorizon(treePos).getY(), 0);
@@ -99,10 +114,31 @@ public class WorldGenTreeTest implements IWorldGenerator
 			growthStage = random.nextInt(2);
 		}
 
-		Schematic schem = tsm.getRandomSchematic(random, growthStage);
+		TreeSchematic schem = tsm.getRandomSchematic(random, growthStage);
 
+		if( schem != null && canGrowHere(world, treePos.offsetDown(), schem))
+		{
+			genTree(schem, tc, world, treePos);
+		}
+	}
 
-		IBlockState groundState = world.getBlockState(treePos.offsetDown());
+	private void genPalm(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, Map m) 
+	{
+		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(WoodType.Palm.getName());
+		TreeConfig tc = TreeRegistry.instance.treeFromString(WoodType.Palm.getName());
+
+		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
+		treePos = treePos.add(0, world.getHorizon(treePos).getY(), 0);
+		Center c = m.getClosestCenter(new Point(treePos.getX(), treePos.getZ()));
+
+		if(c.hasMarker(Marker.Ocean))
+		{
+			return;
+		}
+
+		int growthStage = random.nextInt(3);
+
+		TreeSchematic schem = tsm.getRandomSchematic(random, growthStage);
 
 		if( schem != null && canGrowHere(world, treePos.offsetDown(), schem))
 		{
@@ -119,6 +155,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		int rot = world.rand.nextInt(4);
 		int index;
 		int id;
+		int meta;
 
 		int baseX = pos.getX() - 1;
 		int baseY = pos.getY();
@@ -132,8 +169,9 @@ public class WorldGenTreeTest implements IWorldGenerator
 				{
 					index = x + schem.getSizeX() * (z + schem.getSizeZ() * y);
 					id = schem.getBlockArray()[index];
+					meta = schem.getDataArray()[index];
 					if(id != Block.getIdFromBlock(Blocks.air))
-						Process(world, baseX, baseY, baseZ, tc, schem, x + 1, y, z + 1, rot, Block.getBlockById(id));
+						Process(world, baseX, baseY, baseZ, tc, schem, x + 1, y, z + 1, rot, Block.getBlockById(id), meta);
 				}
 			}
 		}
@@ -142,7 +180,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 	}
 
 	private void Process(World world, int treeX, int treeY, int treeZ, TreeConfig tc,
-			Schematic schem, int schemX, int schemY, int schemZ, int rot, Block b)
+			Schematic schem, int schemX, int schemY, int schemZ, int rot, Block b, int meta)
 	{
 		int localX = treeX + schem.getCenterX() - schemX;
 		int localZ = treeZ + schem.getCenterZ() - schemZ;
@@ -172,18 +210,22 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			world.setBlockState(blockPos, block, 2);
 		}
-		else
+		else if(b.getMaterial() == Material.leaves)
 		{
 			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
 			{
 				world.setBlockState(blockPos, leaves, 2);
 			}
 		}
+		else
+		{
+			world.setBlockState(blockPos, b.getStateFromMeta(meta));
+		}
 	}
 
-	private boolean canGrowHere(World world, BlockPos pos, Schematic schem)
+	private boolean canGrowHere(World world, BlockPos pos, TreeSchematic schem)
 	{
-		Block ground;
+		IBlockState ground;
 		IBlockState above;
 		BlockPos gPos = pos;
 		BlockPos aPos = pos.offsetUp();
@@ -193,13 +235,13 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			for(int k = -1; k <= 1; k++)
 			{
-				ground = world.getBlockState(gPos.add(i, 0, k)).getBlock();
-				above = world.getBlockState(aPos.add(i, 0, k));
-				if(above.getBlock() == TFCBlocks.LogNatural)
+				ground = world.getBlockState(gPos.add(i, 0, k));
+
+				if(schem.getWoodType() != WoodType.Palm && !Core.isSoil(ground))
 				{
 					return false;
 				}
-				if(!isBlockValid(world, gPos, ground))
+				else if(schem.getWoodType() == WoodType.Palm && !Core.isSoil(ground) && !Core.isSand(ground))
 				{
 					return false;
 				}
@@ -226,10 +268,5 @@ public class WorldGenTreeTest implements IWorldGenerator
 		}
 
 		return true;
-	}
-
-	private boolean isBlockValid(World world, BlockPos pos, Block block)
-	{
-		return block.canSustainPlant(world, pos, net.minecraft.util.EnumFacing.UP, (BlockSapling)TFCBlocks.Sapling);
 	}
 }

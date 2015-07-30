@@ -18,14 +18,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.tfc2.World.WorldGen;
+import com.bioxx.tfc2.api.Interfaces.INeedOffset;
 import com.bioxx.tfc2.api.Types.WoodType;
 
-public class BlockLeaves extends BlockTerra
+public class BlockLeaves2 extends BlockTerra implements INeedOffset
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 16));
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 19));
 	private boolean isTransparent = true;
 
-	public BlockLeaves()
+	public BlockLeaves2()
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
@@ -114,5 +115,14 @@ public class BlockLeaves extends BlockTerra
 	public int damageDropped(IBlockState state)
 	{
 		return ((WoodType)state.getValue(META_PROPERTY)).getMeta();
+	}
+
+	@Override
+	public int convertMeta(int meta) 
+	{
+		if(meta < 16)
+			return meta + 16;
+		else
+			return meta;
 	}
 }
