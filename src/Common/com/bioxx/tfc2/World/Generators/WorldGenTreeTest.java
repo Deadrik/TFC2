@@ -2,10 +2,8 @@ package com.bioxx.tfc2.World.Generators;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -19,6 +17,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.World.ChunkManager;
 import com.bioxx.tfc2.World.WorldGen;
 import com.bioxx.tfc2.api.Schematic;
+import com.bioxx.tfc2.api.Schematic.SchemBlock;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
 import com.bioxx.tfc2.api.Trees.TreeSchemManager;
@@ -164,7 +163,12 @@ public class WorldGenTreeTest implements IWorldGenerator
 		int baseY = pos.getY();
 		int baseZ = pos.getZ() - 1;
 
-		for(int y = 0; y < schem.getSizeY(); y++)
+		for(SchemBlock b : schem.getBlockMap())
+		{
+			Process(world, baseX, baseY, baseZ, tc, schem, b.pos, rot, b.state);
+		}
+
+		/*for(int y = 0; y < schem.getSizeY(); y++)
 		{
 			for(int z = 0; z < schem.getSizeZ(); z++)
 			{
@@ -177,15 +181,15 @@ public class WorldGenTreeTest implements IWorldGenerator
 						Process(world, baseX, baseY, baseZ, tc, schem, x + 1, y, z + 1, rot, Block.getBlockById(id), meta);
 				}
 			}
-		}
+		}*/
 
 		return true;
 	}
 
 	private void Process(World world, int treeX, int treeY, int treeZ, TreeConfig tc,
-			Schematic schem, int schemX, int schemY, int schemZ, int rot, Block b, int meta)
+			Schematic schem, BlockPos localPos, int rot, IBlockState state)
 	{
-		int localX = treeX + schem.getCenterX() - schemX;
+		/*int localX = treeX + schem.getCenterX() - schemX;
 		int localZ = treeZ + schem.getCenterZ() - schemZ;
 		int localY = treeY + schemY;
 
@@ -203,17 +207,37 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			localX = treeX + schem.getCenterX() - schemX;
 			localZ = treeZ - schem.getCenterZ() + schemZ;
+		}*/
+
+		int localX = treeX + localPos.getX() * -1;
+		int localZ = treeZ + localPos.getZ() * -1;
+		int localY = treeY + localPos.getY();
+
+		if(rot == 0)
+		{
+			localX = treeX + localPos.getX();
+			localZ = treeZ + localPos.getZ();
+		}
+		else if(rot == 1)
+		{
+			localX = treeX + localPos.getX();
+			localZ = treeZ + localPos.getZ() * -1;
+		}
+		else if(rot == 2)
+		{
+			localX = treeX  + localPos.getX() * -1;
+			localZ = treeZ + localPos.getZ();
 		}
 
 		IBlockState block = tc.wood;
 		BlockPos blockPos = new BlockPos(localX, localY, localZ);
 		IBlockState leaves = tc.leaves;
 
-		if(b.getMaterial() == Material.wood)
+		if(state.getBlock().getMaterial() == Material.wood)
 		{
 			world.setBlockState(blockPos, block, 2);
 		}
-		else if(b.getMaterial() == Material.leaves)
+		else if(state.getBlock().getMaterial() == Material.leaves)
 		{
 			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
 			{
@@ -222,7 +246,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		}
 		else
 		{
-			world.setBlockState(blockPos, b.getStateFromMeta(meta));
+			world.setBlockState(blockPos, state);
 		}
 	}
 

@@ -3,10 +3,15 @@ package com.bioxx.tfc2.api;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 
 import com.bioxx.tfc2.api.Interfaces.ISchematic;
 
@@ -17,13 +22,12 @@ public class Schematic implements ISchematic
 	protected int centerX;
 	protected int length;
 	protected int centerZ;
-	protected int[] blockArray;
-	protected byte[] dataArray;
 	protected NBTTagList te;
 	protected NBTTagList entities;
 	protected String path;
 	protected String filename;
 	protected int id;
+	protected ArrayList<SchemBlock> blockMap;
 
 	public Schematic(String p, String f)
 	{
@@ -35,6 +39,7 @@ public class Schematic implements ISchematic
 	public boolean Load()
 	{
 		NBTTagCompound tree;
+		blockMap = new ArrayList<SchemBlock>();
 		try
 		{
 			InputStream fis = getClass().getResourceAsStream(path);
@@ -46,6 +51,8 @@ public class Schematic implements ISchematic
 			centerX = getCenter(width);
 			length = tree.getShort("Length");
 			centerZ = getCenter(length);
+			int[] blockArray = null;
+			byte[] dataArray = null;
 
 			if(tree.hasKey("Blocks"))
 			{
@@ -64,6 +71,20 @@ public class Schematic implements ISchematic
 
 			dataArray = tree.getByteArray("Data");
 			te = tree.getTagList("TileEntities", 10);
+
+			for(int y = 0; y < getSizeY(); y++)
+			{
+				for(int z = 0; z < getSizeZ(); z++)
+				{
+					for(int x = 0; x < getSizeX(); x++)
+					{
+						int index = x + getSizeX() * (z + getSizeZ() * y);
+						//TODO: Add support for Tile Entity loading
+						this.blockMap.add(new SchemBlock(blockArray[index], dataArray[index], new BlockPos(x-centerX, y, z-centerZ)));
+					}
+				}
+			}
+
 			int num = path.indexOf('_') + 1;
 			id = Integer.parseInt(path.substring(num, num + 2));
 		}
@@ -109,18 +130,6 @@ public class Schematic implements ISchematic
 	}
 
 	@Override
-	public int[] getBlockArray()
-	{
-		return blockArray;
-	}
-
-	@Override
-	public byte[] getDataArray()
-	{
-		return dataArray;
-	}
-
-	@Override
 	public NBTTagList getTileEntities()
 	{
 		return te;
@@ -157,18 +166,6 @@ public class Schematic implements ISchematic
 	}
 
 	@Override
-	public void setBlockArray(int[] array)
-	{
-		blockArray = array;
-	}
-
-	@Override
-	public void setDataArray(byte[] array)
-	{
-		dataArray = array;
-	}
-
-	@Override
 	public void setTileEntities(NBTTagList tag)
 	{
 		te = tag;
@@ -198,6 +195,10 @@ public class Schematic implements ISchematic
 		return centerZ;
 	}
 
+	@Override
+	public ArrayList<SchemBlock> getBlockMap() {
+		return blockMap;
+	}
 
 	//*****************
 	// Private methods
@@ -208,6 +209,29 @@ public class Schematic implements ISchematic
 			return (v + 1) / 2;
 		return v / 2;
 	}
+
+
+	public class SchemBlock
+	{
+		public IBlockState state;
+		public BlockPos pos;
+		public TileEntity tileEntity;
+
+		public SchemBlock(int id, int meta, BlockPos p)
+		{
+			state = Block.getBlockById(id).getStateFromMeta(meta);
+			pos = p;
+			te = null;
+		}
+
+		public SchemBlock(int id, int meta, BlockPos p, TileEntity te)
+		{
+			state = Block.getBlockById(id).getStateFromMeta(meta);
+			pos = p;
+			tileEntity = te;
+		}
+	}
+
 
 
 }

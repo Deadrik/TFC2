@@ -1,5 +1,9 @@
 package com.bioxx.tfc2.api.Trees;
 
+import java.util.ArrayList;
+
+import net.minecraft.init.Blocks;
+
 import com.bioxx.tfc2.api.Schematic;
 import com.bioxx.tfc2.api.Types.WoodType;
 
@@ -19,6 +23,14 @@ public class TreeSchematic extends Schematic
 	{
 		if(super.Load())
 		{
+			ArrayList<SchemBlock> map = new ArrayList<SchemBlock>();
+			for(SchemBlock b : blockMap)
+			{
+				if(b.state.getBlock() != Blocks.air)
+					map.add(b);
+			}
+			blockMap = map;
+
 			int num = filename.indexOf('_');
 			String s = filename.substring(0, num);
 			if(s.equals("Large"))

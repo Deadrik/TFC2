@@ -1,6 +1,10 @@
 package com.bioxx.tfc2.api.Interfaces;
 
+import java.util.ArrayList;
+
 import net.minecraft.nbt.NBTTagList;
+
+import com.bioxx.tfc2.api.Schematic.SchemBlock;
 
 public interface ISchematic
 {
@@ -25,22 +29,6 @@ public interface ISchematic
 	public int getSizeZ();
 
 	public void setSizeZ(int z);
-
-	/**
-	 * In normal schematic files, this is a byte array. TFC uses an int array to be able to 
-	 * support 4096 ids.
-	 * @return Schematic "Blocks"
-	 */
-	public int[] getBlockArray();
-
-	public void setBlockArray(int[] array);
-
-	/**
-	 * @return Schematic "Data"
-	 */
-	public byte[] getDataArray();
-
-	public void setDataArray(byte[] array);
 
 	/**
 	 * @return Schematic "TileEntities"
@@ -84,4 +72,9 @@ public interface ISchematic
 	 * @return File Index number
 	 */
 	public int getIndex();
+
+	/**
+	 * @return Returns an Arraylist containing every block in this schematic for iteration
+	 */
+	public ArrayList<SchemBlock> getBlockMap();	
 }
