@@ -22,6 +22,7 @@ import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.attributes.Attribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
 import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jMapGen.graph.Center.HexDirection;
 import com.bioxx.jMapGen.graph.Corner;
 import com.bioxx.jMapGen.pathfinding.Path;
 import com.bioxx.jMapGen.pathfinding.PathNode;
@@ -275,6 +276,15 @@ public class PrintImageMapCommand extends CommandBase
 			graphics.setColor(Color.RED);	
 			poly = new Polygon();
 			Center c = map.getSelectedHexagon(p);
+			for(Corner cn : c.corners)
+			{
+				poly.addPoint((int)cn.point.x, (int)cn.point.y);
+			}
+			graphics.fillPolygon(poly);
+
+			graphics.setColor(Color.CYAN);
+			poly = new Polygon();
+			c = c.getNeighbor(HexDirection.NorthWest);
 			for(Corner cn : c.corners)
 			{
 				poly.addPoint((int)cn.point.x, (int)cn.point.y);

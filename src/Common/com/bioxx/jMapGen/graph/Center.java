@@ -121,6 +121,30 @@ public class Center
 		if(angle < 330 && neighbors.size() >= 5)
 			return neighbors.get(5);
 
+		return this;
+	}
+
+	public Center getNeighbor(HexDirection dir)
+	{
+		switch(dir)
+		{
+		case North: return neighbors.get(1);
+		case NorthEast: return neighbors.get(2);
+		case SouthEast: return neighbors.get(3);
+		case South: return neighbors.get(4);
+		case SouthWest: return neighbors.get(5);
+		case NorthWest: return neighbors.get(0);
+		default: return neighbors.get(0);
+		}
+	}
+
+	public HexDirection getDirection(Center c)
+	{
+		for(HexDirection n : HexDirection.values())
+		{
+			if(getNeighbor(n) == c)
+				return n;
+		}
 		return null;
 	}
 
@@ -281,6 +305,36 @@ public class Center
 		public int getFlag()
 		{
 			return 1 << this.ordinal();
+		}
+	}
+
+	public enum HexDirection
+	{
+		North(0), South(1), NorthEast(2), NorthWest(3), SouthEast(4), SouthWest(5);
+
+		int order;
+
+		HexDirection (int o)
+		{
+			order = o;
+		}
+		public HexDirection getOpposite()
+		{
+			switch(this)
+			{
+			case North: return South;
+			case South: return North;
+			case NorthEast: return SouthWest;
+			case NorthWest: return SouthEast;
+			case SouthEast: return NorthWest;
+			case SouthWest: return NorthEast;
+			default: return North;
+			}
+		}
+
+		public int getOrder()
+		{
+			return order;
 		}
 	}
 }

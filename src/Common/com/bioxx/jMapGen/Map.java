@@ -2042,6 +2042,8 @@ public class Map
 			edges.get(i).readFromNBT(edgeList.getCompoundTagAt(i), this);
 		}
 
+		sortClockwise();
+
 
 
 		//Rebuild the river list
