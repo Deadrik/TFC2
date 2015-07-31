@@ -39,8 +39,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	private static final int SEA_LEVEL = 64;
 	int worldX;//This is the x coordinate of the chunk using world coords.
 	int worldZ;//This is the z coordinate of the chunk using world coords.
-	int islandX;//This is the x coordinate of the chunk within the bounds of the island (0 - MAP_SIZE)
-	int islandZ;//This is the z coordinate of the chunk within the bounds of the island (0 - MAP_SIZE)
+	int islandChunkX;//This is the x coordinate of the chunk within the bounds of the island (0 - MAP_SIZE)
+	int islandChunkZ;//This is the z coordinate of the chunk within the bounds of the island (0 - MAP_SIZE)
 	int mapX;//This is the x coordinate of the chunk using world coords.
 	int mapZ;//This is the z coordinate of the chunk using world coords.
 
@@ -117,14 +117,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		elevationMap = new int[256];
 		worldX = chunkX * 16;
 		worldZ = chunkZ * 16;
-		islandX = worldX % MAP_SIZE;
-		islandZ = worldZ % MAP_SIZE;
+		islandChunkX = worldX % MAP_SIZE;
+		islandChunkZ = worldZ % MAP_SIZE;
 		mapX = (chunkX >> 8);
 		mapZ = (chunkZ >> 8);
-		if(chunkX < 0)
-			mapX -= 1;
-		if(chunkZ < 0)
-			mapZ -= 1;
 		islandMap = WorldGen.instance.getIslandMap(mapX, mapZ);
 		centersInChunk = new Vector<Center>();
 
@@ -153,7 +149,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		int y16 = (int)p.y + 16;
 		if(centerCache[x16][y16] == null)
 		{
-			centerCache[x16][y16] = islandMap.getSelectedHexagon(p.plus(islandX, islandZ));
+			centerCache[x16][y16] = islandMap.getSelectedHexagon(p.plus(islandChunkX, islandChunkZ).toIslandCoord());
 		}
 
 		if(!centersInChunk.contains(centerCache[x16][y16]))
@@ -319,7 +315,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	protected int getElevation(Center c, Point p, double scale)
 	{
-		Point p2 = p.plus(islandX, islandZ);
+		Point p2 = p.plus(islandChunkX, islandChunkZ);
 		double turb = (turbMap.GetValue(p2.x, p2.y));
 		return (int)(turb * scale);
 	}
@@ -452,14 +448,15 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		Center closest;
 		int waterLevel = SEA_LEVEL;
 		//if(c.water)
-		waterLevel = convertElevation(c.elevation);
+		waterLevel = Math.max(convertElevation(c.elevation), waterLevel);
 
 		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
 
 		//This loop moves in increments of X% and attempts to carve the river at each point
 		for(double m = 0; m < 1; m+= 0.03)
 		{
-			interval = spline.getPoint(m).floor().minus(new Point(islandX, islandZ));
+			temp = new Point(islandChunkX, islandChunkZ).toIslandCoord();
+			interval = spline.getPoint(m).floor().minus(temp);
 
 			for(double x = -width; x <= width; x+=0.25)
 			{

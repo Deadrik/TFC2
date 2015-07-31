@@ -271,6 +271,16 @@ public class PrintImageMapCommand extends CommandBase
 				}
 
 			}
+			Point p = new Point(xCoord, zCoord).toIslandCoord();
+			graphics.setColor(Color.RED);	
+			poly = new Polygon();
+			Center c = map.getSelectedHexagon(p);
+			for(Corner cn : c.corners)
+			{
+				poly.addPoint((int)cn.point.x, (int)cn.point.y);
+			}
+			graphics.fillPolygon(poly);
+
 			System.out.println(name+".png Done!");
 			ImageIO.write(outBitmap, "PNG", outFile);
 		}

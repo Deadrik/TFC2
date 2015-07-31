@@ -22,9 +22,9 @@ import com.bioxx.jMapGen.Map;
 import com.bioxx.jMapGen.RandomCollection;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
+import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Types.Moisture;
 import com.bioxx.tfc2.api.Types.StoneType;
-import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Util.Helper;
 import com.bioxx.tfc2.api.Util.IThreadCompleteListener;
 
@@ -123,7 +123,7 @@ public class WorldGen implements IThreadCompleteListener
 			if(f == Feature.Canyons)
 				id.setFeatures(Feature.Gorges);
 
-			if(f == Feature.NoLand && x == 0 && z == 0)
+			if(f == Feature.NoLand && x == 0)
 				continue;
 
 			if((f == Feature.SharperMountains || f == Feature.EvenSharperMountains) && 
@@ -233,7 +233,7 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			int key = iter.next();
 			CachedIsland c = islandCache.get(key);
-			if(now-c.lastAccess > 12000)//12 seconds of no access will trim the map
+			if(c != null && now-c.lastAccess > 12000)//12 seconds of no access will trim the map
 			{
 				saveMap(c);
 				islandCache.remove(key);

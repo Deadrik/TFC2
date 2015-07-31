@@ -37,6 +37,17 @@ public class Point extends Point2D
 		y = arg1;
 	}
 
+	public Point toIslandCoord()
+	{
+		x = x % 4096;
+		y = y % 4096;
+		if(x < 0)
+			x = 4095 - x * -1;
+		if(y < 0)
+			y = 4095 - y * -1;
+		return this;
+	}
+
 	public double getLength()
 	{
 		return this.distance(0, 0);

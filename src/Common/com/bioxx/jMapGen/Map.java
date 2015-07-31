@@ -89,6 +89,11 @@ public class Map
 		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 	}
 
+	public IslandParameters getParams()
+	{
+		return this.islandParams;
+	}
+
 	public void go() 
 	{
 		points = this.generateHexagon(SIZE);
@@ -1369,8 +1374,11 @@ public class Map
 		Vector<Center> out = new Vector<Center>();
 		for(Center c : centers)
 		{
-			if (c.elevation <= elev && (!allowWater && !c.hasMarker(Marker.Water)))
-				out.add(c);
+			if (c.elevation <= elev)
+			{
+				if(allowWater || !c.hasMarker(Marker.Water))
+					out.add(c);
+			}
 		}
 		return out;
 	}
@@ -1852,7 +1860,7 @@ public class Map
 		else return Math.floor(p.elevation*10);
 	}
 
-	public Center getClosestCenter(Point p)
+	/*public Center getClosestCenter(Point p)
 	{
 		Center closest = null;
 		double distance = Double.MAX_VALUE;
@@ -1869,10 +1877,10 @@ public class Map
 		if(closest == null)
 			System.out.println("Failed center check");
 		return closest;
-	}
+	}*/
 
 	/**
-	 * @return nearest Center point for the contianing hex
+	 * @return nearest Center point for the containing hex
 	 */
 	public Center getSelectedHexagon(Point p)
 	{

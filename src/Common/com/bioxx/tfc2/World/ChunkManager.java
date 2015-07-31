@@ -29,14 +29,14 @@ public class ChunkManager extends WorldChunkManager
 	public BlockPos findTerrainPositionForSpawn(Random random)
 	{
 		BlockPos blockpos = new BlockPos(0,0,0);
-		Map map = WorldGen.instance.getIslandMap(0, 0);
-		Vector<Center> land = map.landCenters(map.centers);
+		Map map = WorldGen.instance.getIslandMap(0, -2);
+		Vector<Center> land = map.getCentersBelow(0.1, false);
 		Center c = land.get(random.nextInt(land.size()));
 		for(int i = 0; i < 10000; i++)
 		{
 			if(c.hasMarker(Marker.Coast))
 			{
-				blockpos = new BlockPos((int)c.point.x, 0, (int)c.point.y);
+				blockpos = new BlockPos((int)c.point.x + map.getParams().getWorldX(), 0, (int)c.point.y + map.getParams().getWorldZ());
 				return blockpos;
 			}
 			else if(c.elevation > 0)
@@ -48,7 +48,7 @@ public class ChunkManager extends WorldChunkManager
 				c = c.neighbors.get(4);
 			}
 		}
-		blockpos = new BlockPos((int)c.point.x, 0, (int)c.point.y);
+		blockpos = new BlockPos((int)c.point.x + map.getParams().getWorldX(), 0, (int)c.point.y + map.getParams().getWorldZ());
 		return blockpos;
 	}
 

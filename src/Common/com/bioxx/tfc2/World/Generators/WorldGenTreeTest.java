@@ -43,9 +43,11 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			int xM = (chunkX >> 12);
 			int zM = (chunkZ >> 12);
+			int xMLocal = chunkX & 4095;
+			int zMLocal = chunkZ & 4095;
 			Map m = WorldGen.instance.getIslandMap(xM, zM);
 			BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
-			Center c = m.getClosestCenter(new Point(chunkX+8, chunkZ+8));
+			Center c = m.getSelectedHexagon(new Point(xMLocal+8, zMLocal+8));
 
 			if(c.hasMarker(Marker.Ocean))
 			{
@@ -97,7 +99,8 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
 		treePos = treePos.add(0, world.getHorizon(treePos).getY(), 0);
-		Center c = m.getClosestCenter(new Point(treePos.getX(), treePos.getZ()));
+		Point p = new Point(treePos.getX(), treePos.getZ()).toIslandCoord();
+		Center c = m.getSelectedHexagon(p);
 
 		if(c.hasMarker(Marker.Ocean))
 		{
@@ -129,7 +132,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
 		treePos = treePos.add(0, world.getHorizon(treePos).getY(), 0);
-		Center c = m.getClosestCenter(new Point(treePos.getX(), treePos.getZ()));
+		Center c = m.getSelectedHexagon(new Point(treePos.getX() % 4096, treePos.getZ() % 4096));
 
 		if(c.hasMarker(Marker.Ocean))
 		{

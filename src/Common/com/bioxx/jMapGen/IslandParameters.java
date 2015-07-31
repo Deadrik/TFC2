@@ -9,9 +9,9 @@ import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Types.Moisture;
 import com.bioxx.tfc2.api.Types.StoneType;
-import com.bioxx.tfc2.api.Types.ClimateTemp;
 import com.bioxx.tfc2.api.Types.WoodType;
 
 public class IslandParameters 
@@ -195,6 +195,16 @@ public class IslandParameters
 	public void setIslandMoisture(Moisture m)
 	{
 		moisture = m;
+	}
+
+	public int getWorldX()
+	{
+		return this.xCoord*SIZE;
+	}
+
+	public int getWorldZ()
+	{
+		return this.zCoord*SIZE;
 	}
 
 	public void readFromNBT(NBTTagCompound nbt)
