@@ -3,15 +3,17 @@ package com.bioxx.jMapGen.attributes;
 import java.util.UUID;
 import java.util.Vector;
 
-import com.bioxx.jMapGen.graph.Center;
-
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.bioxx.jMapGen.Point;
+import com.bioxx.jMapGen.graph.Center;
 
 public class RiverAttribute extends Attribute 
 {
 	public Vector<Center> upriver;
 	Center downriver;
 	double river;
+	Point riverMid;
 
 	public RiverAttribute() 
 	{
@@ -31,6 +33,16 @@ public class RiverAttribute extends Attribute
 	public void setRiver(double d)
 	{
 		river = Math.min(d, 4.0);
+	}
+
+	public void setRiverMidpoint(Point p)
+	{
+		riverMid = p;
+	}
+
+	public Point getRiverMidpoint()
+	{
+		return riverMid;
 	}
 
 	public double getRiver()
@@ -74,6 +86,8 @@ public class RiverAttribute extends Attribute
 			nbt.setIntArray("upriver", nArray);
 		}
 
+		nbt.setDouble("midX", riverMid.x);
+		nbt.setDouble("midY", riverMid.y);
 	}
 
 	@Override
@@ -93,6 +107,7 @@ public class RiverAttribute extends Attribute
 			}
 		}
 
+		this.riverMid = new Point(nbt.getInteger("midX"), nbt.getInteger("midY"));
 	}
 
 }

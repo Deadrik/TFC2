@@ -16,8 +16,8 @@ import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.MapGenBase;
 
 import com.bioxx.jMapGen.BiomeType;
-import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.IslandMap;
+import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.Spline2D;
 import com.bioxx.jMapGen.attributes.Attribute;
@@ -414,7 +414,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				{
 					riverPoints = new ArrayList<Point>();
 					riverPoints.add(c.getSharedEdge(attrib.upriver.get(0)).midpoint);
-					riverPoints.add(c.point);
+					riverPoints.add(attrib.getRiverMidpoint());
+
 					if(attrib.getDownRiver() != null)
 						riverPoints.add(c.getSharedEdge(attrib.getDownRiver()).midpoint);
 

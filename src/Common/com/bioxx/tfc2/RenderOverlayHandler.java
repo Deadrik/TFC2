@@ -6,8 +6,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.IslandMap;
+import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.attributes.Attribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
@@ -39,7 +39,11 @@ public class RenderOverlayHandler
 
 		RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.riverUUID);
 		if(attrib != null)
+		{
 			event.left.add("River: " + attrib.getRiver() + " | " + (attrib.upriver != null ?  attrib.upriver.size() : 0));	
+			if(attrib.upriver != null && attrib.getDownRiver() != null)
+				event.left.add("Up :" + hex.getDirection(attrib.upriver.get(0)).toString() + " | Dn :" + hex.getDirection(attrib.getDownRiver()).toString());
+		}
 		event.right.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--Island Parmaters--");
 		event.right.add("*Moisture: "+map.islandParams.getIslandMoisture());
 		event.right.add("*Temperature: "+map.islandParams.getIslandTemp());

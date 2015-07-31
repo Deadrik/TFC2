@@ -24,6 +24,7 @@ import com.bioxx.jMapGen.com.nodename.Delaunay.DelaunayUtil;
 import com.bioxx.jMapGen.com.nodename.Delaunay.Voronoi;
 import com.bioxx.jMapGen.com.nodename.geom.LineSegment;
 import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jMapGen.graph.Center.HexDirection;
 import com.bioxx.jMapGen.graph.Center.Marker;
 import com.bioxx.jMapGen.graph.Corner;
 import com.bioxx.jMapGen.graph.CornerElevationSorter;
@@ -1633,8 +1634,11 @@ public class IslandMap
 				curNode = r.nodes.get(0);
 				nextNode = curNode;
 				boolean cancelRiver = false;
+
+				//Propogate through each node in this river and setup RiverAttributes for each Center
 				for (int j = 0; j <= r.nodes.size() && !cancelRiver; j++) 
 				{
+					//On the first node, we add a small pond and make sure that this river does not start too close to another river.
 					if(j == 0)
 					{
 						for(Center n :r.riverStart.center.neighbors)
@@ -1654,6 +1658,7 @@ public class IslandMap
 						if(j < r.nodes.size())
 							nextNode = r.nodes.get(j);
 						else nextNode = null;
+
 						//Sanity
 						RiverAttribute riverAttrib = ((RiverAttribute)curNode.center.getAttribute(Attribute.riverUUID));
 						if(riverAttrib == null)
@@ -1662,7 +1667,9 @@ public class IslandMap
 							curNode.center.addAttribute(riverAttrib);
 							//curNode.center.setElevation(Math.max(curNode.center.getElevation() - this.convertMCToHeight(1), 0));
 						}
+
 						riverAttrib.addRiver(r.riverWidth);
+						riverAttrib.setRiverMidpoint(curNode.center.point);
 						if(nextNode != null)
 						{
 							riverAttrib.setDownRiver(nextNode.center);
@@ -1679,6 +1686,53 @@ public class IslandMap
 							nextAttrib.addUpRiverCenter(curNode.center);
 							curNode = nextNode;
 						}
+					}
+				}
+			}
+		}
+
+		//After the rivers are built, we traverse through them one more time to add some jitter to the straight rivers
+		for(River river : rivers)
+		{
+			for(RiverNode rn : river.nodes)
+			{
+				RiverAttribute Attrib = ((RiverAttribute)rn.center.getAttribute(Attribute.riverUUID));
+				if(rn.upRiver != null && rn.downRiver != null && Attrib.upriver != null && Attrib.upriver.size() == 1)
+				{
+					HexDirection hd = rn.center.getDirection(rn.upRiver);
+					HexDirection dn = rn.center.getDirection(rn.downRiver);
+					if(hd.getOpposite() == dn)
+					{
+						double dist = 7.5 - Attrib.getRiver();
+						double x = 0;
+						double y = 0;
+
+						if(hd == HexDirection.North || hd == HexDirection.South)
+							if((rn.center.index & 1) > 0)
+								x = 8 - Attrib.getRiver();
+							else
+								x = -8 + Attrib.getRiver();
+						else if(hd == HexDirection.NorthEast || hd == HexDirection.SouthWest)
+						{
+							if((rn.center.index & 1) > 0)
+							{y = -8 - Attrib.getRiver(); x = -8 - Attrib.getRiver();}
+							else
+							{y = 8 + Attrib.getRiver(); x = 8 - Attrib.getRiver();}
+						}
+						else if(hd == HexDirection.SouthEast || hd == HexDirection.NorthWest)
+						{
+							if((rn.center.index & 1) > 0)
+							{y = -8 - Attrib.getRiver(); x = 8 - Attrib.getRiver();}
+							else
+							{y = 8 + Attrib.getRiver(); x = -8 - Attrib.getRiver();}
+						}
+						else
+						{
+							System.out.println("River:" + hd.toString() + " : " + dn.toString());
+						}
+
+
+						Attrib.setRiverMidpoint(rn.center.point.plus(x, y));
 					}
 				}
 			}
