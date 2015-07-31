@@ -57,7 +57,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			//The theoretical max number of trees per chunk is 8.
 			//We mult this by whichever is lower, the hex moisture or the island moisture.
 			//This way base dry islands still feature less trees overall.
-			int baseTrees = (int)(8 * Math.min(c.getMoisture().getMoisture(), m.islandParams.getIslandMoisture().getMoisture()));
+			int baseTrees = (int)(8 * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
 			int numTrees = random.nextInt(baseTrees+1)+1;
 			//numTrees = (int)(numTrees * c.getMoisture().getMoisture());
 
@@ -68,7 +68,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			 * Do palm tree gen on valid islands
 			 */
 			if(c.getElevation() < 0.2 && c.getMoisture().getMoisture() >= Moisture.HIGH.getMoisture() && 
-					m.islandParams.getIslandTemp().getTemp() >= ClimateTemp.SUBTROPICAL.getTemp())
+					m.getParams().getIslandTemp().getTemp() >= ClimateTemp.SUBTROPICAL.getTemp())
 			{
 				for(int l = 0; l < 3; l++)
 				{
@@ -80,11 +80,11 @@ public class WorldGenTreeTest implements IWorldGenerator
 			{
 				double rarity = random.nextDouble();
 				if(rarity > 0.9)
-					gen(random, chunkX, chunkZ, world, chunkPos, m, m.islandParams.getRareTree());
+					gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getRareTree());
 				else if(rarity > 0.6)
-					gen(random, chunkX, chunkZ, world, chunkPos, m, m.islandParams.getUncommonTree());
+					gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getUncommonTree());
 				else
-					gen(random, chunkX, chunkZ, world, chunkPos, m, m.islandParams.getCommonTree());
+					gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getCommonTree());
 			}
 		}
 	}

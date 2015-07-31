@@ -45,13 +45,13 @@ public class RenderOverlayHandler
 				event.left.add("Up :" + hex.getDirection(attrib.upriver.get(0)).toString() + " | Dn :" + hex.getDirection(attrib.getDownRiver()).toString());
 		}
 		event.right.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--Island Parmaters--");
-		event.right.add("*Moisture: "+map.islandParams.getIslandMoisture());
-		event.right.add("*Temperature: "+map.islandParams.getIslandTemp());
+		event.right.add("*Moisture: "+map.getParams().getIslandMoisture());
+		event.right.add("*Temperature: "+map.getParams().getIslandTemp());
 
 		event.right.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"---Island Features--");
 		for(Feature f : Feature.values())
 		{
-			if(map.islandParams.hasFeature(f))
+			if(map.getParams().hasFeature(f))
 			{
 				event.right.add("*"+f.toString());
 			}

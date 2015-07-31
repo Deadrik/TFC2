@@ -294,8 +294,8 @@ public class MapGenCaves extends net.minecraft.world.gen.MapGenCaves
 	protected void digBlock(ChunkPrimer data, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop, IBlockState state, IBlockState up)
 	{
 		IslandMap m = WorldGen.instance.getIslandMap(chunkX >> 8, chunkZ >> 8);
-		IBlockState top = TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, m.islandParams.getSurfaceRock());
-		IBlockState filler = TFCBlocks.Dirt.getDefaultState().withProperty(BlockDirt.META_PROPERTY, m.islandParams.getSurfaceRock());
+		IBlockState top = TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, m.getParams().getSurfaceRock());
+		IBlockState filler = TFCBlocks.Dirt.getDefaultState().withProperty(BlockDirt.META_PROPERTY, m.getParams().getSurfaceRock());
 
 		if (this.func_175793_a(state, up) || state.getBlock() == top.getBlock() || state.getBlock() == filler.getBlock())
 		{

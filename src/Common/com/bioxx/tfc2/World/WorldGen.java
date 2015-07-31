@@ -16,9 +16,9 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.IslandParameters;
 import com.bioxx.jMapGen.IslandParameters.Feature;
-import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.RandomCollection;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
@@ -246,8 +246,8 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		try
 		{
-			File file1 = world.getSaveHandler().getMapFileFromName(island.islandData.islandParams.getXCoord() + "," + 
-					island.islandData.islandParams.getZCoord());
+			File file1 = world.getSaveHandler().getMapFileFromName(island.islandData.getParams().getXCoord() + "," + 
+					island.islandData.getParams().getZCoord());
 
 			if (file1 != null)
 			{
@@ -256,7 +256,7 @@ public class WorldGen implements IThreadCompleteListener
 
 				NBTTagCompound finalNBT = new NBTTagCompound();
 				finalNBT.setTag("data", dataNBT);
-				island.islandData.islandParams.writeToNBT(finalNBT);
+				island.islandData.getParams().writeToNBT(finalNBT);
 
 				finalNBT.setLong("lastAccess", island.lastAccess);
 

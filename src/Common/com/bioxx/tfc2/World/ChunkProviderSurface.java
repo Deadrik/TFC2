@@ -165,10 +165,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		Point p;
 		Center closestCenter;
-		IBlockState grass = TFCBlocks.Grass.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
-		IBlockState dirt = TFCBlocks.Dirt.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
-		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
-		IBlockState sand = TFCBlocks.Sand.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
+		IBlockState grass = TFCBlocks.Grass.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
+		IBlockState dirt = TFCBlocks.Dirt.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
+		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
+		IBlockState sand = TFCBlocks.Sand.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 
 		/*if(islandMap.islandParams.getIslandMoisture() == Moisture.NONE)
 		{
@@ -327,7 +327,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	protected int convertElevation(double height)
 	{
-		return (int)(SEA_LEVEL+height * islandMap.islandParams.islandMaxHeight);
+		return (int)(SEA_LEVEL+height * islandMap.getParams().islandMaxHeight);
 	}
 
 	protected void generateTerrain(ChunkPrimer chunkprimer, int chunkX, int chunkZ)
@@ -376,7 +376,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		ArrayList riverPoints;
 		int riverDepth = 0;
-		IBlockState gravel = TFCBlocks.Gravel.getStateFromMeta(this.islandMap.islandParams.getSurfaceRock().getMeta());
+		IBlockState gravel = TFCBlocks.Gravel.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		IBlockState[] bankStates = new IBlockState[] {Blocks.air.getDefaultState(), gravel};
 		IBlockState[] riverStates = new IBlockState[] {Blocks.air.getDefaultState(), TFCBlocks.FreshWater.getDefaultState(), gravel};
 
@@ -547,10 +547,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	protected double getSmoothHeightHex(Center c, Point p)
 	{
-		if(this.islandMap.islandParams.hasFeature(Feature.Cliffs))
+		if(this.islandMap.getParams().hasFeature(Feature.Cliffs))
 			return getSmoothHeightHex(c, p, 2);
 
-		if(islandMap.islandParams.hasFeature(Feature.Canyons) || islandMap.islandParams.hasFeature(Feature.Gorges))
+		if(islandMap.getParams().hasFeature(Feature.Canyons) || islandMap.getParams().hasFeature(Feature.Gorges))
 		{
 			//If this block is in a gorge hex
 			if(c.hasAttribute(Attribute.gorgeUUID))

@@ -44,7 +44,7 @@ public class IslandMap
 	// type of island, passed in when we set the island shape. The
 	// islandShape function uses both of them to determine whether any
 	// point should be water or land.
-	public IslandParameters islandParams;
+	protected IslandParameters islandParams;
 	// Island details are controlled by this random generator. The
 	// initial map upon loading is always deterministic, but
 	// subsequent maps reset this random number generator with a
