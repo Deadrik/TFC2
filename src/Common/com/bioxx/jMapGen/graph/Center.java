@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.bioxx.jMapGen.BiomeType;
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.attributes.Attribute;
 import com.bioxx.tfc2.api.Types.Moisture;
@@ -236,7 +236,7 @@ public class Center
 		nbt.setTag("attribMap", attribList);
 	}
 
-	public void readFromNBT(NBTTagCompound nbt, Map m)
+	public void readFromNBT(NBTTagCompound nbt, IslandMap m)
 	{
 		try 
 		{

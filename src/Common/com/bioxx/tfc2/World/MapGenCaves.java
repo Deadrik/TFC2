@@ -10,7 +10,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
@@ -293,7 +293,7 @@ public class MapGenCaves extends net.minecraft.world.gen.MapGenCaves
 	@Override
 	protected void digBlock(ChunkPrimer data, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop, IBlockState state, IBlockState up)
 	{
-		Map m = WorldGen.instance.getIslandMap(chunkX >> 8, chunkZ >> 8);
+		IslandMap m = WorldGen.instance.getIslandMap(chunkX >> 8, chunkZ >> 8);
 		IBlockState top = TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, m.islandParams.getSurfaceRock());
 		IBlockState filler = TFCBlocks.Dirt.getDefaultState().withProperty(BlockDirt.META_PROPERTY, m.islandParams.getSurfaceRock());
 

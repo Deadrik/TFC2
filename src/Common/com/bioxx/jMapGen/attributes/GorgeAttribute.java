@@ -57,7 +57,7 @@ public class GorgeAttribute extends Attribute
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.Map m) 
+	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.IslandMap m) 
 	{
 		this.id = UUID.fromString(nbt.getString("uuid"));
 		if(nbt.hasKey("down"))

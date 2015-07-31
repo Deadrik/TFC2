@@ -13,7 +13,7 @@ public class IslandMapGen
 	public long mapSeed = 0;
 
 	// The map data
-	public Map map;
+	public IslandMap map;
 	//public Roads roads;
 	public Lava lava;
 
@@ -22,12 +22,12 @@ public class IslandMapGen
 	public IslandMapGen(IslandParameters is, long seed) 
 	{
 		mapSeed = seed;
-		map = new Map(is.SIZE, seed);
+		map = new IslandMap(is.SIZE, seed);
 		def = is;
 		createNewIsland();
 	}
 
-	public IslandMapGen(Map m) 
+	public IslandMapGen(IslandMap m) 
 	{
 		mapSeed = m.seed;
 		map = m;

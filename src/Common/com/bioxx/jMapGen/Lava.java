@@ -17,7 +17,7 @@ public class Lava
 	public ArrayList<Boolean> lava;  // edge index -> Boolean
 
 	// Lava fissures are at high elevations where moisture is low
-	public void createLava(Map map, Random random) 
+	public void createLava(IslandMap map, Random random) 
 	{
 		lava = new ArrayList<Boolean>(map.edges.size());
 		Edge edge;

@@ -1,6 +1,6 @@
 package com.bioxx.jMapGen.graph;
 
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.graph.Center.Marker;
 
@@ -88,7 +88,7 @@ public class Edge
 		nbt.setInteger("vCorner1", vCorner1.index);
 	}
 
-	public void readFromNBT(NBTTagCompound nbt, Map m)
+	public void readFromNBT(NBTTagCompound nbt, IslandMap m)
 	{
 		this.midpoint = new Point(nbt.getDouble("midX"), nbt.getDouble("midY"));
 		dCenter0 = m.centers.get(nbt.getInteger("dcenter0"));

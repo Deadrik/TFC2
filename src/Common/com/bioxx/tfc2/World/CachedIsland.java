@@ -1,18 +1,18 @@
 package com.bioxx.tfc2.World;
 
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 
 public class CachedIsland 
 {
 	public long lastAccess;
-	public Map islandData;
+	public IslandMap islandData;
 
-	public CachedIsland(Map island)
+	public CachedIsland(IslandMap island)
 	{
 		islandData = island;
 	}
 
-	public Map getIslandMap()
+	public IslandMap getIslandMap()
 	{
 		lastAccess = System.currentTimeMillis();
 		return islandData;

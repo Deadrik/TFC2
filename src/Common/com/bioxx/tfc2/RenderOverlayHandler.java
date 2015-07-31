@@ -7,7 +7,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.bioxx.jMapGen.IslandParameters.Feature;
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.attributes.Attribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
@@ -25,7 +25,7 @@ public class RenderOverlayHandler
 		Minecraft mc = Minecraft.getMinecraft();
 		int xM = ((int)(mc.thePlayer.posX) >> 12);
 		int zM = ((int)(mc.thePlayer.posZ) >> 12);
-		Map map = WorldGen.instance.getIslandMap(xM, zM);
+		IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 		Center hex = map.getSelectedHexagon(new Point(mc.thePlayer.posX, mc.thePlayer.posZ).toIslandCoord());
 		event.right.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
 		event.right.add("Elevation: "+hex.elevation);

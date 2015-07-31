@@ -17,7 +17,7 @@ import net.minecraft.world.gen.MapGenBase;
 
 import com.bioxx.jMapGen.BiomeType;
 import com.bioxx.jMapGen.IslandParameters.Feature;
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.Spline2D;
 import com.bioxx.jMapGen.attributes.Attribute;
@@ -45,7 +45,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	int mapZ;//This is the z coordinate of the chunk using world coords.
 
 	Plane turbMap;
-	Map islandMap;
+	IslandMap islandMap;
 
 	Vector<Center> centersInChunk;
 	int[] elevationMap;

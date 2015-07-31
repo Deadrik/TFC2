@@ -15,7 +15,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.tfc2.World.WorldGen;
 import com.bioxx.tfc2.api.Interfaces.INeedOffset;
@@ -62,7 +62,7 @@ public class BlockLeaves2 extends BlockTerra implements INeedOffset
 		int z = pos.getZ() >> 12;
 		if(WorldGen.instance == null)
 			return 0x55ff55;
-		Map m = WorldGen.instance.getIslandMap(x, z);
+		IslandMap m = WorldGen.instance.getIslandMap(x, z);
 		double d0 = m.islandParams.getIslandTemp().getTemp();
 		double d1 = m.getSelectedHexagon(new Point(pos.getX(), pos.getZ())).moisture;
 

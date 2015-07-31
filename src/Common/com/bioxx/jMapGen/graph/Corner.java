@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.graph.Center.Marker;
 
@@ -130,7 +130,7 @@ public class Corner
 		nbt.setIntArray("adjacent", nArray);
 	}
 
-	public void readFromNBT(NBTTagCompound nbt, Map m)
+	public void readFromNBT(NBTTagCompound nbt, IslandMap m)
 	{
 		this.point = new Point(nbt.getDouble("xCoord"), nbt.getDouble("yCoord"));
 		setMarkers(nbt.getInteger("flags"));

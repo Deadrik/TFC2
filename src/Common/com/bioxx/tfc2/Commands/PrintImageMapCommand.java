@@ -17,7 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.attributes.Attribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
@@ -90,7 +90,7 @@ public class PrintImageMapCommand extends CommandBase
 					float count = 0;
 					int xM = ((int)Math.floor(player.posX) >> 12);
 					int zM = ((int)Math.floor(player.posZ) >> 12);
-					Map map = WorldGen.instance.getIslandMap(xM, zM);
+					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 					Point p;
 					Center c;
 					for(int z = 0; z < size; z++)
@@ -139,7 +139,7 @@ public class PrintImageMapCommand extends CommandBase
 					float count = 0;
 					int xM = ((int)Math.floor(player.posX) >> 12);
 					int zM = ((int)Math.floor(player.posZ) >> 12);
-					Map map = WorldGen.instance.getIslandMap(xM, zM);
+					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 					Center closest = map.getSelectedHexagon(new Point((int)Math.floor(player.posX) & 4095, (int)Math.floor(player.posZ) & 4095));
 					Vector<Center> land = map.landCenters(map.centers);
 					Center end = land.get(world.rand.nextInt(land.size()));
@@ -188,7 +188,7 @@ public class PrintImageMapCommand extends CommandBase
 					float count = 0;
 					int xM = ((int)Math.floor(player.posX) >> 12);
 					int zM = ((int)Math.floor(player.posZ) >> 12);
-					Map map = WorldGen.instance.getIslandMap(xM, zM);
+					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 					Polygon poly;
 					for(Center c : map.centers)
 					{
@@ -243,7 +243,7 @@ public class PrintImageMapCommand extends CommandBase
 			float count = 0;
 			int xM = (xCoord >> 12);
 			int zM = (zCoord >> 12);
-			Map map = WorldGen.instance.getIslandMap(xM, zM);
+			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 			Polygon poly;
 			for(Center c : map.centers)
 			{
@@ -314,7 +314,7 @@ public class PrintImageMapCommand extends CommandBase
 			float count = 0;
 			int xM = (xCoord >> 12);
 			int zM = (zCoord >> 12);
-			Map map = WorldGen.instance.getIslandMap(xM, zM);
+			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 			Polygon poly;
 			for(Center c : map.centers)
 			{

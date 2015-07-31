@@ -30,5 +30,5 @@ public abstract class Attribute
 	}
 
 	public abstract void writeToNBT(NBTTagCompound nbt);
-	public abstract void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.Map map);
+	public abstract void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.IslandMap map);
 }

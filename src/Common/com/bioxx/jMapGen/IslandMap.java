@@ -32,7 +32,7 @@ import com.bioxx.jMapGen.graph.MoistureComparator;
 import com.bioxx.jMapGen.pathfinding.PathFinder;
 import com.bioxx.tfc2.TFC;
 
-public class Map 
+public class IslandMap 
 {
 	public int NUM_POINTS = 4096*4;
 	public int NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
@@ -61,7 +61,7 @@ public class Map
 
 	public PathFinder pathfinder;
 
-	public Map(int size, long s) 
+	public IslandMap(int size, long s) 
 	{
 		SIZE = size;
 		seed = s;
@@ -2041,26 +2041,5 @@ public class Map
 		{
 			edges.get(i).readFromNBT(edgeList.getCompoundTagAt(i), this);
 		}
-
-		sortClockwise();
-
-
-
-		//Rebuild the river list
-		/*for(Center c : centers)
-		{
-			if(c.hasAttribute(Attribute.riverUUID) && ((RiverAttribute)c.getAttribute(Attribute.riverUUID)).upriver == null)
-			{
-				River r = new River();
-				r.addCenter(c);
-				Center next = ((RiverAttribute)c.getAttribute(Attribute.riverUUID)).getDownRiver();
-				while(next != null)
-				{
-					r.addCenter(next);
-				}
-
-				rivers.add(r);
-			}
-		}*/
 	}
 }

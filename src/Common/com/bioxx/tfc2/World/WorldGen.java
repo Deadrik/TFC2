@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 import com.bioxx.jMapGen.IslandParameters;
 import com.bioxx.jMapGen.IslandParameters.Feature;
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.RandomCollection;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
@@ -57,7 +57,7 @@ public class WorldGen implements IThreadCompleteListener
 	 * Retrieves an island map from the cache or creates it if needed. This is a pass-through method to an internal method which retrieves
 	 * the island map and hands neighboring island maps off to other threads for generation. Coordinates should already be in MapCoords form.
 	 */
-	public Map getIslandMap(int x, int z)
+	public IslandMap getIslandMap(int x, int z)
 	{
 		int id = Helper.cantorize(x, z);
 
@@ -75,7 +75,7 @@ public class WorldGen implements IThreadCompleteListener
 		return getMap(x, z);
 	}
 
-	private Map getMap(int x, int z)
+	private IslandMap getMap(int x, int z)
 	{
 		int id = Helper.cantorize(x, z);
 		CachedIsland ci = islandCache.get(id);
@@ -96,11 +96,11 @@ public class WorldGen implements IThreadCompleteListener
 		return ci.getIslandMap();
 	}
 
-	private Map createIsland(int x, int z)
+	private IslandMap createIsland(int x, int z)
 	{
 		long seed = world.getSeed()+Helper.cantorize(x, z);
 		IslandParameters id = createParams(seed, x, z);
-		Map mapgen = new Map(4096, seed);
+		IslandMap mapgen = new IslandMap(4096, seed);
 		mapgen.newIsland(id);
 		mapgen.go();
 		CachedIsland ci = new CachedIsland(mapgen);
@@ -285,7 +285,7 @@ public class WorldGen implements IThreadCompleteListener
 				IslandParameters ip = new IslandParameters();
 				ip.readFromNBT(nbt);
 				long seed = world.getSeed()+Helper.cantorize(x, z);
-				Map m = new Map(ISLAND_SIZE, seed);
+				IslandMap m = new IslandMap(ISLAND_SIZE, seed);
 				m.newIsland(ip);
 				m.readFromNBT(nbt.getCompoundTag("data"));
 				CachedIsland ci = new CachedIsland(m);

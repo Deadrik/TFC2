@@ -2,16 +2,16 @@ package com.bioxx.jMapGen.pathfinding;
 
 import java.util.Vector;
 
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.graph.Center;
 import com.bioxx.jMapGen.graph.Center.Marker;
 
 public class PathFinder 
 {
-	Map map;
+	IslandMap map;
 
-	public PathFinder(Map m)
+	public PathFinder(IslandMap m)
 	{
 		map = m;
 	}

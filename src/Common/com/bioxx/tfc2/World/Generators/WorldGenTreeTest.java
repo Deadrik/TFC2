@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.graph.Center;
 import com.bioxx.jMapGen.graph.Center.Marker;
@@ -45,7 +45,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			int zM = (chunkZ >> 12);
 			int xMLocal = chunkX & 4095;
 			int zMLocal = chunkZ & 4095;
-			Map m = WorldGen.instance.getIslandMap(xM, zM);
+			IslandMap m = WorldGen.instance.getIslandMap(xM, zM);
 			BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
 			Center c = m.getSelectedHexagon(new Point(xMLocal+8, zMLocal+8));
 
@@ -89,7 +89,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		}
 	}
 
-	private void gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, Map m, String wood) 
+	private void gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m, String wood) 
 	{
 		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(wood);
 		TreeConfig tc = TreeRegistry.instance.treeFromString(wood);
@@ -125,7 +125,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		}
 	}
 
-	private void genPalm(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, Map m) 
+	private void genPalm(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m) 
 	{
 		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(WoodType.Palm.getName());
 		TreeConfig tc = TreeRegistry.instance.treeFromString(WoodType.Palm.getName());

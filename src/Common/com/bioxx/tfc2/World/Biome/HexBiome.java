@@ -2,7 +2,7 @@ package com.bioxx.tfc2.World.Biome;
 
 import java.awt.Color;
 
-import com.bioxx.jMapGen.Map;
+import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.graph.Center;
 
 public class HexBiome 
@@ -35,7 +35,7 @@ public class HexBiome
 		color = Color.getColor("", c);
 	}
 
-	public void decorate(Map map, Center currentCenter)
+	public void decorate(IslandMap map, Center currentCenter)
 	{
 
 	}

@@ -77,7 +77,7 @@ public class RiverAttribute extends Attribute
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.Map m) 
+	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.IslandMap m) 
 	{
 		this.id = UUID.fromString(nbt.getString("uuid"));
 		river = nbt.getDouble("river");
