@@ -100,7 +100,7 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		long seed = world.getSeed()+Helper.cantorize(x, z);
 		IslandParameters id = createParams(seed, x, z);
-		IslandMap mapgen = new IslandMap(4096, seed);
+		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
 		mapgen.newIsland(id);
 		mapgen.go();
 		CachedIsland ci = new CachedIsland(mapgen);
@@ -233,7 +233,7 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			int key = iter.next();
 			CachedIsland c = islandCache.get(key);
-			if(c != null && now-c.lastAccess > 12000)//12 seconds of no access will trim the map
+			if(c != null && now-c.lastAccess > 20000)//20 seconds of no access will trim the map
 			{
 				saveMap(c);
 				islandCache.remove(key);
@@ -248,7 +248,6 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			File file1 = world.getSaveHandler().getMapFileFromName(island.islandData.getParams().getXCoord() + "," + 
 					island.islandData.getParams().getZCoord());
-
 			if (file1 != null)
 			{
 				NBTTagCompound dataNBT = new NBTTagCompound();

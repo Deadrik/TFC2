@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,7 @@ import com.bioxx.tfc2.Blocks.BlockLogNatural;
 import com.bioxx.tfc2.Blocks.BlockLogNatural2;
 import com.bioxx.tfc2.Commands.PrintImageMapCommand;
 import com.bioxx.tfc2.Networking.PacketPipeline;
+import com.bioxx.tfc2.World.WorldGen;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeConfig;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
@@ -84,6 +86,16 @@ public class TFC
 	public void serverStarting(FMLServerStartingEvent evt)
 	{
 		evt.registerServerCommand(new PrintImageMapCommand());
+	}
+
+	@EventHandler
+	public void serverStarting(FMLServerStoppingEvent evt)
+	{
+		if(WorldGen.instance != null)
+		{
+			WorldGen.instance.resetCache();
+			WorldGen.instance = null;
+		}
 	}
 
 	public void loadSettings()

@@ -28,9 +28,9 @@ import com.bioxx.tfc2.api.Types.WoodType;
 
 public class WorldGenTreeTest implements IWorldGenerator
 {
-
 	TreeSchemManager tsm;
 	TreeConfig tc;
+	TreeSchematic schem;
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
@@ -56,7 +56,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			//The theoretical max number of trees per chunk is 8.
 			//We mult this by whichever is lower, the hex moisture or the island moisture.
 			//This way base dry islands still feature less trees overall.
-			int baseTrees = (int)(8 * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
+			int baseTrees = (int)(12 * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
 			int numTrees = random.nextInt(baseTrees+1)+1;
 			//numTrees = (int)(numTrees * c.getMoisture().getMoisture());
 
@@ -88,13 +88,13 @@ public class WorldGenTreeTest implements IWorldGenerator
 		}
 	}
 
-	private void gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m, String wood) 
+	private boolean gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m, String wood) 
 	{
-		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(wood);
-		TreeConfig tc = TreeRegistry.instance.treeFromString(wood);
+		tsm = TreeRegistry.instance.managerFromString(wood);
+		tc = TreeRegistry.instance.treeFromString(wood);
 
 		if(tsm == null || tc == null)
-			return;
+			return false;
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
 		treePos = treePos.add(0, world.getHorizon(treePos).getY(), 0);
@@ -103,7 +103,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		if(c.hasMarker(Marker.Ocean))
 		{
-			return;
+			return false;
 		}
 
 		int growthStage = 0;
@@ -115,19 +115,25 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			growthStage = random.nextInt(2);
 		}
+		boolean grown = false;
 
-		TreeSchematic schem = tsm.getRandomSchematic(random, growthStage);
-
-		if( schem != null && canGrowHere(world, treePos.offsetDown(), schem))
+		for(;growthStage >= 0 && !grown; growthStage--)
 		{
-			genTree(schem, tc, world, treePos);
+			schem = tsm.getRandomSchematic(random, growthStage);
+
+			if( schem != null && canGrowHere(world, treePos.offsetDown(), schem, growthStage))
+			{
+				grown = genTree(schem, tc, world, treePos);
+			}
 		}
+
+		return grown;
 	}
 
-	private void genPalm(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m) 
+	private boolean genPalm(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m) 
 	{
-		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(WoodType.Palm.getName());
-		TreeConfig tc = TreeRegistry.instance.treeFromString(WoodType.Palm.getName());
+		tsm = TreeRegistry.instance.managerFromString(WoodType.Palm.getName());
+		tc = TreeRegistry.instance.treeFromString(WoodType.Palm.getName());
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
 		treePos = treePos.add(0, world.getHorizon(treePos).getY(), 0);
@@ -135,17 +141,22 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		if(c.hasMarker(Marker.Ocean))
 		{
-			return;
+			return false;
 		}
 
 		int growthStage = random.nextInt(3);
-
-		TreeSchematic schem = tsm.getRandomSchematic(random, growthStage);
-
-		if( schem != null && canGrowHere(world, treePos.offsetDown(), schem))
+		boolean grown = false;
+		for(;growthStage >= 0 && !grown; growthStage--)
 		{
-			genTree(schem, tc, world, treePos);
+			schem = tsm.getRandomSchematic(random, growthStage);
+
+			if( schem != null && canGrowHere(world, treePos.offsetDown(), schem, growthStage))
+			{
+				grown = genTree(schem, tc, world, treePos);
+			}
 		}
+
+		return grown;
 	}
 
 
@@ -168,47 +179,12 @@ public class WorldGenTreeTest implements IWorldGenerator
 			Process(world, baseX, baseY, baseZ, tc, schem, b.pos, rot, b.state);
 		}
 
-		/*for(int y = 0; y < schem.getSizeY(); y++)
-		{
-			for(int z = 0; z < schem.getSizeZ(); z++)
-			{
-				for(int x = 0; x < schem.getSizeX(); x++)
-				{
-					index = x + schem.getSizeX() * (z + schem.getSizeZ() * y);
-					id = schem.getBlockArray()[index];
-					meta = schem.getDataArray()[index];
-					if(id != Block.getIdFromBlock(Blocks.air))
-						Process(world, baseX, baseY, baseZ, tc, schem, x + 1, y, z + 1, rot, Block.getBlockById(id), meta);
-				}
-			}
-		}*/
-
 		return true;
 	}
 
 	private void Process(World world, int treeX, int treeY, int treeZ, TreeConfig tc,
 			Schematic schem, BlockPos localPos, int rot, IBlockState state)
 	{
-		/*int localX = treeX + schem.getCenterX() - schemX;
-		int localZ = treeZ + schem.getCenterZ() - schemZ;
-		int localY = treeY + schemY;
-
-		if(rot == 0)
-		{
-			localX = treeX - schem.getCenterX() + schemX;
-			localZ = treeZ - schem.getCenterZ() + schemZ;
-		}
-		else if(rot == 1)
-		{
-			localX = treeX - schem.getCenterX() + schemX;
-			localZ = treeZ + schem.getCenterZ() - schemZ;
-		}
-		else if(rot == 2)
-		{
-			localX = treeX + schem.getCenterX() - schemX;
-			localZ = treeZ - schem.getCenterZ() + schemZ;
-		}*/
-
 		int localX = treeX + localPos.getX() * -1;
 		int localZ = treeZ + localPos.getZ() * -1;
 		int localY = treeY + localPos.getY();
@@ -250,17 +226,18 @@ public class WorldGenTreeTest implements IWorldGenerator
 		}
 	}
 
-	private boolean canGrowHere(World world, BlockPos pos, TreeSchematic schem)
+	private boolean canGrowHere(World world, BlockPos pos, TreeSchematic schem, int growthStage)
 	{
 		IBlockState ground;
 		IBlockState above;
 		BlockPos gPos = pos;
 		BlockPos aPos = pos.offsetUp();
+		int radius = Math.max(1, growthStage);
 		int count = 0;
 
-		for(int i = -1; i <= 1; i++)
+		for(int i = -radius; i <= radius; i++)
 		{
-			for(int k = -1; k <= 1; k++)
+			for(int k = -radius; k <= radius; k++)
 			{
 				ground = world.getBlockState(gPos.add(i, 0, k));
 

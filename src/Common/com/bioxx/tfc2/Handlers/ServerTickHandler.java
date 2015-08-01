@@ -13,10 +13,13 @@ public class ServerTickHandler
 	public void onServerWorldTick(WorldTickEvent event)
 	{
 		World world = event.world;
-		if(event.phase == Phase.START)
+		if(event.phase == Phase.START && WorldGen.instance != null)
 		{
-			WorldGen.instance.trimCache();
-			WorldGen.instance.buildFromQueue();
+			if(world.provider.getDimensionId() == 0)
+			{
+				WorldGen.instance.trimCache();
+				WorldGen.instance.buildFromQueue();
+			}
 		}
 	}
 }

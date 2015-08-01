@@ -36,8 +36,8 @@ public abstract class BlockTerra extends Block
 	{
 		super(material);
 		this.META_PROP = meta;
-		if (META_PROP != null)
-			this.setDefaultState(this.getBlockState().getBaseState().withProperty(META_PROP, (Comparable)META_PROP.getAllowedValues().toArray()[0]));
+		/*if (META_PROP != null)
+			this.setDefaultState(this.getBlockState().getBaseState().withProperty(META_PROP, (Comparable)META_PROP.getAllowedValues().toArray()[0]));*/
 	}
 
 	public void setShowInCreative(boolean b)

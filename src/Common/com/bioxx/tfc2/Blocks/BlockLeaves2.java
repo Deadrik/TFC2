@@ -4,125 +4,53 @@ import java.util.Arrays;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.Point;
-import com.bioxx.tfc2.World.WorldGen;
-import com.bioxx.tfc2.api.Interfaces.INeedOffset;
 import com.bioxx.tfc2.api.Types.WoodType;
 
-public class BlockLeaves2 extends BlockTerra implements INeedOffset
+public class BlockLeaves2 extends BlockLeaves
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 19));
+	public static PropertyBool IS_OUTER = PropertyBool.create("is_outer");
 	private boolean isTransparent = true;
 
 	public BlockLeaves2()
 	{
-		super(Material.ground, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
-		this.setHardness(0.2F);
-		this.setLightOpacity(1);
-		//this.setShowInCreative(false);
+		super();
+		//this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, WoodType.Oak).withProperty(IS_OUTER, Boolean.valueOf(false)));
 	}
 
 	@Override
 	protected BlockState createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY});
+		return new BlockState(this, new IProperty[]{META_PROPERTY, IS_OUTER});
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return !this.isTransparent;
-	}
+		if(!isTransparent)
+			return state.withProperty(IS_OUTER, false);
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getBlockColor()
-	{
-		return ColorizerGrass.getGrassColor(0.5D, 1.0D);
-	}
+		if(world.getBlockState(pos.offsetNorth()).getBlock().getMaterial() != Material.leaves)
+			return state.withProperty(IS_OUTER, true);
+		if(world.getBlockState(pos.offsetSouth()).getBlock().getMaterial() != Material.leaves)
+			return state.withProperty(IS_OUTER, true);
+		if(world.getBlockState(pos.offsetEast()).getBlock().getMaterial() != Material.leaves)
+			return state.withProperty(IS_OUTER, true);
+		if(world.getBlockState(pos.offsetWest()).getBlock().getMaterial() != Material.leaves)
+			return state.withProperty(IS_OUTER, true);
+		if(world.getBlockState(pos.offsetUp()).getBlock().getMaterial() != Material.leaves)
+			return state.withProperty(IS_OUTER, true);
+		if(world.getBlockState(pos.offsetDown()).getBlock().getMaterial() != Material.leaves)
+			return state.withProperty(IS_OUTER, true);
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
-	{
-		int x = pos.getX() >> 12;
-		int z = pos.getZ() >> 12;
-		if(WorldGen.instance == null)
-			return 0x55ff55;
-		IslandMap m = WorldGen.instance.getIslandMap(x, z);
-		double d0 = m.getParams().getIslandTemp().getTemp();
-		double d1 = m.getSelectedHexagon(new Point(pos.getX(), pos.getZ())).moisture;
+		return state.withProperty(IS_OUTER, false);
 
-		if(d1 < 0.25)
-		{
-			IBlockState state = worldIn.getBlockState(pos);
-			if(state.getValue(META_PROPERTY) == WoodType.Acacia)
-				d1 = 0.25;
-		}
-
-		return ColorizerGrass.getGrassColor(d0, d1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderColor(IBlockState state)
-	{
-		return this.getBlockColor();
-	}
-
-	/**
-	 * Pass true to draw this block using fancy graphics, or false for fast graphics.
-	 */
-	@SideOnly(Side.CLIENT)
-	public void setGraphicsLevel(boolean p_150122_1_)
-	{
-		this.isTransparent = p_150122_1_;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
-	{
-		return this.isTransparent ? EnumWorldBlockLayer.CUTOUT_MIPPED : EnumWorldBlockLayer.SOLID;
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta(meta));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return ((WoodType)state.getValue(META_PROPERTY)).getMeta();
-	}
-
-	@Override
-	public int damageDropped(IBlockState state)
-	{
-		return ((WoodType)state.getValue(META_PROPERTY)).getMeta();
-	}
-
-	@Override
-	public int convertMeta(int meta) 
-	{
-		if(meta < 16)
-			return meta + 16;
-		else
-			return meta;
 	}
 }

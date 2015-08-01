@@ -14,7 +14,7 @@
      	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/trees/Hickory Leaves"} },
         	"maple":  { "textures": {"all": "tfc2:blocks/wood/trees/Maple Leaves"} },
         	"oak":  { "textures": {"all": "tfc2:blocks/wood/trees/Oak Leaves"} },
-        	"pine":  { "textures": {"all": "tfc2:blocks/wood/trees/Pine Leaves"} },
+        	"pine":  { "textures": {"all": "tfc2:blocks/wood/trees/Pine Leaves", "fluff": "tfc2:blocks/wood/trees/Pine Leaves Fluff"} },
    	     	"sequoia":  { "textures": {"all": "tfc2:blocks/wood/trees/Sequoia Leaves"} },
         	"spruce":  { "textures": {"all": "tfc2:blocks/wood/trees/Spruce Leaves"} },
  	       	"sycamore":  { "textures": {"all": "tfc2:blocks/wood/trees/Sycamore Leaves"} },
@@ -22,6 +22,10 @@
     	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/Willow Leaves"} },
     	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/Kapok Leaves"} },
     	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/Acacia Leaves"} }
-        }
+        },
+     "is_outer": {
+     		"true":{"model": "tfc2:leaves_fancy"},
+     		"false":{"model": "tfc2:leaves"}
+     	}        
     }
 }

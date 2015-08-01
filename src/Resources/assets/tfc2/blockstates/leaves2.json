@@ -1,0 +1,18 @@
+{
+	"forge_marker" : 1,
+	"defaults": {
+		"model": "tfc2:leaves",
+		"textures": {"all": "tfc2:blocks/wood/trees/Acacia Leaves", "fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff"}
+	},
+    "variants": {
+    "wood":{
+        	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/trees/Rosewood Leaves"} },
+        	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/trees/Blackwood Leaves"} },
+    	    "palm":  { "textures": {"all": "tfc2:blocks/wood/trees/Palm Leaves"} }
+        },
+     "is_outer": {
+     		"true":{"model": "tfc2:leaves_fancy"},
+     		"false":{"model": "tfc2:leaves"}
+     	}        
+    }
+}
