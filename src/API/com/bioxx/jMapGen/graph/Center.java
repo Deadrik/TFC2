@@ -3,6 +3,7 @@ package com.bioxx.jMapGen.graph;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -13,6 +14,7 @@ import com.bioxx.jMapGen.BiomeType;
 import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.attributes.Attribute;
+import com.bioxx.jMapGen.attributes.RiverAttribute;
 import com.bioxx.tfc2.api.Types.Moisture;
 
 
@@ -146,6 +148,67 @@ public class Center
 				return n;
 		}
 		return null;
+	}
+
+	public Center getRandomNeighbor(Random r)
+	{
+		return neighbors.get(r.nextInt(neighbors.size()));
+	}
+
+	public Center getHighestNeighbor()
+	{
+		Center highest = this;
+		for(Iterator<Center> centerIter2 = neighbors.iterator(); centerIter2.hasNext();)
+		{
+			Center center2 = (Center)centerIter2.next();
+			if(highest == null || center2.elevation > highest.elevation)
+				highest = center2;
+		}
+		RiverAttribute attrib = ((RiverAttribute)getAttribute(Attribute.riverUUID));
+		if(attrib != null && attrib.upriver != null)
+		{
+			highest = getLowestFromGroup(attrib.upriver);
+		}
+		return highest;
+	}
+
+	public Center getLowestNeighbor()
+	{
+		Center lowest = this;
+		for(Iterator<Center> centerIter2 = neighbors.iterator(); centerIter2.hasNext();)
+		{
+			Center center2 = (Center)centerIter2.next();
+			if(lowest == null || center2.elevation < lowest.elevation)
+				lowest = center2;
+		}
+		RiverAttribute attrib = ((RiverAttribute)getAttribute(Attribute.riverUUID));
+		if(attrib != null && attrib.getDownRiver() != null)
+			lowest = attrib.getDownRiver();
+		return lowest;
+	}
+
+	private Center getLowestFromGroup(Vector<Center> group)
+	{
+		Center lowest = group.get(0);
+		for(Iterator<Center> centerIter2 = group.iterator(); centerIter2.hasNext();)
+		{
+			Center center2 = (Center)centerIter2.next();
+			if(lowest == null || center2.elevation < lowest.elevation)
+				lowest = center2;
+		}
+		return lowest;
+	}
+
+	private Center getHighestFromGroup(Vector<Center> group)
+	{
+		Center highest = group.get(0);
+		for(Iterator<Center> centerIter2 = group.iterator(); centerIter2.hasNext();)
+		{
+			Center center2 = (Center)centerIter2.next();
+			if(highest == null || center2.elevation > highest.elevation)
+				highest = center2;
+		}
+		return highest;
 	}
 
 	public Corner getClosestCorner(Point p)

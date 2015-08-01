@@ -31,7 +31,6 @@ import com.bioxx.jMapGen.graph.CornerElevationSorter;
 import com.bioxx.jMapGen.graph.Edge;
 import com.bioxx.jMapGen.graph.MoistureComparator;
 import com.bioxx.jMapGen.pathfinding.PathFinder;
-import com.bioxx.tfc2.TFC;
 
 public class IslandMap 
 {
@@ -117,7 +116,7 @@ public class IslandMap
 		{
 			seed += 1234567;
 			newIsland(islandParams);
-			TFC.log.info("Tossed Island Shape");
+			System.out.println("TFC2: Island Gen: Tossed Island Shape");
 
 		}
 
@@ -484,7 +483,7 @@ public class IslandMap
 		}
 	}
 
-	private Center getHighestNeighbor(Center c)
+	public Center getHighestNeighbor(Center c)
 	{
 		Center highest = c;
 		for(Iterator<Center> centerIter2 = c.neighbors.iterator(); centerIter2.hasNext();)
@@ -501,7 +500,7 @@ public class IslandMap
 		return highest;
 	}
 
-	private Center getLowestNeighbor(Center c)
+	public Center getLowestNeighbor(Center c)
 	{
 		Center lowest = c;
 		for(Iterator<Center> centerIter2 = c.neighbors.iterator(); centerIter2.hasNext();)
@@ -1801,12 +1800,12 @@ public class IslandMap
 		return null;
 	}
 
-	private int convertHeightToMC(double d)
+	public int convertHeightToMC(double d)
 	{
 		return (int)Math.floor(this.islandParams.islandMaxHeight * d);
 	}
 
-	private double convertMCToHeight(int i)
+	public double convertMCToHeight(int i)
 	{
 		return i/this.islandParams.islandMaxHeight;
 	}
