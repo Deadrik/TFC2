@@ -1145,13 +1145,12 @@ public class IslandMap
 		{
 			p = centers.get(i);
 			numWater = 0;
+
 			for(int j = 0; j < p.corners.size(); j++)
 			{
 				q = p.corners.get(j);
 				if (q.hasMarker(Marker.Border)) 
 				{
-					if(p.elevation > 0)
-						numBorderLand++;
 					p.setMarkers(Marker.Border, Marker.Ocean);
 					q.setMarkers(Marker.Water);
 					queue.add(p);
@@ -1161,6 +1160,9 @@ public class IslandMap
 					numWater += 1;
 				}
 			}
+
+			if(p.hasMarker(Marker.Border))
+				numBorderLand++;
 
 			if((p.hasMarker(Marker.Ocean) || numWater >= p.corners.size() * this.islandParams.lakeThreshold))
 				p.setMarkers(Marker.Water);
