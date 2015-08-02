@@ -155,6 +155,14 @@ public class Center
 		return neighbors.get(r.nextInt(neighbors.size()));
 	}
 
+	public Center getRandomNeighborExcept(Random r, Center c)
+	{
+		Center out = getRandomNeighbor(r);
+		while(out == c)
+			out = getRandomNeighbor(r);
+		return out;
+	}
+
 	public Center getHighestNeighbor()
 	{
 		Center highest = this;
@@ -187,7 +195,7 @@ public class Center
 		return lowest;
 	}
 
-	private Center getLowestFromGroup(Vector<Center> group)
+	public Center getLowestFromGroup(Vector<Center> group)
 	{
 		Center lowest = group.get(0);
 		for(Iterator<Center> centerIter2 = group.iterator(); centerIter2.hasNext();)
@@ -199,7 +207,7 @@ public class Center
 		return lowest;
 	}
 
-	private Center getHighestFromGroup(Vector<Center> group)
+	public Center getHighestFromGroup(Vector<Center> group)
 	{
 		Center highest = group.get(0);
 		for(Iterator<Center> centerIter2 = group.iterator(); centerIter2.hasNext();)
@@ -209,6 +217,23 @@ public class Center
 				highest = center2;
 		}
 		return highest;
+	}
+
+	public Center getRandomFromGroup(Random r, Vector<Center> centers)
+	{
+		if(centers.size() == 0)
+			return null;
+		return centers.get(r.nextInt(centers.size()));
+	}
+
+	public Vector<Center> getOnlyHigherCenters()
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : neighbors)
+			if(c.getElevation() > getElevation())
+				out.add(c);
+
+		return out;
 	}
 
 	public Corner getClosestCorner(Point p)

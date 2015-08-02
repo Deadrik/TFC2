@@ -10,6 +10,7 @@ import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.attributes.Attribute;
+import com.bioxx.jMapGen.attributes.CaveAttribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
 import com.bioxx.jMapGen.graph.Center;
 import com.bioxx.tfc2.World.WorldGen;
@@ -46,6 +47,14 @@ public class RenderOverlayHandler
 				if(attrib.upriver != null && attrib.getDownRiver() != null)
 					event.left.add("Up :" + hex.getDirection(attrib.upriver.get(0)).toString() + " | Dn :" + hex.getDirection(attrib.getDownRiver()).toString());
 			}
+
+			CaveAttribute cattrib = (CaveAttribute)hex.getAttribute(Attribute.caveUUID);
+			if(cattrib != null)
+			{
+				if(cattrib.nodes.size() > 0)
+					event.left.add("Cave: ");	
+			}
+
 			event.right.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--Island Parmaters--");
 			event.right.add("*Moisture: "+map.getParams().getIslandMoisture());
 			event.right.add("*Temperature: "+map.getParams().getIslandTemp());

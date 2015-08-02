@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.World;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Vector;
 
@@ -8,6 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
@@ -20,23 +23,29 @@ import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.Point;
 import com.bioxx.jMapGen.Spline2D;
+import com.bioxx.jMapGen.Spline3D;
 import com.bioxx.jMapGen.attributes.Attribute;
 import com.bioxx.jMapGen.attributes.CanyonAttribute;
+import com.bioxx.jMapGen.attributes.CaveAttribute;
 import com.bioxx.jMapGen.attributes.LakeAttribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
+import com.bioxx.jMapGen.cave.CaveAttrNode;
 import com.bioxx.jMapGen.graph.Center;
 import com.bioxx.jMapGen.graph.Center.Marker;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
+import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
+import com.bioxx.tfc2.api.Global;
 
 public class ChunkProviderSurface extends ChunkProviderGenerate 
 {
 	private World worldObj;
 	private Random rand;
 	private static final int MAP_SIZE = 4096;
-	private static final int SEA_LEVEL = 64;
 	int worldX;//This is the x coordinate of the chunk using world coords.
 	int worldZ;//This is the z coordinate of the chunk using world coords.
 	int islandChunkX;//This is the x coordinate of the chunk within the bounds of the island (0 - MAP_SIZE)
@@ -129,7 +138,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		generateTerrain(chunkprimer, chunkX, chunkZ);
 		decorate(chunkprimer, chunkX, chunkZ);
 
-		this.caveGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
+		//this.caveGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
 
 		Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
 		chunk.setHeightMap(elevationMap);
@@ -216,7 +225,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							}
 						}
 
-						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= SEA_LEVEL + 3)
+						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 3)
 						{
 							chunkprimer.setBlockState(x, y, z, sand);
 						}
@@ -268,6 +277,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		}
 
 		carveRiverSpline(chunkprimer);
+		this.carveCaves(chunkprimer);
 	}
 
 	private Block getBlock(ChunkPrimer chunkprimer, int x, int y, int z)
@@ -327,7 +337,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	protected int convertElevation(double height)
 	{
-		return (int)(SEA_LEVEL+height * islandMap.getParams().islandMaxHeight);
+		return (int)(Global.SEALEVEL+height * islandMap.getParams().islandMaxHeight);
 	}
 
 	protected void generateTerrain(ChunkPrimer chunkprimer, int chunkX, int chunkZ)
@@ -345,20 +355,23 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
 
-				int hexElev = getHexElevation(closestCenter, p);
+				int hexElev = 0;
+				if(closestCenter.hasMarker(Marker.Ocean) && !closestCenter.hasMarker(Marker.CoastWater))
+					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p));
+				else 
+					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p));
+
+
+
 				elevationMap[z << 4 | x] = hexElev;
-				for(int y = Math.min(Math.max(hexElev, SEA_LEVEL), 255); y >= 0; y--)
+				for(int y = Math.min(Math.max(hexElev, Global.SEALEVEL), 255); y >= 0; y--)
 				{
 					Block b = Blocks.air;
-					if(!closestCenter.hasMarker(Marker.Ocean) && y < hexElev)
+					if(y < hexElev)
 					{
 						b = Blocks.stone;
 					}
-					else if(y < hexElev)
-					{
-						b = Blocks.stone;
-					}
-					else if(y < SEA_LEVEL)
+					else if(y < Global.SEALEVEL)
 					{
 						b = TFCBlocks.SaltWater;
 					}
@@ -447,7 +460,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		Point interval, temp;
 		Center closest;
-		int waterLevel = SEA_LEVEL;
+		int waterLevel = Global.SEALEVEL;
 		//if(c.water)
 		waterLevel = Math.max(convertElevation(c.elevation), waterLevel);
 
@@ -493,8 +506,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					if(u != null && yC > convertElevation(u.elevation) && m < 0.5)
 						continue;
 
-					if(yC < SEA_LEVEL+1)
-						yC = SEA_LEVEL;
+					if(yC < Global.SEALEVEL+1)
+						yC = Global.SEALEVEL;
 
 					int y = -1, i = 0;
 					if(attrib.getRiver() < 1)
@@ -615,4 +628,79 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	private double squared(double d) { return d * d; }
 
 	private double dist2(Point v, Point w) { return squared(v.x - w.x) + squared(v.y - w.y); }
+
+	protected void carveCaves(ChunkPrimer chunkprimer)
+	{
+		ArrayList<BlockPos> points = new ArrayList<BlockPos>();
+		BlockPos pos, pos2;
+		Spline3D spline;
+		Point iPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
+		Vec3i islandOffset = new Vec3i(iPoint.x, 0, iPoint.y);
+		double wSq = 4;
+
+		for(Center c : centersInChunk)
+		{
+			CaveAttribute attrib = ((CaveAttribute)c.getAttribute(Attribute.caveUUID));
+			if(attrib != null)
+			{
+				for(CaveAttrNode n : attrib.nodes)
+				{
+					wSq = n.getNodeWidth() * n.getNodeWidth();
+					points.clear();
+					if(n.getPrev() != null)
+						points.add(n.getPrevOffset().subtract(islandOffset));
+					points.add(n.getOffset().subtract(islandOffset));
+					if(n.getNext() != null)
+						points.add(n.getNextOffset().subtract(islandOffset));
+
+					spline = new Spline3D(points);
+					for(double i = 0; i < 1; i+= 0.05)
+					{
+						pos = spline.getPoint(i);
+						Iterable iter = BlockPos.getAllInBox(pos.add(-n.getNodeWidth(), -n.getNodeHeight(), -n.getNodeWidth()), 
+								pos.add(n.getNodeWidth(), n.getNodeHeight(), n.getNodeWidth()));
+						Iterator it = iter.iterator();
+						while(it.hasNext())
+						{
+							pos2 = (BlockPos) it.next();
+							if(pos.distanceSqToCenter(pos2.getX(), pos2.getY(), pos2.getZ()) <= wSq)
+							{
+								if(pos2.getX() >= 0 && pos2.getY() >= 0 && pos2.getZ() >= 0 && pos2.getX() < 16 && pos2.getY() < 256 && pos2.getZ() < 16)
+								{
+									Block b = chunkprimer.getBlockState(pos2.getX(), pos2.getY(), pos2.getZ()).getBlock();
+									if(b != Blocks.bedrock && b.getMaterial() != Material.water)
+									{
+										IBlockState down = getState(chunkprimer, pos2.offsetDown());
+										if(Core.isDirt(down))
+										{
+											setState(chunkprimer, pos2.offsetDown(), TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, down.getValue(BlockDirt.META_PROPERTY)));
+										}
+
+										if(n.isSeaCave() && pos2.getY() < Global.SEALEVEL)
+											setState(chunkprimer, pos2, TFCBlocks.SaltWater.getDefaultState());
+										else
+											setState(chunkprimer, pos2, Blocks.air.getDefaultState());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public IBlockState getState(ChunkPrimer primer, BlockPos pos)
+	{
+		if(pos.getX() >= 0 && pos.getY() >= 0 && pos.getZ() >= 0 && pos.getX() < 16 && pos.getY() < 256 && pos.getZ() < 16)
+			return primer.getBlockState(pos.getX(), pos.getY(), pos.getZ());
+		return null;
+	}
+
+	public void setState(ChunkPrimer primer, BlockPos pos, IBlockState state)
+	{
+		if(pos.getX() >= 0 && pos.getY() >= 0 && pos.getZ() >= 0 && pos.getX() < 16 && pos.getY() < 256 && pos.getZ() < 16)
+			primer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), state);
+	}
+
 }

@@ -20,6 +20,7 @@ import com.bioxx.jMapGen.attributes.CanyonAttribute;
 import com.bioxx.jMapGen.attributes.GorgeAttribute;
 import com.bioxx.jMapGen.attributes.LakeAttribute;
 import com.bioxx.jMapGen.attributes.RiverAttribute;
+import com.bioxx.jMapGen.cave.CaveProcessor;
 import com.bioxx.jMapGen.com.nodename.Delaunay.DelaunayUtil;
 import com.bioxx.jMapGen.com.nodename.Delaunay.Voronoi;
 import com.bioxx.jMapGen.com.nodename.geom.LineSegment;
@@ -61,6 +62,8 @@ public class IslandMap
 
 	public PathFinder pathfinder;
 
+	private CaveProcessor caves;
+
 	public IslandMap(int size, long s) 
 	{
 		SIZE = size;
@@ -72,6 +75,7 @@ public class IslandMap
 		lakes = new Vector<Lake>();
 		rivers = new Vector<River>();
 		pathfinder = new PathFinder(this);
+		caves = new CaveProcessor(this);
 	}
 
 	// Random parameters governing the overall shape of the island
@@ -181,6 +185,8 @@ public class IslandMap
 
 		sortClockwise();
 		setupBiomeInfo();
+
+		caves.generate();
 	}
 
 	private void createCanyons()
@@ -1708,22 +1714,22 @@ public class IslandMap
 
 						if(hd == HexDirection.North || hd == HexDirection.South)
 							if((rn.center.index & 1) > 0)
-								x = 8 - Attrib.getRiver();
+							{x = 6 - Attrib.getRiver(); y = -4 + Attrib.getRiver();}
 							else
-								x = -8 + Attrib.getRiver();
+							{x = -6 + Attrib.getRiver(); y = 4 - Attrib.getRiver();}
 						else if(hd == HexDirection.NorthEast || hd == HexDirection.SouthWest)
 						{
 							if((rn.center.index & 1) > 0)
-							{y = -8 - Attrib.getRiver(); x = -8 - Attrib.getRiver();}
+							{y = -6 + Attrib.getRiver(); x = -6 + Attrib.getRiver();}
 							else
-							{y = 8 + Attrib.getRiver(); x = 8 - Attrib.getRiver();}
+							{y = 6 - Attrib.getRiver(); x = 6 - Attrib.getRiver();}
 						}
 						else if(hd == HexDirection.SouthEast || hd == HexDirection.NorthWest)
 						{
 							if((rn.center.index & 1) > 0)
-							{y = -8 - Attrib.getRiver(); x = 8 - Attrib.getRiver();}
+							{y = -6 + Attrib.getRiver(); x = 6 - Attrib.getRiver();}
 							else
-							{y = 8 + Attrib.getRiver(); x = -8 - Attrib.getRiver();}
+							{y = 6 - Attrib.getRiver(); x = -6 + Attrib.getRiver();}
 						}
 						else
 						{
