@@ -268,7 +268,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
 					}
 
-					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == TFCBlocks.SaltWater.getDefaultState())
+					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == TFCBlocks.SaltWaterStatic.getDefaultState())
 					{
 						chunkprimer.setBlockState(x, y, z, sand);
 					}
@@ -373,7 +373,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					}
 					else if(y < Global.SEALEVEL)
 					{
-						b = TFCBlocks.SaltWater;
+						b = TFCBlocks.SaltWaterStatic;
 					}
 
 					if(y <= 1)
@@ -516,7 +516,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						IBlockState bs = chunkprimer.getBlockState(xC, yC+y, zC);
 						//We dont want to replace any existing water blocks
-						if(bs != TFCBlocks.FreshWater.getDefaultState() && bs != TFCBlocks.SaltWater.getDefaultState() && bs != Blocks.flowing_lava.getDefaultState())
+						if(bs != TFCBlocks.FreshWater.getDefaultState() && bs != TFCBlocks.SaltWaterStatic.getDefaultState() && bs != Blocks.flowing_lava.getDefaultState())
 						{
 							bs = fillBlocks[i];
 							//This converts 60% of the river water into stationary blocks so that we cut down on the number of required updates.
@@ -677,7 +677,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 										}
 
 										if(n.isSeaCave() && pos2.getY() < Global.SEALEVEL)
-											setState(chunkprimer, pos2, TFCBlocks.SaltWater.getDefaultState());
+											setState(chunkprimer, pos2, TFCBlocks.SaltWaterStatic.getDefaultState());
 										else
 											setState(chunkprimer, pos2, Blocks.air.getDefaultState());
 									}

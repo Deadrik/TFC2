@@ -37,8 +37,10 @@ public class ClientProxy extends CommonProxy
 		super.preInit(event);
 		Item fresh = Item.getItemFromBlock(TFCBlocks.FreshWater);
 		Item salt = Item.getItemFromBlock(TFCBlocks.SaltWater);
+		Item saltstatic = Item.getItemFromBlock(TFCBlocks.SaltWaterStatic);
 		ModelBakery.addVariantName(fresh);
 		ModelBakery.addVariantName(salt);
+		ModelBakery.addVariantName(saltstatic);
 		ModelLoader.setCustomMeshDefinition(fresh, new ItemMeshDefinition()
 		{
 			@Override
@@ -55,6 +57,14 @@ public class ClientProxy extends CommonProxy
 				return saltwaterLocation;
 			}
 		});
+		ModelLoader.setCustomMeshDefinition(saltstatic, new ItemMeshDefinition()
+		{
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return saltwaterLocation;
+			}
+		});
 		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWater, new StateMapperBase()
 		{
 			@Override
@@ -64,6 +74,14 @@ public class ClientProxy extends CommonProxy
 			}
 		});
 		ModelLoader.setCustomStateMapper(TFCBlocks.SaltWater, new StateMapperBase()
+		{
+			@Override
+			protected ModelResourceLocation func_178132_a(IBlockState state)//getModelResourceLocation
+			{
+				return saltwaterLocation;
+			}
+		});
+		ModelLoader.setCustomStateMapper(TFCBlocks.SaltWaterStatic, new StateMapperBase()
 		{
 			@Override
 			protected ModelResourceLocation func_178132_a(IBlockState state)//getModelResourceLocation

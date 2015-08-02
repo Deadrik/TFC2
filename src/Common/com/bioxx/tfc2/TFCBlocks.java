@@ -19,6 +19,7 @@ import com.bioxx.tfc2.Blocks.BlockLooseRocks;
 import com.bioxx.tfc2.Blocks.BlockPlanks;
 import com.bioxx.tfc2.Blocks.BlockPlanks2;
 import com.bioxx.tfc2.Blocks.BlockSaltWater;
+import com.bioxx.tfc2.Blocks.BlockSaltWaterStatic;
 import com.bioxx.tfc2.Blocks.BlockSapling;
 import com.bioxx.tfc2.Blocks.BlockSapling2;
 import com.bioxx.tfc2.Blocks.BlockVegetation;
@@ -48,6 +49,8 @@ public class TFCBlocks
 	public static Block LooseRocks;
 	public static Block FreshWater;
 	public static Block SaltWater;
+	public static Block FreshWaterStatic;
+	public static Block SaltWaterStatic;
 	public static Block Sapling;
 	public static Block Sapling2;
 	public static Block LogNatural;
@@ -78,8 +81,9 @@ public class TFCBlocks
 		Effect = new BlockEffect().setHardness(0.1F).setStepSound(Block.soundTypeWood).setUnlocalizedName("effect");
 		Vegetation = new BlockVegetation().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("vegetation");
 		LooseRocks = new BlockLooseRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("loose_rock");
-		FreshWater = new BlockFreshWater(TFCFluids.FRESHWATER, Material.water).setUnlocalizedName("freshwater");
-		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater");
+		FreshWater = new BlockFreshWater(TFCFluids.FRESHWATER, Material.water).setUnlocalizedName("freshwater").setLightOpacity(3);
+		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater").setLightOpacity(3);
+		SaltWaterStatic = new BlockSaltWaterStatic(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater").setLightOpacity(3);
 		Sapling = new BlockSapling().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling");
 		Sapling2 = new BlockSapling2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling2");
 		LogNatural = new BlockLogNatural().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural");
@@ -113,6 +117,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(LooseRocks, "loose_rock");
 		GameRegistry.registerBlock(FreshWater, "freshwater");
 		GameRegistry.registerBlock(SaltWater, "saltwater");
+		GameRegistry.registerBlock(SaltWaterStatic, "saltwater_static");
 		GameRegistry.registerBlock(Sapling, ItemWood.class, "sapling");
 		GameRegistry.registerBlock(Sapling2, ItemWood.class, "sapling2");
 		GameRegistry.registerBlock(LogNatural, ItemWood.class, "log_natural");

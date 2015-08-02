@@ -104,8 +104,12 @@ public class BlockSaltWater extends BlockFluidClassic {
 
 			if(count > 1)
 			{
-				world.setBlockState(pos, state.withProperty(LEVEL, 0));
+				world.setBlockState(pos, TFCBlocks.SaltWaterStatic.getDefaultState().withProperty(LEVEL, 0));
 			}
+		}
+		else
+		{
+			world.setBlockState(pos, TFCBlocks.SaltWaterStatic.getDefaultState().withProperty(LEVEL, 0), 2);
 		}
 	}
 }
