@@ -85,4 +85,25 @@ public class Core
 
 		return false;
 	}
+
+	public static boolean isStone(IBlockState state)
+	{
+		if(state.getBlock() == TFCBlocks.Stone)
+			return true;
+
+		return false;
+	}
+
+	public static boolean isGravel(IBlockState state)
+	{
+		if(state.getBlock() == TFCBlocks.Gravel)
+			return true;
+
+		return false;
+	}
+
+	public static boolean isTerrain(IBlockState state)
+	{
+		return isSoil(state) || isSand(state) || isStone(state) || isGravel(state);
+	}
 }

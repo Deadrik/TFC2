@@ -108,4 +108,9 @@ public class Point extends Point2D
 		this.y = Math.ceil(this.y);
 		return this;
 	}
+
+	public Point midpoint(Point p)
+	{
+		return new Point((x + p.x)/2, (y + p.y)/2);
+	}
 }

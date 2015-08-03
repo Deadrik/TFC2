@@ -20,6 +20,7 @@ import com.bioxx.jMapGen.IslandMap;
 import com.bioxx.jMapGen.IslandParameters;
 import com.bioxx.jMapGen.IslandParameters.Feature;
 import com.bioxx.jMapGen.RandomCollection;
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.Trees.TreeRegistry;
 import com.bioxx.tfc2.api.Types.ClimateTemp;
@@ -296,6 +297,7 @@ public class WorldGen implements IThreadCompleteListener
 		}
 		catch (Exception exception)
 		{
+			TFC.log.warn("Error Loading Island: " + x + ", " + z);
 			exception.printStackTrace();
 		}
 
