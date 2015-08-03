@@ -23,7 +23,7 @@ public abstract class BlockTerra extends Block
 	/**
 	 * This is the internal Property for metadata
 	 */
-	private final PropertyHelper META_PROP;
+	protected PropertyHelper META_PROP;
 
 	private boolean showInCreative = true;
 

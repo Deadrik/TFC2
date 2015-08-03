@@ -1,0 +1,14 @@
+{
+    "textures": {
+        "particle": "#top"
+    },
+    "elements": [
+        {   "from": [ 0, 15, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#top", "tintindex": 0, "cullface": "up" },
+                "down":    { "uv": [ 0, 0, 16, 16 ], "texture": "#top", "tintindex": 0, "cullface": "down" }
+            }
+        }
+    ]
+}

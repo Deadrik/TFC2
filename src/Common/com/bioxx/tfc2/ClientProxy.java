@@ -24,6 +24,7 @@ import com.bioxx.tfc2.Handlers.Client.BackgroundMusicHandler;
 import com.bioxx.tfc2.Handlers.Client.ClientRenderHandler;
 import com.bioxx.tfc2.Handlers.Client.KeyBindingHandler;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.Types.WoodType;
 import com.bioxx.tfc2.api.Util.KeyBindings;
 
 public class ClientProxy extends CommonProxy
@@ -115,22 +116,38 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + stone);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + stone);
 		}
-		for(int l = 0; l < Global.WOOD_STANDARD.length; l++)
+		for(int l = 0; l < 16; l++)
 		{
-			String wood = Core.textConvert(Global.WOOD_STANDARD[l]);
+			String wood = Core.textConvert(WoodType.values()[l].getName());
 
 			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Planks), l, new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory"));
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks), Reference.ModID + ":Wood/Planks/" + wood);
 			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Sapling), l, new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory"));
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling), Reference.ModID + ":Wood/Saplings/" + wood);
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Sapling2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling2), Reference.ModID + ":Wood/Saplings/" + wood);
 			registerItemMesh(Item.getItemFromBlock(TFCBlocks.LogVertical), l, new ModelResourceLocation(Reference.ModID + ":Wood/Logs/" + wood, "inventory"));
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogVertical), Reference.ModID + ":Wood/Logs/" + wood);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal), Reference.ModID + ":Wood/Logs/" + wood);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal2), Reference.ModID + ":Wood/Logs/" + wood);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural), Reference.ModID + ":Wood/Logs/" + wood);
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Leaves), l, new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves), Reference.ModID + ":Wood/Saplings/" + wood);
 
+		}
+
+		for(int l = 16; l < 19; l++)
+		{
+			String wood = Core.textConvert(WoodType.values()[l].getName());
+
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Planks2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks2), Reference.ModID + ":Wood/Planks/" + wood);
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Sapling2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling2), Reference.ModID + ":Wood/Saplings/" + wood);
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.LogVertical2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Logs/" + wood, "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogVertical2), Reference.ModID + ":Wood/Logs/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal3), Reference.ModID + ":Wood/Logs/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural2), Reference.ModID + ":Wood/Logs/" + wood);
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Leaves2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves2), Reference.ModID + ":Wood/Saplings/" + wood);
 		}
 	}
 

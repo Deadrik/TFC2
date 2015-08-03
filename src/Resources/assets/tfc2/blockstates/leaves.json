@@ -5,6 +5,10 @@
 		"textures": {"all": "tfc2:blocks/wood/trees/Acacia Leaves", "fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff"}
 	},
     "variants": {
+    "is_outer": {
+     		"true":{"model": "tfc2:leaves_fancy"},
+     		"false":{}
+     	},    
     "wood":{
         	"ash":  { "textures": {"all": "tfc2:blocks/wood/trees/Ash Leaves"} },
         	"aspen":  { "textures": {"all": "tfc2:blocks/wood/trees/Aspen Leaves"} },
@@ -23,9 +27,41 @@
     	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/Kapok Leaves"} },
     	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/Acacia Leaves"} }
         },
-     "is_outer": {
-     		"true":{"model": "tfc2:leaves_fancy"},
-     		"false":{"model": "tfc2:leaves"}
-     	}        
+     	"north": 
+     	{
+     		"true":{},
+     		"false":{}
+     	},
+     	"south": 
+     	{
+     		"true":{},
+     		"false":{}
+     	},
+     	"east": 
+     	{
+     		"true":{},
+     		"false":{}
+     	},
+     	"west": 
+     	{
+     		"true":{},
+     		"false":{}
+     	},
+     	"downnorth": {
+     		"true":{},
+     		"false":{}
+     	},
+     	"downsouth": {
+     		"true":{},
+     		"false":{}
+     	},
+     	"downeast": {
+     		"true":{},
+     		"false":{}
+     	},
+     	"downwest": {
+     		"true":{},
+     		"false":{}
+     	}
     }
 }
