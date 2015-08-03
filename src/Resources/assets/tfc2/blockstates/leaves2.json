@@ -5,10 +5,11 @@
 		"textures": {"all": "tfc2:blocks/wood/trees/Acacia Leaves", "fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff"}
 	},
     "variants": {
+    "is_outer=true,wood=palm": {"model": "tfc2:leaves_palm", "textures": {"side": "tfc2:blocks/wood/trees/Palm Leaves", "top": "tfc2:blocks/wood/trees/Palm Leaves Top"} },
     "wood":{
         	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/trees/Rosewood Leaves"} },
         	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/trees/Blackwood Leaves"} },
-    	    "palm":  { "textures": {"all": "tfc2:blocks/wood/trees/Palm Leaves"} }
+    	    "palm":  { "textures": {"all": "tfc2:blocks/wood/trees/Palm Leaves"}, "model": "tfc2:leaves"}
         },
      "is_outer": {
      		"true":{"model": "tfc2:leaves_fancy"},
