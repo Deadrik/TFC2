@@ -244,7 +244,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							boolean border = isLakeBorder(p, closestCenter, 7);
 							if(!border && y < this.convertElevation(closestCenter.getElevation()) && y >= this.convertElevation(closestCenter.getElevation())-1)
 							{
-								chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
+								chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWaterStatic.getDefaultState());
 								chunkprimer.setBlockState(x, y-1, z, dirt);
 							}
 						}
@@ -255,8 +255,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.lakeUUID);
 						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water
 						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 4)-1)
-							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
-						if(getBlock(chunkprimer, x, y, z).isSolidFullCube() && blockUp == TFCBlocks.FreshWater.getDefaultState())
+							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWaterStatic.getDefaultState());
+						if(getBlock(chunkprimer, x, y, z).isSolidFullCube() && blockUp == TFCBlocks.FreshWaterStatic.getDefaultState())
 						{
 							chunkprimer.setBlockState(x, y, z, sand);
 						}
@@ -265,7 +265,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.lakeUUID);
 						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
-							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
+							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWaterStatic.getDefaultState());
 					}
 
 					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == TFCBlocks.SaltWaterStatic.getDefaultState())
@@ -391,7 +391,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		int riverDepth = 0;
 		IBlockState gravel = TFCBlocks.Gravel.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		IBlockState[] bankStates = new IBlockState[] {Blocks.air.getDefaultState(), gravel};
-		IBlockState[] riverStates = new IBlockState[] {Blocks.air.getDefaultState(), TFCBlocks.FreshWater.getDefaultState(), gravel};
+		IBlockState[] riverStates = new IBlockState[] {Blocks.air.getDefaultState(), TFCBlocks.FreshWaterStatic.getDefaultState(), gravel};
 
 		/*if(this.islandMap.islandParams.shouldGenVolcano())
 			riverStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.flowing_lava.getDefaultState(), Blocks.gravel.getDefaultState()};*/
@@ -516,11 +516,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						IBlockState bs = chunkprimer.getBlockState(xC, yC+y, zC);
 						//We dont want to replace any existing water blocks
-						if(bs != TFCBlocks.FreshWater.getDefaultState() && bs != TFCBlocks.SaltWaterStatic.getDefaultState() && bs != Blocks.flowing_lava.getDefaultState())
+						if(bs != TFCBlocks.FreshWaterStatic.getDefaultState() && bs != TFCBlocks.SaltWaterStatic.getDefaultState() && bs != Blocks.flowing_lava.getDefaultState())
 						{
 							bs = fillBlocks[i];
 							//This converts 60% of the river water into stationary blocks so that we cut down on the number of required updates.
-							if(bs == TFCBlocks.FreshWater.getDefaultState() && (m < 0.2 || m > 0.8))
+							if(bs == TFCBlocks.FreshWaterStatic.getDefaultState() && (m < 0.2 || m > 0.8))
 								bs = TFCBlocks.FreshWater.getDefaultState();
 							chunkprimer.setBlockState(xC, yC+y, zC, fillBlocks[i]);
 						}

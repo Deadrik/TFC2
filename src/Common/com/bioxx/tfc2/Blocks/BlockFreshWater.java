@@ -49,7 +49,7 @@ public class BlockFreshWater extends BlockFluidClassic {
 		if (world.isAirBlock(pos)) return true;
 
 		Block block = world.getBlockState(pos).getBlock();
-		if (block == this || block == TFCBlocks.SaltWater)
+		if (block == this || block == TFCBlocks.SaltWater || block == TFCBlocks.SaltWaterStatic || block == TFCBlocks.FreshWaterStatic)
 		{
 			return true;
 		}
@@ -94,7 +94,8 @@ public class BlockFreshWater extends BlockFluidClassic {
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
 		super.updateTick(world, pos, state, rand);
-		if(((Integer)state.getValue(LEVEL)).intValue() > 0)
+		IBlockState newState = world.getBlockState(pos);
+		if(newState.getBlock() == this && ((Integer)newState.getValue(LEVEL)).intValue() > 0)
 		{
 			int count = 0;
 			if(isSourceBlock(world, pos.offsetNorth())) count++;
@@ -104,9 +105,12 @@ public class BlockFreshWater extends BlockFluidClassic {
 
 			if(count > 1)
 			{
-				world.setBlockState(pos, state.withProperty(LEVEL, 0));
+				world.setBlockState(pos, TFCBlocks.FreshWaterStatic.getDefaultState().withProperty(LEVEL, 0));
 			}
 		}
-
+		else
+		{
+			world.setBlockState(pos, TFCBlocks.FreshWater.getDefaultState().withProperty(LEVEL, state.getValue(LEVEL)), 2);
+		}
 	}
 }

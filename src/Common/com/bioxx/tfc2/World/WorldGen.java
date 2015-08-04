@@ -297,8 +297,8 @@ public class WorldGen implements IThreadCompleteListener
 		}
 		catch (Exception exception)
 		{
-			TFC.log.warn("Error Loading Island: " + x + ", " + z);
-			exception.printStackTrace();
+			TFC.log.warn("Error Loading Island: " + x + ", " + z + " | Will rebuild Island Map");
+			//exception.printStackTrace();
 		}
 
 		return null;

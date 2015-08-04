@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Blocks.BlockEffect;
 import com.bioxx.tfc2.Blocks.BlockFreshWater;
+import com.bioxx.tfc2.Blocks.BlockFreshWaterStatic;
 import com.bioxx.tfc2.Blocks.BlockLeaves;
 import com.bioxx.tfc2.Blocks.BlockLeaves2;
 import com.bioxx.tfc2.Blocks.BlockLogHorizontal;
@@ -81,9 +82,10 @@ public class TFCBlocks
 		Effect = new BlockEffect().setHardness(0.1F).setStepSound(Block.soundTypeWood).setUnlocalizedName("effect");
 		Vegetation = new BlockVegetation().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("vegetation");
 		LooseRocks = new BlockLooseRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("loose_rock");
+		FreshWaterStatic = new BlockFreshWaterStatic(TFCFluids.FRESHWATER, Material.water).setUnlocalizedName("freshwater").setLightOpacity(3);
 		FreshWater = new BlockFreshWater(TFCFluids.FRESHWATER, Material.water).setUnlocalizedName("freshwater").setLightOpacity(3);
-		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater").setLightOpacity(3);
 		SaltWaterStatic = new BlockSaltWaterStatic(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater").setLightOpacity(3);
+		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater").setLightOpacity(3);
 		Sapling = new BlockSapling().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling");
 		Sapling2 = new BlockSapling2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling2");
 		LogNatural = new BlockLogNatural().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural");
@@ -116,6 +118,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Vegetation, "vegetation");
 		GameRegistry.registerBlock(LooseRocks, "loose_rock");
 		GameRegistry.registerBlock(FreshWater, "freshwater");
+		GameRegistry.registerBlock(FreshWaterStatic, "freshwater_static");
 		GameRegistry.registerBlock(SaltWater, "saltwater");
 		GameRegistry.registerBlock(SaltWaterStatic, "saltwater_static");
 		GameRegistry.registerBlock(Sapling, ItemWood.class, "sapling");
