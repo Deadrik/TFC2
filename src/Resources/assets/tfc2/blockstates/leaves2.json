@@ -59,22 +59,22 @@
      	},
      	"corner_ne": 
      	{
-     		"true":{"submodel": "tfc2:leaves_palm_ne"},
+     		"true":{},
      		"false":{}
      	},
      	"corner_nw": 
      	{
-     		"true":{"submodel": "tfc2:leaves_palm_nw" },
+     		"true":{},
      		"false":{}
      	},
      	"corner_se": 
      	{
-     		"true":{ "submodel": "tfc2:leaves_palm_se" },
+     		"true":{},
      		"false":{}
      	},
      	"corner_sw": 
      	{
-     		"true":{"submodel": "tfc2:leaves_palm_sw"},
+     		"true":{},
      		"false":{}
      	}
     }
