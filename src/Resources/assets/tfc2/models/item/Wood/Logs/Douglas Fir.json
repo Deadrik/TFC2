@@ -1,0 +1,8 @@
+{
+    "parent": "tfc2:item/Wood/Logs/Generic",
+    "textures": {
+        "side": "tfc2:blocks/wood/trees/Douglas Fir Log",
+        "end": "tfc2:blocks/wood/trees/Douglas Fir Log Top"
+    }
+}
+

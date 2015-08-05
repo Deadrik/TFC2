@@ -1,0 +1,7 @@
+{
+    "parent": "tfc2:item/Wood/Logs/Generic",
+    "textures": {
+        "side": "tfc2:blocks/wood/trees/Hickory Log",
+        "end": "tfc2:blocks/wood/trees/Hickory Log Top"
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "side": "tfc2:blocks/wood/trees/Ash Log",
+        "end": "tfc2:blocks/wood/trees/Ash Log Top"
+    },
+    "display": {
+        "thirdperson": {
+            "rotation": [ 10, -45, 170 ],
+            "translation": [ 0, 1.5, -2.75 ],
+            "scale": [ 0.375, 0.375, 0.375 ]
+        }
+    }
+}
