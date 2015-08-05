@@ -40,6 +40,9 @@ public class RenderOverlayHandler
 			//event.right.add("Valley:"+hex.hasMarker(Marker.Valley));
 			//event.right.add("Canyon:" + hex.hasAttribute(Attribute.canyonUUID));
 
+			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
+			event.left.add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
+
 			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.riverUUID);
 			if(attrib != null)
 			{

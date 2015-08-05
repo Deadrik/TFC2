@@ -23,6 +23,7 @@ import com.bioxx.tfc2.Blocks.BlockLeaves2;
 import com.bioxx.tfc2.Blocks.BlockLogNatural;
 import com.bioxx.tfc2.Blocks.BlockLogNatural2;
 import com.bioxx.tfc2.Commands.PrintImageMapCommand;
+import com.bioxx.tfc2.Commands.TeleportInIslandCommand;
 import com.bioxx.tfc2.Networking.PacketPipeline;
 import com.bioxx.tfc2.World.WorldGen;
 import com.bioxx.tfc2.api.TFCOptions;
@@ -86,6 +87,7 @@ public class TFC
 	public void serverStarting(FMLServerStartingEvent evt)
 	{
 		evt.registerServerCommand(new PrintImageMapCommand());
+		evt.registerServerCommand(new TeleportInIslandCommand());
 	}
 
 	@EventHandler
