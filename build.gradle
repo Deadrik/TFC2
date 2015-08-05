@@ -5,7 +5,7 @@ buildscript {
             name = "Minecraft Forge"
             url = "http://files.minecraftforge.net/maven"
         }
-		 maven {
+         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
@@ -30,42 +30,48 @@ allprojects {
     apply plugin: 'forge'
     group = config.group_name
     version = config.mod_version
-	archivesBaseName = "[${config.minecraft_version}]${config.mod_id}"
+    archivesBaseName = "[${config.minecraft_version}]${config.mod_id}"
 
     minecraft {
-    version = config.minecraft_version + "-" + config.forge_version
-	if(file('../run').exists()){
-	runDir = "../run"
-	} else {
-    runDir = ""
-	}
-}
+        version = config.minecraft_version + "-" + config.forge_version
+        if(file('../run').exists()) {
+            runDir = "../run"
+        } else {
+            runDir = "run"
+            if (!file(runDir).exists()) file(runDir).mkdir()
+        }
+    }
+
+    tasks.withType(Jar) {
+        manifest {
+            manifest.attributes(
+                'FMLCorePlugin': 'com.bioxx.tfc.TFCASMLoadingPlugin',
+                'FMLCorePluginContainsFMLMod': 'true',
+                'FMLAT': 'tfc_at.cfg'
+            )
+        }
+    }
 }
 
 sourceSets {
-   main {
-     java {
-       srcDirs = [ 'src/Common' , 'src/API' , 'src/ASM' ]
-	   exclude '**/Resources/'
-     }
-	 resources {
-       srcDirs = [ 'src/Resources' ]
-	   exclude '**/API'
-	   exclude '**/ASM'
-	   exclude '**/Common'
-     }
-   }
+    main {
+        java {
+            srcDirs = [ 'src/Common' , 'src/API' , 'src/ASM' ]
+            exclude '**/Resources/'
+        }
+        resources {
+            srcDirs = [ 'src/Resources' ]
+            exclude '**/API'
+            exclude '**/ASM'
+            exclude '**/Common'
+        }
+    }
  }
+
  //Creates a compiled de-obfuscated jar
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     appendix = 'deobf'
-	
-	manifest.attributes(
-            'FMLCorePlugin': 'com.bioxx.tfc.TFCASMLoadingPlugin',
-			'FMLCorePluginContainsFMLMod': 'true',
-			'FMLAT': 'tfc_at.cfg'
-    )
 }
  //creates a jar containing only the src
 task sourceJar(type: Jar) {
@@ -92,14 +98,6 @@ from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.info'
         exclude '**/*.prop'
     }
-}
-
-jar {
-    manifest.attributes(
-            'FMLCorePlugin': 'com.bioxx.tfc.TFCASMLoadingPlugin',
-			'FMLCorePluginContainsFMLMod': 'true',
-			'FMLAT': 'tfc_at.cfg'
-    )
 }
 
 task wrapper(type: Wrapper) {
