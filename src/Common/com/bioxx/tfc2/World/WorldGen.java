@@ -158,6 +158,11 @@ public class WorldGen implements IThreadCompleteListener
 		heightPot.add(0.1, 128);
 		id.islandMaxHeight = heightPot.next();
 
+		if(id.hasFeature(Feature.LowLand))
+		{
+			id.islandMaxHeight = 32;
+		}
+
 		RandomCollection<StoneType> stonePot = new RandomCollection<StoneType>(r);
 		//If the island has a volcano then we need to make sure that the island is properly volcanic.
 		if(!id.hasFeature(Feature.Volcano))

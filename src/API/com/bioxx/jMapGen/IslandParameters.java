@@ -261,7 +261,8 @@ public class IslandParameters
 		SmallCraters(0.2, "Small Crater"), 
 		LargeCrater(0.2, "Large Crater"), 
 		Canyons(0.3, "Canyons"),
-		NoLand(0.3,"NO LAND");
+		NoLand(0.3,"NO LAND"),
+		LowLand(0.1,"Low Land");
 
 		public final double rarity;
 		private String name;
