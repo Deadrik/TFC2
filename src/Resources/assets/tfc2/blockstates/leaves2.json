@@ -20,62 +20,6 @@
     	    "palm":  { 
     	    	"textures": {"top": "tfc2:blocks/wood/trees/Palm Leaves Top"}, 
     	    	"model": "tfc2:leaves_palm_top"}
-        },
-     	"north": 
-     	{
-     		"true":{ "submodel": "tfc2:leaves_palm_north"},
-     		"false":{}
-     	},
-     	"south": 
-     	{
-     		"true":{ "submodel": "tfc2:leaves_palm_south"},
-     		"false":{}
-     	},
-     	"east": 
-     	{
-     		"true":{ "submodel": "tfc2:leaves_palm_east"},
-     		"false":{}
-     	},
-     	"west": 
-     	{
-     		"true":{ "submodel": "tfc2:leaves_palm_west"},
-     		"false":{}
-     	},
-     	"downnorth": {
-     		"true":{ "textures": { "north": "tfc2:blocks/wood/trees/Palm Leaves Top" } },
-     		"false":{ "textures": { "north": "tfc2:blocks/wood/trees/Palm Leaves" } }
-     	},
-     	"downsouth": {
-     		"true":{ "textures": { "south": "tfc2:blocks/wood/trees/Palm Leaves Top" }},
-     		"false":{ "textures": { "south": "tfc2:blocks/wood/trees/Palm Leaves" }}
-     	},
-     	"downeast": {
-     		"true":{"textures": { "east": "tfc2:blocks/wood/trees/Palm Leaves Top" }},
-     		"false":{"textures": { "east": "tfc2:blocks/wood/trees/Palm Leaves" }}
-     	},
-     	"downwest": {
-     		"true":{"textures": { "west": "tfc2:blocks/wood/trees/Palm Leaves Top" }},
-     		"false":{ "textures": { "west": "tfc2:blocks/wood/trees/Palm Leaves" }}
-     	},
-     	"corner_ne": 
-     	{
-     		"true":{},
-     		"false":{}
-     	},
-     	"corner_nw": 
-     	{
-     		"true":{},
-     		"false":{}
-     	},
-     	"corner_se": 
-     	{
-     		"true":{},
-     		"false":{}
-     	},
-     	"corner_sw": 
-     	{
-     		"true":{},
-     		"false":{}
-     	}
+        }
     }
 }

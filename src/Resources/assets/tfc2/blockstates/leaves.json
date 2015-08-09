@@ -26,42 +26,6 @@
     	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/Willow Leaves"} },
     	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/Kapok Leaves"} },
     	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/Acacia Leaves"} }
-        },
-     	"north": 
-     	{
-     		"true":{},
-     		"false":{}
-     	},
-     	"south": 
-     	{
-     		"true":{},
-     		"false":{}
-     	},
-     	"east": 
-     	{
-     		"true":{},
-     		"false":{}
-     	},
-     	"west": 
-     	{
-     		"true":{},
-     		"false":{}
-     	},
-     	"downnorth": {
-     		"true":{},
-     		"false":{}
-     	},
-     	"downsouth": {
-     		"true":{},
-     		"false":{}
-     	},
-     	"downeast": {
-     		"true":{},
-     		"false":{}
-     	},
-     	"downwest": {
-     		"true":{},
-     		"false":{}
-     	}
+        }
     }
 }
