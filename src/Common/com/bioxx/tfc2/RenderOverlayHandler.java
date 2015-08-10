@@ -29,23 +29,17 @@ public class RenderOverlayHandler
 			int xM = ((int)(mc.thePlayer.posX) >> 12);
 			int zM = ((int)(mc.thePlayer.posZ) >> 12);
 			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
-			Center hex = map.getSelectedHexagon(new Point(mc.thePlayer.posX, mc.thePlayer.posZ).toIslandCoord());
-			event.right.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
-			event.right.add("Elevation: "+hex.elevation);
-			//event.right.add("Biome:"+hex.biome.name());
-			event.right.add("Moisture:"+Moisture.fromVal(hex.moisture));
-
-			//event.right.add("Gorge:"+hex.hasAttribute(Attribute.gorgeUUID));
-			//event.right.add("Lava:"+hex.hasMarker(Marker.Lava));
-			//event.right.add("Valley:"+hex.hasMarker(Marker.Valley));
-			//event.right.add("Canyon:" + hex.hasAttribute(Attribute.canyonUUID));
-
 			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
+			Center hex = map.getSelectedHexagon(islandCoord);
+			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
+			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
+			event.left.add("Moisture: "+Moisture.fromVal(hex.moisture));
 			event.left.add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
 
 			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.riverUUID);
 			if(attrib != null)
 			{
+				event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------River-------");
 				event.left.add("River: " + attrib.getRiver() + " | " + (attrib.upriver != null ?  attrib.upriver.size() : 0));	
 				if(attrib.upriver != null && attrib.getDownRiver() != null)
 					event.left.add("Up :" + hex.getDirection(attrib.upriver.get(0)).toString() + " | Dn :" + hex.getDirection(attrib.getDownRiver()).toString());
@@ -55,7 +49,10 @@ public class RenderOverlayHandler
 			if(cattrib != null)
 			{
 				if(cattrib.nodes.size() > 0)
+				{
+					event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------Cave-------");
 					event.left.add("Cave: ");	
+				}
 			}
 
 			event.right.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--Island Parmaters--");

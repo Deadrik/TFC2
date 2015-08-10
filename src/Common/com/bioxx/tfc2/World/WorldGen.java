@@ -115,7 +115,7 @@ public class WorldGen implements IThreadCompleteListener
 		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
 		Random r = new Random(seed);
 		id.setCoords(x, z);
-		int fcount = 1+r.nextInt(1+r.nextInt(2));
+		int fcount = 1+r.nextInt(2+r.nextInt(2));
 		Feature.setupFeatures(r);
 		//Choose Features
 		for(int i = 0; i < fcount; i++)
@@ -137,6 +137,11 @@ public class WorldGen implements IThreadCompleteListener
 			if(id.hasFeature(f)){i--; continue;}
 			else id.setFeatures(f);
 		}
+
+		//id.setFeatures(Feature.LowLand);
+
+		if(id.hasFeature(Feature.LowLand))
+			id.removeFeatures(Feature.SharperMountains, Feature.EvenSharperMountains);
 
 		//Remove all other features if this is supposed to be open ocean.
 		if(id.hasFeature(Feature.NoLand))

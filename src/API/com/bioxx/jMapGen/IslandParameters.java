@@ -65,7 +65,7 @@ public class IslandParameters
 		createShape(seed);
 	}
 
-	protected void createShape(long seed)
+	public void createShape(long seed)
 	{
 		Perlin modulePerl = new Perlin();
 		modulePerl.setSeed((int)seed);
@@ -110,6 +110,12 @@ public class IslandParameters
 	{
 		for(Feature fe : f)
 			features.add(fe);
+	}
+
+	public void removeFeatures(Feature... f)
+	{
+		for(Feature fe : f)
+			features.remove(fe);
 	}
 
 	/**

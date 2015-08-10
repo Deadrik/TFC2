@@ -91,6 +91,15 @@ public class IslandMap
 		mapRandom.setSeed(seed);
 		NUM_POINTS = is.SIZE*4;
 		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
+		is.createShape(seed);
+		points = new Vector<Point>();
+		edges = new Vector<Edge>();
+		centers = new Vector<Center>();
+		corners = new Vector<Corner>();
+		lakes = new Vector<Lake>();
+		rivers = new Vector<River>();
+		pathfinder = new PathFinder(this);
+		caves = new CaveProcessor(this);
 	}
 
 	public IslandParameters getParams()
@@ -110,18 +119,18 @@ public class IslandMap
 		buildGraph(points, voronoi);
 
 		// Determine the elevations and water at Voronoi corners.
-		assignCornerElevations();
+		int borderCount = assignCornerElevations();
 
 		// Determine polygon and corner type: ocean, coast, land.
-		int borderCount = assignOceanCoastAndLand();
+		assignOceanCoastAndLand();
 
 		//If there is too much land on the borders then toss this island and start fresh
 		if(borderCount > 20)
 		{
 			seed += 1234567;
 			newIsland(islandParams);
-			System.out.println("TFC2: Island Gen: Tossed Island Shape");
-
+			go();
+			return;
 		}
 
 		redistributeElevations(landCorners(corners));
@@ -680,9 +689,13 @@ public class IslandMap
 
 		Vector<Point> points = new Vector<Point>();
 		int N = (int) Math.sqrt(NUM_POINTS);
+		double xC, yC;
 		for (int x = 0; x < N; x++) {
-			for (int y = 0; y < N; y++) {
-				points.add(new Point((0.5 + x)/N * size, (0.25 + 0.5*x%2 + y)/N * size));
+			for (int y = 0; y < N; y++) 
+			{
+				xC = (0.5 + x) / N * (size+100);
+				yC = (0.25 + 0.5 * x % 2 + y) / N * (size+100);
+				points.add(new Point(xC-50, yC-50));
 			}
 		}
 		return points;
@@ -910,11 +923,11 @@ public class IslandMap
 	// up flowing out through them. Also by construction, lakes
 	// often end up on river paths because they don't raise the
 	// elevation as much as other terrain does.
-	public void assignCornerElevations() 
+	public int assignCornerElevations() 
 	{
 		Corner baseCorner, adjacentCorner;
 		LinkedList<Corner> queue = new LinkedList<Corner>();
-
+		int numLandBorder = 0;
 		/**
 		 * First we check each corner to see if it is land or water
 		 * */
@@ -922,6 +935,8 @@ public class IslandMap
 		{
 			if(!inside(c.point))
 				c.setMarkers(Marker.Water);
+			else if(c.hasMarker(Marker.Border))
+				numLandBorder++;
 
 			if (c.hasMarker(Marker.Border)) 
 			{
@@ -954,11 +969,7 @@ public class IslandMap
 					// elevations later.				
 					double newElevation = 0.000000001 + baseCorner.elevation;
 
-					if (!baseCorner.hasMarker(Marker.Water) && !adjacentCorner.hasMarker(Marker.Water) && newElevation < 0.20) 
-					{
-						newElevation += 0.05;
-					}
-					else if (!baseCorner.hasMarker(Marker.Water) && !adjacentCorner.hasMarker(Marker.Water)) 
+					if (!baseCorner.hasMarker(Marker.Water) && !adjacentCorner.hasMarker(Marker.Water)) 
 					{
 						newElevation += 1;
 					}
@@ -972,6 +983,8 @@ public class IslandMap
 				}
 			}
 		}
+
+		return numLandBorder;
 	}
 
 	public Vector<Corner> sortElevation(Vector<Corner> locations)
@@ -1128,7 +1141,7 @@ public class IslandMap
 	}
 
 	// Determine polygon and corner types: ocean, coast, land.
-	public int assignOceanCoastAndLand() {
+	public void assignOceanCoastAndLand() {
 		// Compute polygon attributes 'ocean' and 'water' based on the
 		// corner attributes. Count the water corners per
 		// polygon. Oceans are all polygons connected to the edge of the
@@ -1136,24 +1149,22 @@ public class IslandMap
 		// in the second pass, mark any water-containing polygon
 		// connected an ocean as ocean.
 		LinkedList<Center> queue = new LinkedList<Center>();
-		Center p = null, r = null; 
+		Center c = null, r = null; 
 		Corner q; 
 		int numWater;
-		int numBorderLand = 0;
 
 		for(int i = 0; i < centers.size(); i++)
 		{
-			p = centers.get(i);
+			c = centers.get(i);
 			numWater = 0;
-
-			for(int j = 0; j < p.corners.size(); j++)
+			for(int j = 0; j < c.corners.size(); j++)
 			{
-				q = p.corners.get(j);
+				q = c.corners.get(j);
 				if (q.hasMarker(Marker.Border)) 
 				{
-					p.setMarkers(Marker.Border, Marker.Ocean);
+					c.setMarkers(Marker.Border, Marker.Ocean);
 					q.setMarkers(Marker.Water);
-					queue.add(p);
+					queue.add(c);
 				}
 				if (q.hasMarker(Marker.Water)) 
 				{
@@ -1161,19 +1172,16 @@ public class IslandMap
 				}
 			}
 
-			if(p.hasMarker(Marker.Border))
-				numBorderLand++;
-
-			if((p.hasMarker(Marker.Ocean) || numWater >= p.corners.size() * this.islandParams.lakeThreshold))
-				p.setMarkers(Marker.Water);
+			if((c.hasMarker(Marker.Ocean) || numWater >= c.corners.size() * this.islandParams.lakeThreshold))
+				c.setMarkers(Marker.Water);
 		}
 		while (queue.size() > 0) 
 		{
-			p = queue.pop();
+			c = queue.pop();
 
-			for(int j = 0; j < p.neighbors.size(); j++)
+			for(int j = 0; j < c.neighbors.size(); j++)
 			{
-				r = p.neighbors.get(j);
+				r = c.neighbors.get(j);
 				if (r.hasMarker(Marker.Water) && !r.hasMarker(Marker.Ocean)) {
 					r.setMarkers(Marker.Ocean);
 					queue.add(r);
@@ -1189,21 +1197,21 @@ public class IslandMap
 		// then this is a coastal polygon.
 		for(int i = 0; i < centers.size(); i++)
 		{
-			p = centers.get(i);
+			c = centers.get(i);
 			numOcean = 0;
 			numLand = 0;
 
-			for(int j = 0; j < p.neighbors.size(); j++)
+			for(int j = 0; j < c.neighbors.size(); j++)
 			{
-				r = p.neighbors.get(j);
+				r = c.neighbors.get(j);
 				numOcean += (r.hasMarker(Marker.Ocean) ? 1 : 0);
 				numLand += (!r.hasMarker(Marker.Water) ? 1 : 0);
 			}
 
-			if((numOcean > 0) && !p.hasMarker(Marker.Ocean))
-				p.setMarkers(Marker.Coast);
-			if(p.hasMarker(Marker.Ocean) && (numLand > 0))
-				p.setMarkers(Marker.CoastWater);
+			if((numOcean > 0) && !c.hasMarker(Marker.Ocean))
+				c.setMarkers(Marker.Coast);
+			if(c.hasMarker(Marker.Ocean) && (numLand > 0))
+				c.setMarkers(Marker.CoastWater);
 		}
 
 
@@ -1218,9 +1226,9 @@ public class IslandMap
 			numLand = 0;
 			for(int i = 0; i < q.touches.size(); i++)
 			{
-				p = q.touches.get(i);
-				numOcean += (p.hasMarker(Marker.Ocean) ? 1 : 0);
-				numLand += (!p.hasMarker(Marker.Water) ? 1 : 0);
+				c = q.touches.get(i);
+				numOcean += (c.hasMarker(Marker.Ocean) ? 1 : 0);
+				numLand += (!c.hasMarker(Marker.Water) ? 1 : 0);
 			}
 			if(numOcean == q.touches.size())
 				q.setMarkers(Marker.Ocean);
@@ -1230,8 +1238,6 @@ public class IslandMap
 				q.setMarkers(Marker.Water);
 
 		}
-
-		return numBorderLand;
 	}
 
 	// Polygon elevations are the average of the elevations of their corners.
@@ -1714,7 +1720,7 @@ public class IslandMap
 						double x = 0;
 						double y = 0;
 
-						if(hd == HexDirection.North || hd == HexDirection.South)
+						/*if(hd == HexDirection.North || hd == HexDirection.South)
 							if((rn.center.index & 1) > 0)
 							{x = 6 - Attrib.getRiver(); y = -4 + Attrib.getRiver();}
 							else
@@ -1736,7 +1742,7 @@ public class IslandMap
 						else
 						{
 							System.out.println("River:" + hd.toString() + " : " + dn.toString());
-						}
+						}*/
 
 
 						Attrib.setRiverMidpoint(rn.center.point.plus(x, y));
