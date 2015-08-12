@@ -17,7 +17,6 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.MapGenBase;
-import net.minecraftforge.fluids.BlockFluidBase;
 
 import com.bioxx.jMapGen.BiomeType;
 import com.bioxx.jMapGen.IslandMap;
@@ -422,15 +421,15 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						riverPoints.clear();
 						riverPoints.add(u.point.midpoint(c.point));
 						riverPoints.add(c.point);
-						carveRiver(chunkprimer, c, u, new Spline2D(riverPoints.toArray()), uAttrib);
+						carveRiver(chunkprimer, null, c, u, new Spline2D(riverPoints.toArray()), uAttrib);
 					}
-					//Now do the donriver side
+					//Now do the downriver side
 					if(attrib.getDownRiver() != null)
 					{
 						riverPoints.clear();
 						riverPoints.add(c.point);
 						riverPoints.add(attrib.getDownRiver().point.midpoint(c.point));
-						carveRiver(chunkprimer, c, null, new Spline2D(riverPoints.toArray()), attrib);
+						carveRiver(chunkprimer, attrib.getDownRiver(), c, null, new Spline2D(riverPoints.toArray()), attrib);
 					}
 				}
 				else if(attrib.upriver != null && attrib.upriver.size() == 1)
@@ -440,21 +439,21 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					riverPoints.add(attrib.getRiverMidpoint());
 					if(attrib.getDownRiver() != null)
 						riverPoints.add(attrib.getDownRiver().point.midpoint(c.point));
-					carveRiver(chunkprimer, c,attrib.upriver.get(0), new Spline2D(riverPoints.toArray()), attrib);
+					carveRiver(chunkprimer, attrib.getDownRiver(), c, attrib.upriver.get(0), new Spline2D(riverPoints.toArray()), attrib);
 				}
 				else if(attrib.getDownRiver() != null)
 				{
 					riverPoints.clear();
 					riverPoints.add(c.point);
 					riverPoints.add(attrib.getDownRiver().point.midpoint(c.point));
-					carveRiver(chunkprimer, c, null, new Spline2D(riverPoints.toArray()), attrib);
+					carveRiver(chunkprimer, attrib.getDownRiver(), c, null, new Spline2D(riverPoints.toArray()), attrib);
 				}
 
 			}
 		}
 	}
 
-	protected void carveRiver(ChunkPrimer chunkprimer, Center center, Center upCenter, Spline2D spline, RiverAttribute attrib)
+	protected void carveRiver(ChunkPrimer chunkprimer, Center dnCenter, Center center, Center upCenter, Spline2D spline, RiverAttribute attrib)
 	{
 		ArrayList<BlockPos> points = new ArrayList<BlockPos>();
 		Point splinePos;
@@ -464,14 +463,13 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		Center closest;
 		IBlockState b;
 		double wSq = 2;
-		int min = 0;
-		int max = 1;
-
+		int min = 0, max = 1, rDepth =  Math.min((int)Math.ceil(attrib.getRiver()), 3);
+		boolean doAir = false;
 		int waterLevel, hexElev, terrainElev = 0;
 
 		if(attrib != null)
 		{
-			wSq = Math.max(attrib.getRiver() * attrib.getRiver(), 2);
+			wSq = Math.max(rDepth * rDepth, 1);
 
 			for(double i = 0; i < 1; i+= 0.02)
 			{
@@ -490,14 +488,13 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				pos = new BlockPos((int)Math.floor(splinePos.x), 0, (int)Math.floor(splinePos.y));
 
 				min = (int)Math.floor(-attrib.getRiver());
-				max = (int)attrib.getRiver()+1;
+				max = (int)attrib.getRiver();
 
 				//Begin X/Z iteration around the base point
 				for(double x = min; x <= max; x++)
 				{
 					for(double z = min; z <= max; z++)
 					{
-						boolean genWater = true;
 						//Add x and z to our base point to get the local position
 						pos2 = pos.add(x, 0, z);
 						//If this local position is outside of the chunk, end here so we don't crash
@@ -506,61 +503,57 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							continue;
 						}
 						//Get the water level for this location. This is the local terrain elevation - 1
-						hexElev = convertElevation(closest.getElevation());
+						hexElev = convertElevation(center.getElevation());
 						terrainElev = this.elevationMap[(pos2.getZ() << 4) | pos2.getX()];
-						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL-1);
-						int yDrop = 0;
-						if(i > 0.5 && terrainElev < hexElev)
-							yDrop = -1;	
-						else if(i < 0.5 && terrainElev > hexElev)
-							yDrop = -1;		
+						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL);
 
-						if(attrib.getRiver() >= 1)
-							yDrop -= 1;
+						/*if(attrib.getRiver() >= 1)
+							waterLevel--;*/
 
+						/*if(attrib.getRiver() > 1D)
+							System.out.println();*/
 
-						//Begin our vertical iteration
-						//Start above the river and work downward
-						for(int y = max+5; y >= min-1; y--)
+						pos2 = pos2.add(0, waterLevel, 0);
+						for(int depth = rDepth; depth >= -rDepth; depth--)
 						{
-							//This is our final BlockPos where we will attempt to place water
-							pos3 = pos2.add(0, waterLevel+y+yDrop, 0);
-
-							//We're carving with a sphere so don't carve a box
-							if(pos.add(0, waterLevel+yDrop, 0).distanceSqToCenter(pos3.getX(), pos3.getY(), pos3.getZ()) <= wSq || pos3.getY() > waterLevel+yDrop)
+							pos3 = pos2.add(0, depth, 0);
+							doAir = false;
+							//If we're carving below the water level then we want to make the river bottom curved
+							if(depth <= 0 && pos3.distanceSq(pos2.getX(), pos2.getY(), pos2.getZ()) > wSq)
 							{
+								continue;
+							}
+							else if(depth > 0 && pos3.distanceSq(pos2.getX(), pos2.getY(), pos2.getZ()) <= wSq)
+							{
+								setState(chunkprimer, pos3, Blocks.air.getDefaultState());
+								continue;
+							}
+							else if(pos3.distanceSq(pos2.getX(), pos2.getY(), pos2.getZ()) <= wSq)
+							{
+								IBlockState fillState = TFCBlocks.FreshWater.getDefaultState();
 
-								b = getState(chunkprimer, pos3);
-								if(b != null && Core.isTerrain(b) && pos3.getY() <= waterLevel+yDrop)
+								//If we're moving up or down a slope then don't place water
+								if(/*(terrainElev != hexElev && dnCenter != null && terrainElev != this.convertElevation(dnCenter.getElevation())) ||*/ pos3.getY() >= waterLevel)
 								{
-									/*if(i < 0.5 && pos3.getY() < hexElev && getState(chunkprimer, pos3.offsetUp()) == Blocks.air.getDefaultState())
-									{
-										pos3 = pos3.add(0, -yDrop, 0);
-									}*/
-									//if(yDrop == 0)//Only set the block to water if we are in a flat area
-									{
-										if((i < 0.3 && pos3.getY() > hexElev) || (i > 0.7 && pos3.getY() < hexElev))
-											setState(chunkprimer, pos3, TFCBlocks.FreshWater.getDefaultState().withProperty(BlockFluidBase.LEVEL, 1));
-										else
-											setState(chunkprimer, pos3, TFCBlocks.FreshWater.getDefaultState());
-									}
-									convertRiverBank(chunkprimer, pos3.offsetNorth(), true);
-									convertRiverBank(chunkprimer, pos3.offsetSouth(), true);
-									convertRiverBank(chunkprimer, pos3.offsetEast(), true);
-									convertRiverBank(chunkprimer, pos3.offsetWest(), true);
+									fillState = Blocks.air.getDefaultState();
 								}
-								else
+								//fillState = Blocks.air.getDefaultState();
+								IBlockState s = getState(chunkprimer, pos3);
+								//if(Core.isTerrain(s))
 								{
-									b = getState(chunkprimer, pos3);
-									if(b != null && Core.isTerrain(b))
+									setState(chunkprimer, pos3, fillState);
+									s = getState(chunkprimer, pos3.offsetUp());
+									if(s.getBlock() == Blocks.air)
 									{
-										setState(chunkprimer, pos3, Blocks.air.getDefaultState());
+										doAir = true;
 									}
-								}
 
-								b = getState(chunkprimer, pos3.offsetDown());
-								if(b != null && Core.isTerrain(b))
-									setState(chunkprimer, pos3.offsetDown(), TFCBlocks.Gravel.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+									convertRiverBank(chunkprimer, pos3.offsetNorth(), doAir);
+									convertRiverBank(chunkprimer, pos3.offsetSouth(), doAir);
+									convertRiverBank(chunkprimer, pos3.offsetEast(), doAir);
+									convertRiverBank(chunkprimer, pos3.offsetWest(), doAir);
+									convertRiverBank(chunkprimer, pos3.offsetDown());
+								}
 							}
 						}
 					}
@@ -573,7 +566,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		convertRiverBank(chunkprimer,pos, true);
 	}
-	protected void convertRiverBank(ChunkPrimer chunkprimer, BlockPos pos, boolean doStone)
+	protected void convertRiverBank(ChunkPrimer chunkprimer, BlockPos pos, boolean doAir)
 	{
 		if(pos.getX() >= 0 && pos.getY() >= 0 && pos.getZ() >= 0 && pos.getX() < 16 && pos.getY() < 256 && pos.getZ() < 16)
 		{
@@ -581,22 +574,17 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			if(Core.isTerrain(b))
 			{
 				setState(chunkprimer, pos, TFCBlocks.Gravel.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
-			}
-			else if(b.getBlock() == Blocks.air)
-			{
-				int i = 1;
-				BlockPos pos2;
-				b = getState(chunkprimer, pos.offsetDown(i));
-				while(!Core.isTerrain(b))
-				{
-					i++;
-					b = getState(chunkprimer, pos.offsetDown(i));
-				}
 
-				for(;i > 0; i--)
+				if(Core.isTerrain(getState(chunkprimer, pos.offsetUp(1))))
 				{
-					setState(chunkprimer, pos, TFCBlocks.Stone.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
-					setState(chunkprimer, pos.offsetDown(), TFCBlocks.Stone.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+					if(doAir && Core.isGravel(getState(chunkprimer, pos.offsetUp(1))))
+					{
+						convertRiverBank(chunkprimer, pos.offsetUp(1).offsetNorth(), true);
+						convertRiverBank(chunkprimer, pos.offsetUp(1).offsetSouth(), true);
+						convertRiverBank(chunkprimer, pos.offsetUp(1).offsetEast(), true);
+						convertRiverBank(chunkprimer, pos.offsetUp(1).offsetWest(), true);
+					}
+					setState(chunkprimer, pos.offsetUp(1), Blocks.air.getDefaultState());
 				}
 			}
 		}
