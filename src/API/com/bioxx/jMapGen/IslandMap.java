@@ -693,9 +693,9 @@ public class IslandMap
 		for (int x = 0; x < N; x++) {
 			for (int y = 0; y < N; y++) 
 			{
-				xC = (0.5 + x) / N * (size+100);
-				yC = (0.25 + 0.5 * x % 2 + y) / N * (size+100);
-				points.add(new Point(xC-50, yC-50));
+				xC = (0.5 + x) / N * (size);
+				yC = (0.25 + 0.5 * x % 2 + y) / N * (size);
+				points.add(new Point(xC, yC));
 			}
 		}
 		return points;
