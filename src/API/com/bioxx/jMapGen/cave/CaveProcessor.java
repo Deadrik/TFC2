@@ -51,7 +51,7 @@ public class CaveProcessor
 		starts.clear();
 		for(Center c : getBeachesWithCliffs(land))
 		{
-			if(map.mapRandom.nextDouble() < 0.5)
+			if(map.mapRandom.nextDouble() < 0.6)
 				starts.add(c);
 		}
 
@@ -64,7 +64,7 @@ public class CaveProcessor
 		starts.clear();
 		for(Center c : this.getCoastalOcean(map.centers))
 		{
-			if(map.mapRandom.nextDouble() < 0.3)
+			if(map.mapRandom.nextDouble() < 0.5)
 				starts.add(c);
 		}
 
@@ -111,6 +111,9 @@ public class CaveProcessor
 		nextNode.setPrevOffset(getMidpoint(curNode.getOffset(), nextNode.getOffset()));
 		curNode.setNextOffset(nextNode.getPrevOffset());
 
+		if(isSeaCave)
+			curNode.setSeaCave(true);
+
 		int elevOffset = 0;
 		while(curLength < maxLength)
 		{
@@ -140,19 +143,23 @@ public class CaveProcessor
 					curNode.setMajorNode(true);
 			}
 
-			if(curLength > 3 && map.mapRandom.nextDouble() < 0.3)
+			//If the cave is long enough, we may want to create little subcave offshoots in random directions
+			if(curLength > 3)
 			{
-				int subCaveCount = map.mapRandom.nextInt(5)-1;
+				int subCaveCount = map.mapRandom.nextInt(5)+1;
 				while(subCaveCount > 0)
 				{
 					sCenter = center;
-					sNextCenter = sCenter.getRandomNeighbor(map.mapRandom);
-					sCurNode = new CaveAttrNode(100+subCaveCount);
+					if(map.mapRandom.nextDouble() < 0.25)
+						sNextCenter = sCenter;
+					else
+						sNextCenter = sCenter.getRandomNeighbor(map.mapRandom);
+					sCurNode = new CaveAttrNode(1000+subCaveCount);
 					sCurNode.setOffset(curNode.getOffset());
 					sCurNode.setNext(sNextCenter);
 					sCurNode.setNodeHeight(1+map.mapRandom.nextInt(2));
 					sCurNode.setNodeWidth(1+map.mapRandom.nextInt(2));
-					sNextNode = new CaveAttrNode(100+subCaveCount);
+					sNextNode = new CaveAttrNode(1000+subCaveCount);
 					sNextNode.setOffset(new BlockPos(sNextCenter.point.x, sCurNode.getOffset().getY()+map.mapRandom.nextInt(20)-10, sNextCenter.point.x));
 					sCurNode.setNextOffset(getMidpoint(sCurNode.getOffset(), sNextNode.getOffset()).add(10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6)));
 					sNextNode.setPrevOffset(sCurNode.getNextOffset());
@@ -166,29 +173,49 @@ public class CaveProcessor
 			}
 
 			elevOffset = map.mapRandom.nextInt(21)-10;
+
+
 			//Acquire the next hex
 			nextCenter = center.getRandomNeighborExcept(map.mapRandom, prevCenter);
 
+			if(map.mapRandom.nextDouble() < 0.05)
+			{
+				nextCenter = center;
+				elevOffset = map.mapRandom.nextInt(31)-15;
+			}
+
 			//Create our next node
 			nextNode = new CaveAttrNode(caveId);
-			if(isSeaCave)
+			if(curNode.isSeaCave)
 			{
 				nextCenter = center.getRandomFromGroup(map.mapRandom, center.getOnlyHigherCenters());
 				if(nextCenter == null)
-					break;
-				nextNode.setSeaCave(true);
-				curNode.setSeaCave(true);
+					break;				
+
+				if(curNode.offset.getY() <= Global.SEALEVEL)
+					nextNode.setSeaCave(true);
 			}
 			else
 			{
 				if(nextCenter.hasMarker(Marker.Coast))
 					break;
-			}			
+			}
+
+
 
 			nextNode.setOffset(new BlockPos(nextCenter.point.x, curNode.getOffset().getY() + elevOffset, nextCenter.point.y));
 
-			if(nextCenter.hasAttribute(Attribute.riverUUID) && mcElev(nextCenter.getElevation()) - nextNode.getOffset().getY() < 15)
-				break;
+			//If this cave is moving into a hex that has a surface river then we need to make sure that it doesnt try to peek the surface
+			if(nextCenter.hasAttribute(Attribute.riverUUID))
+			{
+				int riverDiff = mcElev(nextCenter.getElevation()) - nextNode.getOffset().getY();
+				if(riverDiff <= 10)
+				{
+					nextNode.getOffset().add(0, -5, 0);
+					nextNode.setNodeHeight(1);
+					nextNode.setNodeWidth(1);
+				}
+			}
 
 			//Setup the midpoint offsets for each node
 			nextNode.setPrevOffset(getMidpoint(curNode.getOffset(), nextNode.getOffset()).add(10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6)));
@@ -279,5 +306,6 @@ public class CaveProcessor
 		}
 		return out;
 	}
+
 
 }

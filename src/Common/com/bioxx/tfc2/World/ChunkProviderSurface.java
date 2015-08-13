@@ -40,6 +40,7 @@ import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
 import com.bioxx.tfc2.Blocks.Terrain.BlockGravel;
+import com.bioxx.tfc2.Blocks.Terrain.BlockStone;
 import com.bioxx.tfc2.api.Global;
 
 public class ChunkProviderSurface extends ChunkProviderGenerate 
@@ -791,29 +792,60 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					for(double i = 0; i < 1; i+= 0.05)
 					{
 						pos = spline.getPoint(i);
-						Iterable iter = BlockPos.getAllInBox(pos.add(-n.getNodeWidth(), -n.getNodeHeight(), -n.getNodeWidth()), 
-								pos.add(n.getNodeWidth(), n.getNodeHeight(), n.getNodeWidth()));
-						Iterator it = iter.iterator();
+
+						ArrayList<BlockPos> list = new ArrayList<BlockPos>();
+						for(int y = -n.getNodeHeight(); y < n.getNodeHeight(); y++)
+						{
+							for(int x = -n.getNodeWidth(); x < n.getNodeWidth(); x++)
+							{
+								for(int z = -n.getNodeWidth(); z < n.getNodeWidth(); z++)
+								{
+									if(pos.add(x, y, z).distanceSq(pos.getX(), pos.getY(), pos.getZ()) <= wSq)
+										list.add(pos.add(x, y, z));
+								}	
+							}
+						}
+						IBlockState down, up, fillBlock, state;
+						Iterator it = list.iterator();
 						while(it.hasNext())
 						{
+							fillBlock = Blocks.air.getDefaultState();
 							pos2 = (BlockPos) it.next();
 							if(pos.distanceSqToCenter(pos2.getX(), pos2.getY(), pos2.getZ()) <= wSq)
 							{
 								if(pos2.getX() >= 0 && pos2.getY() >= 0 && pos2.getZ() >= 0 && pos2.getX() < 16 && pos2.getY() < 256 && pos2.getZ() < 16)
 								{
-									Block b = chunkprimer.getBlockState(pos2.getX(), pos2.getY(), pos2.getZ()).getBlock();
+									state = getState(chunkprimer, pos2);
+									Block b = state.getBlock();
 									if(b != Blocks.bedrock && b.getMaterial() != Material.water)
 									{
-										IBlockState down = getState(chunkprimer, pos2.offsetDown());
+										down = getState(chunkprimer, pos2.offsetDown());
+										up = getState(chunkprimer, pos2.offsetUp());
 										if(Core.isDirt(down))
 										{
 											setState(chunkprimer, pos2.offsetDown(), TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, down.getValue(BlockDirt.META_PROPERTY)));
 										}
 
+										if(down.getBlock().getMaterial() == Material.water)
+											continue;
+
+										if(up.getBlock().getMaterial() == Material.water)
+											continue;
+
 										if(n.isSeaCave() && pos2.getY() < Global.SEALEVEL)
-											setState(chunkprimer, pos2, TFCBlocks.SaltWaterStatic.getDefaultState());
-										else
-											setState(chunkprimer, pos2, Blocks.air.getDefaultState());
+											fillBlock = TFCBlocks.SaltWaterStatic.getDefaultState();
+										else if(c.hasAttribute(Attribute.riverUUID))
+										{
+											if(up.getBlock() != TFCBlocks.Gravel && b != TFCBlocks.Gravel)
+												fillBlock = state;
+										}
+
+										setState(chunkprimer, pos2, fillBlock);
+
+										if(Core.isSoil(up) && !Core.isGrass(up))
+										{
+											setState(chunkprimer, pos2.offsetUp(), TFCBlocks.Stone.getDefaultState().withProperty(BlockStone.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+										}
 									}
 								}
 							}
