@@ -56,7 +56,7 @@ public enum StoneType implements IStringSerializable
 		if(list.size() == 0)
 			return null;
 
-		return (StoneType[])list.toArray();
+		return list.toArray(new StoneType[0]);
 	}
 
 	public enum SubType
