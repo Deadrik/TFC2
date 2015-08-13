@@ -175,7 +175,7 @@ public class Center
 		RiverAttribute attrib = ((RiverAttribute)getAttribute(Attribute.riverUUID));
 		if(attrib != null && attrib.upriver != null)
 		{
-			highest = getLowestFromGroup(attrib.upriver);
+			highest = getHighestFromGroup(attrib.upriver);
 		}
 		return highest;
 	}

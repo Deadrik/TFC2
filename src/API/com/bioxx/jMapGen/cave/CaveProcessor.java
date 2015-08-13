@@ -51,7 +51,7 @@ public class CaveProcessor
 		starts.clear();
 		for(Center c : getBeachesWithCliffs(land))
 		{
-			if(map.mapRandom.nextDouble() < 0.3)
+			if(map.mapRandom.nextDouble() < 0.5)
 				starts.add(c);
 		}
 
@@ -85,10 +85,14 @@ public class CaveProcessor
 		int curLength = 0;
 		Center prevCenter = null;
 		Center center = start;
-		Center nextCenter = start.getHighestNeighbor();
+		Center nextCenter = getHighestNonRiverNeighbor(start);
 		Center sCenter, sNextCenter;
 
 		CaveAttrNode sCurNode, sNextNode;
+
+		//First we will perform some preliminary validity checks
+		if(start.hasAttribute(Attribute.riverUUID))
+			return;
 
 		CaveAttrNode curNode = new CaveAttrNode(caveId);//Start slightly above the ground
 		CaveAttrNode nextNode = new CaveAttrNode(caveId);
@@ -183,7 +187,7 @@ public class CaveProcessor
 
 			nextNode.setOffset(new BlockPos(nextCenter.point.x, curNode.getOffset().getY() + elevOffset, nextCenter.point.y));
 
-			if(nextCenter.hasAttribute(Attribute.riverUUID) && mcElev(nextCenter.getElevation()) - nextNode.getOffset().getY() < 10)
+			if(nextCenter.hasAttribute(Attribute.riverUUID) && mcElev(nextCenter.getElevation()) - nextNode.getOffset().getY() < 15)
 				break;
 
 			//Setup the midpoint offsets for each node
@@ -212,6 +216,20 @@ public class CaveProcessor
 		}
 		attrib.addNode(n);
 
+	}
+
+	private Center getHighestNonRiverNeighbor(Center c)
+	{
+		Center out = null;
+		for(Center n : c.neighbors)
+		{
+			if(n.hasAttribute(Attribute.riverUUID))
+				continue;
+			if(out == null || n.getElevation() > out.getElevation())
+				out = n;
+		}
+
+		return out;
 	}
 
 	private int mcElev(double d)
