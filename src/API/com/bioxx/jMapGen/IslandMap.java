@@ -110,6 +110,7 @@ public class IslandMap
 	public void go() 
 	{
 		points = this.generateHexagon(SIZE);
+
 		//System.out.println("Points: " + points.size());
 		Rectangle R = new Rectangle();
 		R.setFrame(0, 0, SIZE, SIZE);
@@ -117,13 +118,10 @@ public class IslandMap
 		Voronoi voronoi = new Voronoi(points, R);
 		//System.out.println("Finished Creating map Voronoi...");
 		buildGraph(points, voronoi);
-
 		// Determine the elevations and water at Voronoi corners.
 		int borderCount = assignCornerElevations();
-
 		// Determine polygon and corner type: ocean, coast, land.
 		assignOceanCoastAndLand();
-
 		//If there is too much land on the borders then toss this island and start fresh
 		if(borderCount > 20)
 		{
@@ -132,10 +130,8 @@ public class IslandMap
 			go();
 			return;
 		}
-
 		redistributeElevations(landCorners(corners));
 		//fixElevations(landCorners(corners));
-
 		// Assign elevations to non-land corners
 		for(Iterator<Corner> i = corners.iterator(); i.hasNext();)
 		{
@@ -151,7 +147,6 @@ public class IslandMap
 
 			// Polygon elevations are the average of their corners
 			assignPolygonElevations();
-
 			assignLakeElevations(lakeCenters(centers));
 
 			// Determine downslope paths.
@@ -162,19 +157,17 @@ public class IslandMap
 			createValleys(getCentersAbove(0.4));
 
 			createCanyons();
+
 			calculateDownslopesCenter();
+
 			createGorges();
 
 			// Determine downslope paths.
 			calculateDownslopesCenter();
-
 			// Create rivers.
 			createRivers(getCentersAbove(0.25));
-
 			assignSlopedNoise();
-
 			assignHillyNoise();
-
 			calculateDownslopesCenter();
 		}
 		else
@@ -1556,7 +1549,7 @@ public class IslandMap
 				if(cn.hasAttribute(Attribute.gorgeUUID))
 				{
 					if(((GorgeAttribute)cn.getAttribute(Attribute.gorgeUUID)).getUp() == null && 
-							(mapRandom.nextFloat() > 0.25 || cn.hasAttribute(Attribute.canyonUUID)))
+							(mapRandom.nextDouble() > 0.25 || cn.hasAttribute(Attribute.canyonUUID)))
 					{
 						possibleStarts.add(cn);
 					}
@@ -1759,7 +1752,7 @@ public class IslandMap
 		if(next != null)
 			return new RiverNode(next);
 
-		RandomCollection<Center> possibles = new RandomCollection<Center>();
+		RandomCollection<Center> possibles = new RandomCollection<Center>(this.mapRandom);
 
 		//The river will attempt to meander if we aren't propagating down an existing river
 		if(curAttrib == null || curAttrib.getRiver() == 0)
