@@ -121,7 +121,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
 
-			if( schem != null && canGrowHere(world, treePos.offsetDown(), schem, growthStage))
+			if( schem != null && canGrowHere(world, treePos.offsetDown(), schem, Math.max(growthStage, 1)))
 			{
 				grown = genTree(schem, tc, world, treePos);
 			}
@@ -150,7 +150,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
 
-			if( schem != null && canGrowHere(world, treePos.offsetDown(), schem, growthStage))
+			if( schem != null && canGrowHere(world, treePos.offsetDown(), schem, Math.max(growthStage, 1)))
 			{
 				grown = genTree(schem, tc, world, treePos);
 			}
