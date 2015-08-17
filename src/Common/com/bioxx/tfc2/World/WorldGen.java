@@ -179,7 +179,7 @@ public class WorldGen implements IThreadCompleteListener
 		}
 		else
 		{
-			for(StoneType s : StoneType.getSubTypes(StoneType.SubType.IgneousExtrusive))
+			for(StoneType s : StoneType.getForSubTypes(StoneType.SubType.IgneousExtrusive))
 			{
 				stonePot.add(1.0, s);
 			}

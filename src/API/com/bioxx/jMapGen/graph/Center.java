@@ -398,7 +398,7 @@ public class Center
 
 	public enum HexDirection
 	{
-		North(0), South(1), NorthEast(2), NorthWest(3), SouthEast(4), SouthWest(5);
+		NorthWest(0), North(1), NorthEast(2), SouthEast(3), South(4), SouthWest(5);
 
 		int order;
 
@@ -418,6 +418,22 @@ public class Center
 			case SouthWest: return NorthEast;
 			default: return North;
 			}
+		}
+
+		public HexDirection getNextClockwise()
+		{
+			if( order == 5)
+				return values()[0];
+			else
+				return values()[order+1];
+		}
+
+		public HexDirection getNextCounterClockwise()
+		{
+			if( order == 0)
+				return values()[5];
+			else
+				return values()[order-1];
 		}
 
 		public int getOrder()

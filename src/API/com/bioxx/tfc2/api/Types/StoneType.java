@@ -44,13 +44,16 @@ public enum StoneType implements IStringSerializable
 		return null;
 	}
 
-	public static StoneType[] getSubTypes(StoneType.SubType s)
+	public static StoneType[] getForSubTypes(StoneType.SubType... types)
 	{
 		ArrayList<StoneType> list = new ArrayList<StoneType>();
-		for(int i = 0; i < StoneType.values().length; i++)
+		for(StoneType.SubType s : types)
 		{
-			if(StoneType.values()[i].type == s)
-				list.add(StoneType.values()[i]);
+			for(int i = 0; i < StoneType.values().length; i++)
+			{
+				if(StoneType.values()[i].type == s)
+					list.add(StoneType.values()[i]);
+			}
 		}
 
 		if(list.size() == 0)

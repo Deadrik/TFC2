@@ -24,14 +24,15 @@ import com.bioxx.jmapgen.com.nodename.delaunay.DelaunayUtil;
 import com.bioxx.jmapgen.com.nodename.delaunay.Voronoi;
 import com.bioxx.jmapgen.com.nodename.geom.LineSegment;
 import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.HexDirection;
+import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.graph.Corner;
 import com.bioxx.jmapgen.graph.CornerElevationSorter;
 import com.bioxx.jmapgen.graph.Edge;
 import com.bioxx.jmapgen.graph.MoistureComparator;
-import com.bioxx.jmapgen.graph.Center.HexDirection;
-import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.pathfinding.PathFinder;
 import com.bioxx.jmapgen.processing.CaveProcessor;
+import com.bioxx.jmapgen.processing.OreProcessor;
 
 public class IslandMap 
 {
@@ -63,6 +64,7 @@ public class IslandMap
 	public PathFinder pathfinder;
 
 	private CaveProcessor caves;
+	private OreProcessor ores;
 
 	public IslandMap(int size, long s) 
 	{
@@ -76,6 +78,7 @@ public class IslandMap
 		rivers = new Vector<River>();
 		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
+		ores = new OreProcessor(this);
 	}
 
 	// Random parameters governing the overall shape of the island
@@ -100,6 +103,7 @@ public class IslandMap
 		rivers.clear();
 		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
+		ores = new OreProcessor(this);
 	}
 
 	public IslandParameters getParams()
@@ -189,6 +193,7 @@ public class IslandMap
 		setupBiomeInfo();
 
 		caves.generate();
+		ores.generate();
 	}
 
 	private void createCanyons()

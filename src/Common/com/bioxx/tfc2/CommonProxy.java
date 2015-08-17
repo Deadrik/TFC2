@@ -13,6 +13,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.api.TFCFluids;
+import com.bioxx.tfc2.api.ore.OreConfig;
+import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
+import com.bioxx.tfc2.api.ore.OreRegistry;
+import com.bioxx.tfc2.api.types.OreType;
+import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.handlers.CreateSpawnHandler;
 import com.bioxx.tfc2.handlers.ServerTickHandler;
@@ -44,6 +49,8 @@ public class CommonProxy
 		TFCBlocks.RegisterBlocks();
 		TFCFluids.SALTWATER.setBlock(TFCBlocks.SaltWater).setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());
 		TFCFluids.FRESHWATER.setBlock(TFCBlocks.FreshWater).setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());
+
+		setupOre();
 	}
 
 	public void init(FMLInitializationEvent event)
@@ -56,6 +63,11 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(new CreateSpawnHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldLoadHandler());
 		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
+	}
+
+	protected void setupOre()
+	{
+		OreRegistry.getInstance().registerOre(OreType.Bismuthinite.getName(), new OreConfig(VeinType.Seam, TFCBlocks.Ore, OreType.Bismuthinite, 1, 4, 1, 2), StoneType.getForSubTypes(StoneType.SubType.Metamorphic, StoneType.SubType.Sedimentary));
 	}
 
 	public void setupFluids()
