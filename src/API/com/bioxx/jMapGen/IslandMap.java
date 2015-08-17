@@ -92,12 +92,12 @@ public class IslandMap
 		NUM_POINTS = is.SIZE*4;
 		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 		is.createShape(seed);
-		points = new Vector<Point>();
-		edges = new Vector<Edge>();
-		centers = new Vector<Center>();
-		corners = new Vector<Corner>();
-		lakes = new Vector<Lake>();
-		rivers = new Vector<River>();
+		points.clear();
+		edges.clear();
+		centers.clear();
+		corners.clear();
+		lakes.clear();
+		rivers.clear();
 		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 	}
