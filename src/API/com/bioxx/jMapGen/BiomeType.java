@@ -1,4 +1,4 @@
-package com.bioxx.jMapGen;
+package com.bioxx.jmapgen;
 
 import java.awt.Color;
 

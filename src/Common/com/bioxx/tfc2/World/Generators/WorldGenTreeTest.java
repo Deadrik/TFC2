@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.World.Generators;
+package com.bioxx.tfc2.world.generators;
 
 import java.util.Random;
 
@@ -9,22 +9,22 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.Point;
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.jMapGen.graph.Center.Marker;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.World.ChunkManager;
-import com.bioxx.tfc2.World.WorldGen;
+import com.bioxx.tfc2.world.ChunkManager;
+import com.bioxx.tfc2.world.WorldGen;
 import com.bioxx.tfc2.api.Schematic;
 import com.bioxx.tfc2.api.Schematic.SchemBlock;
-import com.bioxx.tfc2.api.Trees.TreeConfig;
-import com.bioxx.tfc2.api.Trees.TreeRegistry;
-import com.bioxx.tfc2.api.Trees.TreeSchemManager;
-import com.bioxx.tfc2.api.Trees.TreeSchematic;
-import com.bioxx.tfc2.api.Types.ClimateTemp;
-import com.bioxx.tfc2.api.Types.Moisture;
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.tfc2.api.trees.TreeConfig;
+import com.bioxx.tfc2.api.trees.TreeRegistry;
+import com.bioxx.tfc2.api.trees.TreeSchemManager;
+import com.bioxx.tfc2.api.trees.TreeSchematic;
+import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.types.Moisture;
+import com.bioxx.tfc2.api.types.WoodType;
 
 public class WorldGenTreeTest implements IWorldGenerator
 {
@@ -56,7 +56,8 @@ public class WorldGenTreeTest implements IWorldGenerator
 			//The theoretical max number of trees per chunk is 8.
 			//We mult this by whichever is lower, the hex moisture or the island moisture.
 			//This way base dry islands still feature less trees overall.
-			int baseTrees = (int)(12 * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
+			int baseTrees = 12;
+			baseTrees = (int)(baseTrees * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
 			int numTrees = random.nextInt(baseTrees+1)+1;
 			//numTrees = (int)(numTrees * c.getMoisture().getMoisture());
 

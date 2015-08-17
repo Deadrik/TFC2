@@ -1,6 +1,6 @@
-package com.bioxx.jMapGen.com.nodename.geom;
+package com.bioxx.jmapgen.com.nodename.geom;
 
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.Point;
 
 public final class LineSegment extends Object
 {

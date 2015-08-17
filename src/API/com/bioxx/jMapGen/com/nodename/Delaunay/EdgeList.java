@@ -1,6 +1,6 @@
-package com.bioxx.jMapGen.com.nodename.Delaunay;
+package com.bioxx.jmapgen.com.nodename.delaunay;
 
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.Point;
 
 	
 	public final class EdgeList

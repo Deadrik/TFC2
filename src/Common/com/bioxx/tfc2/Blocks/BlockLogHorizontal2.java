@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks;
+package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -13,7 +13,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.tfc2.api.types.WoodType;
 
 public class BlockLogHorizontal2 extends BlockLogHorizontal
 {

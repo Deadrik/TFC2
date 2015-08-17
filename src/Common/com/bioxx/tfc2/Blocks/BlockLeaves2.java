@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks;
+package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.tfc2.api.types.WoodType;
 
 public class BlockLeaves2 extends BlockLeaves
 {

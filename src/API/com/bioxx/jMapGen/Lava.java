@@ -2,12 +2,12 @@
 // Author: amitp@cs.stanford.edu
 // License: MIT
 
-package com.bioxx.jMapGen;
+package com.bioxx.jmapgen;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.bioxx.jMapGen.graph.Edge;
+import com.bioxx.jmapgen.graph.Edge;
 
 public class Lava 
 {

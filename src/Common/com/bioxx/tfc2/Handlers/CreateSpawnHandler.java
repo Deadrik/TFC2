@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Handlers;
+package com.bioxx.tfc2.handlers;
 
 import java.util.Random;
 
@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import com.bioxx.tfc2.World.ChunkManager;
+import com.bioxx.tfc2.world.ChunkManager;
 
 public class CreateSpawnHandler 
 {

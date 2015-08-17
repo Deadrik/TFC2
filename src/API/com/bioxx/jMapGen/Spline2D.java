@@ -5,7 +5,7 @@
  * Copyright (c) 2005 David Benson
  *  
  */
-package com.bioxx.jMapGen;
+package com.bioxx.jmapgen;
 import java.util.Arrays;
 
 /**

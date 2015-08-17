@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.api.Util;
+package com.bioxx.tfc2.api.util;
 
 import java.util.ArrayList;
 

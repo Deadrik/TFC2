@@ -1,11 +1,11 @@
-package com.bioxx.jMapGen.pathfinding;
+package com.bioxx.jmapgen.pathfinding;
 
 import java.util.Vector;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.Point;
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.jMapGen.graph.Center.Marker;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
 
 public class PathFinder 
 {

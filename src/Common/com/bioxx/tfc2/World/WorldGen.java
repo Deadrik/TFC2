@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.World;
+package com.bioxx.tfc2.world;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,18 +16,18 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.IslandParameters;
-import com.bioxx.jMapGen.IslandParameters.Feature;
-import com.bioxx.jMapGen.RandomCollection;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters;
+import com.bioxx.jmapgen.RandomCollection;
+import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.TFCOptions;
-import com.bioxx.tfc2.api.Trees.TreeRegistry;
-import com.bioxx.tfc2.api.Types.ClimateTemp;
-import com.bioxx.tfc2.api.Types.Moisture;
-import com.bioxx.tfc2.api.Types.StoneType;
-import com.bioxx.tfc2.api.Util.Helper;
-import com.bioxx.tfc2.api.Util.IThreadCompleteListener;
+import com.bioxx.tfc2.api.trees.TreeRegistry;
+import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.types.Moisture;
+import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.api.util.Helper;
+import com.bioxx.tfc2.api.util.IThreadCompleteListener;
 
 
 public class WorldGen implements IThreadCompleteListener

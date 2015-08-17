@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Commands;
+package com.bioxx.tfc2.commands;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.Point;
 
 public class TeleportInIslandCommand extends CommandBase
 {

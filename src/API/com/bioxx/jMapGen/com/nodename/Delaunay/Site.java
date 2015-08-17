@@ -1,13 +1,13 @@
-package com.bioxx.jMapGen.com.nodename.Delaunay;
+package com.bioxx.jmapgen.com.nodename.delaunay;
 
 import java.awt.Rectangle;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
 
-import com.bioxx.jMapGen.Point;
-import com.bioxx.jMapGen.com.nodename.geom.Polygon;
-import com.bioxx.jMapGen.com.nodename.geom.Winding;
+import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.com.nodename.geom.Polygon;
+import com.bioxx.jmapgen.com.nodename.geom.Winding;
 
 /**
  * Sites are used by edges to define which points that the edge is bisecting.

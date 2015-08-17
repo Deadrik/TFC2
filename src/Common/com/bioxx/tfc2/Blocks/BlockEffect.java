@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks;
+package com.bioxx.tfc2.blocks;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -7,7 +7,7 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 
-import com.bioxx.tfc2.api.Types.EffectType;
+import com.bioxx.tfc2.api.types.EffectType;
 
 public class BlockEffect extends BlockTerra
 {

@@ -20,12 +20,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import com.bioxx.tfc2.Handlers.Client.BackgroundMusicHandler;
-import com.bioxx.tfc2.Handlers.Client.ClientRenderHandler;
-import com.bioxx.tfc2.Handlers.Client.KeyBindingHandler;
+import com.bioxx.tfc2.handlers.client.BackgroundMusicHandler;
+import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
+import com.bioxx.tfc2.handlers.client.KeyBindingHandler;
 import com.bioxx.tfc2.api.Global;
-import com.bioxx.tfc2.api.Types.WoodType;
-import com.bioxx.tfc2.api.Util.KeyBindings;
+import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.api.util.KeyBindings;
 
 public class ClientProxy extends CommonProxy
 {

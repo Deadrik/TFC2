@@ -1,4 +1,4 @@
-package com.bioxx.jMapGen;
+package com.bioxx.jmapgen;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -9,10 +9,10 @@ import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
-import com.bioxx.tfc2.api.Types.ClimateTemp;
-import com.bioxx.tfc2.api.Types.Moisture;
-import com.bioxx.tfc2.api.Types.StoneType;
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.types.Moisture;
+import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.api.types.WoodType;
 
 public class IslandParameters 
 {

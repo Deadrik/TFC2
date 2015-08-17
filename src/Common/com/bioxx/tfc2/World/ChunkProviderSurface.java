@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.World;
+package com.bioxx.tfc2.world;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,29 +18,29 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.MapGenBase;
 
-import com.bioxx.jMapGen.BiomeType;
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.IslandParameters.Feature;
-import com.bioxx.jMapGen.Point;
-import com.bioxx.jMapGen.Spline2D;
-import com.bioxx.jMapGen.Spline3D;
-import com.bioxx.jMapGen.attributes.Attribute;
-import com.bioxx.jMapGen.attributes.CanyonAttribute;
-import com.bioxx.jMapGen.attributes.CaveAttribute;
-import com.bioxx.jMapGen.attributes.LakeAttribute;
-import com.bioxx.jMapGen.attributes.RiverAttribute;
-import com.bioxx.jMapGen.cave.CaveAttrNode;
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.jMapGen.graph.Center.Marker;
+import com.bioxx.jmapgen.BiomeType;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.Spline2D;
+import com.bioxx.jmapgen.Spline3D;
+import com.bioxx.jmapgen.IslandParameters.Feature;
+import com.bioxx.jmapgen.attributes.Attribute;
+import com.bioxx.jmapgen.attributes.CanyonAttribute;
+import com.bioxx.jmapgen.attributes.CaveAttribute;
+import com.bioxx.jmapgen.attributes.LakeAttribute;
+import com.bioxx.jmapgen.attributes.RiverAttribute;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
+import com.bioxx.jmapgen.processing.CaveAttrNode;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
-import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
-import com.bioxx.tfc2.Blocks.Terrain.BlockGravel;
-import com.bioxx.tfc2.Blocks.Terrain.BlockStone;
+import com.bioxx.tfc2.blocks.terrain.BlockDirt;
+import com.bioxx.tfc2.blocks.terrain.BlockGrass;
+import com.bioxx.tfc2.blocks.terrain.BlockGravel;
+import com.bioxx.tfc2.blocks.terrain.BlockStone;
 import com.bioxx.tfc2.api.Global;
 
 public class ChunkProviderSurface extends ChunkProviderGenerate 

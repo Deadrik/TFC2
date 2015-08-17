@@ -1,11 +1,11 @@
-package com.bioxx.tfc2.Handlers.Client;
+package com.bioxx.tfc2.handlers.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.Blocks.BlockLeaves;
+import com.bioxx.tfc2.blocks.BlockLeaves;
 
 public class ClientRenderHandler
 {

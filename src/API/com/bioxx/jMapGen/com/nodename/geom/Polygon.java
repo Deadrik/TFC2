@@ -1,8 +1,8 @@
-package com.bioxx.jMapGen.com.nodename.geom;
+package com.bioxx.jmapgen.com.nodename.geom;
 
 import java.util.Vector;
 
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.Point;
 
 
 	public final class Polygon

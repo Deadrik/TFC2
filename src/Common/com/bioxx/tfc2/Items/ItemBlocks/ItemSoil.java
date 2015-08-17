@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Items.ItemBlocks;
+package com.bioxx.tfc2.items.itemblocks;
 
 import java.util.List;
 

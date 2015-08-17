@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.World;
+package com.bioxx.tfc2.world;
 
 import java.util.Random;
 
@@ -10,10 +10,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 
-import com.bioxx.jMapGen.IslandMap;
+import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.Blocks.Terrain.BlockDirt;
-import com.bioxx.tfc2.Blocks.Terrain.BlockGrass;
+import com.bioxx.tfc2.blocks.terrain.BlockDirt;
+import com.bioxx.tfc2.blocks.terrain.BlockGrass;
 import com.google.common.base.Objects;
 
 public class MapGenCaves extends net.minecraft.world.gen.MapGenCaves
@@ -309,7 +309,7 @@ public class MapGenCaves extends net.minecraft.world.gen.MapGenCaves
 
 				/*if (up.getBlock() == TFCBlocks.Sand)
 				 {
-					 data.setBlockState(x, y + 1, z, up.getValue(com.bioxx.tfc2.Blocks.Terrain.BlockSand.META_PROPERTY) == BlockSand.EnumType.RED_SAND ? Blocks.red_sandstone.getDefaultState() : Blocks.sandstone.getDefaultState());
+					 data.setBlockState(x, y + 1, z, up.getValue(com.bioxx.tfc2.blocks.Terrain.BlockSand.META_PROPERTY) == BlockSand.EnumType.RED_SAND ? Blocks.red_sandstone.getDefaultState() : Blocks.sandstone.getDefaultState());
 				 }*/
 
 				if (foundTop && data.getBlockState(x, y - 1, z).getBlock() == filler.getBlock())

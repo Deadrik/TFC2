@@ -1,7 +1,7 @@
-package com.bioxx.jMapGen.pathfinding;
+package com.bioxx.jmapgen.pathfinding;
 
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.jMapGen.graph.Center.Marker;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
 
 public class PathNode 
 {

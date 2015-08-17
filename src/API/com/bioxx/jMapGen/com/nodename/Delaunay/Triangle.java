@@ -1,4 +1,4 @@
-package com.bioxx.jMapGen.com.nodename.Delaunay;
+package com.bioxx.jmapgen.com.nodename.delaunay;
 
 import java.util.Vector;
 

@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.api.Types;
+package com.bioxx.tfc2.api.types;
 
 
 public enum Moisture

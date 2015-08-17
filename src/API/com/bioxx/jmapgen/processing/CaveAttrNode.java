@@ -1,9 +1,9 @@
-package com.bioxx.jMapGen.cave;
+package com.bioxx.jmapgen.processing;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 
-import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jmapgen.graph.Center;
 
 public class CaveAttrNode 
 {
@@ -134,7 +134,7 @@ public class CaveAttrNode
 		nbt.setInteger("nodeHeight", nodeHeight);
 	}
 
-	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.IslandMap m) 
+	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jmapgen.IslandMap m) 
 	{
 		this.caveId = nbt.getInteger("caveId");
 		this.offset = BlockPos.fromLong(nbt.getLong("offset"));

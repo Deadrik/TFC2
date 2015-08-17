@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks.Terrain;
+package com.bioxx.tfc2.blocks.terrain;
 
 import java.util.Random;
 
@@ -20,12 +20,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.Blocks.BlockTerra;
-import com.bioxx.tfc2.World.WorldGen;
-import com.bioxx.tfc2.api.Types.StoneType;
+import com.bioxx.tfc2.blocks.BlockTerra;
+import com.bioxx.tfc2.world.WorldGen;
+import com.bioxx.tfc2.api.types.StoneType;
 
 public class BlockGrass extends BlockTerra
 {

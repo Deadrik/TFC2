@@ -12,14 +12,14 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import com.bioxx.tfc2.CoreStuff.FluidTFC;
-import com.bioxx.tfc2.Handlers.CreateSpawnHandler;
-import com.bioxx.tfc2.Handlers.ServerTickHandler;
-import com.bioxx.tfc2.Handlers.WorldLoadHandler;
-import com.bioxx.tfc2.World.WorldProviderSurface;
-import com.bioxx.tfc2.World.Generators.WorldGenGrass;
-import com.bioxx.tfc2.World.Generators.WorldGenTreeTest;
 import com.bioxx.tfc2.api.TFCFluids;
+import com.bioxx.tfc2.core.FluidTFC;
+import com.bioxx.tfc2.handlers.CreateSpawnHandler;
+import com.bioxx.tfc2.handlers.ServerTickHandler;
+import com.bioxx.tfc2.handlers.WorldLoadHandler;
+import com.bioxx.tfc2.world.WorldProviderSurface;
+import com.bioxx.tfc2.world.generators.WorldGenGrass;
+import com.bioxx.tfc2.world.generators.WorldGenTreeTest;
 
 public class CommonProxy
 {

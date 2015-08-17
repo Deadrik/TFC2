@@ -1,7 +1,7 @@
 // Make a map out of a voronoi graph
 // Original Author: amitp@cs.stanford.edu
 // License: MIT
-package com.bioxx.jMapGen;
+package com.bioxx.jmapgen;
 
 import java.awt.Rectangle;
 import java.util.Collections;
@@ -14,24 +14,24 @@ import java.util.Vector;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import com.bioxx.jMapGen.IslandParameters.Feature;
-import com.bioxx.jMapGen.attributes.Attribute;
-import com.bioxx.jMapGen.attributes.CanyonAttribute;
-import com.bioxx.jMapGen.attributes.GorgeAttribute;
-import com.bioxx.jMapGen.attributes.LakeAttribute;
-import com.bioxx.jMapGen.attributes.RiverAttribute;
-import com.bioxx.jMapGen.cave.CaveProcessor;
-import com.bioxx.jMapGen.com.nodename.Delaunay.DelaunayUtil;
-import com.bioxx.jMapGen.com.nodename.Delaunay.Voronoi;
-import com.bioxx.jMapGen.com.nodename.geom.LineSegment;
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.jMapGen.graph.Center.HexDirection;
-import com.bioxx.jMapGen.graph.Center.Marker;
-import com.bioxx.jMapGen.graph.Corner;
-import com.bioxx.jMapGen.graph.CornerElevationSorter;
-import com.bioxx.jMapGen.graph.Edge;
-import com.bioxx.jMapGen.graph.MoistureComparator;
-import com.bioxx.jMapGen.pathfinding.PathFinder;
+import com.bioxx.jmapgen.IslandParameters.Feature;
+import com.bioxx.jmapgen.attributes.Attribute;
+import com.bioxx.jmapgen.attributes.CanyonAttribute;
+import com.bioxx.jmapgen.attributes.GorgeAttribute;
+import com.bioxx.jmapgen.attributes.LakeAttribute;
+import com.bioxx.jmapgen.attributes.RiverAttribute;
+import com.bioxx.jmapgen.com.nodename.delaunay.DelaunayUtil;
+import com.bioxx.jmapgen.com.nodename.delaunay.Voronoi;
+import com.bioxx.jmapgen.com.nodename.geom.LineSegment;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Corner;
+import com.bioxx.jmapgen.graph.CornerElevationSorter;
+import com.bioxx.jmapgen.graph.Edge;
+import com.bioxx.jmapgen.graph.MoistureComparator;
+import com.bioxx.jmapgen.graph.Center.HexDirection;
+import com.bioxx.jmapgen.graph.Center.Marker;
+import com.bioxx.jmapgen.pathfinding.PathFinder;
+import com.bioxx.jmapgen.processing.CaveProcessor;
 
 public class IslandMap 
 {
@@ -753,7 +753,7 @@ public class IslandMap
 		Point point;
 		Point other;
 
-		Vector<com.bioxx.jMapGen.com.nodename.Delaunay.Edge> libedges = voronoi.getEdges();
+		Vector<com.bioxx.jmapgen.com.nodename.delaunay.Edge> libedges = voronoi.getEdges();
 		HashMap<Point, Center> centerLookup = new HashMap<Point, Center>();
 
 		//System.out.println("Starting buildGraph...");
@@ -791,7 +791,7 @@ public class IslandMap
 
 		for(int i = 0; i < libedges.size(); i++) 
 		{
-			com.bioxx.jMapGen.com.nodename.Delaunay.Edge libedge = libedges.get(i);
+			com.bioxx.jmapgen.com.nodename.delaunay.Edge libedge = libedges.get(i);
 			LineSegment dedge = libedge.delaunayLine();
 			LineSegment vedge = libedge.voronoiEdge();
 

@@ -1,4 +1,4 @@
-package com.bioxx.jMapGen.attributes;
+package com.bioxx.jmapgen.attributes;
 
 import java.util.UUID;
 import java.util.Vector;
@@ -6,7 +6,7 @@ import java.util.Vector;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import com.bioxx.jMapGen.cave.CaveAttrNode;
+import com.bioxx.jmapgen.processing.CaveAttrNode;
 
 public class CaveAttribute extends Attribute 
 {
@@ -42,7 +42,7 @@ public class CaveAttribute extends Attribute
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.IslandMap m) 
+	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jmapgen.IslandMap m) 
 	{
 		this.id = UUID.fromString(nbt.getString("uuid"));
 		if(nbt.hasKey("nodes"))

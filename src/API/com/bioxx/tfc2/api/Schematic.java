@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 
-import com.bioxx.tfc2.api.Interfaces.ISchematic;
+import com.bioxx.tfc2.api.interfaces.ISchematic;
 
 public class Schematic implements ISchematic
 {

@@ -1,4 +1,4 @@
-package com.bioxx.jMapGen.graph;
+package com.bioxx.jmapgen.graph;
 
 import java.util.Comparator;
 

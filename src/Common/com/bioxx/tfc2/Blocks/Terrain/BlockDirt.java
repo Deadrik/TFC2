@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks.Terrain;
+package com.bioxx.tfc2.blocks.terrain;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -11,8 +11,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.Blocks.BlockTerra;
-import com.bioxx.tfc2.api.Types.StoneType;
+import com.bioxx.tfc2.blocks.BlockTerra;
+import com.bioxx.tfc2.api.types.StoneType;
 
 public class BlockDirt extends BlockTerra
 {

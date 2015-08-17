@@ -1,8 +1,8 @@
-package com.bioxx.jMapGen.com.nodename.Delaunay;
+package com.bioxx.jmapgen.com.nodename.delaunay;
 
 import java.util.Vector;
 
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.Point;
 
 
 public class HalfedgePriorityQueue // also known as heap

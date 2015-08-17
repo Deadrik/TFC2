@@ -1,8 +1,8 @@
-package com.bioxx.jMapGen.graph;
+package com.bioxx.jmapgen.graph;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.Point;
-import com.bioxx.jMapGen.graph.Center.Marker;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.graph.Center.Marker;
 
 import net.minecraft.nbt.NBTTagCompound;
 

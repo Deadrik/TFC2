@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Handlers;
+package com.bioxx.tfc2.handlers;
 
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks;
+package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
 
@@ -16,10 +16,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.Point;
-import com.bioxx.tfc2.World.WorldGen;
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
+import com.bioxx.tfc2.world.WorldGen;
+import com.bioxx.tfc2.api.types.WoodType;
 
 public class BlockLeaves extends BlockTerra
 {

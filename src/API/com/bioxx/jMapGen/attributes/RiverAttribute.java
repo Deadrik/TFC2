@@ -1,12 +1,12 @@
-package com.bioxx.jMapGen.attributes;
+package com.bioxx.jmapgen.attributes;
 
 import java.util.UUID;
 import java.util.Vector;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.bioxx.jMapGen.Point;
-import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.graph.Center;
 
 public class RiverAttribute extends Attribute 
 {
@@ -91,7 +91,7 @@ public class RiverAttribute extends Attribute
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.IslandMap m) 
+	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jmapgen.IslandMap m) 
 	{
 		this.id = UUID.fromString(nbt.getString("uuid"));
 		river = nbt.getDouble("river");

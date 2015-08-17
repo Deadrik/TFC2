@@ -1,14 +1,14 @@
-package com.bioxx.jMapGen.cave;
+package com.bioxx.jmapgen.processing;
 
 import java.util.Vector;
 
 import net.minecraft.util.BlockPos;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.attributes.Attribute;
-import com.bioxx.jMapGen.attributes.CaveAttribute;
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.jMapGen.graph.Center.Marker;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.attributes.Attribute;
+import com.bioxx.jmapgen.attributes.CaveAttribute;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.api.Global;
 
 public class CaveProcessor 

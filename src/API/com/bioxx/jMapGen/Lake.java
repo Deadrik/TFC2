@@ -1,8 +1,8 @@
-package com.bioxx.jMapGen;
+package com.bioxx.jmapgen;
 
 import java.util.Vector;
 
-import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jmapgen.graph.Center;
 
 public class Lake 
 {

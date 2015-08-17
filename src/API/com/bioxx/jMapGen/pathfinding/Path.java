@@ -1,8 +1,8 @@
-package com.bioxx.jMapGen.pathfinding;
+package com.bioxx.jmapgen.pathfinding;
 
 import java.util.LinkedList;
 
-import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jmapgen.graph.Center;
 
 public class Path 
 {

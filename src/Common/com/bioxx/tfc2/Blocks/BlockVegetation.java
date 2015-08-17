@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks;
+package com.bioxx.tfc2.blocks;
 
 import java.util.Random;
 
@@ -21,10 +21,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.World.WorldGen;
+import com.bioxx.tfc2.world.WorldGen;
 
 public class BlockVegetation extends BlockTerra
 {

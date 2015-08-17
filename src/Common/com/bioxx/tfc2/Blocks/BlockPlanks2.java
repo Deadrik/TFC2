@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks;
+package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
 
@@ -9,8 +9,8 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 
-import com.bioxx.tfc2.api.Interfaces.INeedOffset;
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.tfc2.api.interfaces.INeedOffset;
+import com.bioxx.tfc2.api.types.WoodType;
 
 public class BlockPlanks2 extends BlockTerra implements INeedOffset
 {

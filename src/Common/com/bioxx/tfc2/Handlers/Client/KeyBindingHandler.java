@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Handlers.Client;
+package com.bioxx.tfc2.handlers.client;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;

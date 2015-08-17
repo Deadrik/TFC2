@@ -1,11 +1,11 @@
-package com.bioxx.tfc2.api.Trees;
+package com.bioxx.tfc2.api.trees;
 
 import java.util.ArrayList;
 
 import net.minecraft.init.Blocks;
 
 import com.bioxx.tfc2.api.Schematic;
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.tfc2.api.types.WoodType;
 
 public class TreeSchematic extends Schematic
 {

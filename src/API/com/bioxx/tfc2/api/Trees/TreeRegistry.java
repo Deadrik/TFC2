@@ -1,13 +1,13 @@
-package com.bioxx.tfc2.api.Trees;
+package com.bioxx.tfc2.api.trees;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.bioxx.tfc2.api.Types.ClimateTemp;
-import com.bioxx.tfc2.api.Types.Moisture;
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.types.Moisture;
+import com.bioxx.tfc2.api.types.WoodType;
 
 public class TreeRegistry
 {

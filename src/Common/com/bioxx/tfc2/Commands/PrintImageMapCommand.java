@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Commands;
+package com.bioxx.tfc2.commands;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -17,14 +17,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.Point;
-import com.bioxx.jMapGen.attributes.Attribute;
-import com.bioxx.jMapGen.attributes.RiverAttribute;
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.jMapGen.graph.Corner;
-import com.bioxx.jMapGen.pathfinding.Path;
-import com.bioxx.jMapGen.pathfinding.PathNode;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.attributes.Attribute;
+import com.bioxx.jmapgen.attributes.RiverAttribute;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Corner;
+import com.bioxx.jmapgen.pathfinding.Path;
+import com.bioxx.jmapgen.pathfinding.PathNode;
 import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.Cache;
@@ -33,7 +33,7 @@ import com.bioxx.libnoise.module.modifier.Curve;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.modifier.ScalePoint;
 import com.bioxx.libnoise.module.source.Perlin;
-import com.bioxx.tfc2.World.WorldGen;
+import com.bioxx.tfc2.world.WorldGen;
 
 public class PrintImageMapCommand extends CommandBase
 {

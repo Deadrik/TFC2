@@ -20,7 +20,7 @@
 
 package com.bioxx.libnoise.model;
 
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.Point;
 import com.bioxx.libnoise.exception.NoModuleException;
 import com.bioxx.libnoise.module.Module;
 

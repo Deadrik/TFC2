@@ -1,6 +1,6 @@
-package com.bioxx.jMapGen.com.nodename.geom;
+package com.bioxx.jmapgen.com.nodename.geom;
 
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.Point;
 
 public final class Circle extends Object
 {
@@ -10,7 +10,7 @@ public final class Circle extends Object
 	public Circle(double centerX, double centerY, double radius)
 	{
 		super();
-		this.center = new com.bioxx.jMapGen.Point(centerX, centerY);
+		this.center = new com.bioxx.jmapgen.Point(centerX, centerY);
 		this.radius = radius;
 	}
 

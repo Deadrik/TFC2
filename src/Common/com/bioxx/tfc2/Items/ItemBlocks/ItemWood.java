@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Items.ItemBlocks;
+package com.bioxx.tfc2.items.itemblocks;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import net.minecraft.util.EnumChatFormatting;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.Global;
-import com.bioxx.tfc2.api.Interfaces.INeedOffset;
+import com.bioxx.tfc2.api.interfaces.INeedOffset;
 
 public class ItemWood extends ItemTerraBlock
 {

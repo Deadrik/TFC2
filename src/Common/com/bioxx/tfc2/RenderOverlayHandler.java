@@ -6,15 +6,15 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.IslandParameters.Feature;
-import com.bioxx.jMapGen.Point;
-import com.bioxx.jMapGen.attributes.Attribute;
-import com.bioxx.jMapGen.attributes.CaveAttribute;
-import com.bioxx.jMapGen.attributes.RiverAttribute;
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.tfc2.World.WorldGen;
-import com.bioxx.tfc2.api.Types.Moisture;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.IslandParameters.Feature;
+import com.bioxx.jmapgen.attributes.Attribute;
+import com.bioxx.jmapgen.attributes.CaveAttribute;
+import com.bioxx.jmapgen.attributes.RiverAttribute;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.tfc2.world.WorldGen;
+import com.bioxx.tfc2.api.types.Moisture;
 
 public class RenderOverlayHandler
 {

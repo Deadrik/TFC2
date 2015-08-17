@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.World;
+package com.bioxx.tfc2.world;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;

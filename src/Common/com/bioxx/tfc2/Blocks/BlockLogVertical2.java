@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.Blocks;
+package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
 
@@ -14,8 +14,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.api.Interfaces.INeedOffset;
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.tfc2.api.interfaces.INeedOffset;
+import com.bioxx.tfc2.api.types.WoodType;
 
 public class BlockLogVertical2 extends BlockTerra implements INeedOffset
 {

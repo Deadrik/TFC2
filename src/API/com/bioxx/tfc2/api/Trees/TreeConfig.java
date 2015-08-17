@@ -1,9 +1,9 @@
-package com.bioxx.tfc2.api.Trees;
+package com.bioxx.tfc2.api.trees;
 
 import net.minecraft.block.state.IBlockState;
 
-import com.bioxx.tfc2.api.Types.Moisture;
-import com.bioxx.tfc2.api.Types.ClimateTemp;
+import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.types.Moisture;
 
 public class TreeConfig 
 {

@@ -18,21 +18,21 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.bioxx.tfc2.Blocks.BlockLeaves;
-import com.bioxx.tfc2.Blocks.BlockLeaves2;
-import com.bioxx.tfc2.Blocks.BlockLogNatural;
-import com.bioxx.tfc2.Blocks.BlockLogNatural2;
-import com.bioxx.tfc2.Commands.PrintImageMapCommand;
-import com.bioxx.tfc2.Commands.TeleportInIslandCommand;
-import com.bioxx.tfc2.Networking.PacketPipeline;
-import com.bioxx.tfc2.World.WorldGen;
+import com.bioxx.tfc2.blocks.BlockLeaves;
+import com.bioxx.tfc2.blocks.BlockLeaves2;
+import com.bioxx.tfc2.blocks.BlockLogNatural;
+import com.bioxx.tfc2.blocks.BlockLogNatural2;
+import com.bioxx.tfc2.commands.PrintImageMapCommand;
+import com.bioxx.tfc2.commands.TeleportInIslandCommand;
+import com.bioxx.tfc2.networking.PacketPipeline;
+import com.bioxx.tfc2.world.WorldGen;
 import com.bioxx.tfc2.api.TFCOptions;
-import com.bioxx.tfc2.api.Trees.TreeConfig;
-import com.bioxx.tfc2.api.Trees.TreeRegistry;
-import com.bioxx.tfc2.api.Trees.TreeSchematic;
-import com.bioxx.tfc2.api.Types.ClimateTemp;
-import com.bioxx.tfc2.api.Types.Moisture;
-import com.bioxx.tfc2.api.Types.WoodType;
+import com.bioxx.tfc2.api.trees.TreeConfig;
+import com.bioxx.tfc2.api.trees.TreeRegistry;
+import com.bioxx.tfc2.api.trees.TreeSchematic;
+import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.types.Moisture;
+import com.bioxx.tfc2.api.types.WoodType;
 
 @Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, dependencies = Reference.ModDependencies)
 public class TFC

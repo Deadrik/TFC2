@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.api.Interfaces;
+package com.bioxx.tfc2.api.interfaces;
 
 public interface INeedOffset 
 {

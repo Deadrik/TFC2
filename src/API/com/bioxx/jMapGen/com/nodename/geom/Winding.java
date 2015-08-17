@@ -1,4 +1,4 @@
-package com.bioxx.jMapGen.com.nodename.geom;
+package com.bioxx.jmapgen.com.nodename.geom;
 
 	public class Winding
 	{

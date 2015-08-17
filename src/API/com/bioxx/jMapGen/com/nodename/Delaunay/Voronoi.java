@@ -11,14 +11,14 @@
  * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY
  * OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
  */
-package com.bioxx.jMapGen.com.nodename.Delaunay;
+package com.bioxx.jmapgen.com.nodename.delaunay;
 
 import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import com.bioxx.jMapGen.Point;
+import com.bioxx.jmapgen.Point;
 
 public class Voronoi
 {

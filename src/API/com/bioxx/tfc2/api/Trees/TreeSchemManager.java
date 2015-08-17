@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.api.Trees;
+package com.bioxx.tfc2.api.trees;
 
 import java.util.Random;
 import java.util.Vector;

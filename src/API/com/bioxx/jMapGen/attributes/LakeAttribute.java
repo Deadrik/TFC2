@@ -1,4 +1,4 @@
-package com.bioxx.jMapGen.attributes;
+package com.bioxx.jmapgen.attributes;
 
 import java.util.UUID;
 
@@ -72,7 +72,7 @@ public class LakeAttribute extends Attribute
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.IslandMap m) 
+	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jmapgen.IslandMap m) 
 	{
 		this.id = UUID.fromString(nbt.getString("uuid"));
 		this.lakeID = nbt.getInteger("lakeID");

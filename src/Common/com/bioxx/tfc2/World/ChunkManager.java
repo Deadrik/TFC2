@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.World;
+package com.bioxx.tfc2.world;
 
 import java.util.Random;
 import java.util.Vector;
@@ -8,9 +8,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.graph.Center;
-import com.bioxx.jMapGen.graph.Center.Marker;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
 
 public class ChunkManager extends WorldChunkManager 
 {

@@ -1,4 +1,4 @@
-package com.bioxx.jMapGen;
+package com.bioxx.jmapgen;
 
 import java.util.NavigableMap;
 import java.util.Random;

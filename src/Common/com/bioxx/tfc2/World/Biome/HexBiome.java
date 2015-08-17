@@ -1,9 +1,9 @@
-package com.bioxx.tfc2.World.Biome;
+package com.bioxx.tfc2.world.biome;
 
 import java.awt.Color;
 
-import com.bioxx.jMapGen.IslandMap;
-import com.bioxx.jMapGen.graph.Center;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.graph.Center;
 
 public class HexBiome 
 {

@@ -1,4 +1,4 @@
-package com.bioxx.jMapGen.attributes;
+package com.bioxx.jmapgen.attributes;
 
 import java.util.UUID;
 
@@ -31,5 +31,5 @@ public abstract class Attribute
 	}
 
 	public abstract void writeToNBT(NBTTagCompound nbt);
-	public abstract void readFromNBT(NBTTagCompound nbt, com.bioxx.jMapGen.IslandMap map);
+	public abstract void readFromNBT(NBTTagCompound nbt, com.bioxx.jmapgen.IslandMap map);
 }

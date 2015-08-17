@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.CoreStuff;
+package com.bioxx.tfc2.core;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
