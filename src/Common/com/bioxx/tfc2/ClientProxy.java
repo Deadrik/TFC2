@@ -20,12 +20,13 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.types.OreType;
+import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.api.util.KeyBindings;
 import com.bioxx.tfc2.handlers.client.BackgroundMusicHandler;
 import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
 import com.bioxx.tfc2.handlers.client.KeyBindingHandler;
-import com.bioxx.tfc2.api.Global;
-import com.bioxx.tfc2.api.types.WoodType;
-import com.bioxx.tfc2.api.util.KeyBindings;
 
 public class ClientProxy extends CommonProxy
 {
@@ -166,6 +167,14 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural2), Reference.ModID + ":Wood/Logs/" + wood);
 			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Leaves2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory"));
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves2), Reference.ModID + ":Wood/Saplings/" + wood);
+		}
+
+		for(int l = 0; l < OreType.values().length; l++)
+		{
+			String ore = Core.textConvert(OreType.values()[l].getName());
+
+			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Ore), l, new ModelResourceLocation(Reference.ModID + ":Ore/" + ore, "inventory"));
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Ore), Reference.ModID + ":Ore/" + ore);
 		}
 	}
 

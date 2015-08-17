@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import com.bioxx.tfc2.api.TFCFluids;
 import com.bioxx.tfc2.blocks.BlockEffect;
 import com.bioxx.tfc2.blocks.BlockFreshWater;
 import com.bioxx.tfc2.blocks.BlockFreshWaterStatic;
@@ -27,13 +28,14 @@ import com.bioxx.tfc2.blocks.BlockVegetation;
 import com.bioxx.tfc2.blocks.terrain.BlockDirt;
 import com.bioxx.tfc2.blocks.terrain.BlockGrass;
 import com.bioxx.tfc2.blocks.terrain.BlockGravel;
+import com.bioxx.tfc2.blocks.terrain.BlockOre;
 import com.bioxx.tfc2.blocks.terrain.BlockRubble;
 import com.bioxx.tfc2.blocks.terrain.BlockSand;
 import com.bioxx.tfc2.blocks.terrain.BlockStone;
+import com.bioxx.tfc2.items.itemblocks.ItemOre;
 import com.bioxx.tfc2.items.itemblocks.ItemSoil;
 import com.bioxx.tfc2.items.itemblocks.ItemStone;
 import com.bioxx.tfc2.items.itemblocks.ItemWood;
-import com.bioxx.tfc2.api.TFCFluids;
 
 public class TFCBlocks
 {
@@ -97,6 +99,7 @@ public class TFCBlocks
 		LogHorizontal3 = new BlockLogHorizontal3().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal3");
 		Leaves = new BlockLeaves().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves");
 		Leaves2 = new BlockLeaves2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves2");
+		Ore = new BlockOre().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("ore");
 	}
 
 	public static void RegisterBlocks()
@@ -132,6 +135,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(LogHorizontal3, ItemWood.class, "log_horizontal3");
 		GameRegistry.registerBlock(Leaves, ItemWood.class, "leaves");
 		GameRegistry.registerBlock(Leaves2, ItemWood.class, "leaves2");
+		GameRegistry.registerBlock(Ore, ItemOre.class, "ore");
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);
