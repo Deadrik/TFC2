@@ -33,6 +33,8 @@ public class CaveProcessor
 		for(int i = 0; i < majorCavesToGen; i++)
 		{
 			s = land.get(map.mapRandom.nextInt(land.size()));
+
+			//We don't want any caves to start on the edge of the map or in a lava tile.
 			if(s.hasAnyMarkersOf(Marker.Border, Marker.Lava) || s.hasAttribute(Attribute.riverUUID))
 			{ 
 				i--;
@@ -41,13 +43,15 @@ public class CaveProcessor
 			starts.add(s);
 		}
 
-		int caveCount = 0;
+		int caveCount = 0;//This keeps track of the total number of caves that we have generated so far.
+
 		for(Center c : starts)
 		{
 			gen(c, caveCount);
 			caveCount++;
 		}
 
+		//After we gen the initial major cave systems, we will attempt to start caves from beach cliffs.
 		starts.clear();
 		for(Center c : getBeachesWithCliffs(land))
 		{
@@ -61,6 +65,7 @@ public class CaveProcessor
 			caveCount++;
 		}
 
+		//Next we generate sea caves from ocean coastal tiles
 		starts.clear();
 		for(Center c : this.getCoastalOcean(map.centers))
 		{
