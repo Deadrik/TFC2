@@ -18,14 +18,6 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.bioxx.tfc2.blocks.BlockLeaves;
-import com.bioxx.tfc2.blocks.BlockLeaves2;
-import com.bioxx.tfc2.blocks.BlockLogNatural;
-import com.bioxx.tfc2.blocks.BlockLogNatural2;
-import com.bioxx.tfc2.commands.PrintImageMapCommand;
-import com.bioxx.tfc2.commands.TeleportInIslandCommand;
-import com.bioxx.tfc2.networking.PacketPipeline;
-import com.bioxx.tfc2.world.WorldGen;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.trees.TreeConfig;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
@@ -33,6 +25,16 @@ import com.bioxx.tfc2.api.trees.TreeSchematic;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.blocks.BlockLeaves;
+import com.bioxx.tfc2.blocks.BlockLeaves2;
+import com.bioxx.tfc2.blocks.BlockLogNatural;
+import com.bioxx.tfc2.blocks.BlockLogNatural2;
+import com.bioxx.tfc2.commands.PrintImageMapCommand;
+import com.bioxx.tfc2.commands.RemoveAreaCommand;
+import com.bioxx.tfc2.commands.StripChunkCommand;
+import com.bioxx.tfc2.commands.TeleportInIslandCommand;
+import com.bioxx.tfc2.networking.PacketPipeline;
+import com.bioxx.tfc2.world.WorldGen;
 
 @Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, dependencies = Reference.ModDependencies)
 public class TFC
@@ -88,6 +90,8 @@ public class TFC
 	{
 		evt.registerServerCommand(new PrintImageMapCommand());
 		evt.registerServerCommand(new TeleportInIslandCommand());
+		evt.registerServerCommand(new RemoveAreaCommand());
+		evt.registerServerCommand(new StripChunkCommand());
 	}
 
 	@EventHandler
