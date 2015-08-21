@@ -7,14 +7,16 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.IslandParameters.Feature;
+import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.CaveAttribute;
+import com.bioxx.jmapgen.attributes.OreAttribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
 import com.bioxx.jmapgen.graph.Center;
-import com.bioxx.tfc2.world.WorldGen;
+import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.tfc2.api.types.Moisture;
+import com.bioxx.tfc2.world.WorldGen;
 
 public class RenderOverlayHandler
 {
@@ -52,6 +54,19 @@ public class RenderOverlayHandler
 				{
 					event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------Cave-------");
 					event.left.add("Cave: ");	
+				}
+			}
+
+			OreAttribute oattrib = (OreAttribute)hex.getAttribute(Attribute.Ore);
+			if(oattrib != null)
+			{
+				if(oattrib.nodes.size() > 0)
+				{
+					event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------Ore-------");
+					for(OreAttrNode n : oattrib.nodes)
+					{
+						event.left.add(n.getOreType());	
+					}
 				}
 			}
 

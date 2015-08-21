@@ -14,18 +14,18 @@ public class OreConfig
 	int veinHeightMax;//Max height of the seam or blob
 	int veinWidthMin;//Max width of the seam or blob
 	int veinHeightMin;//Max height of the seam or blob
-	int noiseVertical = 20;//How much the seam can move vertically between hexes. 1-30 is a sane range
+	int noiseVertical = 5;//How much the seam can move vertically between hexes. 1-10 is a sane range
 	double noiseBiasVertical = 0.5;//Range (0-1) This will bias the vertical movement of a seam towards the up or down direction. 0 = 100% down, 1.0 = 100% up
-	int noiseHorizontal = 8;//How much the seam can move horizontally between hexes. 1-8 is a good range
+	int noiseHorizontal = 5;//How much the seam can move horizontally between hexes. 1-5 is a good range
 	int layerHexWidth = 1;//This is how many hexes wide that this seem should generate. Only used for large layer style ores such as coal.
-	int minSeamLength = 5;//When deciding how long to make the seam, this is the minimum number of hexes to move.
-	int maxSeamLength = 30;//When deciding how long to make the seam, this is the maximum number of hexes to move.
-	double pathBias = 0.5;//Range (0-1) This causes the seam to prefer moving either left or right from the previous hex. 0 = Left, 1 = Right
+	int minSeamLength = 10;//When deciding how long to make the seam, this is the minimum number of hexes to move.
+	int maxSeamLength = 100;//When deciding how long to make the seam, this is the maximum number of hexes to move.
+
 	int subSeamRarity = 1;//1 in X Centers will have an offshoot seam
 	/**
-	 * This value is means that 1 in X centers will have an ore seam start. If an island has 16000 centers and rarity is 100, then there should be ~16 seams of this ore.
+	 * This is the maximum number of veins that will start per island. The actual amount will be between 1 and this number.
 	 */
-	int rarity = 200;
+	int rarity = 5;
 
 	public OreConfig(VeinType v, Block b, int m, String ore, int wMin, int wMax, int hMin, int hMax)
 	{
@@ -40,11 +40,7 @@ public class OreConfig
 
 	public OreConfig(VeinType v, Block b, OreType m, int wMin, int wMax, int hMin, int hMax)
 	{
-		state = b.getStateFromMeta(m.getMeta());
-		veinWidthMax = hMax;
-		veinHeightMax = wMax;
-		vType = v;
-		oreName = m.getName();
+		this(v, b, m.getMeta(), m.getName(), wMin, wMax, hMin, hMax);
 	}
 
 	public String getOreName() {
@@ -114,40 +110,34 @@ public class OreConfig
 		return minSeamLength;
 	}
 
-	public void setMinSeamLength(int minSeamLength) {
-		this.minSeamLength = minSeamLength;
+	public OreConfig setMinSeamLength(int minSeamLength) {
+		this.minSeamLength = minSeamLength; return this;
 	}
 
 	public int getMaxSeamLength() {
 		return maxSeamLength;
 	}
 
-	public void setMaxSeamLength(int maxSeamLength) {
-		this.maxSeamLength = maxSeamLength;
-	}
-
-	public double getPathBias() {
-		return pathBias;
-	}
-
-	public void setPathBias(double pathBias) {
-		this.pathBias = pathBias;
+	public OreConfig setMaxSeamLength(int maxSeamLength) {
+		this.maxSeamLength = maxSeamLength; return this;
 	}
 
 	public int getRarity() {
 		return rarity;
 	}
 
-	public void setRarity(int rarity) {
+	public OreConfig setRarity(int rarity) {
 		this.rarity = rarity;
+		return this;
 	}
 
 	public int getSubSeamRarity() {
 		return subSeamRarity;
 	}
 
-	public void setSubSeamRarity(int subSeamRarity) {
+	public OreConfig setSubSeamRarity(int subSeamRarity) {
 		this.subSeamRarity = subSeamRarity;
+		return this;
 	}
 
 	public enum VeinType

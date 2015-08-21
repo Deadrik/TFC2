@@ -53,6 +53,7 @@ public class CaveAttribute extends Attribute
 				NBTTagCompound aNBT = list.getCompoundTagAt(i);
 				CaveAttrNode c = new CaveAttrNode(0);
 				c.readFromNBT(aNBT, m);
+				nodes.add(c);
 			}
 		}
 	}

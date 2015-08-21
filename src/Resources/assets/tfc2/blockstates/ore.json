@@ -16,7 +16,7 @@
         	"sphalerite": { "textures": { "all": "tfc2:blocks/ores/Sphalerite Ore" } },
         	"tetrahedrite": { "textures": { "all": "tfc2:blocks/ores/Tetrahedrite Ore" } },
         	"galena": { "textures": { "all": "tfc2:blocks/ores/Galena Ore" } },
-        	"bituminouscoal": { "textures": { "all": "tfc2:blocks/ores/Bituminous Coal Ore" } },
+        	"anthracite": { "textures": { "all": "tfc2:blocks/ores/Anthracite Ore" } },
         	"lignite": { "textures": { "all": "tfc2:blocks/ores/Lignite Ore" } }
         }
     }

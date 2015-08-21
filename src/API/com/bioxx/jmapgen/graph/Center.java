@@ -130,12 +130,12 @@ public class Center
 	{
 		switch(dir)
 		{
-		case North: return neighbors.get(1);
-		case NorthEast: return neighbors.get(2);
-		case SouthEast: return neighbors.get(3);
-		case South: return neighbors.get(4);
-		case SouthWest: return neighbors.get(5);
-		case NorthWest: return neighbors.get(0);
+		case North: return neighbors.size() > 1 ? neighbors.get(1) : null;
+		case NorthEast: return neighbors.size() > 2 ? neighbors.get(2) : null;
+		case SouthEast: return neighbors.size() > 3 ? neighbors.get(3) : null;
+		case South: return neighbors.size() > 4 ? neighbors.get(4) : null;
+		case SouthWest: return neighbors.size() > 5 ? neighbors.get(5) : null;
+		case NorthWest: return neighbors.size() > 0 ? neighbors.get(0) : null;
 		default: return neighbors.get(0);
 		}
 	}
@@ -434,6 +434,40 @@ public class Center
 				return values()[5];
 			else
 				return values()[order-1];
+		}
+
+		public HexDirection getRandomTurnSmall(Random r, boolean mid)
+		{
+			int rand = mid ? 5 : 4;
+			switch(r.nextInt(rand))
+			{
+			case 0: return getNextClockwise();
+			case 1: return getNextCounterClockwise();
+			default: return this;
+			}
+		}
+
+		public HexDirection getRandomTurnSmall(Random r)
+		{
+			return getRandomTurnSmall(r, true);
+		}
+
+		public HexDirection getRandomTurnBig(Random r, boolean mid)
+		{
+			int rand = mid ? 5 : 4;
+			switch(r.nextInt(rand))
+			{
+			case 0: return getNextClockwise();
+			case 1: return getNextCounterClockwise();
+			case 2: return getNextClockwise().getNextClockwise();
+			case 3: return getNextCounterClockwise().getNextCounterClockwise();
+			default: return this;
+			}
+		}
+
+		public HexDirection getRandomTurnBig(Random r)
+		{
+			return getRandomTurnBig(r, true);
 		}
 
 		public int getOrder()

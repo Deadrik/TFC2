@@ -1,7 +1,7 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "tfc2:blocks/ores/Bituminous Coal Ore"
+        "all": "tfc2:blocks/ores/Anthracite Ore"
     },
     "display": {
         "thirdperson": {

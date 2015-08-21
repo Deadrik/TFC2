@@ -86,7 +86,7 @@ public class OreAttrNode
 	}
 
 	public void setNodeWidth(int nodeWidth) {
-		this.nodeWidth = nodeWidth;
+		this.nodeWidth = Math.max(nodeWidth, 1);
 	}
 
 	public int getNodeHeight() {
@@ -94,7 +94,7 @@ public class OreAttrNode
 	}
 
 	public void setNodeHeight(int nodeHeight) {
-		this.nodeHeight = nodeHeight;
+		this.nodeHeight = Math.max(nodeHeight, 1);
 	}
 
 	public String getOreType() {

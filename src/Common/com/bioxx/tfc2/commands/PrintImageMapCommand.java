@@ -309,7 +309,7 @@ public class PrintImageMapCommand extends CommandBase
 			for(Center c : map.centers)
 			{
 				count++;
-				int elev = Math.max((int)(c.getElevation()*255), 0);
+				int elev = Math.min(Math.max((int)(c.getElevation()*255), 0), colorMap.length-1);
 				graphics.setColor(colorMap[elev]);		
 				poly = new Polygon();
 				for(Corner cn : c.corners)

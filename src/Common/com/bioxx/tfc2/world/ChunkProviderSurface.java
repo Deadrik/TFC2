@@ -20,28 +20,33 @@ import net.minecraft.world.gen.MapGenBase;
 
 import com.bioxx.jmapgen.BiomeType;
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.Spline2D;
 import com.bioxx.jmapgen.Spline3D;
-import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.CanyonAttribute;
 import com.bioxx.jmapgen.attributes.CaveAttribute;
 import com.bioxx.jmapgen.attributes.LakeAttribute;
+import com.bioxx.jmapgen.attributes.OreAttribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.processing.CaveAttrNode;
+import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.ore.OreConfig;
+import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
+import com.bioxx.tfc2.api.ore.OreRegistry;
 import com.bioxx.tfc2.blocks.terrain.BlockDirt;
 import com.bioxx.tfc2.blocks.terrain.BlockGrass;
 import com.bioxx.tfc2.blocks.terrain.BlockGravel;
 import com.bioxx.tfc2.blocks.terrain.BlockStone;
-import com.bioxx.tfc2.api.Global;
 
 public class ChunkProviderSurface extends ChunkProviderGenerate 
 {
@@ -149,13 +154,47 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		ChunkPrimer chunkprimer = new ChunkPrimer();
 		generateTerrain(chunkprimer, chunkX, chunkZ);
 		decorate(chunkprimer, chunkX, chunkZ);
-
-		//this.caveGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
+		carveRiverSpline(chunkprimer);
+		carveCaves(chunkprimer);
+		placeOreSeams(chunkprimer);
+		placeOreLayers(chunkprimer);
+		//stripChunk(chunkprimer);
 
 		Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
 		chunk.setHeightMap(elevationMap);
 		chunk.generateSkylightMap();
 		return chunk;  
+	}
+
+	/**
+	 * This is for stripping a chunk of all but ore and bedrock for easier testing.
+	 */
+	protected void stripChunk(ChunkPrimer primer)
+	{
+		Point p;
+		Center closestCenter;
+		IBlockState state;
+		for(int x = 0; x < 16; x++)
+		{
+			for(int z = 0; z < 16; z++)
+			{
+				p = new Point(x, z);
+				closestCenter = this.getHex(p);
+				int hexElev = this.getHexElevation(closestCenter, p);
+
+				if(closestCenter.hasAnyMarkersOf(Marker.Coast, Marker.Ocean))
+					continue;
+
+				for(int y = hexElev; y >= 0; y--)
+				{
+					state = primer.getBlockState(x, y, z);
+					if(state.getBlock() != TFCBlocks.Ore && state.getBlock() != Blocks.bedrock)
+					{
+						primer.setBlockState(x, y, z, Blocks.air.getDefaultState());
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -291,9 +330,6 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				}
 			}
 		}
-
-		carveRiverSpline(chunkprimer);
-		this.carveCaves(chunkprimer);
 	}
 
 	private Block getBlock(ChunkPrimer chunkprimer, int x, int y, int z)
@@ -392,7 +428,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						b = TFCBlocks.SaltWaterStatic;
 					}
 
-					if(y <= 1)
+					if(y <= hexElev * 0.2)
 						b = Blocks.bedrock;
 
 					chunkprimer.setBlockState(x, y, z, b.getDefaultState());
@@ -847,6 +883,118 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 											setState(chunkprimer, pos2.offsetUp(), TFCBlocks.Stone.getDefaultState().withProperty(BlockStone.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
 										}
 									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	protected void placeOreSeams(ChunkPrimer chunkprimer)
+	{
+		ArrayList<BlockPos> points = new ArrayList<BlockPos>();
+		BlockPos pos, pos2;
+		Spline3D spline;
+		Point iPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
+		Vec3i islandOffset = new Vec3i(iPoint.x, 0, iPoint.y);
+		double wSq = 4;
+
+		for(Center c : centersInChunk)
+		{
+			OreAttribute attrib = ((OreAttribute)c.getAttribute(Attribute.Ore));
+			if(attrib != null)
+			{
+				for(OreAttrNode n : attrib.nodes)
+				{
+					OreConfig oc = OreRegistry.getInstance().getConfig(n.getOreType(), islandMap.getParams().getSurfaceRock());
+					if(oc.getVeinType() != VeinType.Seam)
+						continue;
+					wSq = n.getNodeWidth() * n.getNodeWidth();
+					points.clear();
+					if(n.getPrev() != null)
+						points.add(n.getPrevOffset().subtract(islandOffset));
+					points.add(n.getOffset().subtract(islandOffset));
+					if(n.getNext() != null)
+						points.add(n.getNextOffset().subtract(islandOffset));
+
+					spline = new Spline3D(points);
+					for(double i = 0; i < 1; i+= 0.03)
+					{
+						pos = spline.getPoint(i);
+
+						ArrayList<BlockPos> list = new ArrayList<BlockPos>();
+						for(int y = -n.getNodeHeight(); y < n.getNodeHeight(); y++)
+						{
+							for(int x = -n.getNodeWidth(); x < n.getNodeWidth(); x++)
+							{
+								for(int z = -n.getNodeWidth(); z < n.getNodeWidth(); z++)
+								{
+									if(this.rand.nextDouble() < 0.75)
+										list.add(pos.add(x, y, z));
+								}	
+							}
+						}
+						IBlockState down, up, fillBlock, state;
+						Iterator it = list.iterator();
+						while(it.hasNext())
+						{
+							fillBlock = oc.getOreBlockState();
+							pos2 = (BlockPos) it.next();
+
+							{
+								if(pos2.getX() >= 0 && pos2.getY() >= 0 && pos2.getZ() >= 0 && pos2.getX() < 16 && pos2.getY() < 256 && pos2.getZ() < 16)
+								{
+									state = getState(chunkprimer, pos2);
+									if(Core.isStone(state))
+									{
+										down = getState(chunkprimer, pos2.offsetDown());
+										up = getState(chunkprimer, pos2.offsetUp());
+
+										setState(chunkprimer, pos2, fillBlock);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	protected void placeOreLayers(ChunkPrimer chunkprimer)
+	{
+		Point p;
+		BlockPos pos = new BlockPos(0,0,0);
+		BlockPos pos2;
+		double wSq = 4;
+		IBlockState state;
+
+		for(Center c : centersInChunk)
+		{
+			OreAttribute attrib = ((OreAttribute)c.getAttribute(Attribute.Ore));
+			if(attrib != null)
+			{
+				for(OreAttrNode n : attrib.nodes)
+				{
+					OreConfig oc = OreRegistry.getInstance().getConfig(n.getOreType(), islandMap.getParams().getSurfaceRock());
+					if(oc.getVeinType() != VeinType.Layer)
+						continue;
+
+					for(int x = 0; x < 16; x++)
+					{
+						for(int z = 0; z < 16; z++)
+						{
+							for(int y = n.getOffset().getY(); y < n.getOffset().getY() + n.getNodeHeight(); y++)
+							{
+								p = new Point(x, z);
+								pos2 = pos.add(x, y, z);
+								state = getState(chunkprimer, pos2);
+								if(this.getHex(p) == c && Core.isStone(state))
+								{
+									//Add air check
+									this.setState(chunkprimer, pos2, oc.getOreBlockState());
 								}
 							}
 						}

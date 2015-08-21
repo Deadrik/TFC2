@@ -5,6 +5,7 @@ import java.util.Vector;
 import net.minecraft.util.BlockPos;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.OreAttribute;
 import com.bioxx.jmapgen.graph.Center;
@@ -30,41 +31,56 @@ public class OreProcessor
 
 		Vector<Center> landCenters = map.getCentersAbove(0.02);
 
+		if(landCenters.size() == 0)
+			return;
+
 		for(OreConfig oc : configs)
 		{
-			for(int i = 0; i < landCenters.size()/oc.getRarity(); i++)
+			int total = Math.max(map.getParams().hasFeature(Feature.MineralRich) ? oc.getRarity()/2 : 1, 1);
+			total = map.mapRandom.nextInt(map.getParams().hasFeature(Feature.MineralRich) ? oc.getRarity() * 2 : oc.getRarity()) + total;
+			for(int i = 0; i < total; i++)
 			{
 				if(oc.getVeinType() == VeinType.Seam)
 					genSeam(landCenters.get(map.mapRandom.nextInt(landCenters.size())), oc);
+				else if(oc.getVeinType() == VeinType.Layer)
+					genLayer(landCenters.get(map.mapRandom.nextInt(landCenters.size())), oc);
 			}
 		}
 	}
 
-	private void genSeam(Center start, OreConfig oc)
+	private void genLayer(Center start, OreConfig oc)
 	{
+		/**
+		 * Stage 0: Setup all of our variables
+		 */
 		int maxLength = oc.getMinSeamLength()+map.mapRandom.nextInt(oc.getMaxSeamLength()-oc.getMinSeamLength());
 		int curLength = 0;
+		HexDirection seamDir = HexDirection.values()[map.mapRandom.nextInt(HexDirection.values().length)];
 		Center prevCenter = null;
 		Center center = start;
-		Center nextCenter = start.getRandomNeighbor(map.mapRandom);
+		Center nextCenter = start.getNeighbor(seamDir);
 		Center sCenter, sNextCenter;
 
 		OreAttrNode sCurNode, sNextNode;
 
 		OreAttrNode curNode = new OreAttrNode(oc.getOreName());
-		//Y Start between 8-(hexElevation-8)
-		curNode.setOffset(new BlockPos(center.point.x, map.mapRandom.nextInt(mcElev(start.getElevation())-16)+8, center.point.y));
-		OreAttrNode nextNode = new OreAttrNode(oc.getOreName());
 
-		nextNode.setPrevOffset(getMidpoint(curNode.getOffset(), nextNode.getOffset()));
-		curNode.setNextOffset(nextNode.getPrevOffset());
+		int startElev = (int)(mcElev(start.getElevation())*0.75);
+		startElev = map.mapRandom.nextInt(Math.max(startElev, 10));
+
+		curNode.setOffset(new BlockPos(center.point.x, startElev, center.point.y));
+		setupHeightAndWidth(oc, curNode);
+		OreAttrNode nextNode = new OreAttrNode(oc.getOreName());
+		nextNode.setOffset(new BlockPos(nextCenter.point.x, curNode.getOffset().getY(), nextCenter.point.y));
+
 
 		int elevOffset = 0;
 		double nextDir = 0.5;
 		while(curLength < maxLength)
 		{
-
-			//Cycle the data to start the next iteration
+			/**
+			 * Stage 1: Cycle the data to start the next iteration
+			 */
 			//Link our current and next nodes together
 			curNode.setNext(nextCenter);
 			nextNode.setPrev(center);
@@ -72,98 +88,240 @@ public class OreProcessor
 			//apply the node data to the current center
 			addNode(center, curNode);
 
-			//If the cave breaks into the surface again, we end the cave
-			if(nextNode.offset.getY() > mcElev(nextCenter.getElevation()) || nextCenter.hasAnyMarkersOf(Marker.Border))
+			//Elevation validation
+			if(nextNode.offset.getY() > mcElev(nextCenter.getElevation()))
+			{
+				int diff = nextNode.offset.getY() - mcElev(nextCenter.getElevation());
+				nextNode.offset = nextNode.offset.add(0, (-diff) - 10, 0);
+			}
+			else if(nextNode.offset.getY() < (int)(mcElev(nextCenter.getElevation()) * 0.2))
+			{
+				int diff =  (int)(mcElev(nextCenter.getElevation()) * 0.2) - nextNode.offset.getY();
+				nextNode.offset = nextNode.offset.add(0, diff+2 , 0);
+			}
+
+			if(nextCenter.hasAnyMarkersOf(Marker.Border))
 			{
 				curLength = maxLength;
+				continue;
 			}
-			//Otherwise we continue
 
+			//Otherwise we continue
 			curNode = nextNode;
 			prevCenter = center;
 			center = nextCenter;
 			//Finished cycling
+			/**
+			 * Stage 2: Setup up our nodes with relevant data
+			 */
+			setupHeightAndWidth(oc, curNode);
+			//first we perform the bias math
+			elevOffset = (int)Math.floor((double)oc.getNoiseVertical() * 2.0d);
+			//then we apply the bias to the vertical noise
+			elevOffset = oc.getNoiseVertical() - map.mapRandom.nextInt(elevOffset);
 
-			curNode.setNodeHeight(oc.getVeinHeightMin()+map.mapRandom.nextInt(oc.getVeinHeightMax()-oc.getVeinHeightMin()));
-			curNode.setNodeWidth(oc.getVeinWidthMin()+map.mapRandom.nextInt(oc.getVeinWidthMax()-oc.getVeinWidthMin()));
+			nextCenter = center.getNeighbor(seamDir.getRandomTurnBig(map.mapRandom));
 
-			//If the cave is long enough, we may want to create little subcave offshoots in random directions
-			if(curLength > 3)
+			//Sanity
+			if(nextCenter == null)
+				nextCenter = center.getRandomNeighbor(map.mapRandom);
+
+			//Create our next node
+			nextNode = new OreAttrNode(oc.getOreName());
+			nextNode.setOffset(new BlockPos(nextCenter.point.x, curNode.getOffset().getY() + elevOffset, nextCenter.point.y));
+
+			curLength++;
+		}
+	}
+
+	private void genSeam(Center start, OreConfig oc)
+	{
+		/**
+		 * Stage 0: Setup all of our variables
+		 */
+		int maxLength = oc.getMinSeamLength()+map.mapRandom.nextInt(oc.getMaxSeamLength()-oc.getMinSeamLength());
+		int curLength = 0;
+		HexDirection seamDir = HexDirection.values()[map.mapRandom.nextInt(HexDirection.values().length)];
+		Center prevCenter = null;
+		Center center = start;
+		Center nextCenter = start.getNeighbor(seamDir);
+		Center sCenter, sNextCenter;
+
+		OreAttrNode sCurNode, sNextNode;
+
+		OreAttrNode curNode = new OreAttrNode(oc.getOreName());
+
+		int startElev = (int)(mcElev(start.getElevation())*0.75);
+		startElev = map.mapRandom.nextInt(Math.max(startElev, 10));
+
+		curNode.setOffset(new BlockPos(center.point.x, startElev, center.point.y));
+		setupHeightAndWidth(oc, curNode);
+		OreAttrNode nextNode = new OreAttrNode(oc.getOreName());
+		nextNode.setOffset(new BlockPos(nextCenter.point.x, curNode.getOffset().getY(), nextCenter.point.y));
+		nextNode.setPrevOffset(getMidpoint(curNode.getOffset(), nextNode.getOffset()));
+		curNode.setNextOffset(nextNode.getPrevOffset());
+
+		int elevOffset = 0;
+		double nextDir = 0.5;
+		while(curLength < maxLength)
+		{
+			/**
+			 * Stage 1: Cycle the data to start the next iteration
+			 */
+			//Link our current and next nodes together
+			curNode.setNext(nextCenter);
+			nextNode.setPrev(center);
+
+			//apply the node data to the current center
+			addNode(center, curNode);
+
+			//Elevation validation
+			if(nextNode.offset.getY() > mcElev(nextCenter.getElevation()))
 			{
-				int subCaveCount = map.mapRandom.nextInt(5)+1;
-				while(subCaveCount > 0)
+				int diff = nextNode.offset.getY() - mcElev(nextCenter.getElevation());
+				nextNode.offset = nextNode.offset.add(0, (-diff) - 10, 0);
+			}
+			else if(nextNode.offset.getY() < (int)(mcElev(nextCenter.getElevation()) * 0.2))
+			{
+				int diff =  (int)(mcElev(nextCenter.getElevation()) * 0.2) - nextNode.offset.getY();
+				nextNode.offset = nextNode.offset.add(0, diff+2 , 0);
+			}
+
+			if(nextCenter.hasAnyMarkersOf(Marker.Border))
+			{
+				curLength = maxLength;
+				continue;
+			}
+
+			//Otherwise we continue
+			curNode = nextNode;
+			prevCenter = center;
+			center = nextCenter;
+			//Finished cycling
+			/**
+			 * Stage 2: Setup up our nodes with relevant data
+			 */
+			setupHeightAndWidth(oc, curNode);
+
+			//Create little offshoots of the main seam.
+			if(oc.getSubSeamRarity() > 0 && map.mapRandom.nextInt(oc.getSubSeamRarity()) == 0)
+			{
+				int subSeamLength = map.mapRandom.nextInt(2)+1;
+				HexDirection subSeamDir = seamDir.getRandomTurnBig(map.mapRandom, false);
+				//Perform initial setup
+				sCenter = center;
+				sCurNode = new OreAttrNode(oc.getOreName());
+				sCurNode.setOffset(curNode.getOffset());
+				sCurNode.setNodeHeight(Math.max(curNode.getNodeHeight()/2, 1));
+				sCurNode.setNodeWidth(Math.max(curNode.getNodeWidth()/2, 1));
+				sNextNode = new OreAttrNode(oc.getOreName());
+				sNextCenter = sCenter.getNeighbor(subSeamDir);
+				sCurNode.setNext(sNextCenter);
+
+				if(sNextCenter == null)
+					break;
+
+				elevOffset = oc.getNoiseVertical()*2 - map.mapRandom.nextInt(oc.getNoiseVertical() * 4);
+				sNextNode.setOffset(new BlockPos(sNextCenter.point.x, sCurNode.getOffset().getY() + elevOffset, sNextCenter.point.y));
+				sCurNode.setNextOffset(getMidpoint(sCurNode.getOffset(), sNextNode.getOffset()));
+				sNextNode.setPrevOffset(sCurNode.getNextOffset());
+				sNextNode.setPrev(sCenter);
+				addNode(sCenter, sCurNode);
+
+				while(subSeamLength > 0)
 				{
-					sCenter = center;
-					if(map.mapRandom.nextDouble() < 0.25)
+					// Begin Cycling
+					sCurNode = sNextNode;
+					sCenter = sNextCenter;
+					// End Cycling 
+
+					if(oc.getNoiseVertical() >= 10 && map.mapRandom.nextDouble() < 0.15)
+					{
 						sNextCenter = sCenter;
+						elevOffset = oc.getNoiseVertical() - map.mapRandom.nextInt((int)Math.floor(oc.getNoiseVertical() * 2));
+					}
 					else
-						sNextCenter = sCenter.getRandomNeighbor(map.mapRandom);
-					sCurNode = new OreAttrNode(oc.getOreName());
-					sCurNode.setOffset(curNode.getOffset());
-					sCurNode.setNext(sNextCenter);
-					sCurNode.setNodeHeight(1+map.mapRandom.nextInt(2));
-					sCurNode.setNodeWidth(1+map.mapRandom.nextInt(2));
+					{
+						sNextCenter = sCenter.getNeighbor(subSeamDir.getRandomTurnSmall(map.mapRandom));
+						elevOffset = oc.getNoiseVertical() - map.mapRandom.nextInt((int)Math.floor(oc.getNoiseVertical() * 2));
+					}
+
+					if(sNextCenter == null)
+						break;
+
+					sCurNode.setNodeHeight(Math.max(curNode.getNodeHeight()/2, 1));
+					sCurNode.setNodeWidth(Math.max(curNode.getNodeWidth()/2, 1));
+
 					sNextNode = new OreAttrNode(oc.getOreName());
-					sNextNode.setOffset(new BlockPos(sNextCenter.point.x, sCurNode.getOffset().getY()+map.mapRandom.nextInt(20)-10, sNextCenter.point.x));
-					sCurNode.setNextOffset(getMidpoint(sCurNode.getOffset(), sNextNode.getOffset()).add(10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6)));
+					sNextNode.setOffset(new BlockPos(sNextCenter.point.x, sCurNode.getOffset().getY() + elevOffset, sNextCenter.point.y));
+
+					//Elevation validation
+					if(sNextNode.offset.getY() > mcElev(sNextCenter.getElevation()))
+					{
+						int diff = sNextNode.offset.getY() - mcElev(sNextCenter.getElevation());
+						sNextNode.offset = sNextNode.offset.add(0, (-diff) - 10, 0);
+					}
+					else if(sNextNode.offset.getY() < (int)(mcElev(sNextCenter.getElevation()) * 0.2))
+					{
+						int diff =  (int)(mcElev(sNextCenter.getElevation()) * 0.2) - sNextNode.offset.getY();
+						sNextNode.offset = sNextNode.offset.add(0, diff+2 , 0);
+					}
+
+					//Link the current node and the next node together
+					sCurNode.setNext(sNextCenter);
+					sCurNode.setNextOffset(getMidpoint(sCurNode.getOffset(), sNextNode.getOffset()).add(
+							oc.getNoiseHorizontal()-map.mapRandom.nextInt((oc.getNoiseHorizontal()*2)), 
+							elevOffset, 
+							oc.getNoiseHorizontal()-map.mapRandom.nextInt((oc.getNoiseHorizontal()*2))));
 					sNextNode.setPrevOffset(sCurNode.getNextOffset());
 					sNextNode.setPrev(sCenter);
 
 					addNode(sCenter, sCurNode);
-					addNode(sNextCenter, sNextNode);
-
-					subCaveCount--;
+					subSeamLength--;
 				}
 			}
+
 			//first we perform the bias math
-			elevOffset = (int)Math.floor((double)oc.getNoiseVertical() * 2.0d * oc.getNoiseBiasVertical());
+			elevOffset = (int)Math.floor((double)oc.getNoiseVertical() * 2.0d);
 			//then we apply the bias to the vertical noise
-			elevOffset = elevOffset - map.mapRandom.nextInt(oc.getNoiseVertical());
+			elevOffset = oc.getNoiseVertical() - map.mapRandom.nextInt(elevOffset);
 
+			nextCenter = center.getNeighbor(seamDir.getRandomTurnSmall(map.mapRandom));
 
-			nextDir = 2.0d * oc.getPathBias();
-			nextDir = nextDir - map.mapRandom.nextDouble();
-			//Acquire the next hex: The path bias may cause a seam to spiral.
-			HexDirection hexDir = center.getDirection(prevCenter);
-			if(hexDir == null || nextDir > 0.4 && nextDir <= 0.6)
-			{
-				nextCenter = center.getRandomNeighborExcept(map.mapRandom, prevCenter);
-			}
-			else if(nextDir > 0.2 && nextDir <= 0.4)
-			{
-				nextCenter = center.getNeighbor(hexDir.getOpposite().getNextCounterClockwise());
-			}
-			else if(nextDir >= 0 && nextDir <= 0.2)
-			{
-				nextCenter = center.getNeighbor(hexDir.getOpposite().getNextCounterClockwise().getNextCounterClockwise());
-			}
-			else if(nextDir > 0.6 && nextDir <= 0.8)
-			{
-				nextCenter = center.getNeighbor(hexDir.getOpposite().getNextClockwise());
-			}
-			else if(nextDir > 0.8 && nextDir <= 1.0)
-			{
-				nextCenter = center.getNeighbor(hexDir.getOpposite().getNextClockwise().getNextClockwise());
-			}
-
-			//5% chance that a seam will spike vertically within the same hex
-			if(map.mapRandom.nextDouble() < 0.05)
+			if(map.mapRandom.nextDouble() < 0.05) //Otherwise, 5% chance that a seam will spike vertically within the same hex
 			{
 				nextCenter = center;
+				elevOffset *= 2;
 			}
+
+			//Sanity
+			if(nextCenter == null)
+				nextCenter = center.getRandomNeighbor(map.mapRandom);
 
 			//Create our next node
 			nextNode = new OreAttrNode(oc.getOreName());
 
 			nextNode.setOffset(new BlockPos(nextCenter.point.x, curNode.getOffset().getY() + elevOffset, nextCenter.point.y));
 
-
+			int horiz = oc.getNoiseHorizontal()*2;
 			//Setup the midpoint offsets for each node
-			nextNode.setPrevOffset(getMidpoint(curNode.getOffset(), nextNode.getOffset()).add(10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6)));
+			nextNode.setPrevOffset(getMidpoint(curNode.getOffset(), nextNode.getOffset()).add(oc.getNoiseHorizontal()-map.mapRandom.nextInt(horiz), 0, oc.getNoiseHorizontal()-map.mapRandom.nextInt(horiz)));
 			curNode.setNextOffset(nextNode.getPrevOffset());
 			curLength++;
 		}
 
+	}
+
+	private void setupHeightAndWidth(OreConfig oc, OreAttrNode curNode) {
+		if(oc.getVeinHeightMin() == oc.getVeinHeightMax())
+			curNode.setNodeHeight(oc.getVeinHeightMin());
+		else
+			curNode.setNodeHeight(oc.getVeinHeightMin()+map.mapRandom.nextInt(oc.getVeinHeightMax()-oc.getVeinHeightMin()));
+
+		if(oc.getVeinWidthMin() == oc.getVeinWidthMax())
+			curNode.setNodeWidth(oc.getVeinWidthMin());
+		else
+			curNode.setNodeWidth(oc.getVeinWidthMin()+map.mapRandom.nextInt(oc.getVeinWidthMax()-oc.getVeinWidthMin()));
 	}
 
 	private BlockPos getMidpoint(BlockPos p0, BlockPos p1)

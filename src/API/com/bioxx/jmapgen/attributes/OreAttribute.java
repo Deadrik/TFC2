@@ -53,6 +53,7 @@ public class OreAttribute extends Attribute
 				NBTTagCompound aNBT = list.getCompoundTagAt(i);
 				OreAttrNode c = new OreAttrNode("");
 				c.readFromNBT(aNBT, m);
+				nodes.add(c);
 			}
 		}
 	}
