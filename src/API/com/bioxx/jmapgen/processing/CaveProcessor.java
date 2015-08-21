@@ -162,8 +162,8 @@ public class CaveProcessor
 					sCurNode = new CaveAttrNode(1000+subCaveCount);
 					sCurNode.setOffset(curNode.getOffset());
 					sCurNode.setNext(sNextCenter);
-					sCurNode.setNodeHeight(1+map.mapRandom.nextInt(2));
-					sCurNode.setNodeWidth(1+map.mapRandom.nextInt(2));
+					sCurNode.setNodeHeight(1+map.mapRandom.nextInt(3));
+					sCurNode.setNodeWidth(2+map.mapRandom.nextInt(2));
 					sNextNode = new CaveAttrNode(1000+subCaveCount);
 					sNextNode.setOffset(new BlockPos(sNextCenter.point.x, sCurNode.getOffset().getY()+map.mapRandom.nextInt(20)-10, sNextCenter.point.y));
 					sCurNode.setNextOffset(getMidpoint(sCurNode.getOffset(), sNextNode.getOffset()).add(10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6)));
