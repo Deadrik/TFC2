@@ -14,10 +14,9 @@ import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.world.ChunkManager;
-import com.bioxx.tfc2.world.WorldGen;
 import com.bioxx.tfc2.api.Schematic;
 import com.bioxx.tfc2.api.Schematic.SchemBlock;
+import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.trees.TreeConfig;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
 import com.bioxx.tfc2.api.trees.TreeSchemManager;
@@ -25,6 +24,8 @@ import com.bioxx.tfc2.api.trees.TreeSchematic;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.world.ChunkManager;
+import com.bioxx.tfc2.world.WorldGen;
 
 public class WorldGenTreeTest implements IWorldGenerator
 {
@@ -48,7 +49,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
 			Center c = m.getSelectedHexagon(new Point(xMLocal+8, zMLocal+8));
 
-			if(c.hasMarker(Marker.Ocean))
+			if(c.hasMarker(Marker.Ocean) || !TFCOptions.shouldGenTrees)
 			{
 				return;
 			}

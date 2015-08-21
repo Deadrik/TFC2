@@ -119,9 +119,13 @@ public class TFC
 		/**Start setup here*/
 		String GAMEL_HEADER = "Game";
 		String ENGINE_HEADER = "Engine";
+		String DEBUG_HEADER = "Debug";
 
 		//Engine
 		TFCOptions.maxThreadsForIslandGen = TFCOptions.getIntFor(config, ENGINE_HEADER, "maxThreadsForIslandGen", 1, "Maximum number of neighboring islands that can be pregenerated at once. Setting this higher may reduce performance.");
+		//Debug
+		TFCOptions.shouldGenTrees = TFCOptions.getBooleanFor(config, DEBUG_HEADER, "shouldGenTrees", true, "Setting to false will cause no trees to generate.");
+		TFCOptions.shouldStripChunks = TFCOptions.getBooleanFor(config, DEBUG_HEADER, "shouldStripChunks", false, "Setting to true will cause all land hexes to generated stripped.");
 
 		/**Always end with this*/
 		if (config != null)

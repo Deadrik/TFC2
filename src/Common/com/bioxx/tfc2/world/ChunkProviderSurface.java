@@ -40,6 +40,7 @@ import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
@@ -158,7 +159,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		carveCaves(chunkprimer);
 		placeOreSeams(chunkprimer);
 		placeOreLayers(chunkprimer);
-		//stripChunk(chunkprimer);
+
+		if(TFCOptions.shouldStripChunks)
+			stripChunk(chunkprimer);
 
 		Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
 		chunk.setHeightMap(elevationMap);
@@ -188,7 +191,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				for(int y = hexElev; y >= 0; y--)
 				{
 					state = primer.getBlockState(x, y, z);
-					if(state.getBlock() != TFCBlocks.Ore && state.getBlock() != Blocks.bedrock)
+					if(state.getBlock() != TFCBlocks.Ore && state.getBlock() != Blocks.bedrock && state.getBlock() != Blocks.wool)
 					{
 						primer.setBlockState(x, y, z, Blocks.air.getDefaultState());
 					}
@@ -875,6 +878,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 											if(up.getBlock() != TFCBlocks.Gravel && b != TFCBlocks.Gravel)
 												fillBlock = state;
 										}
+
+										if(TFCOptions.shouldStripChunks)
+											fillBlock = Blocks.wool.getDefaultState();
 
 										setState(chunkprimer, pos2, fillBlock);
 

@@ -6,6 +6,8 @@ import net.minecraftforge.common.config.Property;
 public class TFCOptions
 {
 	public static int maxThreadsForIslandGen = 1;
+	public static boolean shouldGenTrees = true;
+	public static boolean shouldStripChunks = false;
 
 	public static boolean getBooleanFor(Configuration config,String heading, String item, boolean value)
 	{
