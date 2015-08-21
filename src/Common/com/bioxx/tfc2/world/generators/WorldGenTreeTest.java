@@ -14,6 +14,8 @@ import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.world.ChunkManager;
+import com.bioxx.tfc2.world.WorldGen;
 import com.bioxx.tfc2.api.Schematic;
 import com.bioxx.tfc2.api.Schematic.SchemBlock;
 import com.bioxx.tfc2.api.trees.TreeConfig;
@@ -23,8 +25,6 @@ import com.bioxx.tfc2.api.trees.TreeSchematic;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
-import com.bioxx.tfc2.world.ChunkManager;
-import com.bioxx.tfc2.world.WorldGen;
 
 public class WorldGenTreeTest implements IWorldGenerator
 {
@@ -52,9 +52,6 @@ public class WorldGenTreeTest implements IWorldGenerator
 			{
 				return;
 			}
-
-			if(true)
-				return;
 
 			//The theoretical max number of trees per chunk is 8.
 			//We mult this by whichever is lower, the hex moisture or the island moisture.
