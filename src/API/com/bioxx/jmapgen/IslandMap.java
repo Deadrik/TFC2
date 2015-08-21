@@ -216,7 +216,7 @@ public class IslandMap
 				found = true;
 				start = highCenters.get(mapRandom.nextInt(highCenters.size()));
 
-				if(start.hasAttribute(Attribute.canyonUUID) || startCenters.contains(start))
+				if(start.hasAttribute(Attribute.Canyon) || startCenters.contains(start))
 					found = false;
 
 				for(Center c : startCenters)
@@ -258,11 +258,11 @@ public class IslandMap
 
 				double elevMult = Math.min(0.5, gn.nodeNum* 0.05);
 
-				if(!curCenter.hasAttribute(Attribute.canyonUUID))
+				if(!curCenter.hasAttribute(Attribute.Canyon))
 					curCenter.setElevation(Math.max(minElevation, gn.getCenter().getElevation()*(1-elevMult)));
 
 				//Create a canyon attribute for the node center
-				CanyonAttribute a = new CanyonAttribute(Attribute.canyonUUID, gn.nodeNum);
+				CanyonAttribute a = new CanyonAttribute(Attribute.Canyon, gn.nodeNum);
 				//set the down center in the canyon attribute to the down node for this node
 				if(gn.getDown() != null)
 					a.setDown(gn.getDown().getCenter());
@@ -277,9 +277,9 @@ public class IslandMap
 				for(Center n : gn.getCenter().neighbors)
 				{
 					//If this center already has a canyon attribute than it must have already been processed.
-					if(!n.hasAttribute(Attribute.canyonUUID) && !n.hasMarker(Marker.Water))
+					if(!n.hasAttribute(Attribute.Canyon) && !n.hasMarker(Marker.Water))
 					{
-						CanyonAttribute c = new CanyonAttribute(Attribute.canyonUUID, gn.nodeNum);
+						CanyonAttribute c = new CanyonAttribute(Attribute.Canyon, gn.nodeNum);
 						c.setDown(gn.getCenter());
 						if(n.addAttribute(c))
 							n.setElevation(Math.max(minElevation, gn.getCenter().getElevation()));
@@ -301,7 +301,7 @@ public class IslandMap
 			if(curNode.getUp() != null && n == curNode.getUp().getCenter())
 				continue;
 
-			if(n.hasAttribute(Attribute.canyonUUID))
+			if(n.hasAttribute(Attribute.Canyon))
 				return null;
 
 			if(n.hasMarker(Marker.Water))
@@ -331,8 +331,8 @@ public class IslandMap
 		double lowestElev = 1.0;
 		for(Center c : caldera)
 		{
-			if(c.hasAttribute(Attribute.riverUUID))
-				((RiverAttribute)c.getAttribute(Attribute.riverUUID)).setRiver(0);
+			if(c.hasAttribute(Attribute.River))
+				((RiverAttribute)c.getAttribute(Attribute.River)).setRiver(0);
 			c.removeMarkers(Marker.Water);
 			c.setMarkers(Marker.Lava);
 			if(c.elevation < lowestElev)
@@ -427,9 +427,9 @@ public class IslandMap
 		{
 			Center center = (Center)centerIter.next();
 			//10% change of any hex being selected as long as it is not a water or canyon hex, and does not contain a river.
-			if(!center.hasAttribute(Attribute.canyonUUID) && !center.hasAttribute(Attribute.gorgeUUID) && 
+			if(!center.hasAttribute(Attribute.Canyon) && !center.hasAttribute(Attribute.Gorge) && 
 					!center.hasMarker(Marker.Coast) && this.mapRandom.nextInt(100) < 10 && !center.hasMarker(Marker.Water) && 
-					center.getAttribute(Attribute.riverUUID) == null)
+					center.getAttribute(Attribute.River) == null)
 			{
 				Center highest = this.getHighestNeighbor(center);
 				highest = this.getHighestNeighbor(highest);
@@ -449,7 +449,7 @@ public class IslandMap
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
 				{
 					Center center2 = (Center)centerIter2.next();
-					if(!center2.hasMarker(Marker.Lava) && !center2.hasAttribute(Attribute.gorgeUUID) && !center2.hasMarker(Marker.Coast) && center2.getAttribute(Attribute.riverUUID) == null && !center2.hasMarker(Marker.Water))
+					if(!center2.hasMarker(Marker.Lava) && !center2.hasAttribute(Attribute.Gorge) && !center2.hasMarker(Marker.Coast) && center2.getAttribute(Attribute.River) == null && !center2.hasMarker(Marker.Water))
 					{
 						center2.elevation += Math.max(0, (center.elevation - center2.elevation)*mapRandom.nextDouble());
 						if(center2.elevation <= 0)
@@ -468,7 +468,7 @@ public class IslandMap
 		for(Iterator<Center> centerIter = centers.iterator(); centerIter.hasNext();)
 		{
 			Center center = (Center)centerIter.next();
-			if(!center.hasAttribute(Attribute.gorgeUUID) && !center.hasMarker(Marker.Coast) && !center.hasMarker(Marker.Water) && !center.hasAttribute(Attribute.riverUUID))
+			if(!center.hasAttribute(Attribute.Gorge) && !center.hasMarker(Marker.Coast) && !center.hasMarker(Marker.Water) && !center.hasAttribute(Attribute.River))
 			{
 				boolean nearWater = false;
 				for(Iterator<Center> centerIter2 = center.neighbors.iterator(); centerIter2.hasNext();)
@@ -505,7 +505,7 @@ public class IslandMap
 			if(highest == null || center2.elevation > highest.elevation)
 				highest = center2;
 		}
-		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.River));
 		if(attrib != null && attrib.upriver != null)
 		{
 			highest = getLowestFromGroup(attrib.upriver);
@@ -522,7 +522,7 @@ public class IslandMap
 			if(lowest == null || center2.elevation < lowest.elevation)
 				lowest = center2;
 		}
-		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.River));
 		if(attrib != null && attrib.getDownRiver() != null)
 			lowest = attrib.getDownRiver();
 		return lowest;
@@ -1096,7 +1096,7 @@ public class IslandMap
 		// Fresh water
 		for(Center cr : centers)
 		{
-			RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.riverUUID);
+			RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.River);
 			if ((cr.hasMarker(Marker.Water) || (attrib != null && attrib.getRiver() > 0)) && !cr.hasMarker(Marker.Ocean)) 
 			{
 				double rivermult = attrib != null ? attrib.getRiver() : 0;
@@ -1305,15 +1305,15 @@ public class IslandMap
 			for(Center c : lake.centers)
 			{
 				c.elevation = lake.lowestCenter.elevation;
-				LakeAttribute attrib = new LakeAttribute(Attribute.lakeUUID);
+				LakeAttribute attrib = new LakeAttribute(Attribute.Lake);
 				attrib.setLakeElev(lake.lowestCenter.elevation);
 				attrib.setLakeID(lakeID);
 				//Here we try to smooth the centers around lakes a bit
 				for(Center n : c.neighbors)
 				{
-					if(n.hasAttribute(Attribute.lakeUUID))
+					if(n.hasAttribute(Attribute.Lake))
 					{
-						LakeAttribute nAttrib = (LakeAttribute) n.getAttribute(Attribute.lakeUUID);
+						LakeAttribute nAttrib = (LakeAttribute) n.getAttribute(Attribute.Lake);
 						if(nAttrib.getBorderDistance() < attrib.getBorderDistance())
 							attrib.setBorderDistance(nAttrib.getBorderDistance() + 1);
 						else if (nAttrib.getBorderDistance() > attrib.getBorderDistance())
@@ -1407,9 +1407,9 @@ public class IslandMap
 		Vector<Center> highCenters = this.getCentersAbove(0.5);
 		for(Center c : centers)
 		{
-			if(c.hasAttribute(Attribute.canyonUUID))
+			if(c.hasAttribute(Attribute.Canyon))
 			{
-				CanyonAttribute a = (CanyonAttribute) c.getAttribute(Attribute.canyonUUID);
+				CanyonAttribute a = (CanyonAttribute) c.getAttribute(Attribute.Canyon);
 				if(a.isNode && a.nodeNum < 10)
 					possibleStarts.add(c);
 			}
@@ -1421,7 +1421,7 @@ public class IslandMap
 			Center c = highCenters.get(mapRandom.nextInt(highCenters.size()-1));
 			for(Center n : c.neighbors)
 			{
-				if(possibleStarts.contains(n) || n.hasAttribute(Attribute.canyonUUID))
+				if(possibleStarts.contains(n) || n.hasAttribute(Attribute.Canyon))
 				{
 					flag = false;
 					break;
@@ -1467,7 +1467,7 @@ public class IslandMap
 				{
 					double diff = cn.center.getElevation() - gorge.minElev;
 					double elev = cn.center.getElevation();
-					if(!cn.center.hasAttribute(Attribute.gorgeUUID))
+					if(!cn.center.hasAttribute(Attribute.Gorge))
 					{
 						cn.center.setElevation(Math.max(gorge.minElev,cn.center.elevation - Math.min(diff * 0.5, 0.2)));
 						if(cn.getUp() != null && cn.center.getElevation() > cn.getUp().center.getElevation())
@@ -1475,7 +1475,7 @@ public class IslandMap
 							cn.center.setElevation(cn.getUp().center.getElevation());
 						}
 
-						GorgeAttribute a = new GorgeAttribute(Attribute.gorgeUUID);
+						GorgeAttribute a = new GorgeAttribute(Attribute.Gorge);
 						if(cn.getUp() != null)
 							a.setUp(cn.getUp().center);
 						if(cn.getDown() != null)
@@ -1499,7 +1499,7 @@ public class IslandMap
 			if(convertHeightToMC(n.elevation) < convertHeightToMC(cur.center.elevation))
 			{
 				//If next to a gorge hex then we finish here
-				if(n.hasAttribute(Attribute.gorgeUUID))
+				if(n.hasAttribute(Attribute.Gorge))
 					return null;
 				if(n.hasMarker(Marker.Ocean) || n.hasMarker(Marker.Water))
 				{
@@ -1551,10 +1551,10 @@ public class IslandMap
 		{
 			for(Center cn : centers)
 			{
-				if(cn.hasAttribute(Attribute.gorgeUUID))
+				if(cn.hasAttribute(Attribute.Gorge))
 				{
-					if(((GorgeAttribute)cn.getAttribute(Attribute.gorgeUUID)).getUp() == null && 
-							(mapRandom.nextDouble() > 0.25 || cn.hasAttribute(Attribute.canyonUUID)))
+					if(((GorgeAttribute)cn.getAttribute(Attribute.Gorge)).getUp() == null && 
+							(mapRandom.nextDouble() > 0.25 || cn.hasAttribute(Attribute.Canyon)))
 					{
 						possibleStarts.add(cn);
 					}
@@ -1580,7 +1580,7 @@ public class IslandMap
 		for (int i = 0; i < possibleStarts.size(); i++) 
 		{
 			c = possibleStarts.get(i);
-			RiverAttribute cAttrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+			RiverAttribute cAttrib = ((RiverAttribute)c.getAttribute(Attribute.River));
 			if (c.hasMarker(Marker.Ocean) || c.elevation > 0.85 || (cAttrib != null && cAttrib.getRiver() > 0)) continue;
 
 			River r = new River();
@@ -1600,7 +1600,7 @@ public class IslandMap
 				nextNode = getNextRiverNode(r, curNode);
 				if(nextNode == null)
 					break;
-				RiverAttribute nextAttrib = ((RiverAttribute)nextNode.center.getAttribute(Attribute.riverUUID));
+				RiverAttribute nextAttrib = ((RiverAttribute)nextNode.center.getAttribute(Attribute.River));
 
 				//set the downriver center for this node to the next center
 				curNode.setDownRiver(nextNode.center);
@@ -1628,7 +1628,7 @@ public class IslandMap
 				isValid = true;
 			else
 				isValid = false;
-			RiverAttribute startAttrib = (RiverAttribute)r.riverStart.center.getAttribute(Attribute.riverUUID);
+			RiverAttribute startAttrib = (RiverAttribute)r.riverStart.center.getAttribute(Attribute.River);
 			if(r.riverStart == null || (startAttrib != null && startAttrib.getRiver() != 0) || r.nodes.size() < 4)
 				isValid = false;
 
@@ -1636,7 +1636,7 @@ public class IslandMap
 			{
 				if(r.riverStart.center.hasMarker(Marker.Water) && this.centerInExistingLake(r.riverStart.center).centers.size() > 8)
 					r.riverWidth = 4 - 3 * r.riverStart.center.elevation;
-				else if(r.riverStart.center.hasAttribute(Attribute.gorgeUUID))
+				else if(r.riverStart.center.hasAttribute(Attribute.Gorge))
 					r.riverWidth = 1;
 				else
 					r.riverWidth = 0.5;
@@ -1654,8 +1654,8 @@ public class IslandMap
 					{
 						for(Center n :r.riverStart.center.neighbors)
 						{
-							if(n.getAttribute(Attribute.riverUUID) != null && 
-									((RiverAttribute)n.getAttribute(Attribute.riverUUID)).getRiver() > 0)
+							if(n.getAttribute(Attribute.River) != null && 
+									((RiverAttribute)n.getAttribute(Attribute.River)).getRiver() > 0)
 							{
 								rivers.remove(r);
 								cancelRiver = true;
@@ -1671,10 +1671,10 @@ public class IslandMap
 						else nextNode = null;
 
 						//Sanity
-						RiverAttribute riverAttrib = ((RiverAttribute)curNode.center.getAttribute(Attribute.riverUUID));
+						RiverAttribute riverAttrib = ((RiverAttribute)curNode.center.getAttribute(Attribute.River));
 						if(riverAttrib == null)
 						{
-							riverAttrib = new RiverAttribute(Attribute.riverUUID);
+							riverAttrib = new RiverAttribute(Attribute.River);
 							curNode.center.addAttribute(riverAttrib);
 							//curNode.center.setElevation(Math.max(curNode.center.getElevation() - this.convertMCToHeight(1), 0));
 						}
@@ -1687,10 +1687,10 @@ public class IslandMap
 							if(nextNode.center.getElevation() > curNode.center.getElevation())
 								nextNode.center.setElevation(curNode.center.getElevation());
 							//Sanity
-							RiverAttribute nextAttrib = ((RiverAttribute)nextNode.center.getAttribute(Attribute.riverUUID));
+							RiverAttribute nextAttrib = ((RiverAttribute)nextNode.center.getAttribute(Attribute.River));
 							if(nextAttrib == null)
 							{
-								nextAttrib = new RiverAttribute(Attribute.riverUUID);
+								nextAttrib = new RiverAttribute(Attribute.River);
 								nextNode.center.addAttribute(nextAttrib);
 							}
 
@@ -1707,7 +1707,7 @@ public class IslandMap
 		{
 			for(RiverNode rn : river.nodes)
 			{
-				RiverAttribute Attrib = ((RiverAttribute)rn.center.getAttribute(Attribute.riverUUID));
+				RiverAttribute Attrib = ((RiverAttribute)rn.center.getAttribute(Attribute.River));
 				if(rn.upRiver != null && rn.downRiver != null && Attrib.upriver != null && Attrib.upriver.size() == 1)
 				{
 					HexDirection hd = rn.center.getDirection(rn.upRiver);
@@ -1752,7 +1752,7 @@ public class IslandMap
 
 	public RiverNode getNextRiverNode(River river, RiverNode curNode)
 	{
-		RiverAttribute curAttrib = (RiverAttribute)curNode.center.getAttribute(Attribute.riverUUID);
+		RiverAttribute curAttrib = (RiverAttribute)curNode.center.getAttribute(Attribute.River);
 		Center next = (curAttrib != null ? curAttrib.getDownRiver() : null);
 		if(next != null)
 			return new RiverNode(next);
@@ -1787,7 +1787,7 @@ public class IslandMap
 					}
 
 					//If one of the neighbors is also a river then we want to join it
-					if(n.getAttribute(Attribute.riverUUID) != null && ((RiverAttribute)n.getAttribute(Attribute.riverUUID)).getRiver() > 0)
+					if(n.getAttribute(Attribute.River) != null && ((RiverAttribute)n.getAttribute(Attribute.River)).getRiver() > 0)
 						return new RiverNode(n);
 
 					if(curNode.center.elevation - n.elevation > 0.06)
@@ -2082,9 +2082,9 @@ public class IslandMap
 			c.readFromNBT(centerList.getCompoundTagAt(i), this);
 
 			//Rebuild the lake list
-			if(c.hasAttribute(Attribute.lakeUUID))
+			if(c.hasAttribute(Attribute.Lake))
 			{
-				int lakeID = ((LakeAttribute)c.getAttribute(Attribute.lakeUUID)).getLakeID();
+				int lakeID = ((LakeAttribute)c.getAttribute(Attribute.Lake)).getLakeID();
 				if(lakes.size() <= lakeID)
 					lakes.setSize(lakeID+1);
 				if(lakes.get(lakeID) == null)

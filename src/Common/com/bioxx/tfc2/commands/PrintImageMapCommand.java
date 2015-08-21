@@ -99,7 +99,7 @@ public class PrintImageMapCommand extends CommandBase
 							p = new Point(x,z);
 							count++;
 							c = map.getSelectedHexagon(p);
-							if(c.hasAttribute(Attribute.gorgeUUID))
+							if(c.hasAttribute(Attribute.Gorge))
 								graphics.setColor(Color.white);	
 							else
 								graphics.setColor(Color.black);	
@@ -206,9 +206,9 @@ public class PrintImageMapCommand extends CommandBase
 
 					for(Center c : map.centers)
 					{
-						if(c.hasAttribute(Attribute.riverUUID))
+						if(c.hasAttribute(Attribute.River))
 						{
-							RiverAttribute a = (RiverAttribute) c.getAttribute(Attribute.riverUUID);
+							RiverAttribute a = (RiverAttribute) c.getAttribute(Attribute.River);
 							if(a.getDownRiver() != null)
 							{
 								graphics.setColor(Color.cyan);	
@@ -260,9 +260,9 @@ public class PrintImageMapCommand extends CommandBase
 
 			for(Center c : map.centers)
 			{
-				if(c.hasAttribute(Attribute.riverUUID))
+				if(c.hasAttribute(Attribute.River))
 				{
-					RiverAttribute a = (RiverAttribute) c.getAttribute(Attribute.riverUUID);
+					RiverAttribute a = (RiverAttribute) c.getAttribute(Attribute.River);
 					if(a.getDownRiver() != null)
 					{
 						graphics.setColor(Color.cyan);	

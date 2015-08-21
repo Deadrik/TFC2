@@ -14,7 +14,7 @@ public class CaveAttribute extends Attribute
 
 	public CaveAttribute() 
 	{
-		super(Attribute.caveUUID);
+		super(Attribute.Cave);
 	}
 
 	public CaveAttribute(UUID i) 

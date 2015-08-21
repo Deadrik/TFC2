@@ -291,9 +291,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						chunkprimer.setBlockState(x, y, z, stone);
 					}
 
-					if(closestCenter.hasAttribute(Attribute.riverUUID) && closestCenter.hasAnyMarkersOf(Marker.Pond))
+					if(closestCenter.hasAttribute(Attribute.River) && closestCenter.hasAnyMarkersOf(Marker.Pond))
 					{
-						RiverAttribute attrib = (RiverAttribute)closestCenter.getAttribute(Attribute.riverUUID);
+						RiverAttribute attrib = (RiverAttribute)closestCenter.getAttribute(Attribute.River);
 						if(attrib.upriver == null || attrib.upriver.size() == 0)
 						{
 							boolean border = isLakeBorder(p, closestCenter, 7);
@@ -305,9 +305,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						}
 					}
 
-					if(closestCenter.biome == BiomeType.LAKE && closestCenter.hasAttribute(Attribute.lakeUUID))
+					if(closestCenter.biome == BiomeType.LAKE && closestCenter.hasAttribute(Attribute.Lake))
 					{
-						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.lakeUUID);
+						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
 						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water
 						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 4)-1)
 							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
@@ -318,7 +318,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					}
 					else if(closestCenter.biome == BiomeType.MARSH)
 					{
-						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.lakeUUID);
+						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
 						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
 							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
 					}
@@ -446,7 +446,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 		for(Center c : centersInChunk)
 		{
-			RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+			RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.River));
 			if(attrib != null && attrib.getRiver() > 0)
 			{
 				//If the river has multiple Up River locations then we need to handle the splines in two parts.
@@ -454,7 +454,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				{
 					for(Center u : attrib.upriver)
 					{
-						RiverAttribute uAttrib = ((RiverAttribute)u.getAttribute(Attribute.riverUUID));
+						RiverAttribute uAttrib = ((RiverAttribute)u.getAttribute(Attribute.River));
 						riverPoints.clear();
 						riverPoints.add(u.point.midpoint(c.point));
 						riverPoints.add(c.point);
@@ -635,7 +635,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		//if(c.water)
 		waterLevel = Math.max(convertElevation(c.elevation), waterLevel);
 
-		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.riverUUID));
+		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.River));
 
 		//This loop moves in increments of X% and attempts to carve the river at each point
 		for(double m = 0; m < 1; m+= 0.03)
@@ -737,14 +737,14 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		if(islandMap.getParams().hasFeature(Feature.Canyons) || islandMap.getParams().hasFeature(Feature.Gorges))
 		{
 			//If this block is in a gorge hex
-			if(c.hasAttribute(Attribute.gorgeUUID))
+			if(c.hasAttribute(Attribute.Gorge))
 			{
 				return getSmoothHeightHex(c, p, 2);
 			}
 			//If this block is in a canyon hex
-			if(c.hasAttribute(Attribute.canyonUUID))
+			if(c.hasAttribute(Attribute.Canyon))
 			{
-				CanyonAttribute a = (CanyonAttribute) c.getAttribute(Attribute.canyonUUID);
+				CanyonAttribute a = (CanyonAttribute) c.getAttribute(Attribute.Canyon);
 				if(a.nodeNum < 10)
 					return getSmoothHeightHex(c, p, 5);
 				return getSmoothHeightHex(c, p, 2);
@@ -754,7 +754,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			Vector<Center> nearList = getCentersNear(p, 5);
 			for(Center n : nearList)
 			{
-				if(n.hasAttribute(Attribute.canyonUUID) || n.hasAttribute(Attribute.gorgeUUID))
+				if(n.hasAttribute(Attribute.Canyon) || n.hasAttribute(Attribute.Gorge))
 					return getSmoothHeightHex(c, p, 2);
 			}
 		}
@@ -811,7 +811,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 		for(Center c : centersInChunk)
 		{
-			CaveAttribute attrib = ((CaveAttribute)c.getAttribute(Attribute.caveUUID));
+			CaveAttribute attrib = ((CaveAttribute)c.getAttribute(Attribute.Cave));
 			if(attrib != null)
 			{
 				for(CaveAttrNode n : attrib.nodes)
@@ -870,7 +870,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 										if(n.isSeaCave() && pos2.getY() < Global.SEALEVEL)
 											fillBlock = TFCBlocks.SaltWaterStatic.getDefaultState();
-										else if(c.hasAttribute(Attribute.riverUUID))
+										else if(c.hasAttribute(Attribute.River))
 										{
 											if(up.getBlock() != TFCBlocks.Gravel && b != TFCBlocks.Gravel)
 												fillBlock = state;

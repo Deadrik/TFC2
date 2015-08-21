@@ -172,7 +172,7 @@ public class Center
 			if(highest == null || center2.elevation > highest.elevation)
 				highest = center2;
 		}
-		RiverAttribute attrib = ((RiverAttribute)getAttribute(Attribute.riverUUID));
+		RiverAttribute attrib = ((RiverAttribute)getAttribute(Attribute.River));
 		if(attrib != null && attrib.upriver != null)
 		{
 			highest = getHighestFromGroup(attrib.upriver);
@@ -189,7 +189,7 @@ public class Center
 			if(lowest == null || center2.elevation < lowest.elevation)
 				lowest = center2;
 		}
-		RiverAttribute attrib = ((RiverAttribute)getAttribute(Attribute.riverUUID));
+		RiverAttribute attrib = ((RiverAttribute)getAttribute(Attribute.River));
 		if(attrib != null && attrib.getDownRiver() != null)
 			lowest = attrib.getDownRiver();
 		return lowest;

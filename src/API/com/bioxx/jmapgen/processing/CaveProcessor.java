@@ -35,7 +35,7 @@ public class CaveProcessor
 			s = land.get(map.mapRandom.nextInt(land.size()));
 
 			//We don't want any caves to start on the edge of the map or in a lava tile.
-			if(s.hasAnyMarkersOf(Marker.Border, Marker.Lava) || s.hasAttribute(Attribute.riverUUID))
+			if(s.hasAnyMarkersOf(Marker.Border, Marker.Lava) || s.hasAttribute(Attribute.River))
 			{ 
 				i--;
 				continue;
@@ -96,7 +96,7 @@ public class CaveProcessor
 		CaveAttrNode sCurNode, sNextNode;
 
 		//First we will perform some preliminary validity checks
-		if(start.hasAttribute(Attribute.riverUUID))
+		if(start.hasAttribute(Attribute.River))
 			return;
 
 		CaveAttrNode curNode = new CaveAttrNode(caveId);//Start slightly above the ground
@@ -211,7 +211,7 @@ public class CaveProcessor
 			nextNode.setOffset(new BlockPos(nextCenter.point.x, curNode.getOffset().getY() + elevOffset, nextCenter.point.y));
 
 			//If this cave is moving into a hex that has a surface river then we need to make sure that it doesnt try to peek the surface
-			if(nextCenter.hasAttribute(Attribute.riverUUID))
+			if(nextCenter.hasAttribute(Attribute.River))
 			{
 				int riverDiff = mcElev(nextCenter.getElevation()) - nextNode.getOffset().getY();
 				if(riverDiff <= 10)
@@ -240,7 +240,7 @@ public class CaveProcessor
 
 	private void addNode(Center c, CaveAttrNode n)
 	{
-		CaveAttribute attrib = (CaveAttribute) c.getAttribute(Attribute.caveUUID);
+		CaveAttribute attrib = (CaveAttribute) c.getAttribute(Attribute.Cave);
 		if(attrib == null)
 		{
 			attrib = new CaveAttribute();
@@ -255,7 +255,7 @@ public class CaveProcessor
 		Center out = null;
 		for(Center n : c.neighbors)
 		{
-			if(n.hasAttribute(Attribute.riverUUID))
+			if(n.hasAttribute(Attribute.River))
 				continue;
 			if(out == null || n.getElevation() > out.getElevation())
 				out = n;

@@ -38,7 +38,7 @@ public class RenderOverlayHandler
 			event.left.add("Moisture: "+Moisture.fromVal(hex.moisture));
 			event.left.add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
 
-			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.riverUUID);
+			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.River);
 			if(attrib != null)
 			{
 				event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------River-------");
@@ -47,7 +47,7 @@ public class RenderOverlayHandler
 					event.left.add("Up :" + hex.getDirection(attrib.upriver.get(0)).toString() + " | Dn :" + hex.getDirection(attrib.getDownRiver()).toString());
 			}
 
-			CaveAttribute cattrib = (CaveAttribute)hex.getAttribute(Attribute.caveUUID);
+			CaveAttribute cattrib = (CaveAttribute)hex.getAttribute(Attribute.Cave);
 			if(cattrib != null)
 			{
 				if(cattrib.nodes.size() > 0)

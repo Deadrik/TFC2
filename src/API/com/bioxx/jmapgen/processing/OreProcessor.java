@@ -349,7 +349,7 @@ public class OreProcessor
 		Center out = null;
 		for(Center n : c.neighbors)
 		{
-			if(n.hasAttribute(Attribute.riverUUID))
+			if(n.hasAttribute(Attribute.River))
 				continue;
 			if(out == null || n.getElevation() > out.getElevation())
 				out = n;
