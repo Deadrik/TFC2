@@ -1,14 +1,17 @@
 package com.bioxx.tfc2.blocks.terrain;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 
-import com.bioxx.tfc2.blocks.BlockTerra;
 import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.blocks.BlockTerra;
 
 public class BlockStone extends BlockTerra
 {
@@ -36,5 +39,23 @@ public class BlockStone extends BlockTerra
 	public int getMetaFromState(IBlockState state)
 	{
 		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
+	}
+
+	@Override
+	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) 
+	{
+		IBlockState stateUp = worldIn.getBlockState(pos.offsetUp());
+		IBlockState stateDown = worldIn.getBlockState(pos.offsetDown());
+		IBlockState stateNorth = worldIn.getBlockState(pos.offsetNorth());
+		IBlockState stateSouth = worldIn.getBlockState(pos.offsetSouth());
+		IBlockState stateEast = worldIn.getBlockState(pos.offsetEast());
+		IBlockState stateWest = worldIn.getBlockState(pos.offsetWest());
+
+		if(!stateUp.getBlock().isSolidFullCube() && !stateDown.getBlock().isSolidFullCube() && !stateNorth.getBlock().isSolidFullCube()
+				&& !stateSouth.getBlock().isSolidFullCube() && !stateEast.getBlock().isSolidFullCube() && !stateWest.getBlock().isSolidFullCube())
+		{
+			dropBlockAsItem(worldIn, pos, state, 0);
+			worldIn.setBlockToAir(pos);
+		}
 	}
 }
