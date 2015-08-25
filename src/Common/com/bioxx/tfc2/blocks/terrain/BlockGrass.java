@@ -23,9 +23,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.blocks.BlockTerra;
 import com.bioxx.tfc2.world.WorldGen;
-import com.bioxx.tfc2.api.types.StoneType;
 
 public class BlockGrass extends BlockTerra
 {
@@ -104,7 +104,7 @@ public class BlockGrass extends BlockTerra
 			return 0x55ff55;
 		IslandMap m = WorldGen.instance.getIslandMap(x, z);
 		double d0 = m.getParams().getIslandTemp().getTemp();
-		double d1 = m.getSelectedHexagon(new Point(pos.getX(), pos.getZ()).toIslandCoord()).moisture;
+		double d1 = m.getClosestCenter(new Point(pos.getX(), pos.getZ()).toIslandCoord()).getMoistureRaw();
 		return ColorizerGrass.getGrassColor(d0, d1);
 		//return ColorizerGrass.getGrassColor(0.5, 1);
 	}

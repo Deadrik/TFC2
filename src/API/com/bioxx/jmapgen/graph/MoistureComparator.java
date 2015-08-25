@@ -8,9 +8,9 @@ public class MoistureComparator extends Center implements Comparator<Center>
 	public int compare(Center arg0, Center arg1) {
 		int returnValue = 0;
 
-		if(arg0.moisture < arg1.moisture)
+		if(arg0.getMoistureRaw() < arg1.getMoistureRaw())
 			returnValue = -1;
-		else if(arg0.moisture > arg1.moisture)
+		else if(arg0.getMoistureRaw() > arg1.getMoistureRaw())
 			returnValue = 1;
 
 		return returnValue;

@@ -28,7 +28,7 @@ public class Center
 
 	public BiomeType biome;
 	public double elevation = 0; // 0.0-1.0
-	public double moisture = 0; // 0.0-1.0
+	private float moisture = 0; // 0.0-1.0
 
 	public Center downslope; // pointer to adjacent center most downhill
 
@@ -51,6 +51,21 @@ public class Center
 	{
 		this();
 		index = i;
+	}
+
+	public float getMoistureRaw()
+	{
+		return this.moisture;
+	}
+
+	public void setMoistureRaw(double d)
+	{
+		this.moisture = (float)d;
+	}
+
+	public void setMoistureRaw(float d)
+	{
+		this.moisture = d;
 	}
 
 	public double getElevation()
@@ -86,6 +101,11 @@ public class Center
 	{
 		for(Marker mk : m)
 			flags.remove(mk);
+	}
+
+	public void resetMarkers()
+	{
+		flags.clear();
 	}
 
 	public Attribute getAttribute(UUID id)
@@ -286,7 +306,7 @@ public class Center
 		}
 		nbt.setInteger("flags", f);
 		nbt.setDouble("elevation", elevation);
-		nbt.setDouble("moisture", moisture);
+		nbt.setFloat("moisture", moisture);
 		if(downslope != null)
 			nbt.setInteger("downslope", downslope.index);
 
@@ -332,7 +352,7 @@ public class Center
 			point = new Point(nbt.getDouble("xCoord"), nbt.getDouble("yCoord"));
 			setMarkers(nbt.getInteger("flags"));
 			elevation = nbt.getDouble("elevation");
-			moisture = nbt.getDouble("moisture");
+			moisture = nbt.getFloat("moisture");
 
 			if(nbt.hasKey("downslope"))
 				downslope = m.centers.get(nbt.getInteger("downslope"));

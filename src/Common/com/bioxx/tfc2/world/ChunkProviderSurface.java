@@ -212,7 +212,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		int y16 = (int)p.y + 16;
 		if(centerCache[x16][y16] == null)
 		{
-			centerCache[x16][y16] = islandMap.getSelectedHexagon(p.plus(islandChunkX, islandChunkZ).toIslandCoord());
+			centerCache[x16][y16] = islandMap.getClosestCenter(p.plus(islandChunkX, islandChunkZ).toIslandCoord());
 		}
 
 		if(!centersInChunk.contains(centerCache[x16][y16]))
@@ -517,7 +517,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				splinePos = spline.getPoint(i);
 
 				//Get the closest hex to this spline point
-				closest = islandMap.getSelectedHexagon(splinePos);
+				closest = islandMap.getClosestCenter(splinePos);
 				splinePos = splinePos.minus(iPoint);
 
 				//If the spline point is outsi   de chunk boundary than we skip it

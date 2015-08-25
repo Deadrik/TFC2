@@ -98,7 +98,7 @@ public class PrintImageMapCommand extends CommandBase
 						{
 							p = new Point(x,z);
 							count++;
-							c = map.getSelectedHexagon(p);
+							c = map.getClosestCenter(p);
 							if(c.hasAttribute(Attribute.Gorge))
 								graphics.setColor(Color.white);	
 							else
@@ -139,7 +139,7 @@ public class PrintImageMapCommand extends CommandBase
 					int xM = ((int)Math.floor(player.posX) >> 12);
 					int zM = ((int)Math.floor(player.posZ) >> 12);
 					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
-					Center closest = map.getSelectedHexagon(new Point((int)Math.floor(player.posX) & 4095, (int)Math.floor(player.posZ) & 4095));
+					Center closest = map.getClosestCenter(new Point((int)Math.floor(player.posX) & 4095, (int)Math.floor(player.posZ) & 4095));
 					Vector<Center> land = map.landCenters(map.centers);
 					Center end = land.get(world.rand.nextInt(land.size()));
 					Path path = map.pathfinder.findPath(closest, end);
@@ -192,7 +192,7 @@ public class PrintImageMapCommand extends CommandBase
 					for(Center c : map.centers)
 					{
 						count++;
-						int color = (int)(c.moisture * 255);
+						int color = (int)(c.getMoistureRaw() * 255);
 						graphics.setColor(colorMap[color]);		
 						poly = new Polygon();
 						for(Corner cn : c.corners)
@@ -274,7 +274,7 @@ public class PrintImageMapCommand extends CommandBase
 			Point p = new Point(xCoord, zCoord).toIslandCoord();
 			graphics.setColor(Color.RED);	
 			poly = new Polygon();
-			Center c = map.getSelectedHexagon(p);
+			Center c = map.getClosestCenter(p);
 			for(Corner cn : c.corners)
 			{
 				poly.addPoint((int)cn.point.x, (int)cn.point.y);

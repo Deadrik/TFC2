@@ -921,7 +921,7 @@ public class IslandMap
 	// up flowing out through them. Also by construction, lakes
 	// often end up on river paths because they don't raise the
 	// elevation as much as other terrain does.
-	public int assignCornerElevations() 
+	private int assignCornerElevations() 
 	{
 		Corner baseCorner, adjacentCorner;
 		LinkedList<Corner> queue = new LinkedList<Corner>();
@@ -1085,8 +1085,8 @@ public class IslandMap
 		for (i = 0; i < locations.size(); i++) 
 		{
 			c1 = locations.get(i);
-			double m = i/(double)(locations.size());
-			c1.moisture = m;
+			float m = i/(float)(locations.size());
+			c1.setMoistureRaw(m);
 		}
 	}
 
@@ -1100,12 +1100,12 @@ public class IslandMap
 			if ((cr.hasMarker(Marker.Water) || (attrib != null && attrib.getRiver() > 0)) && !cr.hasMarker(Marker.Ocean)) 
 			{
 				double rivermult = attrib != null ? attrib.getRiver() : 0;
-				cr.moisture = (attrib != null && attrib.getRiver() > 0) ? Math.min(3.0, (0.1 * rivermult)) : 1.0;
+				cr.setMoistureRaw((attrib != null && attrib.getRiver() > 0) ? Math.min(3.0, (0.1 * rivermult)) : 1.0);
 				queue.push(cr);
 			} 
 			else 
 			{
-				cr.moisture = 0.0;
+				cr.setMoistureRaw(0.0);
 			}
 		}
 		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
@@ -1116,10 +1116,10 @@ public class IslandMap
 
 			for(Center adjacent : q.neighbors)
 			{
-				double newMoisture = q.moisture * moistureMult;
-				if (newMoisture > adjacent.moisture) 
+				double newMoisture = q.getMoistureRaw() * moistureMult;
+				if (newMoisture > adjacent.getMoistureRaw()) 
 				{
-					adjacent.moisture = newMoisture;
+					adjacent.setMoistureRaw(newMoisture);
 					queue.push(adjacent);
 				}
 			}
@@ -1129,11 +1129,11 @@ public class IslandMap
 		{
 			if (cr.hasMarker(Marker.Ocean)) 
 			{
-				cr.moisture = 1.0;
+				cr.setMoistureRaw(1.0);
 			}
 			if (cr.hasMarker(Marker.Coast)) 
 			{
-				cr.moisture = Math.max(0.5, cr.moisture);
+				cr.setMoistureRaw(Math.max(0.5, cr.getMoistureRaw()));
 			}
 		}
 	}
@@ -1843,10 +1843,10 @@ public class IslandMap
 				if(!adjacent.hasMarker(Marker.Ocean) && adjacent.getElevation() - q.getElevation() < 0.08)
 				{
 					double moistureMult = Math.max(1 - adjacent.getElevation() / 0.25, 0);
-					double newMoisture = q.moisture * moistureMult;
-					if (newMoisture > adjacent.moisture) 
+					double newMoisture = q.getMoistureRaw() * moistureMult;
+					if (newMoisture > adjacent.getMoistureRaw()) 
 					{
-						adjacent.moisture = newMoisture;
+						adjacent.setMoistureRaw(newMoisture);
 						queue.push(adjacent);
 					}
 				}
@@ -1870,23 +1870,23 @@ public class IslandMap
 		} else if (p.hasMarker(Marker.Coast)) {
 			return BiomeType.BEACH;
 		} else if (p.elevation > 0.8) {
-			if (p.moisture > 0.50) return BiomeType.SNOW;
-			else if (p.moisture > 0.33) return BiomeType.TUNDRA;
-			else if (p.moisture > 0.16) return BiomeType.BARE;
+			if (p.getMoistureRaw() > 0.50) return BiomeType.SNOW;
+			else if (p.getMoistureRaw() > 0.33) return BiomeType.TUNDRA;
+			else if (p.getMoistureRaw() > 0.16) return BiomeType.BARE;
 			else return BiomeType.SCORCHED;
 		} else if (p.elevation > 0.6) {
-			if (p.moisture > 0.66) return BiomeType.TAIGA;
-			else if (p.moisture > 0.33) return BiomeType.SHRUBLAND;
+			if (p.getMoistureRaw() > 0.66) return BiomeType.TAIGA;
+			else if (p.getMoistureRaw() > 0.33) return BiomeType.SHRUBLAND;
 			else return BiomeType.TEMPERATE_DESERT;
 		} else if (p.elevation > 0.3) {
-			if (p.moisture > 0.83) return BiomeType.TEMPERATE_RAIN_FOREST;
-			else if (p.moisture > 0.50) return BiomeType.TEMPERATE_DECIDUOUS_FOREST;
-			else if (p.moisture > 0.16) return BiomeType.GRASSLAND;
+			if (p.getMoistureRaw() > 0.83) return BiomeType.TEMPERATE_RAIN_FOREST;
+			else if (p.getMoistureRaw() > 0.50) return BiomeType.TEMPERATE_DECIDUOUS_FOREST;
+			else if (p.getMoistureRaw() > 0.16) return BiomeType.GRASSLAND;
 			else return BiomeType.TEMPERATE_DESERT;
 		} else {
-			if (p.moisture > 0.66) return BiomeType.TROPICAL_RAIN_FOREST;
-			else if (p.moisture > 0.33) return BiomeType.TROPICAL_SEASONAL_FOREST;
-			else if (p.moisture > 0.16) return BiomeType.GRASSLAND;
+			if (p.getMoistureRaw() > 0.66) return BiomeType.TROPICAL_RAIN_FOREST;
+			else if (p.getMoistureRaw() > 0.33) return BiomeType.TROPICAL_SEASONAL_FOREST;
+			else if (p.getMoistureRaw() > 0.16) return BiomeType.GRASSLAND;
 			else return BiomeType.SUBTROPICAL_DESERT;
 		}
 	}
@@ -1925,29 +1925,10 @@ public class IslandMap
 		else return Math.floor(p.elevation*10);
 	}
 
-	/*public Center getClosestCenter(Point p)
-	{
-		Center closest = null;
-		double distance = Double.MAX_VALUE;
-
-		for (int i = 1; i < centers.size(); i++)
-		{
-			double newDist = p.distanceSq(centers.get(i).point);
-			if(newDist < distance)
-			{
-				distance = newDist;
-				closest = centers.get(i);
-			}
-		}
-		if(closest == null)
-			System.out.println("Failed center check");
-		return closest;
-	}*/
-
 	/**
 	 * @return nearest Center point for the containing hex
 	 */
-	public Center getSelectedHexagon(Point p)
+	public Center getClosestCenter(Point p)
 	{
 		//First we place the point in a local grid between 0 and the map width
 		p.x = p.x % SIZE;

@@ -96,7 +96,7 @@ public class BlockVegetation extends BlockTerra
 			return 0x55ff55;
 		IslandMap m = WorldGen.instance.getIslandMap(x, z);
 		double d0 = m.getParams().getIslandTemp().getTemp();
-		double d1 = m.getSelectedHexagon(new Point(pos.getX(), pos.getZ())).moisture;
+		double d1 = m.getClosestCenter(new Point(pos.getX(), pos.getZ())).getMoistureRaw();
 		return ColorizerGrass.getGrassColor(d0, d1);
 	}
 

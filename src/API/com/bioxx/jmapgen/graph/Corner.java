@@ -54,6 +54,14 @@ public class Corner
 			flags.remove(mk);
 	}
 
+	/**
+	 * Should only be used by the mapgen when tossing a bad map.
+	 */
+	public void resetMarkers()
+	{
+		flags.clear();
+	}
+
 	public Edge getTouchingEdge(Corner c)
 	{
 		for (int i = 0; i < protrudes.size(); i++)

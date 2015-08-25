@@ -32,10 +32,10 @@ public class RenderOverlayHandler
 			int zM = ((int)(mc.thePlayer.posZ) >> 12);
 			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
-			Center hex = map.getSelectedHexagon(islandCoord);
+			Center hex = map.getClosestCenter(islandCoord);
 			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
 			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
-			event.left.add("Moisture: "+Moisture.fromVal(hex.moisture));
+			event.left.add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()));
 			event.left.add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
 
 			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.River);
