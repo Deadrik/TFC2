@@ -45,7 +45,7 @@ public class ChunkManager extends WorldChunkManager
 			}
 			else
 			{
-				c = c.neighbors.get(4);
+				c = c.neighbors.get(0);
 			}
 		}
 		blockpos = new BlockPos((int)c.point.x + map.getParams().getWorldX(), 0, (int)c.point.y + map.getParams().getWorldZ());

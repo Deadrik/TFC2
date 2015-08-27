@@ -15,11 +15,13 @@ import java.util.concurrent.PriorityBlockingQueue;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters;
-import com.bioxx.jmapgen.RandomCollection;
 import com.bioxx.jmapgen.IslandParameters.Feature;
+import com.bioxx.jmapgen.RandomCollection;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
@@ -28,12 +30,14 @@ import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.api.util.IThreadCompleteListener;
+import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 
 
 public class WorldGen implements IThreadCompleteListener
 {
 	public static WorldGen instance;
 	java.util.Map<Integer, CachedIsland> islandCache;
+	java.util.Map<Integer, CachedIsland> clientIslandCache;
 	World world;
 	public static final int ISLAND_SIZE = 4096;
 
@@ -44,6 +48,7 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		world = w;
 		islandCache = Collections.synchronizedMap(new ConcurrentHashMap<Integer, CachedIsland>());
+		clientIslandCache = Collections.synchronizedMap(new ConcurrentHashMap<Integer, CachedIsland>());
 		mapQueue = new PriorityBlockingQueue<Integer>();
 		buildThreads = new ThreadBuild[TFCOptions.maxThreadsForIslandGen];
 	}
@@ -60,38 +65,76 @@ public class WorldGen implements IThreadCompleteListener
 	 */
 	public IslandMap getIslandMap(int x, int z)
 	{
-		int id = Helper.cantorize(x, z);
+		int id = Helper.combineCoords(x, z);
 
-		//First we try to load the map from disk if it exists
-		if(!islandCache.containsKey(id))
+		if(this.world.isRemote)
 		{
-			loadMap(x, z);
+			if(!clientIslandCache.containsKey(id))
+			{
+				createFakeMap(x, z);
+			}
 		}
-		//If the map did not exist on disk then create it from scratch
-		if(!islandCache.containsKey(id))
+		else
 		{
-			createIsland(x, z);
+			//First we try to load the map from disk if it exists
+			if(!islandCache.containsKey(id))
+			{
+				loadMap(x, z);
+			}
+			//If the map did not exist on disk then create it from scratch
+			if(!islandCache.containsKey(id))
+			{
+				createIsland(x, z);
+			}
 		}
-
 		return getMap(x, z);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private IslandMap createFakeMap(int x, int z)
+	{
+		long seed = world.getSeed()+Helper.combineCoords(x, z);
+		IslandParameters id = createParams(seed, x, z);
+		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
+		mapgen.newIsland(id);
+		mapgen.generateFake();
+		CachedIsland ci = new CachedIsland(mapgen);
+		clientIslandCache.put(Helper.combineCoords(x, z), ci);
+
+		TFC.network.sendToServer(new ServerMapRequestPacket(x, z));
+
+		return mapgen;
+	}
+
+	public void addMap(IslandMap map, int x, int z)
+	{
+		CachedIsland ci = new CachedIsland(map);
+		islandCache.put(Helper.combineCoords(x, z), ci);
+		System.out.println("Added Map: " + x + "," + z );
 	}
 
 	private IslandMap getMap(int x, int z)
 	{
-		int id = Helper.cantorize(x, z);
-		CachedIsland ci = islandCache.get(id);
-		//Should only ever be 0 if this map was created but never accessed by the game.
-		if(ci.lastAccess == 0)
+		int id = Helper.combineCoords(x, z);
+		CachedIsland ci;
+		if(world.isRemote)
+			ci = clientIslandCache.get(id);
+		else
 		{
-			//Add the neighbor maps to the mapQueue for generation in another thread
-			mapQueue.add(Helper.cantorize(x+1, z));
-			mapQueue.add(Helper.cantorize(x+1, z-1));
-			mapQueue.add(Helper.cantorize(x, z-1));
-			mapQueue.add(Helper.cantorize(x-1, z-1));
-			mapQueue.add(Helper.cantorize(x-1, z));
-			mapQueue.add(Helper.cantorize(x-1, z+1));
-			mapQueue.add(Helper.cantorize(x, z+1));
-			mapQueue.add(Helper.cantorize(x+1, z+1));
+			ci = islandCache.get(id);
+			//Should only ever be 0 if this map was created but never accessed by the game.
+			if(ci.lastAccess == 0)
+			{
+				//Add the neighbor maps to the mapQueue for generation in another thread
+				mapQueue.add(Helper.combineCoords(x+1, z));
+				mapQueue.add(Helper.combineCoords(x+1, z-1));
+				mapQueue.add(Helper.combineCoords(x, z-1));
+				mapQueue.add(Helper.combineCoords(x-1, z-1));
+				mapQueue.add(Helper.combineCoords(x-1, z));
+				mapQueue.add(Helper.combineCoords(x-1, z+1));
+				mapQueue.add(Helper.combineCoords(x, z+1));
+				mapQueue.add(Helper.combineCoords(x+1, z+1));
+			}
 		}
 
 		return ci.getIslandMap();
@@ -99,14 +142,14 @@ public class WorldGen implements IThreadCompleteListener
 
 	private IslandMap createIsland(int x, int z)
 	{
-		long seed = world.getSeed()+Helper.cantorize(x, z);
+		long seed = world.getSeed()+Helper.combineCoords(x, z);
 		IslandParameters id = createParams(seed, x, z);
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
 		mapgen.newIsland(id);
-		mapgen.go();
+		mapgen.generateFull();
 		CachedIsland ci = new CachedIsland(mapgen);
 		saveMap(ci);
-		islandCache.put(Helper.cantorize(x, z), ci);
+		islandCache.put(Helper.combineCoords(x, z), ci);
 		return mapgen;
 	}
 
@@ -231,25 +274,37 @@ public class WorldGen implements IThreadCompleteListener
 				saveMap(c);
 			}
 			islandCache.clear();
+			clientIslandCache.clear();
 		}
 	}
 
 	public void trimCache()
 	{
 		long now = System.currentTimeMillis();
-
+		int key;
 		Set<Integer> keys = islandCache.keySet();
-
+		CachedIsland c;
 		for(Iterator<Integer> iter = keys.iterator(); iter.hasNext();)
 		{
-			int key = iter.next();
-			CachedIsland c = islandCache.get(key);
+			key = iter.next();
+			c = islandCache.get(key);
 			if(c != null && now-c.lastAccess > 20000)//20 seconds of no access will trim the map
 			{
 				saveMap(c);
 				islandCache.remove(key);
 			}
+		}
 
+		keys = clientIslandCache.keySet();
+
+		for(Iterator<Integer> iter = keys.iterator(); iter.hasNext();)
+		{
+			key = iter.next();
+			c = clientIslandCache.get(key);
+			if(c != null && now-c.lastAccess > 360000)//5 minutes of no access will trim the map
+			{
+				clientIslandCache.remove(key);
+			}
 		}
 	}
 
@@ -257,7 +312,7 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		try
 		{
-			File file1 = world.getSaveHandler().getMapFileFromName(island.islandData.getParams().getXCoord() + "," + 
+			File file1 = world.getSaveHandler().getMapFileFromName("Map " + island.islandData.getParams().getXCoord() + "," + 
 					island.islandData.getParams().getZCoord());
 			if (file1 != null)
 			{
@@ -285,7 +340,7 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		try
 		{
-			File file1 = world.getSaveHandler().getMapFileFromName(x + "," + z);
+			File file1 = world.getSaveHandler().getMapFileFromName("Map " + x + "," + z);
 
 			if (file1 != null && file1.exists())
 			{
@@ -294,13 +349,13 @@ public class WorldGen implements IThreadCompleteListener
 				input.close();
 				IslandParameters ip = new IslandParameters();
 				ip.readFromNBT(nbt);
-				long seed = world.getSeed()+Helper.cantorize(x, z);
+				long seed = world.getSeed()+Helper.combineCoords(x, z);
 				IslandMap m = new IslandMap(ISLAND_SIZE, seed);
 				m.newIsland(ip);
 				m.readFromNBT(nbt.getCompoundTag("data"));
 				CachedIsland ci = new CachedIsland(m);
 				ci.lastAccess = nbt.getLong("lastAccess");
-				islandCache.put(Helper.cantorize(x, z), ci);
+				islandCache.put(Helper.combineCoords(x, z), ci);
 				return ci;
 			}
 
@@ -316,7 +371,7 @@ public class WorldGen implements IThreadCompleteListener
 
 	private boolean doesMapExist(int x, int z)
 	{
-		File file1 = world.getSaveHandler().getMapFileFromName(x + "," + z);
+		File file1 = world.getSaveHandler().getMapFileFromName("Map " + x + "," + z);
 
 		return (file1 != null && file1.exists());
 	}
@@ -331,7 +386,7 @@ public class WorldGen implements IThreadCompleteListener
 			if(buildThreads[i] == null && mapQueue.size() > 0)
 			{
 				int id = mapQueue.poll();
-				if(doesMapExist(Helper.cantorX(id), Helper.cantorY(id)))
+				if(doesMapExist(Helper.getXCoord(id), Helper.getYCoord(id)))
 					return;
 				buildThreads[i] = new ThreadBuild(i, "Map Build Thread: "+i, id);
 				buildThreads[i].setPriority(2);
@@ -345,13 +400,13 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		private String threadName;
 		private Thread t;
-		private int cantorID;
+		private int id;
 		public final int threadID;
 
 		public ThreadBuild(int threadid, String n, int cantorizedID)
 		{
 			threadName = n;
-			cantorID = cantorizedID;
+			id = cantorizedID;
 			threadID = threadid;
 		}
 
@@ -377,7 +432,11 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			try
 			{
-				createIsland(Helper.cantorX(cantorID),Helper.cantorY(cantorID));
+				createIsland(Helper.getXCoord(id),Helper.getYCoord(id));
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
 			}
 			finally 
 			{

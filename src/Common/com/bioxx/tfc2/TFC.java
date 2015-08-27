@@ -5,6 +5,7 @@ import java.io.File;
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -14,6 +15,9 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +37,9 @@ import com.bioxx.tfc2.commands.PrintImageMapCommand;
 import com.bioxx.tfc2.commands.RemoveAreaCommand;
 import com.bioxx.tfc2.commands.StripChunkCommand;
 import com.bioxx.tfc2.commands.TeleportInIslandCommand;
-import com.bioxx.tfc2.networking.PacketPipeline;
+import com.bioxx.tfc2.handlers.PlayerTracker;
+import com.bioxx.tfc2.networking.client.ClientMapPacket;
+import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 import com.bioxx.tfc2.world.WorldGen;
 
 @Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, dependencies = Reference.ModDependencies)
@@ -46,9 +52,7 @@ public class TFC
 
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
 	public static CommonProxy proxy;
-
-	// The packet pipeline
-	public static final PacketPipeline packetPipeline = new PacketPipeline();
+	public static SimpleNetworkWrapper network;
 
 	public TFC() {}
 
@@ -56,8 +60,14 @@ public class TFC
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		instance = this;
+		log = event.getModLog();
 		loadSettings();
 		proxy.preInit(event);
+
+		network = NetworkRegistry.INSTANCE.newSimpleChannel("TFC2");
+		network.registerMessage(ClientMapPacket.Handler.class, ClientMapPacket.class, 0, Side.CLIENT);
+		network.registerMessage(ServerMapRequestPacket.Handler.class, ServerMapRequestPacket.class, 1, Side.SERVER);
+
 		//Register tree types and load tree schematics
 		loadTrees();
 
@@ -67,15 +77,15 @@ public class TFC
 	public void init(FMLInitializationEvent event)
 	{
 		// Register Packet Handler
-		packetPipeline.initalise();
+		//packetPipeline.initalise();
 		proxy.init(event);
+		FMLCommonHandler.instance().bus().register(new PlayerTracker());
 
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		packetPipeline.postInitialise();
 		proxy.postInit(event);
 	}
 

@@ -225,4 +225,10 @@ public class ClientProxy extends CommonProxy
 		settings.loadOptions();
 	}
 
+	@Override
+	public boolean isClientSide()
+	{
+		return true;
+	}
+
 }

@@ -35,7 +35,7 @@ public class RenderOverlayHandler
 			Center hex = map.getClosestCenter(islandCoord);
 			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
 			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
-			event.left.add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()));
+			event.left.add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()) + " | " + hex.getMoistureRaw());
 			event.left.add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
 
 			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.River);

@@ -4,6 +4,7 @@
 package com.bioxx.jmapgen;
 
 import java.awt.Rectangle;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,12 +34,13 @@ import com.bioxx.jmapgen.graph.MoistureComparator;
 import com.bioxx.jmapgen.pathfinding.PathFinder;
 import com.bioxx.jmapgen.processing.CaveProcessor;
 import com.bioxx.jmapgen.processing.OreProcessor;
+import com.bioxx.tfc2.TFC;
 
 public class IslandMap 
 {
 	public int NUM_POINTS = 4096*4;
 	public int NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
-
+	boolean builtVoronoi = false;
 	// Passed in by the caller:
 	public int SIZE;
 	// Island shape is controlled by the islandRandom seed and the
@@ -66,6 +68,8 @@ public class IslandMap
 	private CaveProcessor caves;
 	private OreProcessor ores;
 
+	private byte[] moisturePacketData;
+
 	public IslandMap(int size, long s) 
 	{
 		SIZE = size;
@@ -81,13 +85,6 @@ public class IslandMap
 		ores = new OreProcessor(this);
 	}
 
-	// Random parameters governing the overall shape of the island
-	public void newIsland() 
-	{
-		islandParams = new IslandParameters(seed, SIZE, 0.5);
-		mapRandom.setSeed(seed);
-	}
-
 	public void newIsland(IslandParameters is) 
 	{
 		islandParams = is;
@@ -95,15 +92,28 @@ public class IslandMap
 		NUM_POINTS = is.SIZE*4;
 		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 		is.createShape(seed);
-		points.clear();
-		edges.clear();
-		centers.clear();
-		corners.clear();
-		lakes.clear();
-		rivers.clear();
-		pathfinder = new PathFinder(this);
-		caves = new CaveProcessor(this);
-		ores = new OreProcessor(this);
+		//if(!builtVoronoi)
+		{
+			points.clear();
+			edges.clear();
+			centers.clear();
+			corners.clear();
+			lakes.clear();
+			rivers.clear();
+			pathfinder = new PathFinder(this);
+			caves = new CaveProcessor(this);
+			ores = new OreProcessor(this);
+
+
+			points = this.generateHexagon(SIZE);
+			Rectangle R = new Rectangle();
+			R.setFrame(0, 0, SIZE, SIZE);
+			//System.out.println("Starting Creating map Voronoi...");
+			Voronoi voronoi = new Voronoi(points, R);
+			//System.out.println("Finished Creating map Voronoi...");
+			buildGraph(points, voronoi);
+			builtVoronoi = true;
+		}
 	}
 
 	public IslandParameters getParams()
@@ -111,31 +121,31 @@ public class IslandMap
 		return this.islandParams;
 	}
 
-	public void go() 
+	public void generateFake()
 	{
-		points = this.generateHexagon(SIZE);
 
-		//System.out.println("Points: " + points.size());
-		Rectangle R = new Rectangle();
-		R.setFrame(0, 0, SIZE, SIZE);
-		//System.out.println("Starting Creating map Voronoi...");
-		Voronoi voronoi = new Voronoi(points, R);
-		//System.out.println("Finished Creating map Voronoi...");
-		buildGraph(points, voronoi);
+	}
+
+	public void generateFull() 
+	{
 		// Determine the elevations and water at Voronoi corners.
 		int borderCount = assignCornerElevations();
-		// Determine polygon and corner type: ocean, coast, land.
-		assignOceanCoastAndLand();
 		//If there is too much land on the borders then toss this island and start fresh
 		if(borderCount > 20)
 		{
 			seed += 1234567;
 			newIsland(islandParams);
-			go();
+			//resetMap();
+			generateFull();
+			TFC.log.debug("Reset Map: Centers-" + centers.size());
 			return;
 		}
+
+		// Determine polygon and corner type: ocean, coast, land.
+		assignOceanCoastAndLand();
+
 		redistributeElevations(landCorners(corners));
-		//fixElevations(landCorners(corners));
+
 		// Assign elevations to non-land corners
 		for(Iterator<Corner> i = corners.iterator(); i.hasNext();)
 		{
@@ -203,6 +213,9 @@ public class IslandMap
 
 		Vector<Center> highCenters = getCentersAbove(0.8);
 		Vector<Center> startCenters = new Vector<Center>();
+
+		if(highCenters.size() == 0)
+			return;
 
 		int maxCanyons = 5;
 
@@ -321,7 +334,7 @@ public class IslandMap
 
 	private void createVolcano(Vector<Center> candidates)
 	{
-		if(!this.islandParams.hasFeature(Feature.Volcano))
+		if(!this.islandParams.hasFeature(Feature.Volcano) || candidates.size() == 0)
 			return;
 		Center mid = candidates.get(mapRandom.nextInt(candidates.size()));
 		System.out.println("Volcano: X" + mid.point.x + " Z"+ mid.point.y);
@@ -894,8 +907,8 @@ public class IslandMap
 		corners.add(q);
 
 		q.point = point;
-		if(point.x == 0 || point.x == SIZE
-				|| point.y == 0 || point.y == SIZE) q.setMarkers(Marker.Border);	
+		if(point.x ==0 || point.x == SIZE || point.y == 0 || point.y == SIZE) 
+			q.setMarkers(Marker.Border);	
 
 		_cornerMap.get(bucket).add(q);
 
@@ -932,7 +945,9 @@ public class IslandMap
 		for(Corner c : corners)
 		{
 			if(!inside(c.point))
+			{
 				c.setMarkers(Marker.Water);
+			}
 			else if(c.hasMarker(Marker.Border))
 				numLandBorder++;
 
@@ -983,6 +998,21 @@ public class IslandMap
 		}
 
 		return numLandBorder;
+	}
+
+	private void resetMap()
+	{
+		for(Corner c : corners)
+		{
+			c.resetMarkers();
+			c.elevation = 0;
+		}
+
+		for(Center c : centers)
+		{
+			c.resetMarkers();
+			c.setElevation(0);
+		}
 	}
 
 	public Vector<Corner> sortElevation(Vector<Corner> locations)
@@ -2041,6 +2071,10 @@ public class IslandMap
 		NBTTagList edgeList = nbt.getTagList("edges", 10);
 		Center c;
 
+		centers.clear();
+		corners.clear();
+		edges.clear();
+
 		//First we create empty centers, corners, and edges that can be referenced from each other
 		for(int i = 0; i < centerList.tagCount(); i++)
 		{
@@ -2087,5 +2121,24 @@ public class IslandMap
 		{
 			edges.get(i).readFromNBT(edgeList.getCompoundTagAt(i), this);
 		}
+
+		moisturePacketData = new byte[centers.size()];
+		for(Center cen : centers)
+		{
+			moisturePacketData[cen.index] = (byte)(cen.getMoistureRaw() * 255);
+		}
+	}
+
+	public byte[] getMoistureData(int from, int to)
+	{
+		if(this.moisturePacketData == null)
+		{
+			moisturePacketData = new byte[centers.size()];
+			for(Center c : centers)
+			{
+				moisturePacketData[c.index] = (byte)(c.getMoistureRaw() * 255);
+			}
+		}
+		return Arrays.copyOfRange(this.moisturePacketData, from, to);
 	}
 }

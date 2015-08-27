@@ -20,6 +20,7 @@ import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.handlers.CreateSpawnHandler;
+import com.bioxx.tfc2.handlers.PlayerTracker;
 import com.bioxx.tfc2.handlers.ServerTickHandler;
 import com.bioxx.tfc2.handlers.WorldLoadHandler;
 import com.bioxx.tfc2.world.WorldProviderSurface;
@@ -55,7 +56,7 @@ public class CommonProxy
 
 	public void init(FMLInitializationEvent event)
 	{
-
+		FMLCommonHandler.instance().bus().register(new PlayerTracker());
 	}
 
 	public void postInit(FMLPostInitializationEvent event)
@@ -105,5 +106,14 @@ public class CommonProxy
 	public void uploadKeyBindingsToGame()
 	{
 
+	}
+
+	public void onClientLogin() 
+	{
+	}
+
+	public boolean isClientSide()
+	{
+		return false;
 	}
 }
