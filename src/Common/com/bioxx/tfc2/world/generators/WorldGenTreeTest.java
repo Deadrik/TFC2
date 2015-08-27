@@ -99,7 +99,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			return false;
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
-		treePos = treePos.add(0, world.getHorizon(), 0);
+		treePos = world.getHeight(treePos);
 		Point p = new Point(treePos.getX(), treePos.getZ()).toIslandCoord();
 		Center c = m.getClosestCenter(p);
 
