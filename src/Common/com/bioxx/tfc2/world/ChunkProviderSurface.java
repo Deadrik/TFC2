@@ -236,7 +236,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		IBlockState dirt = TFCBlocks.Dirt.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		IBlockState sand = TFCBlocks.Sand.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
-
+		IBlockState freshwater = TFCBlocks.FreshWaterStatic.getDefaultState();
+		IBlockState saltwater = TFCBlocks.SaltWaterStatic.getDefaultState();
 		/*if(islandMap.islandParams.getIslandMoisture() == Moisture.NONE)
 		{
 			grass = sand;
@@ -302,7 +303,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							boolean border = isLakeBorder(p, closestCenter, 7);
 							if(!border && y < this.convertElevation(closestCenter.getElevation()) && y >= this.convertElevation(closestCenter.getElevation())-1)
 							{
-								chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
+								chunkprimer.setBlockState(x, y, z, freshwater);
 								chunkprimer.setBlockState(x, y-1, z, dirt);
 							}
 						}
@@ -313,8 +314,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
 						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water
 						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 4)-1)
-							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
-						if(getBlock(chunkprimer, x, y, z).isSolidFullCube() && blockUp == TFCBlocks.FreshWater.getDefaultState())
+							chunkprimer.setBlockState(x, y, z, freshwater);
+						if(getBlock(chunkprimer, x, y, z).isSolidFullCube() && blockUp == freshwater)
 						{
 							chunkprimer.setBlockState(x, y, z, sand);
 						}
@@ -323,10 +324,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
 						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
-							chunkprimer.setBlockState(x, y, z, TFCBlocks.FreshWater.getDefaultState());
+							chunkprimer.setBlockState(x, y, z, freshwater);
 					}
 
-					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == TFCBlocks.SaltWaterStatic.getDefaultState())
+					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == saltwater)
 					{
 						chunkprimer.setBlockState(x, y, z, sand);
 					}
@@ -581,17 +582,17 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								//if(Core.isTerrain(s))
 								{
 									setState(chunkprimer, pos3, fillState);
-									s = getState(chunkprimer, pos3.offsetUp());
+									s = getState(chunkprimer, pos3.up());
 									if(s.getBlock() == Blocks.air)
 									{
 										doAir = true;
 									}
 
-									convertRiverBank(chunkprimer, pos3.offsetNorth(), doAir);
-									convertRiverBank(chunkprimer, pos3.offsetSouth(), doAir);
-									convertRiverBank(chunkprimer, pos3.offsetEast(), doAir);
-									convertRiverBank(chunkprimer, pos3.offsetWest(), doAir);
-									convertRiverBank(chunkprimer, pos3.offsetDown());
+									convertRiverBank(chunkprimer, pos3.north(), doAir);
+									convertRiverBank(chunkprimer, pos3.south(), doAir);
+									convertRiverBank(chunkprimer, pos3.east(), doAir);
+									convertRiverBank(chunkprimer, pos3.west(), doAir);
+									convertRiverBank(chunkprimer, pos3.down());
 								}
 							}
 						}
@@ -614,16 +615,16 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			{
 				setState(chunkprimer, pos, TFCBlocks.Gravel.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
 
-				if(Core.isTerrain(getState(chunkprimer, pos.offsetUp(1))))
+				if(Core.isTerrain(getState(chunkprimer, pos.up(1))))
 				{
-					if(doAir && Core.isGravel(getState(chunkprimer, pos.offsetUp(1))))
+					if(doAir && Core.isGravel(getState(chunkprimer, pos.up(1))))
 					{
-						convertRiverBank(chunkprimer, pos.offsetUp(1).offsetNorth(), true);
-						convertRiverBank(chunkprimer, pos.offsetUp(1).offsetSouth(), true);
-						convertRiverBank(chunkprimer, pos.offsetUp(1).offsetEast(), true);
-						convertRiverBank(chunkprimer, pos.offsetUp(1).offsetWest(), true);
+						convertRiverBank(chunkprimer, pos.up(1).north(), true);
+						convertRiverBank(chunkprimer, pos.up(1).south(), true);
+						convertRiverBank(chunkprimer, pos.up(1).east(), true);
+						convertRiverBank(chunkprimer, pos.up(1).west(), true);
 					}
-					setState(chunkprimer, pos.offsetUp(1), Blocks.air.getDefaultState());
+					setState(chunkprimer, pos.up(1), Blocks.air.getDefaultState());
 				}
 			}
 		}
@@ -857,11 +858,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 									Block b = state.getBlock();
 									if(b != Blocks.bedrock && b.getMaterial() != Material.water)
 									{
-										down = getState(chunkprimer, pos2.offsetDown());
-										up = getState(chunkprimer, pos2.offsetUp());
+										down = getState(chunkprimer, pos2.down());
+										up = getState(chunkprimer, pos2.up());
 										if(Core.isDirt(down))
 										{
-											setState(chunkprimer, pos2.offsetDown(), TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, down.getValue(BlockDirt.META_PROPERTY)));
+											setState(chunkprimer, pos2.down(), TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, down.getValue(BlockDirt.META_PROPERTY)));
 										}
 
 										if(down.getBlock().getMaterial() == Material.water)
@@ -885,7 +886,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 										if(Core.isSoil(up) && !Core.isGrass(up))
 										{
-											setState(chunkprimer, pos2.offsetUp(), TFCBlocks.Stone.getDefaultState().withProperty(BlockStone.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+											setState(chunkprimer, pos2.up(), TFCBlocks.Stone.getDefaultState().withProperty(BlockStone.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
 										}
 									}
 								}
@@ -954,8 +955,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 									state = getState(chunkprimer, pos2);
 									if(Core.isStone(state))
 									{
-										down = getState(chunkprimer, pos2.offsetDown());
-										up = getState(chunkprimer, pos2.offsetUp());
+										down = getState(chunkprimer, pos2.down());
+										up = getState(chunkprimer, pos2.up());
 
 										setState(chunkprimer, pos2, fillBlock);
 									}

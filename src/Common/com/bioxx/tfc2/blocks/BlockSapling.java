@@ -64,7 +64,7 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 		{
 			super.updateTick(worldIn, pos, state, rand);
 
-			if (worldIn.getLightFromNeighbors(pos.offsetUp()) >= 9 && rand.nextInt(7) == 0)
+			if (worldIn.getLightFromNeighbors(pos.up()) >= 9 && rand.nextInt(7) == 0)
 			{
 				this.grow(worldIn, rand, pos, state);
 			}
@@ -84,7 +84,7 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 	}
 
 	@Override
-	public boolean isStillGrowing(World world, BlockPos pos, IBlockState state, boolean p_176473_4_) 
+	public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean p_176473_4_) 
 	{
 		return true;
 	}

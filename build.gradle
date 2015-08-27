@@ -1,18 +1,5 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "Minecraft Forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.1"
 }
 
 // define the properties file
@@ -27,13 +14,13 @@ configFile.withReader {
 
 allprojects {
     apply plugin: 'java'
-    apply plugin: 'forge'
     group = config.group_name
     version = config.mod_version
     archivesBaseName = "[${config.minecraft_version}]${config.mod_id}"
-
+	
     minecraft {
         version = config.minecraft_version + "-" + config.forge_version
+		mappings = config.mappings
         if(file('../run').exists()) {
             runDir = "../run"
         } else {
@@ -74,10 +61,10 @@ task deobfJar(type: Jar) {
     appendix = 'deobf'
 }
  //creates a jar containing only the src
-task sourceJar(type: Jar) {
+/*task sourceJar(type: Jar) {
     from sourceSets.main.allSource
     appendix = 'src'
-}
+}*/
 
 tasks.build.dependsOn('sourceJar', 'deobfJar')
 
@@ -98,8 +85,4 @@ from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.info'
         exclude '**/*.prop'
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.2.1'
 }

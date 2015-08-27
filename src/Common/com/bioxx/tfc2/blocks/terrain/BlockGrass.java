@@ -68,11 +68,11 @@ public class BlockGrass extends BlockTerra
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		Block block = world.getBlockState(pos.offsetUp()).getBlock();
-		return state.withProperty(NORTH, world.getBlockState(pos.offsetNorth().offsetDown()).getBlock() == TFCBlocks.Grass).withProperty(
-				SOUTH, world.getBlockState(pos.offsetSouth().offsetDown()).getBlock() == TFCBlocks.Grass).withProperty(
-						EAST, world.getBlockState(pos.offsetEast().offsetDown()).getBlock() == TFCBlocks.Grass).withProperty(
-								WEST, world.getBlockState(pos.offsetWest().offsetDown()).getBlock() == TFCBlocks.Grass);
+		Block block = world.getBlockState(pos.up()).getBlock();
+		return state.withProperty(NORTH, world.getBlockState(pos.north().down()).getBlock() == TFCBlocks.Grass).withProperty(
+				SOUTH, world.getBlockState(pos.south().down()).getBlock() == TFCBlocks.Grass).withProperty(
+						EAST, world.getBlockState(pos.east().down()).getBlock() == TFCBlocks.Grass).withProperty(
+								WEST, world.getBlockState(pos.west().down()).getBlock() == TFCBlocks.Grass);
 	}
 
 	@Override

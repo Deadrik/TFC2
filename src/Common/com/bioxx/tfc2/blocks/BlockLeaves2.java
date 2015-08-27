@@ -44,24 +44,24 @@ public class BlockLeaves2 extends BlockLeaves
 			outer = false;
 
 		//North
-		if(world.getBlockState(pos.offsetNorth()).getBlock() != state.getBlock())
+		if(world.getBlockState(pos.north()).getBlock() != state.getBlock())
 			outer = true;
 
 		//South
-		if(world.getBlockState(pos.offsetSouth()).getBlock() != state.getBlock())
+		if(world.getBlockState(pos.south()).getBlock() != state.getBlock())
 			outer = true;
 
 		//East
-		if(world.getBlockState(pos.offsetEast()).getBlock() != state.getBlock())
+		if(world.getBlockState(pos.east()).getBlock() != state.getBlock())
 			outer = true;
 
 		//West
-		if(world.getBlockState(pos.offsetWest()).getBlock() != state.getBlock())
+		if(world.getBlockState(pos.west()).getBlock() != state.getBlock())
 			outer = true;
 
-		if(world.getBlockState(pos.offsetUp()).getBlock() != this)
+		if(world.getBlockState(pos.up()).getBlock() != this)
 			outer = true;
-		if(world.getBlockState(pos.offsetDown()).getBlock() != this)
+		if(world.getBlockState(pos.down()).getBlock() != this)
 			outer = true;
 
 		if(state.getValue(META_PROPERTY) == WoodType.Palm)

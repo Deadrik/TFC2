@@ -16,7 +16,7 @@ public class Core
 	{
 		BlockPos blockpos1;
 
-		for (blockpos1 = new BlockPos(pos.getX(), 63, pos.getZ()); !world.isAirBlock(blockpos1.offsetUp()); blockpos1 = blockpos1.offsetUp())
+		for (blockpos1 = new BlockPos(pos.getX(), 63, pos.getZ()); !world.isAirBlock(blockpos1.up()); blockpos1 = blockpos1.up())
 		{
 			;
 		}

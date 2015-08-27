@@ -63,8 +63,8 @@ public class BlockVegetation extends BlockTerra
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		Block block = world.getBlockState(pos.offsetUp()).getBlock();
-		return state.withProperty(IS_ON_STONE, world.getBlockState(pos.offsetDown()).getBlock() == TFCBlocks.Stone);
+		Block block = world.getBlockState(pos.up()).getBlock();
+		return state.withProperty(IS_ON_STONE, world.getBlockState(pos.down()).getBlock() == TFCBlocks.Stone);
 	}
 
 	@Override

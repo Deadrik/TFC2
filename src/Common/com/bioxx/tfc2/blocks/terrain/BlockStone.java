@@ -44,12 +44,12 @@ public class BlockStone extends BlockTerra
 	@Override
 	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) 
 	{
-		IBlockState stateUp = worldIn.getBlockState(pos.offsetUp());
-		IBlockState stateDown = worldIn.getBlockState(pos.offsetDown());
-		IBlockState stateNorth = worldIn.getBlockState(pos.offsetNorth());
-		IBlockState stateSouth = worldIn.getBlockState(pos.offsetSouth());
-		IBlockState stateEast = worldIn.getBlockState(pos.offsetEast());
-		IBlockState stateWest = worldIn.getBlockState(pos.offsetWest());
+		IBlockState stateUp = worldIn.getBlockState(pos.up());
+		IBlockState stateDown = worldIn.getBlockState(pos.down());
+		IBlockState stateNorth = worldIn.getBlockState(pos.north());
+		IBlockState stateSouth = worldIn.getBlockState(pos.south());
+		IBlockState stateEast = worldIn.getBlockState(pos.east());
+		IBlockState stateWest = worldIn.getBlockState(pos.west());
 
 		if(!stateUp.getBlock().isSolidFullCube() && !stateDown.getBlock().isSolidFullCube() && !stateNorth.getBlock().isSolidFullCube()
 				&& !stateSouth.getBlock().isSolidFullCube() && !stateEast.getBlock().isSolidFullCube() && !stateWest.getBlock().isSolidFullCube())

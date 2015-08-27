@@ -80,7 +80,7 @@ public class ClientProxy extends CommonProxy
 		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWater, new StateMapperBase()
 		{
 			@Override
-			protected ModelResourceLocation func_178132_a(IBlockState state)//getModelResourceLocation
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
 			{
 				return freshwaterLocation;
 			}
@@ -88,7 +88,7 @@ public class ClientProxy extends CommonProxy
 		ModelLoader.setCustomStateMapper(TFCBlocks.SaltWater, new StateMapperBase()
 		{
 			@Override
-			protected ModelResourceLocation func_178132_a(IBlockState state)//getModelResourceLocation
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
 			{
 				return saltwaterLocation;
 			}
@@ -96,7 +96,7 @@ public class ClientProxy extends CommonProxy
 		ModelLoader.setCustomStateMapper(TFCBlocks.SaltWaterStatic, new StateMapperBase()
 		{
 			@Override
-			protected ModelResourceLocation func_178132_a(IBlockState state)//getModelResourceLocation
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
 			{
 				return saltwaterLocation;
 			}
@@ -104,7 +104,7 @@ public class ClientProxy extends CommonProxy
 		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWaterStatic, new StateMapperBase()
 		{
 			@Override
-			protected ModelResourceLocation func_178132_a(IBlockState state)//getModelResourceLocation
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
 			{
 				return freshwaterLocation;
 			}

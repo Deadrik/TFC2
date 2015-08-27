@@ -125,10 +125,10 @@ public abstract class BlockTerra extends Block
 		case Water:  return getMaterial() == Material.water && ((Integer)state.getValue(BlockLiquid.LEVEL)) == 0;
 		case Beach:
 			boolean isBeach = this == TFCBlocks.Grass || this == TFCBlocks.Dirt || this == TFCBlocks.Sand;
-			boolean hasWater = (world.getBlockState(pos.offsetEast()).getBlock().getMaterial() == Material.water ||
-					world.getBlockState(pos.offsetWest()).getBlock().getMaterial() == Material.water ||
-					world.getBlockState(pos.offsetNorth()).getBlock().getMaterial() == Material.water ||
-					world.getBlockState(pos.offsetSouth()).getBlock().getMaterial() == Material.water);
+			boolean hasWater = (world.getBlockState(pos.east()).getBlock().getMaterial() == Material.water ||
+					world.getBlockState(pos.west()).getBlock().getMaterial() == Material.water ||
+					world.getBlockState(pos.north()).getBlock().getMaterial() == Material.water ||
+					world.getBlockState(pos.south()).getBlock().getMaterial() == Material.water);
 			return isBeach && hasWater;
 		}
 

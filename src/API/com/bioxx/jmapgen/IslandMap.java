@@ -92,28 +92,6 @@ public class IslandMap
 		NUM_POINTS = is.SIZE*4;
 		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 		is.createShape(seed);
-		//if(!builtVoronoi)
-		{
-			points.clear();
-			edges.clear();
-			centers.clear();
-			corners.clear();
-			lakes.clear();
-			rivers.clear();
-			pathfinder = new PathFinder(this);
-			caves = new CaveProcessor(this);
-			ores = new OreProcessor(this);
-
-
-			points = this.generateHexagon(SIZE);
-			Rectangle R = new Rectangle();
-			R.setFrame(0, 0, SIZE, SIZE);
-			//System.out.println("Starting Creating map Voronoi...");
-			Voronoi voronoi = new Voronoi(points, R);
-			//System.out.println("Finished Creating map Voronoi...");
-			buildGraph(points, voronoi);
-			builtVoronoi = true;
-		}
 	}
 
 	public IslandParameters getParams()
@@ -123,11 +101,45 @@ public class IslandMap
 
 	public void generateFake()
 	{
+		points.clear();
+		edges.clear();
+		centers.clear();
+		corners.clear();
+		lakes.clear();
+		rivers.clear();
+		pathfinder = new PathFinder(this);
+		caves = new CaveProcessor(this);
+		ores = new OreProcessor(this);
 
+		points = this.generateHexagon(SIZE);
+		Rectangle R = new Rectangle();
+		R.setFrame(0, 0, SIZE, SIZE);
+		//System.out.println("Starting Creating map Voronoi...");
+		Voronoi voronoi = new Voronoi(points, R);
+		//System.out.println("Finished Creating map Voronoi...");
+		buildGraph(points, voronoi);
 	}
 
 	public void generateFull() 
 	{
+		points.clear();
+		edges.clear();
+		centers.clear();
+		corners.clear();
+		lakes.clear();
+		rivers.clear();
+		pathfinder = new PathFinder(this);
+		caves = new CaveProcessor(this);
+		ores = new OreProcessor(this);
+
+		points = this.generateHexagon(SIZE);
+		Rectangle R = new Rectangle();
+		R.setFrame(0, 0, SIZE, SIZE);
+		//System.out.println("Starting Creating map Voronoi...");
+		Voronoi voronoi = new Voronoi(points, R);
+		//System.out.println("Finished Creating map Voronoi...");
+		buildGraph(points, voronoi);
+
 		// Determine the elevations and water at Voronoi corners.
 		int borderCount = assignCornerElevations();
 		//If there is too much land on the borders then toss this island and start fresh

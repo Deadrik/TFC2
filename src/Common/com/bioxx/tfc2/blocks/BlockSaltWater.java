@@ -27,7 +27,7 @@ public class BlockSaltWater extends BlockFluidClassic {
 	public float getFluidHeightForRender(IBlockAccess world, BlockPos pos)
 	{
 		IBlockState here = world.getBlockState(pos);
-		IBlockState up = world.getBlockState(pos.offsetDown(densityDir));
+		IBlockState up = world.getBlockState(pos.down(densityDir));
 		if (here.getBlock() instanceof BlockFluidBase)
 		{
 			if (up.getBlock().getMaterial().isLiquid() || up.getBlock() instanceof IFluidBlock)
@@ -98,10 +98,10 @@ public class BlockSaltWater extends BlockFluidClassic {
 		if(newState.getBlock() == this && ((Integer)newState.getValue(LEVEL)).intValue() > 0)
 		{
 			int count = 0;
-			if(isSourceBlock(world, pos.offsetNorth())) count++;
-			if(isSourceBlock(world, pos.offsetSouth())) count++;
-			if(isSourceBlock(world, pos.offsetEast())) count++;
-			if(isSourceBlock(world, pos.offsetWest())) count++;
+			if(isSourceBlock(world, pos.north())) count++;
+			if(isSourceBlock(world, pos.south())) count++;
+			if(isSourceBlock(world, pos.east())) count++;
+			if(isSourceBlock(world, pos.west())) count++;
 
 			if(count > 1)
 			{

@@ -99,7 +99,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			return false;
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
-		treePos = treePos.add(0, world.getHorizon(treePos).getY(), 0);
+		treePos = treePos.add(0, world.getHorizon(), 0);
 		Point p = new Point(treePos.getX(), treePos.getZ()).toIslandCoord();
 		Center c = m.getClosestCenter(p);
 
@@ -123,7 +123,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
 
-			if( schem != null && canGrowHere(world, treePos.offsetDown(), schem, Math.max(growthStage, 1)))
+			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
 				grown = genTree(schem, tc, world, treePos);
 			}
@@ -138,7 +138,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		tc = TreeRegistry.instance.treeFromString(WoodType.Palm.getName());
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
-		treePos = treePos.add(0, world.getHorizon(treePos).getY(), 0);
+		treePos = treePos.add(0, world.getHorizon(), 0);
 		Center c = m.getClosestCenter(new Point(treePos.getX() % 4096, treePos.getZ() % 4096));
 
 		if(c.hasMarker(Marker.Ocean))
@@ -152,7 +152,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
 
-			if( schem != null && canGrowHere(world, treePos.offsetDown(), schem, Math.max(growthStage, 1)))
+			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
 				grown = genTree(schem, tc, world, treePos);
 			}
@@ -233,7 +233,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		IBlockState ground;
 		IBlockState above;
 		BlockPos gPos = pos;
-		BlockPos aPos = pos.offsetUp();
+		BlockPos aPos = pos.up();
 		int radius = Math.max(1, growthStage);
 		int count = 0;
 
