@@ -132,7 +132,6 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		centerCache = new Center[48][48];
 
-
 		elevationMap = new int[256];
 		worldX = chunkX * 16;
 		worldZ = chunkZ * 16;
@@ -165,6 +164,16 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 		Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
 		chunk.setHeightMap(elevationMap);
+
+		byte[] biomeArray = chunk.getBiomeArray();
+		for (int x = 0; x < 16; x++) 
+		{
+			for (int z = 0; z < 16; z++) 
+			{
+				biomeArray[z << 4 | x] = (byte)((float)getHex(new Point(x, z)).getMoistureRaw() / 255f);
+			}
+		}
+
 		chunk.generateSkylightMap();
 		return chunk;  
 	}

@@ -13,11 +13,12 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.Point;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.world.WorldGen;
 
@@ -101,7 +102,10 @@ public class BlockLeaves extends BlockTerra
 			return 0x55ff55;
 		IslandMap m = WorldGen.instance.getIslandMap(x, z);
 		double d0 = m.getParams().getIslandTemp().getTemp();
-		double d1 = m.getClosestCenter(new Point(pos.getX(), pos.getZ())).getMoistureRaw();
+		double d1 = 0.5;
+
+		if(worldIn instanceof World)
+			d1 = Core.getMoistureFromChunk((World)worldIn, pos);
 
 		if(d1 < 0.25)
 		{

@@ -23,10 +23,7 @@ public class PlayerTracker
 		int islandZ = (int)(event.player.posZ) >> 12;
 
 		IslandMap map = WorldGen.instance.getIslandMap(islandX, islandZ);
-		for(int i = 0; i < map.centers.size() / 512; i++)
-		{
-			TFC.network.sendTo(new ClientMapPacket(islandX, islandZ, map.getMoistureData(i*512, i*512+512), i * 512), (EntityPlayerMP)event.player);
-		}
+		TFC.network.sendTo(new ClientMapPacket(islandX, islandZ, map.seed), (EntityPlayerMP)event.player);
 
 	}
 

@@ -13,20 +13,17 @@ public class ClientMapPacket implements IMessage
 {
 	public int islandX;
 	public int islandZ;
-	public byte[] output;
-	public int offset;
+	public long seed;
 
 	public ClientMapPacket()
 	{
 
 	}
 
-	public ClientMapPacket(int iX, int iZ, byte[] data, int off)
+	public ClientMapPacket(int iX, int iZ, long seed)
 	{
 		islandX = iX;
 		islandZ = iZ; 
-		output = data;
-		offset = off;
 	}
 
 	@Override
@@ -34,8 +31,7 @@ public class ClientMapPacket implements IMessage
 	{
 		buffer.writeInt(islandX);
 		buffer.writeInt(islandZ);
-		buffer.writeInt(offset);
-		buffer.writeBytes(output);
+		buffer.writeLong(seed);
 	}
 
 	@Override
@@ -43,9 +39,7 @@ public class ClientMapPacket implements IMessage
 	{
 		this.islandX = buffer.readInt();
 		this.islandZ = buffer.readInt();
-		this.offset = buffer.readInt();
-		output = new byte[buffer.readableBytes()];
-		buffer.readBytes(output);
+		this.seed = buffer.readLong();
 	}
 
 	public static class Handler implements IMessageHandler<ClientMapPacket, IMessage> 
@@ -59,13 +53,7 @@ public class ClientMapPacket implements IMessage
 				public void run() 
 				{
 					int j;
-					IslandMap map = WorldGen.instance.getIslandMap(message.islandX, message.islandZ);
-					System.out.println("Packet Island: " + message.islandX + "," + message.islandZ + " | Offset: " + message.offset + " | Length: " + message.output.length);
-					for(int i = 0; i < message.output.length; i++)
-					{
-						j = 0xff & message.output[i];
-						map.centers.get(message.offset+i).setMoistureRaw((float)j/255f);
-					}
+					IslandMap map = WorldGen.instance.createFakeMap(message.islandX, message.islandZ, message.seed);
 				}
 			});
 			return null; // no response in this case

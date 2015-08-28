@@ -94,15 +94,19 @@ public class WorldGen implements IThreadCompleteListener
 	private IslandMap createFakeMap(int x, int z)
 	{
 		long seed = world.getSeed()+Helper.combineCoords(x, z);
+		TFC.network.sendToServer(new ServerMapRequestPacket(x, z));
+		return createFakeMap(x, z, seed);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public IslandMap createFakeMap(int x, int z, long seed)
+	{
 		IslandParameters id = createParams(seed, x, z);
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
 		mapgen.newIsland(id);
 		mapgen.generateFake();
 		CachedIsland ci = new CachedIsland(mapgen);
 		clientIslandCache.put(Helper.combineCoords(x, z), ci);
-
-		TFC.network.sendToServer(new ServerMapRequestPacket(x, z));
-
 		return mapgen;
 	}
 

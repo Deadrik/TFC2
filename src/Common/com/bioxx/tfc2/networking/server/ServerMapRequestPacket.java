@@ -54,12 +54,7 @@ public class ServerMapRequestPacket implements IMessage
 				{
 					int j;
 					IslandMap map = WorldGen.instance.getIslandMap(message.islandX, message.islandZ);
-
-					for(int i = 0; i < map.centers.size() / 512; i++)
-					{
-						TFC.network.sendTo(new ClientMapPacket(message.islandX, message.islandZ, map.getMoistureData(i*512, i*512+512), i * 512), ctx.getServerHandler().playerEntity);
-						System.out.println("Packet Sent: Coord" + message.islandX+","+message.islandZ + " | Offset:" + + i*512);
-					}
+					TFC.network.sendTo(new ClientMapPacket(message.islandX, message.islandZ, map.seed), ctx.getServerHandler().playerEntity);
 				}
 			});
 			return null; // no response in this case
