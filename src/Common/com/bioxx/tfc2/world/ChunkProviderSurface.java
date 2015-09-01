@@ -166,11 +166,12 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		chunk.setHeightMap(elevationMap);
 
 		byte[] biomeArray = chunk.getBiomeArray();
+		Point p = new Point(0, 0);
 		for (int x = 0; x < 16; x++) 
 		{
 			for (int z = 0; z < 16; z++) 
 			{
-				biomeArray[z << 4 | x] = (byte)((float)getHex(new Point(x, z)).getMoistureRaw() / 255f);
+				biomeArray[z << 4 | x] = (byte)(getHex(p.plus(x, z)).getMoistureRaw() * 255f);
 			}
 		}
 

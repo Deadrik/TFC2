@@ -2,7 +2,9 @@ package com.bioxx.tfc2;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -32,10 +34,13 @@ public class RenderOverlayHandler
 			int zM = ((int)(mc.thePlayer.posZ) >> 12);
 			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
+			BlockPos pos = new BlockPos((int)(mc.thePlayer.posX), 0, (int)(mc.thePlayer.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
 			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
 			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
-			event.left.add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()) + " | " + hex.getMoistureRaw());
+			Chunk c = mc.theWorld.getChunkFromBlockCoords(pos);
+			int b = mc.theWorld.getChunkFromBlockCoords(pos).getBiomeArray()[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)] & 0xFF;
+			event.left.add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()) + " | " + hex.getMoistureRaw() + " | " + b + " | " + (float)b / 255F);
 			event.left.add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
 
 			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.River);

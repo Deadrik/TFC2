@@ -11,9 +11,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.world.ColorizerGrass;
+import net.minecraft.world.ChunkCache;
+import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -89,7 +89,7 @@ public class BlockLeaves extends BlockTerra
 	@SideOnly(Side.CLIENT)
 	public int getBlockColor()
 	{
-		return ColorizerGrass.getGrassColor(0.5D, 1.0D);
+		return ColorizerFoliage.getFoliageColor(0.5D, 1.0D);
 	}
 
 	@Override
@@ -104,8 +104,8 @@ public class BlockLeaves extends BlockTerra
 		double d0 = m.getParams().getIslandTemp().getTemp();
 		double d1 = 0.5;
 
-		if(worldIn instanceof World)
-			d1 = Core.getMoistureFromChunk((World)worldIn, pos);
+		if(worldIn instanceof ChunkCache)
+			d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
 
 		if(d1 < 0.25)
 		{
@@ -114,7 +114,7 @@ public class BlockLeaves extends BlockTerra
 				d1 = 0.25;
 		}
 
-		return ColorizerGrass.getGrassColor(d0, d1);
+		return ColorizerFoliage.getFoliageColor(d0, d1);
 	}
 
 	@Override

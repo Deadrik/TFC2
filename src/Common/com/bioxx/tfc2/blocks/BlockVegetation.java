@@ -15,6 +15,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.world.ChunkCache;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -98,8 +99,8 @@ public class BlockVegetation extends BlockTerra
 		double d0 = m.getParams().getIslandTemp().getTemp();
 		double d1 = 0.5;
 
-		if(worldIn instanceof World)
-			d1 = Core.getMoistureFromChunk((World)worldIn, pos);
+		if(worldIn instanceof ChunkCache)
+			d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
 		return ColorizerGrass.getGrassColor(d0, d1);
 	}
 

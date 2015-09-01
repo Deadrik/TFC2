@@ -5,6 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -107,10 +108,12 @@ public class Core
 		return isSoil(state) || isSand(state) || isStone(state) || isGravel(state);
 	}
 
-	public static float getMoistureFromChunk(World w, BlockPos pos)
+	public static float getMoistureFromChunk(ChunkCache w, BlockPos pos)
 	{
-		Chunk c = w.getChunkFromBlockCoords(pos);
+		Chunk c = w.worldObj.getChunkFromBlockCoords(pos);
 		byte[] moistureArray = c.getBiomeArray();
-		return (float)moistureArray[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)] / 255F;
+		byte b = moistureArray[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)];
+		int s = (b & 0xFF);
+		return (float)s / 255F;
 	}
 }
