@@ -324,7 +324,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water
 						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 4)-1)
 							chunkprimer.setBlockState(x, y, z, freshwater);
-						if(getBlock(chunkprimer, x, y, z).isSolidFullCube() && blockUp == freshwater)
+						if(getBlock(chunkprimer, x, y, z).isFullCube() && blockUp == freshwater)
 						{
 							chunkprimer.setBlockState(x, y, z, sand);
 						}

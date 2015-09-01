@@ -27,7 +27,7 @@ public class Core
 	public static int getHeight(World world, int worldX, int worldZ)
 	{
 		Chunk c = world.getChunkFromChunkCoords(worldX >> 4, worldZ >> 4); 
-		return c.getHeight(worldX & 15, worldZ & 15);
+		return c.getHeightValue(worldX & 15, worldZ & 15);
 	}
 
 	/**

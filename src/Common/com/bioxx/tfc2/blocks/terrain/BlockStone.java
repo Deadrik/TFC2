@@ -51,8 +51,8 @@ public class BlockStone extends BlockTerra
 		IBlockState stateEast = worldIn.getBlockState(pos.east());
 		IBlockState stateWest = worldIn.getBlockState(pos.west());
 
-		if(!stateUp.getBlock().isSolidFullCube() && !stateDown.getBlock().isSolidFullCube() && !stateNorth.getBlock().isSolidFullCube()
-				&& !stateSouth.getBlock().isSolidFullCube() && !stateEast.getBlock().isSolidFullCube() && !stateWest.getBlock().isSolidFullCube())
+		if(!stateUp.getBlock().isFullCube() && !stateDown.getBlock().isFullCube() && !stateNorth.getBlock().isFullCube()
+				&& !stateSouth.getBlock().isFullCube() && !stateEast.getBlock().isFullCube() && !stateWest.getBlock().isFullCube())
 		{
 			dropBlockAsItem(worldIn, pos, state, 0);
 			worldIn.setBlockToAir(pos);
