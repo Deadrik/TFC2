@@ -589,7 +589,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								}
 								//fillState = Blocks.air.getDefaultState();
 								IBlockState s = getState(chunkprimer, pos3);
-								//if(Core.isTerrain(s))
+								if(Core.isTerrain(s))
 								{
 									setState(chunkprimer, pos3, fillState);
 									s = getState(chunkprimer, pos3.up());
@@ -635,80 +635,6 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						convertRiverBank(chunkprimer, pos.up(1).west(), true);
 					}
 					setState(chunkprimer, pos.up(1), Blocks.air.getDefaultState());
-				}
-			}
-		}
-	}
-
-	protected void processRiverSpline(ChunkPrimer chunkprimer, Center c, Center u, Spline2D spline, double width, IBlockState[] fillBlocks) 
-	{
-		Point interval, temp;
-		Center closest;
-		int waterLevel = Global.SEALEVEL;
-		//if(c.water)
-		waterLevel = Math.max(convertElevation(c.elevation), waterLevel);
-
-		RiverAttribute attrib = ((RiverAttribute)c.getAttribute(Attribute.River));
-
-		//This loop moves in increments of X% and attempts to carve the river at each point
-		for(double m = 0; m < 1; m+= 0.03)
-		{
-			temp = new Point(islandChunkX, islandChunkZ).toIslandCoord();
-			interval = spline.getPoint(m).floor().minus(temp);
-
-			for(double x = -width; x <= width; x+=0.25)
-			{
-				for(double z = -width; z <= width; z+=0.25)
-				{
-					temp = interval.plus(x, z);
-
-					int xC = (int)Math.floor(temp.x);
-					int zC = (int)Math.floor(temp.y);
-
-					//If we're outside the bounds of the chunk then skip this location
-					if(xC < 0 || xC > 15)
-						continue;
-					if(zC < 0 || zC > 15)
-						continue;
-					closest = this.getHex(temp);
-					//grab the local elevation from our elevation map
-					int yC = elevationMap[zC << 4 | xC];
-					if(yC < convertElevation(closest.elevation) && closest.hasMarker(Marker.Water) && this.isLakeBorder(temp, closest))
-						yC = convertElevation(c.elevation);
-
-					//This prevents our river from attempting to carve into a lake unless we're carving out a border section
-					if(closest.hasMarker(Marker.Water) && !this.isLakeBorder(temp, closest))
-						continue;
-
-					//This makes sure that when we're carving a lake border, we dont carve below the water level
-					if(attrib.getDownRiver() != null && attrib.getDownRiver().hasMarker(Marker.Water) && yC == convertElevation(attrib.getDownRiver().elevation))
-						yC++;
-
-					if(yC > waterLevel && m > 0.5)
-						continue;
-
-					if(u != null && yC > convertElevation(u.elevation) && m < 0.5)
-						continue;
-
-					if(yC < Global.SEALEVEL+1)
-						yC = Global.SEALEVEL;
-
-					int y = -1, i = 0;
-					if(attrib.getRiver() < 1)
-						i = 1;
-					for(; i < fillBlocks.length; y--, i++)
-					{
-						IBlockState bs = chunkprimer.getBlockState(xC, yC+y, zC);
-						//We dont want to replace any existing water blocks
-						if(bs != TFCBlocks.FreshWater.getDefaultState() && bs != TFCBlocks.SaltWaterStatic.getDefaultState() && bs != Blocks.flowing_lava.getDefaultState())
-						{
-							bs = fillBlocks[i];
-							//This converts 60% of the river water into stationary blocks so that we cut down on the number of required updates.
-							if(bs == TFCBlocks.FreshWater.getDefaultState() && (m < 0.2 || m > 0.8))
-								bs = TFCBlocks.FreshWater.getDefaultState();
-							chunkprimer.setBlockState(xC, yC+y, zC, fillBlocks[i]);
-						}
-					}
 				}
 			}
 		}
