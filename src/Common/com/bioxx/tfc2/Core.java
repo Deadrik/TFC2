@@ -40,6 +40,15 @@ public class Core
 		return world.setBlockState(bp, b.getActualState(b.getDefaultState(), world, bp));
 	}
 
+	/**
+	 * Sets the block using setActualState for the given block. Helper method to reduce repeated code usage
+	 * @return Returns if the block is successfully set
+	 */
+	public static boolean setBlock(World world, IBlockState b, BlockPos bp)
+	{
+		return world.setBlockState(bp, b.getBlock().getActualState(b, world, bp));
+	}
+
 	public static String translate(String s)
 	{
 		return StatCollector.translateToLocal(s);

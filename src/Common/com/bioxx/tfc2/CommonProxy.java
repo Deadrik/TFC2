@@ -25,6 +25,7 @@ import com.bioxx.tfc2.handlers.ServerTickHandler;
 import com.bioxx.tfc2.handlers.WorldLoadHandler;
 import com.bioxx.tfc2.world.WorldProviderSurface;
 import com.bioxx.tfc2.world.generators.WorldGenGrass;
+import com.bioxx.tfc2.world.generators.WorldGenLooseRock;
 import com.bioxx.tfc2.world.generators.WorldGenTreeTest;
 
 public class CommonProxy
@@ -34,6 +35,7 @@ public class CommonProxy
 	{
 		GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 0);
 		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 0);
 
 		DimensionManager.unregisterDimension(0);
 		DimensionManager.unregisterProviderType(0);

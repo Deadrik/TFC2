@@ -4,7 +4,6 @@
 package com.bioxx.jmapgen;
 
 import java.awt.Rectangle;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -67,8 +66,6 @@ public class IslandMap
 
 	private CaveProcessor caves;
 	private OreProcessor ores;
-
-	private byte[] moisturePacketData;
 
 	public IslandMap(int size, long s) 
 	{
@@ -2025,7 +2022,6 @@ public class IslandMap
 				}
 			}
 		}
-
 		return bestGuess;
 	}
 
@@ -2133,24 +2129,7 @@ public class IslandMap
 		{
 			edges.get(i).readFromNBT(edgeList.getCompoundTagAt(i), this);
 		}
-
-		moisturePacketData = new byte[centers.size()];
-		for(Center cen : centers)
-		{
-			moisturePacketData[cen.index] = (byte)(cen.getMoistureRaw() * 255);
-		}
 	}
 
-	public byte[] getMoistureData(int from, int to)
-	{
-		if(this.moisturePacketData == null)
-		{
-			moisturePacketData = new byte[centers.size()];
-			for(Center c : centers)
-			{
-				moisturePacketData[c.index] = (byte)(c.getMoistureRaw() * 255);
-			}
-		}
-		return Arrays.copyOfRange(this.moisturePacketData, from, to);
-	}
+
 }

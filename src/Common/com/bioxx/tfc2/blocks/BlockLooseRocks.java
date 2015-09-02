@@ -1,11 +1,17 @@
 package com.bioxx.tfc2.blocks;
 
+import java.util.List;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.types.StoneType;
 
@@ -17,7 +23,7 @@ public class BlockLooseRocks extends BlockTerra
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
-		this.setBlockBounds(0.2f, 0, 0.2f, 0.8f, 0.2f, 0.8f);
+		this.setBlockBounds(0.2f, 0, 0.2f, 0.8f, 0.1f, 0.8f);
 	}
 
 	@Override
@@ -48,5 +54,11 @@ public class BlockLooseRocks extends BlockTerra
 	public boolean isFullCube()
 	{
 		return false;
+	}
+
+	@Override
+	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
+	{
+
 	}
 }
