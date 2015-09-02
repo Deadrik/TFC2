@@ -5,7 +5,7 @@
 		"textures": {"all": "tfc2:blocks/wood/trees/Acacia Leaves", "fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff"}
 	},
     "variants": {
-    "is_outer": {
+    "fancy": {
      		"true":{"model": "tfc2:leaves_fancy"},
      		"false":{}
      	},    

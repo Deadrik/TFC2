@@ -19,7 +19,10 @@ import com.bioxx.tfc2.api.types.WoodType;
 public class BlockLeaves2 extends BlockLeaves
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 19));
-	public static PropertyBool IS_OUTER = PropertyBool.create("is_outer");
+	public static PropertyBool EAST_DOWN = PropertyBool.create("downeast");
+	public static PropertyBool WEST_DOWN = PropertyBool.create("downwest");
+	public static PropertyBool NORTH_DOWN = PropertyBool.create("downnorth");
+	public static PropertyBool SOUTH_DOWN = PropertyBool.create("downsouth");
 	private boolean isTransparent = true;
 
 	public BlockLeaves2()
@@ -32,42 +35,52 @@ public class BlockLeaves2 extends BlockLeaves
 	@Override
 	protected BlockState createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY, IS_OUTER});
+		return new BlockState(this, new IProperty[]{META_PROPERTY, BlockLeaves.FANCY, EAST_DOWN, NORTH_DOWN, SOUTH_DOWN, WEST_DOWN});
 	}
 
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		boolean outer = true;
-
+		boolean east_down = false;
+		boolean west_down = false;
+		boolean north_down = false;
+		boolean south_down = false;
+		boolean fancy = true;
 		if(!isTransparent)
-			outer = false;
-
+			fancy = false;
 		//North
-		if(world.getBlockState(pos.north()).getBlock() != state.getBlock())
-			outer = true;
+		if((world.getBlockState(pos.north().down()).getBlock() == state.getBlock() && 
+				world.getBlockState(pos.north().down()).getValue(META_PROPERTY) == state.getValue(META_PROPERTY)))
+		{
+			north_down = true;
+		}
 
 		//South
-		if(world.getBlockState(pos.south()).getBlock() != state.getBlock())
-			outer = true;
+		if((world.getBlockState(pos.south().down()).getBlock() == state.getBlock() && 
+				world.getBlockState(pos.south().down()).getValue(META_PROPERTY) == state.getValue(META_PROPERTY)))
+		{
+			south_down = true;
+		}
 
-		//East
-		if(world.getBlockState(pos.east()).getBlock() != state.getBlock())
-			outer = true;
+
+		if((world.getBlockState(pos.east().down()).getBlock() == state.getBlock() && 
+				world.getBlockState(pos.east().down()).getValue(META_PROPERTY) == state.getValue(META_PROPERTY)))
+		{
+			east_down = true;
+		}
 
 		//West
-		if(world.getBlockState(pos.west()).getBlock() != state.getBlock())
-			outer = true;
-
-		if(world.getBlockState(pos.up()).getBlock() != this)
-			outer = true;
-		if(world.getBlockState(pos.down()).getBlock() != this)
-			outer = true;
-
+		if((world.getBlockState(pos.west().down()).getBlock() == state.getBlock() && 
+				world.getBlockState(pos.west().down()).getValue(META_PROPERTY) == state.getValue(META_PROPERTY)))
+		{
+			west_down = true;
+		}
 		if(state.getValue(META_PROPERTY) == WoodType.Palm)
-			outer = false;
+			fancy = false;
 
-		return state.withProperty(IS_OUTER, outer);
+
+		return state.withProperty(BlockLeaves.FANCY, fancy).withProperty(EAST_DOWN, east_down).withProperty(WEST_DOWN, west_down).
+				withProperty(NORTH_DOWN, north_down).withProperty(SOUTH_DOWN, south_down);
 
 	}
 

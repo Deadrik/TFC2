@@ -25,7 +25,7 @@ import com.bioxx.tfc2.world.WorldGen;
 public class BlockLeaves extends BlockTerra
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 16));
-	public static PropertyBool IS_OUTER = PropertyBool.create("is_outer");
+	public static PropertyBool FANCY = PropertyBool.create("fancy");
 	private boolean isTransparent = true;
 
 	public BlockLeaves()
@@ -40,42 +40,42 @@ public class BlockLeaves extends BlockTerra
 	@Override
 	protected BlockState createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY, IS_OUTER});
+		return new BlockState(this, new IProperty[]{META_PROPERTY, FANCY});
 	}
 
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		boolean outer = true;
+		boolean fancy = true;
 
 		if(!isTransparent)
-			outer = false;
+			fancy = false;
 
 		//North
 		if(world.getBlockState(pos.north()).getBlock() != state.getBlock())
-			outer = true;
+			fancy = true;
 
 		//South
 		if(world.getBlockState(pos.south()).getBlock() != state.getBlock())
-			outer = true;
+			fancy = true;
 
 		//East
 		if(world.getBlockState(pos.east()).getBlock() != state.getBlock())
-			outer = true;
+			fancy = true;
 
 		//West
 		if(world.getBlockState(pos.west()).getBlock() != state.getBlock())
-			outer = true;
+			fancy = true;
 
 		if(world.getBlockState(pos.up()).getBlock() != this)
-			outer = true;
+			fancy = true;
 		if(world.getBlockState(pos.down()).getBlock() != this)
-			outer = true;
+			fancy = true;
 
 		if(state.getValue(META_PROPERTY) == WoodType.Palm)
-			outer = false;
+			fancy = false;
 
-		return state.withProperty(IS_OUTER, outer);
+		return state.withProperty(FANCY, fancy);
 
 	}
 
