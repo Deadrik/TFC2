@@ -22,8 +22,8 @@
    	     	"sequoia":  { "textures": {"all": "tfc2:blocks/wood/trees/Sequoia Leaves"} },
         	"spruce":  { "textures": {"all": "tfc2:blocks/wood/trees/Spruce Leaves"} },
  	       	"sycamore":  { "textures": {"all": "tfc2:blocks/wood/trees/Sycamore Leaves"} },
-   		    "white_cedar":  { "textures": {"all": "tfc2:blocks/wood/trees/White Cedar Leaves"} },
-    	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/Willow Leaves"} },
+   		    "white_cedar":  { "textures": {"all": "tfc2:blocks/wood/trees/White Cedar Leaves", "fluff": "tfc2:blocks/wood/trees/White Cedar Leaves Fluff"} },
+    	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/Willow Leaves", "fluff": "tfc2:blocks/wood/trees/Willow Leaves Fluff"} },
     	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/Kapok Leaves"} },
     	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/Acacia Leaves"} }
         }
