@@ -158,6 +158,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		carveCaves(chunkprimer);
 		placeOreSeams(chunkprimer);
 		placeOreLayers(chunkprimer);
+		createSpires(chunkprimer);
 
 		if(TFCOptions.shouldStripChunks)
 			stripChunk(chunkprimer);
@@ -344,11 +345,6 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				}
 			}
 		}
-	}
-
-	private Block getBlock(ChunkPrimer chunkprimer, int x, int y, int z)
-	{
-		return chunkprimer.getBlockState(x, y, z).getBlock();
 	}
 
 	protected boolean isLakeBorder(Point p, Center c, double width)
@@ -725,6 +721,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	}
 
+	private Block getBlock(ChunkPrimer chunkprimer, int x, int y, int z)
+	{
+		return chunkprimer.getBlockState(x, y, z).getBlock();
+	}
+
 	private double[] distToSegmentSquared(Point v, Point w, Point local) 
 	{
 		double l2 = dist2(v, w);    
@@ -957,6 +958,47 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		if(pos.getX() >= 0 && pos.getY() >= 0 && pos.getZ() >= 0 && pos.getX() < 16 && pos.getY() < 256 && pos.getZ() < 16)
 			primer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), state);
+	}
+
+	public void createSpires(ChunkPrimer primer)
+	{
+		//I want to expand on these in the future but for now the concept is sound.
+		double radiusSq = 5 * 5;
+		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
+		for(Center c : this.centersInChunk)
+		{
+			if(c.hasAnyMarkersOf(Marker.Spire))
+			{
+				Point p0 = c.point.minus(new Point(islandChunkX, islandChunkZ).toIslandCoord());
+				Random rand = new Random(c.index);
+				int elev = 30 + rand.nextInt(20);
+				for(int x = -10; x < 10; x++)
+				{
+					for(int z = -10; z < 10; z++)
+					{
+						Point p1 = p0.plus(x, z);
+						//Validation
+						if(p1.x < 0 || p1.x > 15 || p1.y < 0 || p1.y > 15)
+							continue;
+
+						//Get the inCircle radius
+						double dist = p1.distanceSq(p0);
+						//Perform a quick test to see if the point is within the inCircle.
+						if(dist == radiusSq && rand.nextBoolean())
+							continue;
+						if(dist <= radiusSq)
+						{
+							int el = elevationMap[(int)p1.y << 4 | (int)p1.x];
+							for(int y = 0; y < elev; y++)
+							{
+								this.setState(primer, new BlockPos((int)p1.x, y+el, (int)p1.y), stone);
+							}
+							elevationMap[(int)p1.y << 4 | (int)p1.x] += elev;
+						}
+					}
+				}
+			}
+		}
 	}
 
 }

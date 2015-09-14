@@ -191,6 +191,7 @@ public class IslandMap
 			createRivers(getCentersAbove(0.25));
 			assignSlopedNoise();
 			assignHillyNoise();
+			createSpires();
 			calculateDownslopesCenter();
 		}
 		else
@@ -213,6 +214,28 @@ public class IslandMap
 
 		caves.generate();
 		ores.generate();
+	}
+
+	private void createSpires()
+	{
+		if(!this.getParams().hasFeature(Feature.Spires))
+			return;
+
+		Vector<Center> land = this.landCenters(centers);
+		Vector<Center> starts = new Vector<Center>();
+
+		for(int i = 0; i < 100; i++)
+		{
+			Center c = land.get(this.mapRandom.nextInt(land.size()));
+			if(c.hasAttribute(Attribute.River) || c.hasAnyMarkersOf(Marker.Water, Marker.Pond, Marker.Coast))
+			{
+				i--;
+				continue;
+			}
+			//c.setElevation(Math.min(c.getElevation()+this.convertMCToHeight(mapRandom.nextInt(15) + 35), 1.0));
+			c.setMarkers(Marker.Spire);
+		}
+
 	}
 
 	private void createCanyons()

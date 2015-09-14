@@ -408,7 +408,7 @@ public class Center
 	public enum Marker
 	{
 		//Important not to change this order if it can be helped.
-		Water, Ocean, Coast, CoastWater, Border, Lava, Valley, SmallCrater, Pond;
+		Water, Ocean, Coast, CoastWater, Border, Lava, Valley, SmallCrater, Pond, Spire;
 
 		public int getFlag()
 		{
