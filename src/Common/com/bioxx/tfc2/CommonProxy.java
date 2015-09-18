@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.api.TFCFluids;
@@ -19,7 +20,9 @@ import com.bioxx.tfc2.api.ore.OreRegistry;
 import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.FluidTFC;
+import com.bioxx.tfc2.core.Recipes;
 import com.bioxx.tfc2.handlers.CreateSpawnHandler;
+import com.bioxx.tfc2.handlers.GuiHandler;
 import com.bioxx.tfc2.handlers.PlayerTracker;
 import com.bioxx.tfc2.handlers.ServerTickHandler;
 import com.bioxx.tfc2.handlers.WorldLoadHandler;
@@ -59,13 +62,14 @@ public class CommonProxy
 
 	public void init(FMLInitializationEvent event)
 	{
-
+		registerGuiHandler();
 
 		FMLCommonHandler.instance().bus().register(new PlayerTracker());
 	}
 
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		Recipes.RegisterKnappingRecipes();
 		MinecraftForge.EVENT_BUS.register(new CreateSpawnHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldLoadHandler());
 		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
@@ -86,6 +90,11 @@ public class CommonProxy
 		OreRegistry.getInstance().registerOre(OreType.Malachite.getName(), new OreConfig(VeinType.Seam, TFCBlocks.Ore, OreType.Malachite, /*wMin*/1, /*wMax*/1, /*hMin*/1, /*hMax*/1).setRarity(20).setMinSeamLength(3).setMaxSeamLength(10), new StoneType[] {StoneType.Marble});
 		OreRegistry.getInstance().registerOre(OreType.NativeGold.getName(), new OreConfig(VeinType.Seam, TFCBlocks.Ore, OreType.NativeGold, /*wMin*/1, /*wMax*/1, /*hMin*/1, /*hMax*/1).setRarity(8).setMinSeamLength(4).setMaxSeamLength(8), StoneType.getForSubTypes(StoneType.SubType.IgneousIntrusive, StoneType.SubType.IgneousExtrusive));
 		OreRegistry.getInstance().registerOre(OreType.Galena.getName(), new OreConfig(VeinType.Seam, TFCBlocks.Ore, OreType.Galena, /*wMin*/1, /*wMax*/2, /*hMin*/1, /*hMax*/2).setRarity(2), StoneType.getForSubTypes(StoneType.SubType.Metamorphic, StoneType.SubType.IgneousExtrusive));
+	}
+
+	public void registerGuiHandler()
+	{
+		NetworkRegistry.INSTANCE.registerGuiHandler(TFC.instance, new GuiHandler());
 	}
 
 	public void setupFluids()

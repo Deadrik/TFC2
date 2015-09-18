@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerDisconnection
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.core.PlayerInfo;
+import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.networking.client.ClientMapPacket;
 import com.bioxx.tfc2.world.WorldGen;
 
@@ -17,6 +19,10 @@ public class PlayerTracker
 	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event)
 	{
+		PlayerManagerTFC.getInstance().players.add(new PlayerInfo(
+				event.player.getCommandSenderName(),
+				event.player.getUniqueID()));
+
 		if(event.player.worldObj.isRemote)
 			return;
 		int islandX = (int)(event.player.posX) >> 12;
@@ -24,7 +30,6 @@ public class PlayerTracker
 
 		IslandMap map = WorldGen.instance.getIslandMap(islandX, islandZ);
 		TFC.network.sendTo(new ClientMapPacket(islandX, islandZ, map.seed), (EntityPlayerMP)event.player);
-
 	}
 
 	@SubscribeEvent

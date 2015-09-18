@@ -125,4 +125,9 @@ public class Core
 		int s = (b & 0xFF);
 		return (float)s / 255F;
 	}
+
+	public static void bindTexture(ResourceLocation texture)
+	{
+		net.minecraft.client.Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+	}
 }

@@ -6,9 +6,13 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.core.PlayerInfo;
+import com.bioxx.tfc2.core.PlayerManagerTFC;
 
 public class ItemLooseRock extends ItemTerra
 {
@@ -36,5 +40,15 @@ public class ItemLooseRock extends ItemTerra
 			arraylist.add(EnumChatFormatting.DARK_GRAY + Core.translate("global." + Global.STONE_ALL[is.getItemDamage()]));
 		else
 			arraylist.add(EnumChatFormatting.DARK_RED + Core.translate("global.unknown"));
+	}
+
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
+	{
+		PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(playerIn);
+		pi.specialCraftingType = itemStackIn;
+		if(!worldIn.isRemote)
+			playerIn.openGui(TFC.instance, 0, worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ());
+		return itemStackIn;
 	}
 }

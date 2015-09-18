@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.types.OreType;
@@ -26,6 +27,7 @@ import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.api.util.KeyBindings;
 import com.bioxx.tfc2.handlers.client.BackgroundMusicHandler;
 import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
+import com.bioxx.tfc2.handlers.client.GuiHandler;
 import com.bioxx.tfc2.handlers.client.KeyBindingHandler;
 
 public class ClientProxy extends CommonProxy
@@ -232,6 +234,14 @@ public class ClientProxy extends CommonProxy
 	public boolean isClientSide()
 	{
 		return true;
+	}
+
+	@Override
+	public void registerGuiHandler()
+	{
+		NetworkRegistry.INSTANCE.registerGuiHandler(TFC.instance, new GuiHandler());
+		// Register Gui Event Handler
+		MinecraftForge.EVENT_BUS.register(new GuiHandler());
 	}
 
 }

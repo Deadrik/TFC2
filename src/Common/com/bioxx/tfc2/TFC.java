@@ -39,6 +39,7 @@ import com.bioxx.tfc2.commands.StripChunkCommand;
 import com.bioxx.tfc2.commands.TeleportInIslandCommand;
 import com.bioxx.tfc2.handlers.PlayerTracker;
 import com.bioxx.tfc2.networking.client.ClientMapPacket;
+import com.bioxx.tfc2.networking.server.KnappingUpdatePacket;
 import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 import com.bioxx.tfc2.world.WorldGen;
 
@@ -67,6 +68,7 @@ public class TFC
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("TFC2");
 		network.registerMessage(ClientMapPacket.Handler.class, ClientMapPacket.class, 0, Side.CLIENT);
 		network.registerMessage(ServerMapRequestPacket.Handler.class, ServerMapRequestPacket.class, 1, Side.SERVER);
+		network.registerMessage(KnappingUpdatePacket.Handler.class, KnappingUpdatePacket.class, 2, Side.SERVER);
 
 		//Register tree types and load tree schematics
 		loadTrees();
