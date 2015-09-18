@@ -299,12 +299,12 @@ public class Center
 		nbt.setInteger("biome", biome.ordinal());
 		nbt.setDouble("xCoord", point.x);
 		nbt.setDouble("yCoord", point.y);
-		int f = 0;
+		long f = 0;
 		for(Marker ff : flags)
 		{
 			f += ff.getFlag();
 		}
-		nbt.setInteger("flags", f);
+		nbt.setLong("flags", f);
 		nbt.setDouble("elevation", elevation);
 		nbt.setFloat("moisture", moisture);
 		if(downslope != null)
@@ -350,7 +350,7 @@ public class Center
 		{
 			biome = BiomeType.values()[nbt.getInteger("biome")];
 			point = new Point(nbt.getDouble("xCoord"), nbt.getDouble("yCoord"));
-			setMarkers(nbt.getInteger("flags"));
+			setMarkers(nbt.getLong("flags"));
 			elevation = nbt.getDouble("elevation");
 			moisture = nbt.getFloat("moisture");
 
@@ -394,7 +394,7 @@ public class Center
 	/**
 	 * Used for reading stored nbt information
 	 */
-	private void setMarkers(int i)
+	private void setMarkers(long i)
 	{
 		for(Marker f : Marker.values())
 		{
@@ -407,12 +407,28 @@ public class Center
 
 	public enum Marker
 	{
-		//Important not to change this order if it can be helped.
-		Water, Ocean, Coast, CoastWater, Border, Lava, Valley, SmallCrater, Pond, Spire;
+		Water(1), 
+		Ocean(2), 
+		Coast(3), 
+		CoastWater(4), 
+		Border(5), 
+		Lava(6), 
+		Valley(7), 
+		SmallCrater(8), 
+		Pond(9), 
+		Spire(10),
+		Volcano(11);
 
-		public int getFlag()
+		long flag;
+		Marker(int f)
 		{
-			return 1 << this.ordinal();
+			//Sets it to a bit flag
+			flag = 1 << f;
+		}
+
+		public long getFlag()
+		{
+			return flag;
 		}
 	}
 

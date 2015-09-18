@@ -44,12 +44,12 @@ public class CaveProcessor
 		}
 
 		int caveCount = 0;//This keeps track of the total number of caves that we have generated so far.
-
-		for(Center c : starts)
-		{
-			gen(c, caveCount);
-			caveCount++;
-		}
+		if(starts.size() > 0)
+			for(Center c : starts)
+			{
+				gen(c, caveCount);
+				caveCount++;
+			}
 
 		//After we gen the initial major cave systems, we will attempt to start caves from beach cliffs.
 		starts.clear();
@@ -58,12 +58,12 @@ public class CaveProcessor
 			if(map.mapRandom.nextDouble() < 0.6)
 				starts.add(c);
 		}
-
-		for(Center c : starts)
-		{
-			gen(c, caveCount);
-			caveCount++;
-		}
+		if(starts.size() > 0)
+			for(Center c : starts)
+			{
+				gen(c, caveCount);
+				caveCount++;
+			}
 
 		//Next we generate sea caves from ocean coastal tiles
 		starts.clear();
@@ -72,12 +72,12 @@ public class CaveProcessor
 			if(map.mapRandom.nextDouble() < 0.5)
 				starts.add(c);
 		}
-
-		for(Center c : starts)
-		{
-			gen(c, caveCount, true, 5);
-			caveCount++;
-		}
+		if(starts.size() > 0)
+			for(Center c : starts)
+			{
+				gen(c, caveCount, true, 5);
+				caveCount++;
+			}
 	}
 
 	private void gen(Center start, int caveId)
