@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.api.TFCFluids;
+import com.bioxx.tfc2.blocks.BlockClimbingRocks;
 import com.bioxx.tfc2.blocks.BlockEffect;
 import com.bioxx.tfc2.blocks.BlockFreshWater;
 import com.bioxx.tfc2.blocks.BlockFreshWaterStatic;
@@ -66,6 +67,7 @@ public class TFCBlocks
 	public static Block Leaves;
 	public static Block Leaves2;
 	public static Block Ore;
+	public static Block ClimbingRocks;
 
 	public static void LoadBlocks()
 	{
@@ -100,6 +102,7 @@ public class TFCBlocks
 		Leaves = new BlockLeaves().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves");
 		Leaves2 = new BlockLeaves2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves2");
 		Ore = new BlockOre().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("ore");
+		ClimbingRocks = new BlockClimbingRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("climbing_rock");
 	}
 
 	public static void RegisterBlocks()
@@ -136,6 +139,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Leaves, ItemWood.class, "leaves");
 		GameRegistry.registerBlock(Leaves2, ItemWood.class, "leaves2");
 		GameRegistry.registerBlock(Ore, ItemOre.class, "ore");
+		GameRegistry.registerBlock(ClimbingRocks, "climbing_rock");
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);
