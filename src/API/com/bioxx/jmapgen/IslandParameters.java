@@ -259,7 +259,7 @@ public class IslandParameters
 	{
 		//Important not to change this order if it can be helped.
 		Gorges(0.3, "Gorges"), 
-		Volcano(0.1, "Volcano"), 
+		Volcano(0.001, "Volcano"), 
 		Cliffs(0.3, "Cliffs"), 
 		SharperMountains(0.3, "Sharper Mountians"), 
 		EvenSharperMountains(0.3, "Even Sharper Mountains"), 

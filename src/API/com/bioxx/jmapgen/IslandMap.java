@@ -175,7 +175,7 @@ public class IslandMap
 			// Determine downslope paths.
 			calculateDownslopesCenter();
 
-			createVolcano(getCentersAbove(0.8));
+			createVolcano(getCentersAbove(landCenters(centers), 0.4));
 
 			createValleys(getCentersAbove(0.4));
 
@@ -373,21 +373,50 @@ public class IslandMap
 		Vector<Center> caldera = new Vector<Center>();
 		caldera.add(mid);
 		caldera.addAll(mid.neighbors);
-		double lowestElev = 1.0;
-		for(Center c : caldera)
-		{
-			if(c.hasAttribute(Attribute.River))
-				((RiverAttribute)c.getAttribute(Attribute.River)).setRiver(0);
-			c.removeMarkers(Marker.Water);
-			c.setMarkers(Marker.Lava);
-			if(c.elevation < lowestElev)
-				lowestElev = c.elevation;
-		}
 
 		for(Center c : caldera)
 		{
-			c.elevation = lowestElev * 0.85;
+			c.resetMarkers();
+			c.setMarkers(Marker.Lava, Marker.Volcano);
+			c.setElevation(0.80);
 		}
+
+		LinkedList<Center> queue = new LinkedList<Center>();
+		double elev = 0.03;
+		double baseDist = mid.point.distanceSq(mid.neighbors.get(0).point);
+
+		for(Center c : caldera)
+		{
+			for(Center n : c.neighbors)
+			{
+				if(!n.hasAnyMarkersOf(Marker.Volcano))
+					queue.add(n);
+			}
+		}
+		Center qc;
+		double dist = 0;
+		while(!queue.isEmpty())
+		{
+			qc = queue.pop();
+			if(!qc.hasAnyMarkersOf(Marker.Volcano))
+			{
+				dist = mid.point.distanceSq(qc.point);
+				dist /= baseDist;
+				if(qc.getElevation() < 1-dist*elev)
+				{
+					qc.setMarkers(Marker.Volcano);
+					qc.setElevation(1-dist*elev);
+					if(qc.getElevation() < -1 || qc.getElevation() > 1)
+						System.out.println(qc.getElevation());
+					queue.addAll(qc.neighbors);
+				}
+				else
+				{
+
+				}
+			}
+		}
+
 	}
 
 	private void createValleys(Vector<Center> candidates)
@@ -1434,8 +1463,13 @@ public class IslandMap
 
 	public Vector<Center> getCentersAbove(double elev)
 	{
+		return getCentersAbove(centers, elev);
+	}
+
+	public Vector<Center> getCentersAbove(Vector<Center> inCenters, double elev)
+	{
 		Vector<Center> out = new Vector<Center>();
-		for(Center c : centers)
+		for(Center c : inCenters)
 		{
 			if (c.elevation >= elev)
 				out.add(c);

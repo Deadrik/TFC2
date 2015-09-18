@@ -185,7 +185,7 @@ public class WorldGen implements IThreadCompleteListener
 			else id.setFeatures(f);
 		}
 
-		//id.setFeatures(Feature.LowLand);
+		//id.setFeatures(Feature.Volcano);
 
 		if(id.hasFeature(Feature.LowLand))
 			id.removeFeatures(Feature.SharperMountains, Feature.EvenSharperMountains);
@@ -226,6 +226,7 @@ public class WorldGen implements IThreadCompleteListener
 		}
 		else
 		{
+			id.islandMaxHeight = 128;
 			for(StoneType s : StoneType.getForSubTypes(StoneType.SubType.IgneousExtrusive))
 			{
 				stonePot.add(1.0, s);

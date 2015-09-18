@@ -14,6 +14,7 @@ public class RiverAttribute extends Attribute
 	Center downriver;
 	double river;
 	Point riverMid;
+	boolean deadRiver;
 
 	public RiverAttribute() 
 	{
@@ -23,6 +24,16 @@ public class RiverAttribute extends Attribute
 	public RiverAttribute(UUID i) 
 	{
 		super(i);
+	}
+
+	public void setDead(boolean b)
+	{
+		this.deadRiver = b;
+	}
+
+	public boolean getDead()
+	{
+		return deadRiver;
 	}
 
 	public void addRiver(double d)
@@ -88,6 +99,7 @@ public class RiverAttribute extends Attribute
 
 		nbt.setDouble("midX", riverMid.x);
 		nbt.setDouble("midY", riverMid.y);
+		nbt.setBoolean("isDead", deadRiver);
 	}
 
 	@Override
@@ -108,6 +120,7 @@ public class RiverAttribute extends Attribute
 		}
 
 		this.riverMid = new Point(nbt.getInteger("midX"), nbt.getInteger("midY"));
+		this.deadRiver = nbt.getBoolean("isDead");
 	}
 
 }
