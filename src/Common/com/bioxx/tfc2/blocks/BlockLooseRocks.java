@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.blocks;
 
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -9,10 +10,12 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.api.types.StoneType;
 
 public class BlockLooseRocks extends BlockTerra
@@ -24,6 +27,7 @@ public class BlockLooseRocks extends BlockTerra
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setBlockBounds(0.2f, 0, 0.2f, 0.8f, 0.1f, 0.8f);
+		setShowInCreative(false);
 	}
 
 	@Override
@@ -60,5 +64,11 @@ public class BlockLooseRocks extends BlockTerra
 	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
 	{
 
+	}
+
+	@Override
+	public Item getItemDropped(IBlockState paramIBlockState, Random paramRandom, int paramInt)
+	{
+		return TFCItems.LooseRock;
 	}
 }

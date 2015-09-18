@@ -50,14 +50,17 @@ public class CommonProxy
 		FluidRegistry.registerFluid(TFCFluids.FRESHWATER);
 		TFCBlocks.LoadBlocks();
 		TFCBlocks.RegisterBlocks();
+		TFCItems.Load();
+		TFCItems.Register();
 		TFCFluids.SALTWATER.setBlock(TFCBlocks.SaltWater).setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());
 		TFCFluids.FRESHWATER.setBlock(TFCBlocks.FreshWater).setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());
-
 		setupOre();
 	}
 
 	public void init(FMLInitializationEvent event)
 	{
+
+
 		FMLCommonHandler.instance().bus().register(new PlayerTracker());
 	}
 

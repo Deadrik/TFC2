@@ -30,6 +30,7 @@ public class BlockClimbingRocks extends BlockTerra
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setBlockBounds(0f, 0, 0f, 1f, 0.01f, 1f);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(FACING, EnumFacing.DOWN));
+		this.setShowInCreative(false);
 	}
 
 	@Override

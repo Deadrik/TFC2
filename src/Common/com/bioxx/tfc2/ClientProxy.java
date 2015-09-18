@@ -134,6 +134,9 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Rubble), Reference.ModID + ":Rubble/" + stone);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + stone);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + stone);
+
+			registerItemMesh(TFCItems.LooseRock, l, new ModelResourceLocation(Reference.ModID + ":LooseRock/" + stone, "inventory"));
+			ModelBakery.addVariantName(TFCItems.LooseRock, Reference.ModID + ":LooseRock/" + stone);
 		}
 		for(int l = 0; l < 16; l++)
 		{

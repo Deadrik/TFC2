@@ -57,3 +57,5 @@ tile.rubble.name=Rubble
 #=================
 
 tile.planks.name=Wood Planks
+
+item.looserock.name=Rock
