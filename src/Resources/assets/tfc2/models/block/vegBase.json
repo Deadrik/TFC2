@@ -1,4 +1,7 @@
 {
+	"textures": {
+        "particle": "#cross"
+    },
     "elements": [
         {   "from": [ -0.02, -16, -0.02 ],
             "to": [ 16.02, 0.04, 16.02 ],
