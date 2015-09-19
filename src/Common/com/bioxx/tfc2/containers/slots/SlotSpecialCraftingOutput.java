@@ -6,6 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import com.bioxx.tfc2.containers.ContainerSpecialCrafting;
 import com.bioxx.tfc2.gui.GuiKnapping;
@@ -35,7 +36,7 @@ public class SlotSpecialCraftingOutput extends Slot
 	public void onPickupFromSlot(EntityPlayer player, ItemStack itemstack)
 	{
 		itemstack.onCrafting(thePlayer.worldObj, thePlayer, slotNumber);
-		//TerraFirmaCraft.proxy.takenFromCrafting(thePlayer, itemstack, craftMatrix);
+		FMLCommonHandler.instance().firePlayerCraftingEvent(player, itemstack, player.inventory);
 
 		for (int i = 0; i < craftMatrix.getSizeInventory(); i++)
 		{

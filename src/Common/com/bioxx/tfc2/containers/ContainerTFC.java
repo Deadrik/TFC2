@@ -245,6 +245,7 @@ public class ContainerTFC extends Container
 		if (is4Tags == null)
 			return is3Tags.hasNoTags();
 
+		//Removed during porting this code to 1.8 due to there not being any heat infrastructure at the time.
 		/*float temp3 = TFC_ItemHeat.getTemp(is1);
 		float temp4 = TFC_ItemHeat.getTemp(is2);
 		is3Tags.removeTag("temp");

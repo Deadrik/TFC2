@@ -130,4 +130,9 @@ public class Core
 	{
 		net.minecraft.client.Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 	}
+
+	public static int getExtraEquipInventorySize() 
+	{
+		return 0;
+	}
 }
