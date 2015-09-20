@@ -1,7 +1,7 @@
 {
 	"forge_marker" : 1,
 	"defaults": {
-		"model": "tfc2:leaves",
+		"model": "tfc2:leaves/leaves",
 		"textures": {
 			"all": "tfc2:blocks/wood/trees/Acacia Leaves", 
 			"fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff", 
@@ -11,26 +11,13 @@
     {
     	"fancy": 
     	{
-     		"true":{"model": "tfc2:leaves_fancy"},
+     		"true":{"model": "tfc2:leaves/leaves_fancy"},
      		"false":{}
      	},
      	"wood":{
         	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/trees/Rosewood Leaves"} },
         	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/trees/Blackwood Leaves"} },
-    	    "palm":  { 
-    	    	"textures": 
-    	    	{
-    	    		"top": "tfc2:blocks/wood/trees/Palm Leaves Top",
-    	    		"north": "tfc2:blocks/wood/trees/Palm Leaves",
-    	    		"south": "tfc2:blocks/wood/trees/Palm Leaves",
-    	    		"east": "tfc2:blocks/wood/trees/Palm Leaves",
-    	    		"west": "tfc2:blocks/wood/trees/Palm Leaves"
-    	    	}, 
-    	    	"model": "tfc2:leaves_palm"}
-        },
-        "downnorth" : {"true":{"textures": { "north": "tfc2:blocks/wood/trees/Palm Leaves Top" }}, "false":{}},
-        "downsouth" : {"true":{"textures": { "south": "tfc2:blocks/wood/trees/Palm Leaves Top" }}, "false":{}},
-        "downeast" : {"true":{"textures": { "east": "tfc2:blocks/wood/trees/Palm Leaves Top" }}, "false":{}},
-        "downwest" : {"true":{"textures": { "west": "tfc2:blocks/wood/trees/Palm Leaves Top" }}, "false":{}}
+    	    "palm":  { }
+        }
     }
 }

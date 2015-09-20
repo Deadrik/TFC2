@@ -36,6 +36,7 @@ public class BlockLogVertical2 extends BlockTerra implements INeedOffset
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
+		meta %= 16;
 		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta(meta + 16));
 	}
 

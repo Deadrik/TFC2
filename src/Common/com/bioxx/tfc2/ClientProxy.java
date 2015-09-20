@@ -13,6 +13,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -39,6 +40,10 @@ public class ClientProxy extends CommonProxy
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		super.preInit(event);
+
+		B3DLoader.instance.addDomain(Reference.ModID);
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Leaves2), WoodType.Palm.getMeta(), new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
+
 		Item fresh = Item.getItemFromBlock(TFCBlocks.FreshWater);
 		Item salt = Item.getItemFromBlock(TFCBlocks.SaltWater);
 		Item saltstatic = Item.getItemFromBlock(TFCBlocks.SaltWaterStatic);
