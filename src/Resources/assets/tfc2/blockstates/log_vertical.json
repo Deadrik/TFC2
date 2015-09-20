@@ -4,7 +4,7 @@
 		"model": "cube_column"
 	},
     "variants": {
-    "wood":{
+   	 	"wood":{
         	"ash":  { "textures": {"side": "tfc2:blocks/wood/trees/Ash Log", "end": "tfc2:blocks/wood/trees/Ash Log Top"} },
         	"aspen":  { "textures": {"side": "tfc2:blocks/wood/trees/Aspen Log", "end": "tfc2:blocks/wood/trees/Aspen Log Top"} },
         	"birch":  { "textures": {"side": "tfc2:blocks/wood/trees/Birch Log", "end": "tfc2:blocks/wood/trees/Birch Log Top"} },

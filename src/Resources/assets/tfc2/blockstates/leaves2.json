@@ -4,8 +4,8 @@
 		"model": "tfc2:leaves/leaves",
 		"textures": {
 			"all": "tfc2:blocks/wood/trees/Acacia Leaves", 
-			"fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff", 
-			"palm": "tfc2:blocks/wood/trees/Palm Leaves"}
+			"fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff",
+			"particle": "tfc2:blocks/wood/trees/Acacia Leaves"}
 	},
     "variants": 
     {
@@ -18,6 +18,12 @@
         	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/trees/Rosewood Leaves"} },
         	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/trees/Blackwood Leaves"} },
     	    "palm":  { }
-        }
+        },
+        "normal":{
+        	"textures": {"all": "tfc2:blocks/wood/trees/Rosewood Leaves"}
+        },
+        "inventory": [{
+            "transform": "forge:default-block"
+        }]
     }
 }

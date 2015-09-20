@@ -1,5 +1,6 @@
 {
-    "parent": "tfc2:block/Wood/Planks/Chestnut",
+    "parent": "tfc2:block/Leaves/leaves",
+    "textures": {"all": "tfc2:blocks/wood/trees/Chestnut Leaves"},
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

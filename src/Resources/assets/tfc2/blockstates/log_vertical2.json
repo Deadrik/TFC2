@@ -4,10 +4,13 @@
 		"model": "cube_column"
 	},
     "variants": {
-    "wood":{
+    	"wood":{
         	"rosewood":  { "textures": {"side": "tfc2:blocks/wood/trees/Rosewood Log", "end": "tfc2:blocks/wood/trees/Rosewood Log Top"} },
         	"blackwood":  { "textures": {"side": "tfc2:blocks/wood/trees/Blackwood Log", "end": "tfc2:blocks/wood/trees/Blackwood Log Top"} },
     	    "palm":  { "textures": {"side": "tfc2:blocks/wood/trees/Palm Log", "end": "tfc2:blocks/wood/trees/Palm Log Top"} }
-        }
+        },
+        "inventory": [{
+            "transform": "forge:default-block"
+        }]
     }
 }

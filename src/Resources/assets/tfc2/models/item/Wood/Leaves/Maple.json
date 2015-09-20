@@ -1,5 +1,6 @@
 {
-    "parent": "tfc2:block/Wood/Planks/Maple",
+    "parent": "tfc2:block/Leaves/leaves",
+    "textures": {"all": "tfc2:blocks/wood/trees/Maple Leaves"},
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],
