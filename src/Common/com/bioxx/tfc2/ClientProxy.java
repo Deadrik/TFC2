@@ -26,6 +26,7 @@ import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.api.util.KeyBindings;
+import com.bioxx.tfc2.blocks.BlockLeaves2;
 import com.bioxx.tfc2.handlers.client.BackgroundMusicHandler;
 import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
 import com.bioxx.tfc2.handlers.client.GuiHandler;
@@ -116,6 +117,18 @@ public class ClientProxy extends CommonProxy
 				return freshwaterLocation;
 			}
 		});
+
+		StateMapperBase ignoreState = new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) 
+			{
+				if(iBlockState.getValue(BlockLeaves2.META_PROPERTY) == WoodType.Palm)
+					return new ModelResourceLocation("tfc2:leaves_palm");
+				else return new ModelResourceLocation("tfc2:leaves2");
+
+			}
+		};
+		ModelLoader.setCustomStateMapper(TFCBlocks.Leaves2, ignoreState);
 	}
 
 	@Override
