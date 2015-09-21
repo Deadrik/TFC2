@@ -6,10 +6,11 @@ import java.util.List;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
-public class ShapelessRecipesTFC implements IRecipe
+import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
+
+public class ShapelessRecipesTFC implements IRecipeTFC
 {
 	/** Is the ItemStack that you get when craft the recipe. */
 	private final ItemStack recipeOutput;
@@ -43,6 +44,18 @@ public class ShapelessRecipesTFC implements IRecipe
 	 */
 	@Override
 	public int getRecipeSize()
+	{
+		return this.recipeItems.size();
+	}
+
+	@Override
+	public int getRecipeWidth()
+	{
+		return this.recipeItems.size();
+	}
+
+	@Override
+	public int getRecipeHeight()
 	{
 		return this.recipeItems.size();
 	}
@@ -129,5 +142,10 @@ public class ShapelessRecipesTFC implements IRecipe
 		}
 
 		return aitemstack;
+	}
+
+	@Override
+	public List getRecipeItems() {
+		return recipeItems;
 	}
 }

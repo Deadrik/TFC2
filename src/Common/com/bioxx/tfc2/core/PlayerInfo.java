@@ -12,8 +12,11 @@ public class PlayerInfo
 	public ItemStack specialCraftingType;
 	public ItemStack specialCraftingTypeAlternate;
 
+	public boolean isInDebug = true;
+
 	//Clientside only variables
 	public boolean[] knappingInterface;
+	public boolean shouldDrawKnappingHighlight;
 
 	public PlayerInfo(String name, UUID uuid)
 	{

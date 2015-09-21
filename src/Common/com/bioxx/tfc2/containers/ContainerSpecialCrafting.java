@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
+import com.bioxx.tfc2.api.crafting.CraftingManagerTFC.RecipeType;
 import com.bioxx.tfc2.containers.slots.SlotSpecialCraftingOutput;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerInventory;
@@ -70,7 +71,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	@Override
 	public void onCraftMatrixChanged(IInventory ii)
 	{
-		ItemStack result = CraftingManagerTFC.getInstance().findMatchingRecipe(this.craftMatrix, worldObj);
+		ItemStack result = CraftingManagerTFC.getInstance().findMatchingRecipe(RecipeType.Knapping, this.craftMatrix, worldObj);
 
 		// Handle decreasing the stack of the held item used to open the interface.
 		if (!decreasedStack && !isConstructing)

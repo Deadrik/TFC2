@@ -48,7 +48,7 @@ public class KnappingUpdatePacket implements IMessage
 				public void run() 
 				{
 					PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromUUID(ctx.getServerHandler().playerEntity.getUniqueID());
-					pi.knappingInterface[message.id] = false;
+					pi.knappingInterface[message.id] = true;
 					if(ctx.getServerHandler().playerEntity.openContainer != null && ctx.getServerHandler().playerEntity.openContainer instanceof ContainerSpecialCrafting)
 					{
 						((ContainerSpecialCrafting)ctx.getServerHandler().playerEntity.openContainer).craftMatrix.setInventorySlotContents(message.id, pi.specialCraftingTypeAlternate);

@@ -1,5 +1,10 @@
 package com.bioxx.tfc2.gui;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.util.List;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -10,7 +15,11 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
+import com.bioxx.tfc2.api.crafting.CraftingManagerTFC.RecipeType;
+import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
 import com.bioxx.tfc2.containers.ContainerSpecialCrafting;
+import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.networking.server.KnappingUpdatePacket;
 
@@ -28,6 +37,7 @@ public class GuiKnapping extends GuiContainerTFC
 	public void onGuiClosed()
 	{
 		PlayerManagerTFC.getInstance().getClientPlayer().knappingInterface = new boolean[81];
+		PlayerManagerTFC.getInstance().getClientPlayer().shouldDrawKnappingHighlight = false;
 		super.onGuiClosed();
 	}
 
@@ -68,14 +78,68 @@ public class GuiKnapping extends GuiContainerTFC
 			}
 		}
 
+		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.Knapping);
+		int x = 0, y = 0;
+		for (int i = 0; i < recipes.size(); i++)
+		{
+			y = i / 4;
+			x = i % 4;
+			buttonList.add(81, new GuiKnappingRecipeButton(81 + i, 3+guiLeft+176 + (x * 18), 4+guiTop + (y * 19), 18, 18, recipes.get(i).getRecipeOutput()));
+		}
+
 		previouslyLoaded = true;
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton)
 	{
-		resetButton(guibutton.id);
-		TFC.network.sendToServer(new KnappingUpdatePacket(guibutton.id));
+		if(guibutton.id < 81)
+		{
+			resetButton(guibutton.id);
+			TFC.network.sendToServer(new KnappingUpdatePacket(guibutton.id));
+
+			if(PlayerManagerTFC.getInstance().getClientPlayer().isInDebug)
+			{
+				PlayerInfo pi = PlayerManagerTFC.getInstance().getClientPlayer();
+				StringBuilder out = new StringBuilder("");
+				String[] temp = new String[]{"","","","","","","","",""};
+				int x = 0, y = 0;
+				for(int i = 0; i < 81; i++)
+				{
+					y = i / 9;
+					temp[y] += pi.knappingInterface[i] ? " " : "X";
+				}
+				out = out.append("\""+temp[0]+"\",").append("\""+temp[1]+"\",").append("\""+temp[2]+"\",").append("\""+temp[3]+"\",").
+						append("\""+temp[4]+"\",").append("\""+temp[5]+"\",").append("\""+temp[6]+"\",").append("\""+temp[7]+"\",").
+						append("\""+temp[8]+"\"");
+				StringSelection selection = new StringSelection(out.toString());
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				clipboard.setContents(selection, selection);
+			}
+
+		}
+		else
+		{
+			PlayerManagerTFC.getInstance().getClientPlayer().shouldDrawKnappingHighlight = true;
+			highlightGrid(guibutton.id);
+		}
+	}
+
+	private void highlightGrid(int id)
+	{
+		for(int i = 0; i < 81; i++)
+		{
+			((GuiKnappingButton) this.buttonList.get(i)).highlight(true);
+		}
+		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.Knapping);
+		IRecipeTFC rec = recipes.get(id - 81);
+		for(int i = 0; i < rec.getRecipeSize(); i++)
+		{
+			int x = i % rec.getRecipeWidth();
+			int y = i / rec.getRecipeWidth();
+			if(rec.getRecipeItems().get(x+y*rec.getRecipeWidth()) != null)
+				((GuiKnappingButton) this.buttonList.get(x+y*9)).highlight(false);
+		}
 	}
 
 	public void resetButton(int id)
@@ -93,6 +157,12 @@ public class GuiKnapping extends GuiContainerTFC
 	protected void drawGuiContainerBackgroundLayer(float f, int p, int j)
 	{
 		drawGui(texture);
+	}
+
+	@Override
+	protected void drawForeground(int guiLeft, int guiTop)
+	{
+		this.drawTexturedModalRect(this.guiLeft+175, this.guiTop, 176, 0, 80, 190);
 	}
 
 	/**

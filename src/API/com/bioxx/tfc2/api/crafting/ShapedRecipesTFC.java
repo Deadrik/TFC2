@@ -1,22 +1,25 @@
 package com.bioxx.tfc2.api.crafting;
 
+import java.util.List;
+
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
-public class ShapedRecipesTFC implements IRecipe
+import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
+
+public class ShapedRecipesTFC implements IRecipeTFC
 {
 	private int recipeWidth;
 	private int recipeHeight;
-	private ItemStack recipeItems[];
+	private final List<ItemStack> recipeItems;
 	private ItemStack recipeOutput;
 
-	public ShapedRecipesTFC(int i, int j, ItemStack aitemstack[], ItemStack itemstack)
+	public ShapedRecipesTFC(int i, int j, List<ItemStack> aitemstack, ItemStack itemstack)
 	{
 		recipeWidth = i;
 		recipeHeight = j;
-		recipeItems = aitemstack.clone();
+		recipeItems = aitemstack;
 		recipeOutput = itemstack;
 	}
 
@@ -33,11 +36,11 @@ public class ShapedRecipesTFC implements IRecipe
 				{
 					if (flag)
 					{
-						recipeIS = recipeItems[recipeWidth - i1 - 1 + j1 * recipeWidth];
+						recipeIS = recipeItems.get(recipeWidth - i1 - 1 + j1 * recipeWidth);
 					}
 					else
 					{
-						recipeIS = recipeItems[i1 + j1 * recipeWidth];
+						recipeIS = recipeItems.get(i1 + j1 * recipeWidth);
 					}
 				}
 				ItemStack inputIS = inventorycrafting.getStackInRowAndColumn(k, l);
@@ -88,19 +91,21 @@ public class ShapedRecipesTFC implements IRecipe
 		return recipeWidth * recipeHeight;
 	}
 
+	@Override
 	public int getRecipeWidth()
 	{
 		return recipeWidth;
 	}
 
+	@Override
 	public int getRecipeHeight()
 	{
 		return recipeHeight;
 	}
 
-	public ItemStack[] getRecipeItems()
-	{
-		return recipeItems.clone();
+	@Override
+	public List getRecipeItems() {
+		return recipeItems;
 	}
 
 	@Override

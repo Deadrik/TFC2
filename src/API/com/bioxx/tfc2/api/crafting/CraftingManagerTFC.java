@@ -9,8 +9,9 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+
+import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
 
 public class CraftingManagerTFC
 {
@@ -20,17 +21,24 @@ public class CraftingManagerTFC
 		return INSTANCE;
 	}
 
-	private List<IRecipe> recipes;
+	private List<IRecipeTFC> recipes;
+	private List<IRecipeTFC> recipes_knapping;
 
 	private CraftingManagerTFC()
 	{
-		recipes = new ArrayList<IRecipe>();
+		recipes = new ArrayList<IRecipeTFC>();
+		recipes_knapping = new ArrayList<IRecipeTFC>();
 
 		Collections.sort(recipes, new RecipeSorterTFC(this));
-		//System.out.println(new StringBuilder().append(recipes.size()).append(" recipes").toString());
+		Collections.sort(recipes_knapping, new RecipeSorterTFC(this));
 	}
 
 	public ShapedRecipesTFC addRecipe(ItemStack itemstack, Object... aobj)
+	{
+		return addRecipe(RecipeType.Normal, itemstack, aobj);
+	}
+
+	public ShapedRecipesTFC addRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
 	{
 		String s = "";
 		int i = 0;
@@ -77,26 +85,34 @@ public class CraftingManagerTFC
 			hashmap.put(character, itemstack1);
 		}
 
-		ItemStack aitemstack[] = new ItemStack[j * k];
+		List<ItemStack> aitemstack = new ArrayList<ItemStack>(j * k);
 		for (int i1 = 0; i1 < j * k; i1++)
 		{
 			char c = s.charAt(i1);
 			if (hashmap.containsKey(Character.valueOf(c)))
 			{
-				aitemstack[i1] = hashmap.get(Character.valueOf(c)).copy();
+				aitemstack.add(i1, hashmap.get(Character.valueOf(c)).copy());
 			}
 			else
 			{
-				aitemstack[i1] = null;
+				aitemstack.add(i1, null);
 			}
 		}
 
 		ShapedRecipesTFC shapedRecipesTFC = new ShapedRecipesTFC(j, k, aitemstack, itemstack);
-		recipes.add(shapedRecipesTFC);
+		if(rt == RecipeType.Normal)
+			recipes.add(shapedRecipesTFC);
+		else if(rt == RecipeType.Knapping)
+			recipes_knapping.add(shapedRecipesTFC);
 		return shapedRecipesTFC;
 	}
 
-	public ShapelessRecipesTFC addShapelessRecipe(ItemStack itemstack, Object... aobj)
+	public ShapedRecipesTFC addShapelessRecipe(ItemStack itemstack, Object... aobj)
+	{
+		return addRecipe(RecipeType.Normal, itemstack, aobj);
+	}
+
+	public ShapelessRecipesTFC addShapelessRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
 	{
 		ArrayList<ItemStack> arraylist = new ArrayList<ItemStack>();
 		Object aobj1[] = aobj;
@@ -124,15 +140,29 @@ public class CraftingManagerTFC
 			}
 		}
 		ShapelessRecipesTFC recipesTFC = new ShapelessRecipesTFC(itemstack, arraylist);
-		recipes.add(recipesTFC);
+		if(rt == RecipeType.Normal)
+			recipes.add(recipesTFC);
+		else if(rt == RecipeType.Knapping)
+			recipes_knapping.add(recipesTFC);
 		return recipesTFC;
 	}
 
 	public ItemStack findMatchingRecipe(InventoryCrafting inventorycrafting, World world)
 	{
-		for (int k = 0; k < recipes.size(); k++)
+		return findMatchingRecipe(RecipeType.Normal, inventorycrafting, world);
+	}
+
+	public ItemStack findMatchingRecipe(RecipeType rt, InventoryCrafting inventorycrafting, World world)
+	{
+		List<IRecipeTFC> rec = Collections.emptyList();
+		if(rt == RecipeType.Normal)
+			rec = recipes;
+		else if(rt == RecipeType.Knapping)
+			rec = recipes_knapping;
+
+		for (int k = 0; k < rec.size(); k++)
 		{
-			IRecipe irecipe = recipes.get(k);
+			IRecipeTFC irecipe = rec.get(k);
 			if (irecipe.matches(inventorycrafting, world))
 			{
 				return irecipe.getCraftingResult(inventorycrafting);
@@ -142,8 +172,18 @@ public class CraftingManagerTFC
 		return null;
 	}
 
-	public List<IRecipe> getRecipeList()
+	public List<IRecipeTFC> getRecipeList(RecipeType rt)
 	{
+		if(rt == RecipeType.Normal)
+			return recipes;
+		else if(rt == RecipeType.Knapping)
+			return recipes_knapping;
+
 		return recipes;
+	}
+
+	public enum RecipeType
+	{
+		Normal, Knapping;
 	}
 }
