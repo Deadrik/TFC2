@@ -35,4 +35,12 @@ public class ItemWood extends ItemTerraBlock
 		else
 			arraylist.add(EnumChatFormatting.DARK_RED + Core.translate("global.unknown"));
 	}
+
+	@Override
+	public int getMetadata(int i)
+	{
+		if(block instanceof INeedOffset)
+			return((INeedOffset)block).convertMeta(i);
+		return i;
+	}
 }

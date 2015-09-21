@@ -11,12 +11,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.interfaces.INeedOffset;
 
 public abstract class BlockTerra extends Block
 {
@@ -53,8 +55,16 @@ public abstract class BlockTerra extends Block
 		{
 			if(hasMeta())
 			{
-				for(int l = 0; l < META_PROP.getAllowedValues().size(); l++)
-					list.add(new ItemStack(itemIn, 1, l));
+				if(itemIn instanceof ItemBlock && ((ItemBlock)itemIn).block instanceof INeedOffset)
+				{
+					for(int l = 0; l < META_PROP.getAllowedValues().size(); l++)
+						list.add(new ItemStack(itemIn, 1, ((INeedOffset)(((ItemBlock)itemIn).block)).convertMeta(l)));
+				}
+				else
+				{
+					for(int l = 0; l < META_PROP.getAllowedValues().size(); l++)
+						list.add(new ItemStack(itemIn, 1, l));
+				}
 			}
 			else
 				super.getSubBlocks(itemIn, tab, list);
