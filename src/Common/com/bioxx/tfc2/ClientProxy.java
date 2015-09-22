@@ -43,8 +43,8 @@ public class ClientProxy extends CommonProxy
 		super.preInit(event);
 
 		B3DLoader.instance.addDomain(Reference.ModID);
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Leaves2), WoodType.Palm.getMeta(), new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
-
+		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.LeavesPalm), 0, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Leaves2), 18, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
 		Item fresh = Item.getItemFromBlock(TFCBlocks.FreshWater);
 		Item salt = Item.getItemFromBlock(TFCBlocks.SaltWater);
 		Item saltstatic = Item.getItemFromBlock(TFCBlocks.SaltWaterStatic);
@@ -188,8 +188,15 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogVertical2), Reference.ModID + ":Wood/Logs/" + wood);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal3), Reference.ModID + ":Wood/Logs/" + wood);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural2), Reference.ModID + ":Wood/Logs/" + wood);
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Leaves2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves2), Reference.ModID + ":Wood/Leaves/" + wood);
+			if(l < 18)
+			{
+				registerItemMesh(Item.getItemFromBlock(TFCBlocks.Leaves2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory"));
+				ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves2), Reference.ModID + ":Wood/Leaves/" + wood);
+			}
+			/*else
+			{
+				registerItemMesh(Item.getItemFromBlock(TFCBlocks.Leaves2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/palm_leaves", "inventory"));
+			}*/
 		}
 
 		for(int l = 0; l < OreType.values().length; l++)

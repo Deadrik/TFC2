@@ -66,6 +66,7 @@ public class TFCBlocks
 	public static Block LogHorizontal3;
 	public static Block Leaves;
 	public static Block Leaves2;
+	//public static Block LeavesPalm;
 	public static Block Ore;
 	public static Block ClimbingRocks;
 
@@ -103,6 +104,7 @@ public class TFCBlocks
 		Leaves2 = new BlockLeaves2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves2");
 		Ore = new BlockOre().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("ore");
 		ClimbingRocks = new BlockClimbingRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("climbing_rock");
+		//LeavesPalm = new BlockLeavesPalm().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves_palm");
 	}
 
 	public static void RegisterBlocks()
@@ -140,6 +142,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Leaves2, ItemWood.class, "leaves2");
 		GameRegistry.registerBlock(Ore, ItemOre.class, "ore");
 		GameRegistry.registerBlock(ClimbingRocks, "climbing_rock");
+		//GameRegistry.registerBlock(LeavesPalm, ItemWood.class, "leaves_palm");
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);

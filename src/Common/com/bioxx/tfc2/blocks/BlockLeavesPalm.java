@@ -2,7 +2,6 @@ package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -10,7 +9,6 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.b3d.B3DLoader;
@@ -20,13 +18,13 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 
 import com.bioxx.tfc2.api.types.WoodType;
 
-public class BlockLeaves2 extends BlockLeaves
+public class BlockLeavesPalm extends BlockLeaves
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 19));
 
 	private boolean isTransparent = true;
 
-	public BlockLeaves2()
+	public BlockLeavesPalm()
 	{
 		super();
 		this.META_PROP = META_PROPERTY;
@@ -35,19 +33,7 @@ public class BlockLeaves2 extends BlockLeaves
 	@Override
 	protected BlockState createBlockState()
 	{
-		return new ExtendedBlockState(this, new IProperty[]{META_PROPERTY, BlockLeaves.FANCY}, new IUnlistedProperty[]{ B3DLoader.B3DFrameProperty.instance });
-	}
-
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		boolean fancy = true;
-		if(!isTransparent)
-			fancy = false;
-		if(state.getValue(META_PROPERTY) == WoodType.Palm)
-			fancy = false;
-
-		return state.withProperty(BlockLeaves.FANCY, fancy);
+		return new ExtendedBlockState(this, new IProperty[]{META_PROPERTY}, new IUnlistedProperty[]{ B3DLoader.B3DFrameProperty.instance });
 	}
 
 	@Override
@@ -75,16 +61,7 @@ public class BlockLeaves2 extends BlockLeaves
 	@Override
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list)
 	{
-		for(int l = 16; l < 19; l++)
-			list.add(new ItemStack(itemIn, 1, l));
-	}
 
-	@Override
-	public int quantityDropped(IBlockState state, int i, Random random)
-	{
-		if(state.getValue(META_PROPERTY) == WoodType.Palm)
-			return 0;
-		return 1;
 	}
 
 	@Override
