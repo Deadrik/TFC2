@@ -15,6 +15,11 @@ public class ItemTerra extends Item
 	protected int maxSubTypeMeta = 0;
 	protected String[] subTypeNames;
 
+	public ItemTerra()
+	{
+		this.setCreativeTab(CreativeTabs.tabMisc);
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems)

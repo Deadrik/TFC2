@@ -207,8 +207,14 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Ore), Reference.ModID + ":Ore/" + ore);
 		}
 
-		registerItemMesh(TFCItems.StoneAxeHead, 0, new ModelResourceLocation(Reference.ModID + ":stoneaxehead", "inventory"));
-		registerItemMesh(TFCItems.StoneAxe, 0, new ModelResourceLocation(Reference.ModID + ":stoneaxe", "inventory"));
+		registerItemMesh(TFCItems.StoneAxeHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_axe_head", "inventory"));
+		registerItemMesh(TFCItems.StoneShovelHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_shovel_head", "inventory"));
+		registerItemMesh(TFCItems.StoneKnifeHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_knife_head", "inventory"));
+		registerItemMesh(TFCItems.StoneHoeHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_hoe_head", "inventory"));
+		registerItemMesh(TFCItems.StoneAxe, 0, new ModelResourceLocation(Reference.ModID + ":stone_axe", "inventory"));
+		registerItemMesh(TFCItems.StoneShovel, 0, new ModelResourceLocation(Reference.ModID + ":stone_shovel", "inventory"));
+		registerItemMesh(TFCItems.StoneKnife, 0, new ModelResourceLocation(Reference.ModID + ":stone_knife", "inventory"));
+		registerItemMesh(TFCItems.StoneHoe, 0, new ModelResourceLocation(Reference.ModID + ":stone_hoe", "inventory"));
 	}
 
 	@Override
