@@ -17,4 +17,17 @@ public class Helper
 	{
 		return (short)(c & 0xffff);
 	}
+
+	/**
+	 * @param angle Any angle in degrees
+	 * @return Returns the original angle after making sure that it is bounded between 0 and 360 degrees
+	 */
+	public static double normalizeAngle(double angle)
+	{
+		angle = angle % 360;
+		if(angle < 0)
+			angle += 360;
+
+		return angle;
+	}
 }

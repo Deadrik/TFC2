@@ -16,6 +16,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -31,6 +32,7 @@ import com.bioxx.tfc2.handlers.client.BackgroundMusicHandler;
 import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
 import com.bioxx.tfc2.handlers.client.GuiHandler;
 import com.bioxx.tfc2.handlers.client.KeyBindingHandler;
+import com.bioxx.tfc2.rendering.model.RenderCart;
 
 public class ClientProxy extends CommonProxy
 {
@@ -215,6 +217,9 @@ public class ClientProxy extends CommonProxy
 		registerItemMesh(TFCItems.StoneShovel, 0, new ModelResourceLocation(Reference.ModID + ":stone_shovel", "inventory"));
 		registerItemMesh(TFCItems.StoneKnife, 0, new ModelResourceLocation(Reference.ModID + ":stone_knife", "inventory"));
 		registerItemMesh(TFCItems.StoneHoe, 0, new ModelResourceLocation(Reference.ModID + ":stone_hoe", "inventory"));
+
+		//Entities
+		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart(Minecraft.getMinecraft().getRenderManager()));
 	}
 
 	@Override
