@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-import com.bioxx.tfc2.EntityCart;
 import com.bioxx.tfc2.Reference;
+import com.bioxx.tfc2.entity.EntityCart;
 
 public class RenderCart extends Render
 {

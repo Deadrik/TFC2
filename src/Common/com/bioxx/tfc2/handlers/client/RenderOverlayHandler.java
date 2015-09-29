@@ -1,4 +1,4 @@
-package com.bioxx.tfc2;
+package com.bioxx.tfc2.handlers.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

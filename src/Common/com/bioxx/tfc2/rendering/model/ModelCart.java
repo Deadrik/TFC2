@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-import com.bioxx.tfc2.EntityCart;
+import com.bioxx.tfc2.entity.EntityCart;
 
 public class ModelCart extends ModelBase
 {

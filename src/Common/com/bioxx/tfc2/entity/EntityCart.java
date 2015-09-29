@@ -1,4 +1,4 @@
-package com.bioxx.tfc2;
+package com.bioxx.tfc2.entity;
 
 import java.util.List;
 
@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.util.Helper;
 
 public class EntityCart extends Entity 
@@ -106,6 +107,11 @@ public class EntityCart extends Entity
 			{
 				player.mountEntity(this);
 				this.noClip = true;
+			}
+			else
+			{
+				if(!worldObj.isRemote)
+					player.openGui(TFC.instance, 1, worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
 			}
 
 			return true;
