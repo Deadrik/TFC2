@@ -8,6 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.api.util.Helper;
 
@@ -30,12 +32,12 @@ public class EntityCart extends Entity
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound tagCompund) {
-
+		this.setFacingAngle(this.rotationYaw);
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound tagCompound) {
-		// TODO Auto-generated method stub
+
 
 	}
 
@@ -92,7 +94,7 @@ public class EntityCart extends Entity
 		}
 		else
 		{
-			double angle = Helper.normalizeAngle(getAngleToEntity(player) % 360);
+			double angle = Helper.normalizeAngle(getAngleToEntity(player));
 			double fAngle = Helper.normalizeAngle(getFacingAngle());
 			double revAngle =Helper.normalizeAngle(fAngle + 180);
 			System.out.println(angle+"/"+fAngle);
@@ -174,65 +176,62 @@ public class EntityCart extends Entity
 	public void onUpdate()
 	{
 		super.onUpdate();
-		//kill();
-		//if(!worldObj.isRemote)
+		if (this.riddenByEntity == null)
 		{
-			if (this.riddenByEntity == null)
+			noClip = false;
+		}
+		if(pullEntity == null)
+		{
+			if (this.onGround)
 			{
-				noClip = false;
+				this.motionX *= 0.3D;
+				this.motionY *= 0.3D;
+				this.motionZ *= 0.3D;
 			}
-			if(pullEntity == null)
+
+			this.motionX *= 0.7900000095367432D;
+			this.motionY *= 0.749999988079071D;
+			this.motionZ *= 0.7900000095367432D;
+
+			this.moveEntity(this.motionX, this.motionY, this.motionZ);
+		}
+		else
+		{
+			double dist = Math.sqrt(Math.pow(pullPrevPosX - pullEntity.posX, 2)+Math.pow(pullPrevPosY - pullEntity.posY, 2)+Math.pow(pullPrevPosZ - pullEntity.posZ, 2));
+			if(dist > 0.05)
 			{
-				if (this.onGround)
+				double angle = 0;
+				if(!worldObj.isRemote)
+					angle = setFacingAngle((pullEntity.rotationYaw-90) % 360);
+				angle = getFacingAngle();
+				double posX = pullEntity.posX+Math.cos(Math.toRadians(angle))*1.2;
+				double posY = pullEntity.posY;
+				double posZ = pullEntity.posZ+Math.sin(Math.toRadians(angle))*1.2;
+
+				if(!worldObj.isRemote)
+					this.setLocationAndAngles(posX, posY, posZ, pullEntity.rotationYaw, 0);
+				else
 				{
-					this.motionX *= 0.5D;
-					this.motionY *= 0.5D;
-					this.motionZ *= 0.5D;
+					this.setPositionAndRotation(posX, posY, posZ, pullEntity.rotationYaw, 0);
+					isMoving = true;
 				}
 
-				this.motionX *= 0.7900000095367432D;
-				this.motionY *= 0.749999988079071D;
-				this.motionZ *= 0.7900000095367432D;
+				pullPrevPosX = pullEntity.posX;
+				pullPrevPosY = pullEntity.posY;
+				pullPrevPosZ = pullEntity.posZ;
 
-				this.moveEntity(this.motionX, this.motionY, this.motionZ);
 			}
 			else
 			{
-				double dist = Math.sqrt(Math.pow(pullPrevPosX - pullEntity.posX, 2)+Math.pow(pullPrevPosY - pullEntity.posY, 2)+Math.pow(pullPrevPosZ - pullEntity.posZ, 2));
-				if(dist > 0.05)
-				{
-					double angle = 0;
-					if(!worldObj.isRemote)
-						angle = setFacingAngle((pullEntity.rotationYaw-90) % 360);
-					angle = getFacingAngle();
-					double posX = pullEntity.posX+Math.cos(Math.toRadians(angle))*1.2;
-					double posY = pullEntity.posY;
-					double posZ = pullEntity.posZ+Math.sin(Math.toRadians(angle))*1.2;
+				isMoving = false;
+			}
 
-					if(!worldObj.isRemote)
-						this.setLocationAndAngles(posX, posY, posZ, pullEntity.rotationYaw, 0);
-					else
-					{
-						this.setPositionAndRotation(posX, posY, posZ, pullEntity.rotationYaw, 0);
-						isMoving = true;
-					}
-
-					pullPrevPosX = pullEntity.posX;
-					pullPrevPosY = pullEntity.posY;
-					pullPrevPosZ = pullEntity.posZ;
-
-				}
-				else
-				{
-					isMoving = false;
-				}
-
-				if(pullEntity != null && this.pullEntity.isSneaking())
-				{
-					setPullEntity(null);
-				}
+			if(pullEntity != null && this.pullEntity.isSneaking())
+			{
+				setPullEntity(null);
 			}
 		}
+
 
 		if (!this.worldObj.isRemote)
 		{
@@ -255,10 +254,15 @@ public class EntityCart extends Entity
 			{
 				this.riddenByEntity = null;
 			}
-
-
-
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean isTeleport)
+	{
+		this.setPosition(x, y, z);
+		this.setRotation(yaw, pitch);
 	}
 
 }
