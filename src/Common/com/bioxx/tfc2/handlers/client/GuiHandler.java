@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
+import com.bioxx.tfc2.entity.EntityCart;
+import com.bioxx.tfc2.gui.GuiCart;
 import com.bioxx.tfc2.gui.GuiKnapping;
 
 public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
@@ -17,7 +19,7 @@ public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) 
 	{
 		BlockPos pos = new BlockPos(x, y, z);
-
+		PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(player);
 		TileEntity te;
 		try
 		{
@@ -31,9 +33,9 @@ public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
 		switch(id)
 		{
 		case 0:
-			PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(player);
 			return new GuiKnapping(player.inventory, pi.specialCraftingTypeAlternate == null ? pi.specialCraftingType : null, world, x, y, z);
-
+		case 1:
+			return new GuiCart(player.inventory, ((EntityCart)pi.entityForInventory).cartInv, world, x, y, z);
 		default:
 			return null;
 		}

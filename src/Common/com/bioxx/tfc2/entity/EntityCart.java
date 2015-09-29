@@ -5,7 +5,9 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,10 +15,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.util.Helper;
+import com.bioxx.tfc2.core.PlayerManagerTFC;
 
 public class EntityCart extends Entity 
 {
-	EntityLivingBase pullEntity;
+	public EntityLivingBase pullEntity;
+	public InventoryCart cartInv;
 	double pullPrevPosX, pullPrevPosY, pullPrevPosZ;
 	public boolean isMoving = false;
 
@@ -24,6 +28,7 @@ public class EntityCart extends Entity
 	{
 		super(worldIn);
 		this.setSize(1.0F, 1.0F);
+		cartInv = new InventoryCart("Cart", false, 27);
 	}
 	@Override
 	protected void entityInit() {
@@ -34,11 +39,39 @@ public class EntityCart extends Entity
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound tagCompund) {
 		this.setFacingAngle(this.rotationYaw);
+		NBTTagList nbttaglist = tagCompund.getTagList("Items", 10);
+
+		for (int i = 0; i < nbttaglist.tagCount(); ++i)
+		{
+			NBTTagCompound nbt1 = nbttaglist.getCompoundTagAt(i);
+			int j = nbt1.getByte("Slot") & 255;
+
+			if (j < cartInv.getSizeInventory())
+			{
+				cartInv.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbt1));
+			}
+		}
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound tagCompound) {
+	protected void writeEntityToNBT(NBTTagCompound tagCompound) 
+	{
+		NBTTagList nbttaglist = new NBTTagList();
 
+		for (int i = 0; i < this.cartInv.getSizeInventory(); ++i)
+		{
+			ItemStack itemstack = this.cartInv.getStackInSlot(i);
+
+			if (itemstack != null)
+			{
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Slot", (byte)i);
+				itemstack.writeToNBT(nbttagcompound1);
+				nbttaglist.appendTag(nbttagcompound1);
+			}
+		}
+
+		tagCompound.setTag("Items", nbttaglist);
 
 	}
 
@@ -110,8 +143,11 @@ public class EntityCart extends Entity
 			}
 			else
 			{
+				PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(player).entityForInventory = this;
 				if(!worldObj.isRemote)
+				{
 					player.openGui(TFC.instance, 1, worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+				}
 			}
 
 			return true;
