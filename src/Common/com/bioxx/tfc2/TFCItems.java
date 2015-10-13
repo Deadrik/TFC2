@@ -4,6 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.items.ItemAxe;
 import com.bioxx.tfc2.items.ItemHoe;
 import com.bioxx.tfc2.items.ItemKnife;
@@ -43,21 +44,28 @@ public class TFCItems
 	public static void Register()
 	{
 		TFC.log.info(new StringBuilder().append("[TFC2] Registering Items").toString());
-		GameRegistry.registerItem(LooseRock, "looserock");
-		GameRegistry.registerItem(StoneAxe, "stone_axe");
-		GameRegistry.registerItem(StoneShovel, "stone_shovel");
-		GameRegistry.registerItem(StoneKnife, "stone_knife");
-		GameRegistry.registerItem(StoneHoe, "stone_hoe");
-		GameRegistry.registerItem(StoneAxeHead, "stone_axe_head");
-		GameRegistry.registerItem(StoneShovelHead, "stone_shovel_head");
-		GameRegistry.registerItem(StoneKnifeHead, "stone_knife_head");
-		GameRegistry.registerItem(StoneHoeHead, "stone_hoe_head");
 
+		registerItem(LooseRock, "looserock");
+		registerItem(StoneAxe, "stone_axe");
+		registerItem(StoneShovel, "stone_shovel");
+		registerItem(StoneKnife, "stone_knife");
+		registerItem(StoneHoe, "stone_hoe");
+		registerItem(StoneAxeHead, "stone_axe_head");
+		registerItem(StoneShovelHead, "stone_shovel_head");
+		registerItem(StoneKnifeHead, "stone_knife_head");
+		registerItem(StoneHoeHead, "stone_hoe_head");
 
 
 
 
 		SetupHarvestLevels();
+	}
+
+	private static void registerItem(Item i, String name)
+	{
+		GameRegistry.registerItem(i, name);
+		if(TFC.proxy.isClientSide())
+			RegistryItemQueue.getInstance().addItemToQueue(i, name);
 	}
 
 	private static void SetupHarvestLevels()

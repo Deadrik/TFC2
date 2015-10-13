@@ -28,6 +28,7 @@ import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.api.util.KeyBindings;
 import com.bioxx.tfc2.blocks.BlockLeaves2;
+import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.entity.EntityCart;
 import com.bioxx.tfc2.handlers.client.BackgroundMusicHandler;
 import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
@@ -211,14 +212,9 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Ore), Reference.ModID + ":Ore/" + ore);
 		}
 
-		registerItemMesh(TFCItems.StoneAxeHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_axe_head", "inventory"));
-		registerItemMesh(TFCItems.StoneShovelHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_shovel_head", "inventory"));
-		registerItemMesh(TFCItems.StoneKnifeHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_knife_head", "inventory"));
-		registerItemMesh(TFCItems.StoneHoeHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_hoe_head", "inventory"));
-		registerItemMesh(TFCItems.StoneAxe, 0, new ModelResourceLocation(Reference.ModID + ":stone_axe", "inventory"));
-		registerItemMesh(TFCItems.StoneShovel, 0, new ModelResourceLocation(Reference.ModID + ":stone_shovel", "inventory"));
-		registerItemMesh(TFCItems.StoneKnife, 0, new ModelResourceLocation(Reference.ModID + ":stone_knife", "inventory"));
-		registerItemMesh(TFCItems.StoneHoe, 0, new ModelResourceLocation(Reference.ModID + ":stone_hoe", "inventory"));
+		//registerItemMesh(TFCItems.StoneAxeHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_axe_head", "inventory"));
+
+		RegistryItemQueue.getInstance().registerQueue();
 
 		//Entities
 		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart(Minecraft.getMinecraft().getRenderManager()));
