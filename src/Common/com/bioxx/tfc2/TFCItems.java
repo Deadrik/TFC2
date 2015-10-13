@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.items.ItemAxe;
+import com.bioxx.tfc2.items.ItemFoodTFC;
 import com.bioxx.tfc2.items.ItemHoe;
 import com.bioxx.tfc2.items.ItemKnife;
 import com.bioxx.tfc2.items.ItemLooseRock;
@@ -24,6 +25,8 @@ public class TFCItems
 	public static Item StoneKnifeHead;
 	public static Item StoneHoeHead;
 
+	public static Item FoodCabbage;
+
 	public static void Load()
 	{
 		TFC.log.info(new StringBuilder().append("[TFC2] Loading Items").toString());
@@ -38,13 +41,14 @@ public class TFCItems
 		StoneKnifeHead = new ItemToolHead().setUnlocalizedName("stone_knife_head");
 		StoneHoeHead = new ItemToolHead().setUnlocalizedName("stone_hoe_head");
 
+		FoodCabbage = new ItemFoodTFC().setExpiration(3600).setUnlocalizedName("food_cabbage");
+
 
 	}
 
 	public static void Register()
 	{
 		TFC.log.info(new StringBuilder().append("[TFC2] Registering Items").toString());
-
 		registerItem(LooseRock, "looserock");
 		registerItem(StoneAxe, "stone_axe");
 		registerItem(StoneShovel, "stone_shovel");
@@ -54,6 +58,7 @@ public class TFCItems
 		registerItem(StoneShovelHead, "stone_shovel_head");
 		registerItem(StoneKnifeHead, "stone_knife_head");
 		registerItem(StoneHoeHead, "stone_hoe_head");
+		registerItem(FoodCabbage, "food_cabbage");
 
 
 

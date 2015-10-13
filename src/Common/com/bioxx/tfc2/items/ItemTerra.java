@@ -3,6 +3,7 @@ package com.bioxx.tfc2.items;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,6 +19,14 @@ public class ItemTerra extends Item
 	public ItemTerra()
 	{
 		this.setCreativeTab(CreativeTabs.tabMisc);
+	}
+
+	@Override
+	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
+	{
+		super.addInformation(is, player, arraylist, flag);
+
+
 	}
 
 	@Override

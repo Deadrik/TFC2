@@ -12,6 +12,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -218,6 +219,11 @@ public class ClientProxy extends CommonProxy
 
 		//Entities
 		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart(Minecraft.getMinecraft().getRenderManager()));
+
+		//Disable vanilla UI elements
+		GuiIngameForge.renderHealth = false;
+		GuiIngameForge.renderArmor = false;
+		GuiIngameForge.renderExperiance = false;
 	}
 
 	@Override

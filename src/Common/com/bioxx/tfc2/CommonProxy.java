@@ -24,6 +24,7 @@ import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.core.Recipes;
 import com.bioxx.tfc2.entity.EntityCart;
 import com.bioxx.tfc2.handlers.CreateSpawnHandler;
+import com.bioxx.tfc2.handlers.EntityLivingHandler;
 import com.bioxx.tfc2.handlers.GuiHandler;
 import com.bioxx.tfc2.handlers.PlayerTracker;
 import com.bioxx.tfc2.handlers.ServerTickHandler;
@@ -76,6 +77,7 @@ public class CommonProxy
 		Recipes.RegisterKnappingRecipes();
 		MinecraftForge.EVENT_BUS.register(new CreateSpawnHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldLoadHandler());
+		MinecraftForge.EVENT_BUS.register(new EntityLivingHandler());
 		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
 	}
 

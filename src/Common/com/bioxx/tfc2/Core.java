@@ -2,6 +2,7 @@ package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -10,6 +11,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import org.apache.commons.lang3.text.WordUtils;
+
+import com.bioxx.tfc2.core.FoodStatsTFC;
 
 public class Core 
 {
@@ -134,5 +137,22 @@ public class Core
 	public static int getExtraEquipInventorySize() 
 	{
 		return 0;
+	}
+
+	public static boolean isPlayerInDebugMode(EntityPlayer player)
+	{
+		return true;
+	}
+
+	public static FoodStatsTFC getPlayerFoodStats(EntityPlayer player)
+	{
+		FoodStatsTFC foodstats = new FoodStatsTFC(player);
+		foodstats.readNBT(player.getEntityData());
+		return foodstats;
+	}
+
+	public static void setPlayerFoodStats(EntityPlayer player, FoodStatsTFC foodstats)
+	{
+		foodstats.writeNBT(player.getEntityData());
 	}
 }
