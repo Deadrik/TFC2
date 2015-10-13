@@ -100,7 +100,7 @@ public class ModelCart extends ModelBase
 	{
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-		if(entity.isMoving)
+		if(entity.isBeingPulled() && entity.isMoving)
 		{
 			LeftWheel.rotateAngleX += 0.2*f;
 			RightWheel.rotateAngleX +=0.2*f;
