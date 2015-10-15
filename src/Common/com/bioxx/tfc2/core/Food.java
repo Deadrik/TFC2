@@ -6,6 +6,8 @@ import java.util.Random;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.bioxx.tfc2.api.interfaces.IFood;
+
 public class Food 
 {
 	public static final int DRYHOURS = 4;
@@ -30,7 +32,7 @@ public class Food
 
 	private static NBTTagCompound getNBT(ItemStack is)
 	{
-		if (is.hasTagCompound())
+		if (is != null && is.hasTagCompound())
 		{
 			return is.getTagCompound();
 		}
@@ -165,23 +167,6 @@ public class Food
 		return f1[0] == f2[0] && f1[1] == f2[1] && f1[2] == f2[2] && f1[3] == f2[3] && f1[4] == f2[4];
 	}
 
-	public static void setDecay(ItemStack is, float value)
-	{
-		NBTTagCompound nbt = getNBT(is);
-		nbt.setFloat("foodDecay", value);
-		if(value > getWeight(is))
-			is.stackSize = 0;
-	}
-
-	public static float getDecay(ItemStack is)
-	{
-		NBTTagCompound nbt = getNBT(is);
-		if (nbt.hasKey("foodDecay"))
-			return nbt.getFloat("foodDecay");
-		else
-			return 0;
-	}
-
 	public static void setDecayTimer(ItemStack is, long value)
 	{
 		NBTTagCompound nbt = getNBT(is);
@@ -196,23 +181,6 @@ public class Food
 		else
 			//return (int) TFC_Time.getTotalHours(); //Removed when porting
 			return Calendar.getInstance().getTimeInMillis();
-	}
-
-	public static void setWeight(ItemStack is, float value)
-	{
-		NBTTagCompound nbt = getNBT(is);
-		nbt.setFloat("foodWeight", value);
-		if(getDecay(is) > value || value <= 0)
-			is.stackSize = 0;
-	}
-
-	public static float getWeight(ItemStack is)
-	{
-		NBTTagCompound nbt = getNBT(is);
-		if (nbt.hasKey("foodWeight"))
-			return nbt.getFloat("foodWeight");
-		else
-			return 0;
 	}
 
 	public static boolean isDried(ItemStack is)
@@ -262,10 +230,22 @@ public class Food
 		nbt.setInteger("tasteSweetMod", val);
 	}
 
+	public static int getSweetMod(ItemStack is) 
+	{
+		NBTTagCompound nbt = getNBT(is);
+		return nbt.getInteger("tasteSweetMod");
+	}
+
 	public static void setSourMod(ItemStack is, int val)
 	{
 		NBTTagCompound nbt = getNBT(is);
 		nbt.setInteger("tasteSourMod", val);
+	}
+
+	public static int getSourMod(ItemStack is) 
+	{
+		NBTTagCompound nbt = getNBT(is);
+		return nbt.getInteger("tasteSourMod");
 	}
 
 	public static void setSaltyMod(ItemStack is, int val)
@@ -274,16 +254,33 @@ public class Food
 		nbt.setInteger("tasteSaltyMod", val);
 	}
 
+	public static int getSaltyMod(ItemStack is) 
+	{
+		NBTTagCompound nbt = getNBT(is);
+		return nbt.getInteger("tasteSaltyMod");
+	}
+
 	public static void setBitterMod(ItemStack is, int val)
 	{
 		NBTTagCompound nbt = getNBT(is);
 		nbt.setInteger("tasteBitterMod", val);
 	}
+	public static int getBitterMod(ItemStack is) 
+	{
+		NBTTagCompound nbt = getNBT(is);
+		return nbt.getInteger("tasteBitterMod");
+	}
 
 	public static void setSavoryMod(ItemStack is, int val)
 	{
 		NBTTagCompound nbt = getNBT(is);
-		nbt.setInteger("tasteUmamiMod", val);
+		nbt.setInteger("tasteSavoryMod", val);
+	}
+
+	public static int getSavoryMod(ItemStack is) 
+	{
+		NBTTagCompound nbt = getNBT(is);
+		return nbt.getInteger("tasteSavoryMod");
 	}
 
 	public static void adjustFlavor(ItemStack is, Random r)
@@ -315,15 +312,15 @@ public class Food
 	public static int[] getFoodTasteProfile(ItemStack is)
 	{
 		int[] profile = new int[5];
-		//Removed when porting
-		/*if(is != null && is.getItem() instanceof IFood)
+
+		if(is != null && is.getItem() instanceof IFood)
 		{
 			profile[0] = ((IFood)is.getItem()).getTasteSweet(is);
 			profile[1] = ((IFood)is.getItem()).getTasteSour(is);
 			profile[2] = ((IFood)is.getItem()).getTasteSalty(is);
 			profile[3] = ((IFood)is.getItem()).getTasteBitter(is);
 			profile[4] = ((IFood)is.getItem()).getTasteSavory(is);
-		}*/
+		}
 		return profile;
 	}
 

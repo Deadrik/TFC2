@@ -3,6 +3,7 @@ package com.bioxx.tfc2;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 
+import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.items.ItemAxe;
 import com.bioxx.tfc2.items.ItemFoodTFC;
@@ -40,7 +41,7 @@ public class TFCItems
 		StoneKnifeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_knife_head"));
 		StoneHoeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_hoe_head"));
 
-		FoodCabbage = new ItemFoodTFC().setExpiration(3600).setUnlocalizedName("food_cabbage");
+		FoodCabbage = registerItem(new ItemFoodTFC(EnumFoodGroup.Vegetable).setExpiration(3600).setUnlocalizedName("food_cabbage"));
 
 
 	}

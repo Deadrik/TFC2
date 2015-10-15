@@ -120,6 +120,12 @@ public class Core
 		return isSoil(state) || isSand(state) || isStone(state) || isGravel(state);
 	}
 
+	/**
+	 * 
+	 * @param w
+	 * @param pos
+	 * @return
+	 */
 	public static float getMoistureFromChunk(ChunkCache w, BlockPos pos)
 	{
 		Chunk c = w.worldObj.getChunkFromBlockCoords(pos);
@@ -144,6 +150,11 @@ public class Core
 		return true;
 	}
 
+	/**
+	 * If this is modified in any way, setPlayerFoodStats should be called to save the data back 
+	 * to players nbt or the changes will be lost.
+	 * @return Returns the FoodStatsTFC object that is associated with this player. 
+	 */
 	public static FoodStatsTFC getPlayerFoodStats(EntityPlayer player)
 	{
 		FoodStatsTFC foodstats = new FoodStatsTFC(player);

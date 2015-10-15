@@ -215,7 +215,7 @@ public class ClientProxy extends CommonProxy
 
 		//registerItemMesh(TFCItems.StoneAxeHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_axe_head", "inventory"));
 
-		RegistryItemQueue.getInstance().registerQueue();
+		RegistryItemQueue.getInstance().registerMeshes();;
 
 		//Entities
 		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart(Minecraft.getMinecraft().getRenderManager()));

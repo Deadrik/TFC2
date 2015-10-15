@@ -8,19 +8,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 
 public class FoodStatsTFC
 {
 	/** The player's food level. This measures how much food the player can handle.*/
-	public float stomachLevel = 24;
-	private float stomachMax = 24.0f;
-	private float prevFoodLevel = 24;
+	public float stomachLevel = 100;
+	private float stomachMax = 100.0f;
+	private float prevFoodLevel = 100;
 
 	public float nutrFruit = 1.0f;
 	public float nutrVeg = 1.0f;
 	public float nutrGrain = 1.0f;
-	public float nutrDairy = 1.0f;
+	public float nutrDairy = 0.0f;
 	public float nutrProtein = 1.0f;
 	private boolean sendUpdate = true;
 
@@ -394,19 +396,17 @@ public class FoodStatsTFC
 	public float getNutritionHealthModifier()
 	{
 		float nMod = 0.00f;
-		nMod += 0.2f * nutrFruit;
-		nMod += 0.2f * nutrVeg;
-		nMod += 0.2f * nutrGrain;
+		nMod += 0.1f * nutrFruit;
+		nMod += 0.4f * nutrVeg;
+		nMod += 0.3f * nutrGrain;
 		nMod += 0.2f * nutrProtein;
-		nMod += 0.2f * nutrDairy;
 		return Math.max(nMod, 0.05f);
 	}
 
 	public static int getMaxHealth(EntityPlayer player)
 	{
-		//return (int)(Math.min(1000+(player.experienceLevel * TFCOptions.healthGainRate),
-		//		TFCOptions.healthGainCap) * TFC_Core.getPlayerFoodStats(player).getNutritionHealthModifier());
-		return 0;
+		return (int)(Math.min(1000+(player.experienceLevel * TFCOptions.healthGainRate),
+				TFCOptions.healthGainCap) * Core.getPlayerFoodStats(player).getNutritionHealthModifier() * (1+0.2f * Core.getPlayerFoodStats(player).nutrDairy));
 	}
 
 	/**

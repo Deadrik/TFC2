@@ -1,7 +1,6 @@
 package com.bioxx.tfc2.items;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,18 +14,32 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.FoodRegistry;
+import com.bioxx.tfc2.api.interfaces.ICookableFood;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import com.bioxx.tfc2.core.Food;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 
-public class ItemFoodTFC extends ItemTerra
+public class ItemFoodTFC extends ItemTerra implements ICookableFood
 {
+	private int foodID = 0;
 	private long expiration = 300000L;//time expressed in milliseconds
 	private float foodFilling = 1f;
+	public boolean edible = true;
+	public boolean canBeUsedRaw = true;
+	protected int tasteSweet;
+	protected int tasteSour;
+	protected int tasteSalty;
+	protected int tasteBitter;
+	protected int tasteUmami;
+	protected boolean canBeSmoked;
+	protected float smokeAbsorb;
 	private EnumFoodGroup foodGroup = EnumFoodGroup.None;
 
-	public ItemFoodTFC()
+	public ItemFoodTFC(EnumFoodGroup fg)
 	{
+		foodGroup = fg;
+		foodID = FoodRegistry.getInstance().registerFood(fg, this);
 		this.setCreativeTab(CreativeTabs.tabFood);
 	}
 
@@ -36,23 +49,26 @@ public class ItemFoodTFC extends ItemTerra
 	 */
 	public ItemTerra setExpiration(int seconds)
 	{
-		expiration = seconds*1000;
+		expiration = seconds*20;
 		return this;
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
 		super.addInformation(is, player, arraylist, flag);
-		long time = Food.getDecayTimer(is)-System.currentTimeMillis();
-
-		String out = String.format("%d:%02d", 
-				TimeUnit.MILLISECONDS.toMinutes(time),
-				TimeUnit.MILLISECONDS.toSeconds(time) - 
-				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time))
-				);
-		arraylist.add("Expires: " + out);
-
+		long t = net.minecraft.client.Minecraft.getMinecraft().theWorld.getTotalWorldTime();
+		long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().theWorld.getTotalWorldTime();
+		if(time < 0)
+		{
+			arraylist.add("Expired");
+		}
+		else
+		{
+			String out = String.format("%d:%02d", time/60/20, (time/20) % 60);
+			arraylist.add("Expires: " + out + " - " + net.minecraft.client.Minecraft.getMinecraft().theWorld.getTotalWorldTime());
+		}
 	}
 
 	@Override
@@ -62,7 +78,7 @@ public class ItemFoodTFC extends ItemTerra
 		ItemStack is = new ItemStack(itemIn, 1, 0);
 		NBTTagCompound nbt = new NBTTagCompound();
 		is.setTagCompound(nbt);
-		Food.setDecayTimer(is, System.currentTimeMillis()+expiration);
+		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getTotalWorldTime()+expiration);
 		subItems.add(is);
 	}
 
@@ -75,6 +91,7 @@ public class ItemFoodTFC extends ItemTerra
 	{
 		FoodStatsTFC fs = Core.getPlayerFoodStats(player);
 		fs.addNutrition(foodGroup, foodFilling);
+		Core.setPlayerFoodStats(player, fs);
 		worldIn.playSoundAtEntity(player, "random.burp", 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 		this.onFoodEaten(stack, worldIn, player);
 		player.triggerAchievement(StatList.objectUseStats[Item.getIdFromItem(this)]);
@@ -83,16 +100,13 @@ public class ItemFoodTFC extends ItemTerra
 
 	protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player)
 	{
-		/*if (!worldIn.isRemote && this.potionId > 0 && worldIn.rand.nextFloat() < this.potionEffectProbability)
-		{
-			player.addPotionEffect(new PotionEffect(this.potionId, this.potionDuration * 20, this.potionAmplifier));
-		}*/
+
 	}
 
 	@Override
 	public int getItemStackLimit(ItemStack stack)
 	{
-		return 100;
+		return 64;
 	}
 
 	/**
@@ -125,5 +139,116 @@ public class ItemFoodTFC extends ItemTerra
 		}
 
 		return itemStackIn;
+	}
+
+	@Override
+	public EnumFoodGroup getFoodGroup() {
+		return this.foodGroup;
+	}
+
+	@Override
+	public int getFoodID() 
+	{
+		return foodID;
+	}
+
+	@Override
+	public ItemStack onDecayed(ItemStack is, World world, int i, int j, int k) {
+
+		return is;
+	}
+
+	@Override
+	public boolean isEdible(ItemStack is) {
+		return edible;
+	}
+
+	@Override
+	public boolean isUsable(ItemStack is) {
+		return canBeUsedRaw;
+	}
+
+	@Override
+	public int getTasteSweet(ItemStack is) {
+		int base = tasteSweet;
+		if(is != null)
+		{
+			if(is.getTagCompound().hasKey("tasteSweet"))
+				base = is.getTagCompound().getInteger("tasteSweet");
+			base += Food.getCookedProfile(is)[0];
+			base += Food.getFuelProfile(is)[0]*getSmokeAbsorbMultiplier();
+		}
+		return Math.max(base + Food.getSweetMod(is), 0);
+	}
+
+	@Override
+	public int getTasteSour(ItemStack is) {
+		int base = tasteSour;
+		if(is != null)
+		{
+			if(is.getTagCompound().hasKey("tasteSour"))
+				base = is.getTagCompound().getInteger("tasteSour");
+			base += Food.getCookedProfile(is)[1];
+			base += Food.getFuelProfile(is)[1]*getSmokeAbsorbMultiplier();
+		}
+		if (Food.isBrined(is))
+			base += 5;
+		if(Food.isPickled(is))
+			base += 30;
+		return Math.max(base + Food.getSourMod(is), 0);
+	}
+
+	@Override
+	public int getTasteSalty(ItemStack is) {
+		int base = tasteSalty;
+		if(is != null)
+		{
+			if(is.getTagCompound().hasKey("tasteSalty"))
+				base = is.getTagCompound().getInteger("tasteSalty");
+			base += Food.getCookedProfile(is)[2];
+			base += Food.getFuelProfile(is)[2]*getSmokeAbsorbMultiplier();
+		}
+		if(Food.isSalted(is))
+			base += 40;
+		if(Food.isBrined(is))
+			base += 10;
+
+		return Math.max(base + Food.getSaltyMod(is), 0);
+	}
+
+	@Override
+	public int getTasteBitter(ItemStack is) {
+		int base = tasteBitter;
+		if(is != null)
+		{
+			if(is.getTagCompound().hasKey("tasteBitter"))
+				base = is.getTagCompound().getInteger("tasteBitter");
+			base += Food.getCookedProfile(is)[3];
+			base += Food.getFuelProfile(is)[3]*getSmokeAbsorbMultiplier();
+		}
+		return Math.max(base + Food.getBitterMod(is), 0);
+	}
+
+	@Override
+	public int getTasteSavory(ItemStack is) {
+		int base = tasteUmami;
+		if(is != null)
+		{
+			if(is.getTagCompound().hasKey("tasteUmami"))
+				base = is.getTagCompound().getInteger("tasteUmami");
+			base += Food.getCookedProfile(is)[4];
+			base += Food.getFuelProfile(is)[4]*getSmokeAbsorbMultiplier();
+		}
+		return Math.max(base + Food.getSavoryMod(is), 0);
+	}
+
+	@Override
+	public boolean canSmoke() {
+		return canBeSmoked;
+	}
+
+	@Override
+	public float getSmokeAbsorbMultiplier() {
+		return smokeAbsorb;
 	}
 }

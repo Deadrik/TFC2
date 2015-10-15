@@ -5,9 +5,14 @@ import net.minecraftforge.common.config.Property;
 
 public class TFCOptions
 {
+	// World Generation
 	public static int maxThreadsForIslandGen = 1;
 	public static boolean shouldGenTrees = true;
 	public static boolean shouldStripChunks = false;
+
+	// Player
+	public static int healthGainRate = 20;
+	public static int healthGainCap = 3000;
 
 	public static boolean getBooleanFor(Configuration config,String heading, String item, boolean value)
 	{
