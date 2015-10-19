@@ -3,6 +3,8 @@ package com.bioxx.tfc2;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -13,6 +15,7 @@ import net.minecraft.world.chunk.Chunk;
 import org.apache.commons.lang3.text.WordUtils;
 
 import com.bioxx.tfc2.core.FoodStatsTFC;
+import com.bioxx.tfc2.core.InventoryPlayerTFC;
 
 public class Core 
 {
@@ -143,6 +146,16 @@ public class Core
 	public static int getExtraEquipInventorySize() 
 	{
 		return 0;
+	}
+
+	public static InventoryPlayer getNewInventory(EntityPlayer player)
+	{
+		InventoryPlayer ip = player.inventory;
+		NBTTagList nbt = new NBTTagList();
+		nbt = player.inventory.writeToNBT(nbt);
+		ip = new InventoryPlayerTFC(player);
+		ip.readFromNBT(nbt);
+		return ip;
 	}
 
 	public static boolean isPlayerInDebugMode(EntityPlayer player)

@@ -201,6 +201,7 @@ public class RenderOverlayHandler
 			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
 			BlockPos pos = new BlockPos((int)(mc.thePlayer.posX), 0, (int)(mc.thePlayer.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
+			event.left.add(""+mc.theWorld.getWorldTime());
 			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
 			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
 			Chunk c = mc.theWorld.getChunkFromBlockCoords(pos);

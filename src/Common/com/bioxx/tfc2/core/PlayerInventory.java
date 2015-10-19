@@ -79,6 +79,7 @@ public class PlayerInventory
 
 	public static void addExtraEquipables(Container container, InventoryPlayer inventory, int x, int y, boolean freezeSlot){
 		int index = 36; // Should be the correct index
+		//Removed during port
 		//addSlotToContainer(container, new SlotExtraEquipable(inventory, index, 8 + 18, 8 + 18, IEquipable.EquipType.BACK));
 	}
 

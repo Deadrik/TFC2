@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -58,16 +59,16 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
 		super.addInformation(is, player, arraylist, flag);
-		long t = net.minecraft.client.Minecraft.getMinecraft().theWorld.getTotalWorldTime();
-		long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().theWorld.getTotalWorldTime();
+		long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime();
+
 		if(time < 0)
 		{
-			arraylist.add("Expired");
+			arraylist.add(EnumChatFormatting.RED+"Expired x"+Math.min(1+(time / expiration)* (-1), is.stackSize));
 		}
 		else
 		{
 			String out = String.format("%d:%02d", time/60/20, (time/20) % 60);
-			arraylist.add("Expires: " + out + " - " + net.minecraft.client.Minecraft.getMinecraft().theWorld.getTotalWorldTime());
+			arraylist.add("Expires: " + out);
 		}
 	}
 
@@ -78,7 +79,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood
 		ItemStack is = new ItemStack(itemIn, 1, 0);
 		NBTTagCompound nbt = new NBTTagCompound();
 		is.setTagCompound(nbt);
-		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getTotalWorldTime()+expiration);
+		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+expiration);
 		subItems.add(is);
 	}
 
