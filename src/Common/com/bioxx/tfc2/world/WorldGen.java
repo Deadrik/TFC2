@@ -23,7 +23,9 @@ import com.bioxx.jmapgen.IslandParameters;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.RandomCollection;
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.api.events.IslandGenEvent;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
@@ -144,17 +146,33 @@ public class WorldGen implements IThreadCompleteListener
 		return ci.getIslandMap();
 	}
 
+	public boolean isMapLoaded(int x, int z)
+	{
+		return isMapLoaded(Helper.combineCoords(x, z));
+	}
+
+	public boolean isMapLoaded(int id)
+	{
+		if(world.isRemote)
+			return clientIslandCache.get(id) != null;
+		else
+			return islandCache.get(id) != null;
+	}
+
 	private IslandMap createIsland(int x, int z)
 	{
 		long seed = world.getSeed()+Helper.combineCoords(x, z);
-		IslandParameters id = createParams(seed, x, z);
+		IslandGenEvent.Pre preEvent = new IslandGenEvent.Pre(createParams(seed, x, z));
+		Global.EVENT_BUS.post(preEvent);
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
-		mapgen.newIsland(id);
+		mapgen.newIsland(preEvent.params);
 		mapgen.generateFull();
-		CachedIsland ci = new CachedIsland(mapgen);
+		IslandGenEvent.Post postEvent = new IslandGenEvent.Post(mapgen);
+		Global.EVENT_BUS.post(postEvent);
+		CachedIsland ci = new CachedIsland(postEvent.islandMap);
 		saveMap(ci);
 		islandCache.put(Helper.combineCoords(x, z), ci);
-		return mapgen;
+		return ci.islandData;
 	}
 
 	private IslandParameters createParams(long seed, int x, int z)

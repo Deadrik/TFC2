@@ -43,10 +43,10 @@ import com.bioxx.tfc2.networking.server.KnappingUpdatePacket;
 import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 import com.bioxx.tfc2.world.WorldGen;
 
-@Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, dependencies = Reference.ModDependencies)
+@Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, useMetadata = false, dependencies = Reference.ModDependencies)
 public class TFC
 {
-	@Instance("TFC")
+	@Instance
 	public static TFC instance;
 
 	public static Logger log = LogManager.getLogger("TFC");

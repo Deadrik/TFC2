@@ -2,10 +2,14 @@ package com.bioxx.tfc2.api;
 
 import java.util.Arrays;
 
+import net.minecraftforge.fml.common.eventhandler.EventBus;
+
 import com.google.common.collect.ObjectArrays;
 
 public class Global
 {
+	public static final EventBus EVENT_BUS = new EventBus();
+
 	/* FruitTree Meta Names, also used for fruit items and FloraManager */
 	public static final String[] FRUIT_META_NAMES = new String[] {
 		"red_apple", "banana", "orange", "green_apple", "lemon", "olive", "cherry", "peach", "plum"
