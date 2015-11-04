@@ -22,6 +22,8 @@ import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.core.Recipes;
+import com.bioxx.tfc2.entity.EntityBear;
+import com.bioxx.tfc2.entity.EntityBearPanda;
 import com.bioxx.tfc2.entity.EntityCart;
 import com.bioxx.tfc2.handlers.CreateSpawnHandler;
 import com.bioxx.tfc2.handlers.EntityLivingHandler;
@@ -70,6 +72,8 @@ public class CommonProxy
 		FMLCommonHandler.instance().bus().register(new PlayerTracker());
 
 		EntityRegistry.registerModEntity(EntityCart.class, "Cart", 0, TFC.instance, 80, 3, true, 0x000000, 0x00ff00);
+		EntityRegistry.registerModEntity(EntityBear.class, "Bear", 1, TFC.instance, 80, 3, true, 0x000000, 0xff0000);
+		EntityRegistry.registerModEntity(EntityBearPanda.class, "BearPanda", 2, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 	}
 
 	public void postInit(FMLPostInitializationEvent event)
