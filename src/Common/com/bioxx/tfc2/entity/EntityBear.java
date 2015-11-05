@@ -23,6 +23,7 @@ import com.bioxx.tfc2.core.TFC_Sounds;
 
 public class EntityBear extends EntityTameable 
 {
+	BearType bearType;
 
 	public EntityBear(World worldIn) 
 	{
@@ -37,6 +38,7 @@ public class EntityBear extends EntityTameable
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
+		bearType = BearType.Brown;
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class EntityBear extends EntityTameable
 	protected void entityInit ()
 	{
 		super.entityInit ();
-		//dataWatcher.addObject (18, getHealth());
+		dataWatcher.addObject (18, BearType.Polar.ordinal());
 		/*this.dataWatcher.addObject(13, Integer.valueOf(0)); //sex (1 or 0)
 		this.dataWatcher.addObject(15, Integer.valueOf(0));		//age
 		this.dataWatcher.addObject(22, Integer.valueOf(0)); //Size, strength, aggression, obedience
@@ -89,6 +91,7 @@ public class EntityBear extends EntityTameable
 	public void writeEntityToNBT (NBTTagCompound nbt)
 	{
 		super.writeEntityToNBT (nbt);
+		nbt.setInteger("BearType", bearType.ordinal());
 	}
 
 
@@ -99,6 +102,7 @@ public class EntityBear extends EntityTameable
 	public void readEntityFromNBT(NBTTagCompound nbt)
 	{
 		super.readEntityFromNBT(nbt);
+		bearType = BearType.values()[nbt.getInteger("BearType")];
 	}
 
 
@@ -276,5 +280,15 @@ public class EntityBear extends EntityTameable
 		{
 			super.handleHealthUpdate (par1);
 		}
+	}
+
+	public BearType getBearType()
+	{
+		return BearType.values()[this.dataWatcher.getWatchableObjectInt(18)];
+	}
+
+	public enum BearType
+	{
+		Brown, Polar, Black;
 	}
 }
