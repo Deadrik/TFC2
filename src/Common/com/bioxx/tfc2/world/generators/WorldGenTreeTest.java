@@ -125,7 +125,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
-				grown = genTree(schem, tc, world, treePos);
+				grown = genTree(schem, tc, world, random, treePos);
 			}
 		}
 
@@ -154,7 +154,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
-				grown = genTree(schem, tc, world, treePos);
+				grown = genTree(schem, tc, world, random, treePos);
 			}
 		}
 
@@ -165,9 +165,9 @@ public class WorldGenTreeTest implements IWorldGenerator
 	//*****************
 	// Private methods
 	//*****************
-	private boolean genTree(Schematic schem, TreeConfig tc, World world, BlockPos pos)
+	private boolean genTree(Schematic schem, TreeConfig tc, World world, Random rand, BlockPos pos)
 	{
-		int rot = world.rand.nextInt(4);
+		int rot = rand.nextInt(4);
 		int index;
 		int id;
 		int meta;

@@ -34,6 +34,7 @@ import com.bioxx.tfc2.blocks.BlockLeaves2;
 import com.bioxx.tfc2.blocks.BlockLogNatural;
 import com.bioxx.tfc2.blocks.BlockLogNatural2;
 import com.bioxx.tfc2.commands.PrintImageMapCommand;
+import com.bioxx.tfc2.commands.RegenChunkCommand;
 import com.bioxx.tfc2.commands.RemoveAreaCommand;
 import com.bioxx.tfc2.commands.StripChunkCommand;
 import com.bioxx.tfc2.commands.TeleportInIslandCommand;
@@ -104,6 +105,7 @@ public class TFC
 		evt.registerServerCommand(new TeleportInIslandCommand());
 		evt.registerServerCommand(new RemoveAreaCommand());
 		evt.registerServerCommand(new StripChunkCommand());
+		evt.registerServerCommand(new RegenChunkCommand());
 	}
 
 	@EventHandler
