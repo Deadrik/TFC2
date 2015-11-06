@@ -1810,15 +1810,14 @@ public class IslandMap
 					HexDirection dn = rn.center.getDirection(rn.downRiver);
 					if(hd.getOpposite() == dn)
 					{
-						double dist = 7.5 - Attrib.getRiver();
 						double x = 0;
 						double y = 0;
 
-						/*if(hd == HexDirection.North || hd == HexDirection.South)
+						if(hd == HexDirection.North || hd == HexDirection.South)
 							if((rn.center.index & 1) > 0)
-							{x = 6 - Attrib.getRiver(); y = -4 + Attrib.getRiver();}
+							{x = 6 - Attrib.getRiver();}
 							else
-							{x = -6 + Attrib.getRiver(); y = 4 - Attrib.getRiver();}
+							{x = -6 + Attrib.getRiver();}
 						else if(hd == HexDirection.NorthEast || hd == HexDirection.SouthWest)
 						{
 							if((rn.center.index & 1) > 0)
@@ -1836,7 +1835,7 @@ public class IslandMap
 						else
 						{
 							System.out.println("River:" + hd.toString() + " : " + dn.toString());
-						}*/
+						}
 
 
 						Attrib.setRiverMidpoint(rn.center.point.plus(x, y));

@@ -504,7 +504,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		ArrayList<BlockPos> points = new ArrayList<BlockPos>();
 		Point splinePos;
-		BlockPos pos, pos2, pos3;
+		BlockPos pos, pos2, pos3, pos4;
 		Point iPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
 		Center closest;
 		IBlockState b;
@@ -515,7 +515,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 		if(attrib != null)
 		{
-			wSq = Math.max(rDepth * rDepth, 1);
+			wSq = Math.max(rDepth * rDepth*2, 1);
 
 			for(double i = 0; i < 1; i+= 0.02)
 			{
@@ -526,7 +526,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				closest = islandMap.getClosestCenter(splinePos);
 				splinePos = splinePos.minus(iPoint);
 
-				//If the spline point is outsi   de chunk boundary than we skip it
+				//If the spline point is outside chunk boundary than we skip it
 				if(splinePos.x < -16 || splinePos.y < -16 || splinePos.x >= 32 || splinePos.y >= 32)
 					continue;
 
@@ -553,52 +553,48 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						terrainElev = this.elevationMap[(pos2.getZ() << 4) | pos2.getX()];
 						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL);
 
-						/*if(attrib.getRiver() >= 1)
-							waterLevel--;*/
-
-						/*if(attrib.getRiver() > 1D)
-							System.out.println();*/
-
 						pos2 = pos2.add(0, waterLevel, 0);
-						for(int depth = rDepth; depth >= -rDepth; depth--)
+						pos4 = pos.add(0, waterLevel, 0);
+						for(int depth = rDepth; depth >= -rDepth*3; depth--)
 						{
 							pos3 = pos2.add(0, depth, 0);
 							doAir = false;
-							//If we're carving below the water level then we want to make the river bottom curved
-							if(depth <= 0 && pos3.distanceSq(pos2.getX(), pos2.getY(), pos2.getZ()) > wSq)
+							IBlockState s = getState(chunkprimer, pos3);
+
+
+							if(depth >= 0 && pos3.distanceSq(pos4.getX(), pos4.getY(), pos4.getZ()) < wSq)
 							{
-								continue;
+								if(s.getBlock() != TFCBlocks.SaltWater && s.getBlock() != TFCBlocks.SaltWaterStatic && 
+										s.getBlock() != TFCBlocks.FreshWater && s.getBlock() != TFCBlocks.FreshWaterStatic)
+								{
+									setState(chunkprimer, pos3, Blocks.air.getDefaultState());
+								}
+								//continue;
 							}
-							else if(depth > 0 && pos3.distanceSq(pos2.getX(), pos2.getY(), pos2.getZ()) <= wSq)
-							{
-								setState(chunkprimer, pos3, Blocks.air.getDefaultState());
-								continue;
-							}
-							else if(pos3.distanceSq(pos2.getX(), pos2.getY(), pos2.getZ()) <= wSq)
+							else if(depth < 0 && pos3.distanceSq(pos4.getX(), pos4.getY(), pos4.getZ()) <= wSq)
 							{
 								IBlockState fillState = TFCBlocks.FreshWater.getDefaultState();
 
 								//If we're moving up or down a slope then don't place water
-								if(/*(terrainElev != hexElev && dnCenter != null && terrainElev != this.convertElevation(dnCenter.getElevation())) ||*/ pos3.getY() >= waterLevel)
+								if(terrainElev != hexElev /* pos3.getY() >= waterLevel*/)
 								{
 									fillState = Blocks.air.getDefaultState();
 								}
-								//fillState = Blocks.air.getDefaultState();
-								IBlockState s = getState(chunkprimer, pos3);
-								if(Core.isTerrain(s))
+
+								if(s.getBlock() != TFCBlocks.SaltWater && s.getBlock() != TFCBlocks.SaltWaterStatic && 
+										s.getBlock() != TFCBlocks.FreshWater && s.getBlock() != TFCBlocks.FreshWaterStatic)
 								{
 									setState(chunkprimer, pos3, fillState);
-									s = getState(chunkprimer, pos3.up());
-									if(s.getBlock() == Blocks.air)
-									{
-										doAir = true;
-									}
+									convertRiverBank(chunkprimer, pos3.down());
+								}
 
+								if(pos3.getY() == waterLevel || pos3.getY() == waterLevel-1)
+								{
+									doAir = true;
 									convertRiverBank(chunkprimer, pos3.north(), doAir);
 									convertRiverBank(chunkprimer, pos3.south(), doAir);
 									convertRiverBank(chunkprimer, pos3.east(), doAir);
 									convertRiverBank(chunkprimer, pos3.west(), doAir);
-									convertRiverBank(chunkprimer, pos3.down());
 								}
 							}
 						}
