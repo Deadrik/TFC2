@@ -94,8 +94,8 @@ public class BlockSaltWater extends BlockFluidClassic {
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
 		super.updateTick(world, pos, state, rand);
-		IBlockState newState = world.getBlockState(pos);
-		if(newState.getBlock() == this && ((Integer)newState.getValue(LEVEL)).intValue() > 0)
+		int myLevel = ((Integer)state.getValue(LEVEL)).intValue();
+		if(state.getBlock() == this && myLevel > 0)
 		{
 			int count = 0;
 			if(isSourceBlock(world, pos.north())) count++;
