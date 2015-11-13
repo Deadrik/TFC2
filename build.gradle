@@ -1,5 +1,5 @@
 plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.1"
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 
 // define the properties file
@@ -32,7 +32,7 @@ allprojects {
     tasks.withType(Jar) {
         manifest {
             manifest.attributes(
-                'FMLCorePlugin': 'com.bioxx.tfc.TFCASMLoadingPlugin',
+                'FMLCorePlugin': 'com.bioxx.tfc2.TFCASMLoadingPlugin',
                 'FMLCorePluginContainsFMLMod': 'true',
                 'FMLAT': 'tfc_at.cfg'
             )
