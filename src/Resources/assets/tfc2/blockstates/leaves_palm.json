@@ -1,10 +1,9 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "textures": {
-            "#palmleaf": "tfc2:blocks/wood/trees/Palm Leaf"
-        },
-        "model": "tfc2:Leaves/palm full.b3d"
+        "textures": {},
+        "model": "tfc2:Leaves/palm_half.obj",
+        "custom": { "flip-v": true }
      },
     "variants": {
         "normal": [{}],

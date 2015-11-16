@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -53,6 +54,7 @@ public class ClientProxy extends CommonProxy
 		super.preInit(event);
 
 		B3DLoader.instance.addDomain(Reference.ModID);
+		OBJLoader.instance.addDomain(Reference.ModID);
 		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.LeavesPalm), 0, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Leaves2), 18, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
 		Item fresh = Item.getItemFromBlock(TFCBlocks.FreshWater);

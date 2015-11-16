@@ -201,6 +201,8 @@ public class TFC
 
 	private IBlockState getNaturalLog(WoodType w)
 	{
+		if(w == WoodType.Palm)
+			return TFCBlocks.LogNaturalPalm.getDefaultState();
 		if(w.getMeta() >= 16)
 			return TFCBlocks.LogNatural2.getDefaultState().withProperty(BlockLogNatural2.META_PROPERTY, w);
 		return TFCBlocks.LogNatural.getDefaultState().withProperty(BlockLogNatural.META_PROPERTY, w);

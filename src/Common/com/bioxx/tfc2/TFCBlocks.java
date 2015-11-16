@@ -16,6 +16,7 @@ import com.bioxx.tfc2.blocks.BlockLogHorizontal2;
 import com.bioxx.tfc2.blocks.BlockLogHorizontal3;
 import com.bioxx.tfc2.blocks.BlockLogNatural;
 import com.bioxx.tfc2.blocks.BlockLogNatural2;
+import com.bioxx.tfc2.blocks.BlockLogNaturalPalm;
 import com.bioxx.tfc2.blocks.BlockLogVertical;
 import com.bioxx.tfc2.blocks.BlockLogVertical2;
 import com.bioxx.tfc2.blocks.BlockLooseRocks;
@@ -59,6 +60,7 @@ public class TFCBlocks
 	public static Block Sapling2;
 	public static Block LogNatural;
 	public static Block LogNatural2;
+	public static Block LogNaturalPalm;
 	public static Block LogVertical;
 	public static Block LogVertical2;
 	public static Block LogHorizontal;
@@ -95,6 +97,7 @@ public class TFCBlocks
 		Sapling2 = new BlockSapling2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling2");
 		LogNatural = new BlockLogNatural().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural");
 		LogNatural2 = new BlockLogNatural2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural2");
+		LogNaturalPalm = new BlockLogNaturalPalm().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("LogNaturalPalm");
 		LogVertical = new BlockLogVertical().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical");
 		LogVertical2 = new BlockLogVertical2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical2");
 		LogHorizontal = new BlockLogHorizontal().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal");
@@ -133,6 +136,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Sapling2, ItemWood.class, "sapling2");
 		GameRegistry.registerBlock(LogNatural, ItemWood.class, "log_natural");
 		GameRegistry.registerBlock(LogNatural2, ItemWood.class, "log_natural2");
+		GameRegistry.registerBlock(LogNaturalPalm, ItemWood.class, "log_naturalpalm");
 		GameRegistry.registerBlock(LogVertical, ItemWood.class, "log_vertical");
 		GameRegistry.registerBlock(LogVertical2, ItemWood.class, "log_vertical2");
 		GameRegistry.registerBlock(LogHorizontal, ItemWood.class, "log_horizontal");
@@ -146,6 +150,7 @@ public class TFCBlocks
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);
+		LogNaturalPalm.setHarvestLevel("axe", 1);
 		LogVertical.setHarvestLevel("axe", 1);
 		LogVertical2.setHarvestLevel("axe", 1);
 		LogHorizontal.setHarvestLevel("axe", 1);

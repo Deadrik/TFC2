@@ -5,8 +5,6 @@
 	},
     "variants": {
     "wood":{
-        	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/trees/Rosewood Log"} },
-    	    "blackwood":  { "textures": {"all": "tfc2:blocks/wood/trees/Blackwood Log"} },
     	    "palm":  { "textures": {"all": "tfc2:blocks/wood/trees/Palm Log"}, "model" : "tfc2:Wood/Logs/Palm" }
         }
     }

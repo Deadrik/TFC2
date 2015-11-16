@@ -11,17 +11,18 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.WoodType;
 
-public class BlockLogNatural2 extends BlockTerra
+public class BlockLogNaturalPalm extends BlockTerra
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 18));
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 18, 19));
 
-	public BlockLogNatural2()
+	public BlockLogNaturalPalm()
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
+		this.setBlockBounds(0.125f, 0, 0.125f, 0.875f, 1f, 0.875f);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, WoodType.Palm));
 		this.setShowInCreative(false);
 	}
 
@@ -46,12 +47,24 @@ public class BlockLogNatural2 extends BlockTerra
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(TFCBlocks.LogVertical2);
+		return null;
 	}
 
 	@Override
 	public int damageDropped(IBlockState state)
 	{
 		return ((WoodType)state.getValue(META_PROPERTY)).getMeta();
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube()
+	{
+		return false;
 	}
 }
