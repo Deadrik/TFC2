@@ -16,7 +16,7 @@
 
  This is a port of libnoise ( http://libnoise.sourceforge.net/index.html ).  Original implementation by Jason Bevins
 
-*/
+ */
 
 package com.bioxx.libnoise.module.source;
 
@@ -27,6 +27,11 @@ public class Const extends Module {
 
 	public Const() {
 		super(0);
+	}
+
+	public Const(double val) {
+		super(0);
+		value = val;
 	}
 
 	public double getValue() {

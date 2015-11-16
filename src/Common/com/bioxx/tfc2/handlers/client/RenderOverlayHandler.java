@@ -36,6 +36,7 @@ import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
+import com.bioxx.tfc2.api.WeatherManager;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.PlayerInfo;
@@ -202,6 +203,9 @@ public class RenderOverlayHandler
 			BlockPos pos = new BlockPos((int)(mc.thePlayer.posX), 0, (int)(mc.thePlayer.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
 			event.left.add(""+mc.theWorld.getWorldTime());
+			event.left.add("Rain: "+WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
+					" / "  + " / " + mc.theWorld.isRaining());
+			event.left.add("Temp: " + WeatherManager.getInstance().getTemperature((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
 			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
 			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
 			Chunk c = mc.theWorld.getChunkFromBlockCoords(pos);

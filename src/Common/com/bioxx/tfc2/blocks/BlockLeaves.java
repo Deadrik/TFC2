@@ -101,7 +101,7 @@ public class BlockLeaves extends BlockTerra
 		if(WorldGen.instance == null)
 			return 0x55ff55;
 		IslandMap m = WorldGen.instance.getIslandMap(x, z);
-		double d0 = m.getParams().getIslandTemp().getTemp();
+		double d0 = m.getParams().getIslandTemp().getMapTemp();
 		double d1 = 0.5;
 
 		if(worldIn instanceof ChunkCache)

@@ -70,6 +70,13 @@ public class Perlin extends Module {
 		super(0);
 	}
 
+	public Perlin(long seed, double freq, double pers) {
+		super(0);
+		this.seed = seed;
+		this.frequency = freq;
+		this.persistence = pers;
+	}
+
 	public double getFrequency() {
 		return frequency;
 	}

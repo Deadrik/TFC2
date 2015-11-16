@@ -3,17 +3,42 @@ package com.bioxx.tfc2.api.types;
 
 public enum ClimateTemp
 {
-	POLAR(0), SUBPOLAR(0.25), TEMPERATE(0.5), SUBTROPICAL(0.75), TROPICAL(1);
+	POLAR(0, -50.0, 0.0, 10.0), 
+	SUBPOLAR(0.25, -25.0, 15.0, 10.0), 
+	TEMPERATE(0.5, -10.0, 30.0, 5.0), 
+	SUBTROPICAL(0.75, 10.0, 35.0, 5.0), 
+	TROPICAL(1, 25.0, 40.0, 5.0);
 
-	double temp;
+	double mapTemp;
+	double weatherTempMin;
+	double weatherTempMax;
+	double weatherVariance;//this is how much the temperature can fluctuate outside of the base range. Used for local/daily temperatures
 
-	ClimateTemp(double d)
+	ClimateTemp(double d, double min, double max, double variance)
 	{
-		temp = d;
+		mapTemp = d;
+		weatherTempMin = min;
+		weatherTempMax = max;
+		weatherVariance = variance;
 	}
 
-	public double getTemp()
+	public double getMapTemp()
 	{
-		return temp;
+		return mapTemp;
+	}
+
+	public double getTempMin()
+	{
+		return weatherTempMin;
+	}
+
+	public double getTempMax()
+	{
+		return weatherTempMax;
+	}
+
+	public double getTempVar()
+	{
+		return weatherVariance;
 	}
 }

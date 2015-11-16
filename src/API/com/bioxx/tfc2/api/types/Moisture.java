@@ -17,6 +17,17 @@ public enum Moisture
 		return val;
 	}
 
+	/**
+	 * Used by the weather manager to determine the required precipitation value before rain actually 
+	 * begins to fall. This is inverse from the raw moisture value for each enum value. e.x. An island
+	 * with a LOW moisture value has a raw value of 0.2. This means that the precipitation value will
+	 * need to be at least 0.8 before rain will actually begin to fall.
+	 */
+	public double getInverse()
+	{
+		return 1.0-val;
+	}
+
 	public static Moisture fromVal(double d)
 	{
 		if(d <= 0.2)

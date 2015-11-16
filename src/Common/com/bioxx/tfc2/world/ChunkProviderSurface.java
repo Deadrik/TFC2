@@ -567,7 +567,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								if(s.getBlock() != TFCBlocks.SaltWater && s.getBlock() != TFCBlocks.SaltWaterStatic && 
 										s.getBlock() != TFCBlocks.FreshWater && s.getBlock() != TFCBlocks.FreshWaterStatic)
 								{
-									setState(chunkprimer, pos3, Blocks.air.getDefaultState());
+								setState(chunkprimer, pos3, Blocks.air.getDefaultState());
 								}
 								//continue;
 							}
@@ -580,7 +580,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								{
 									fillState = Blocks.air.getDefaultState();
 								}
-
+								
 								if(s.getBlock() != TFCBlocks.SaltWater && s.getBlock() != TFCBlocks.SaltWaterStatic && 
 										s.getBlock() != TFCBlocks.FreshWater && s.getBlock() != TFCBlocks.FreshWaterStatic)
 								{

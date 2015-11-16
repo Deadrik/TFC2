@@ -25,16 +25,7 @@ public class IslandParameters
 	private int xCoord = 0;
 	private int zCoord = 0;
 
-	/**
-	 * 0x1 = Canyons
-	 * 0x2 = Volcano
-	 * 0x4 = Cliffs
-	 * 0x8 = Sharper Mountains
-	 * 0x16 = Even Sharper Mountains
-	 * 0x32 = Valleys
-	 * 0x64 = Small Craters
-	 * 0x128 = Large Crater
-	 */
+	private long seed;
 
 	private EnumSet<Feature> features = EnumSet.noneOf(Feature.class);
 	private StoneType surfaceRock = StoneType.Granite;
@@ -57,6 +48,7 @@ public class IslandParameters
 	// The Perlin-based island combines perlin noise with the radius
 	public IslandParameters (long seed, int size, double oceans, double lake) 
 	{
+		this.seed = seed;
 		SIZE = size;
 		double landRatioMinimum = 0.1;
 		double landRatioMaximum = 0.55;
@@ -68,7 +60,7 @@ public class IslandParameters
 	public void createShape(long seed)
 	{
 		Perlin modulePerl = new Perlin();
-		modulePerl.setSeed((int)seed);
+		modulePerl.setSeed(seed);
 		modulePerl.setFrequency(0.00058);
 		modulePerl.setPersistence(0.7);
 		modulePerl.setLacunarity(2.0);
@@ -231,6 +223,7 @@ public class IslandParameters
 		this.treeRare = nbt.getString("treeRare");
 		this.moisture = Moisture.values()[nbt.getInteger("moisture")];
 		this.temp = ClimateTemp.values()[nbt.getInteger("temp")];
+		this.seed = nbt.getLong("seed");
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
@@ -253,6 +246,7 @@ public class IslandParameters
 		nbt.setString("treeRare", treeRare);
 		nbt.setInteger("moisture", moisture.ordinal());
 		nbt.setInteger("temp", temp.ordinal());
+		nbt.setLong("seed", seed);
 	}
 
 	public enum Feature

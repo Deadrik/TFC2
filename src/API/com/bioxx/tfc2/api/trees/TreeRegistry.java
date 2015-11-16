@@ -108,7 +108,7 @@ public class TreeRegistry
 			if(tree.equals(WoodType.Palm))
 				continue;
 			TreeConfig tc = treeFromString(tree);
-			if(tc.minTemp.getTemp() <= temp.getTemp() && tc.maxTemp.getTemp() >= temp.getTemp() && 
+			if(tc.minTemp.getMapTemp() <= temp.getMapTemp() && tc.maxTemp.getMapTemp() >= temp.getMapTemp() && 
 					tc.minMoisture.getMoisture() <= moisture.getMoisture() && tc.maxMoisture.getMoisture() >= moisture.getMoisture())
 				list.add(tree);
 		}

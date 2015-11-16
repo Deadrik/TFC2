@@ -225,8 +225,53 @@ public class PrintImageMapCommand extends CommandBase
 					e.printStackTrace();
 				}
 			}
+			else if(params[0].equals("test"))
+			{
+				Perlin p0 = new Perlin(world.getSeed(), 0.005, 0.8);
+				p0.setOctaveCount(4);
+				p0.setLacunarity(1.1);
+
+				Clamp c0 = new Clamp(p0);
+
+				Plane rainPlane = new Plane(c0);
+				int size = 512;
+				try 
+				{
+					File outFile = new File(name+".png");
+					BufferedImage outBitmap = new BufferedImage(size,size,BufferedImage.TYPE_INT_RGB);
+					Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
+					graphics.clearRect(0, 0, size, size);
+					System.out.println(name+".png");
+					float perc = 0.1f;
+					float count = 0;
+					int xM = ((int)Math.floor(player.posX) >> 12);
+					int zM = ((int)Math.floor(player.posZ) >> 12);
+					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+
+					for(int x = 0; x < size; x++)
+					{
+						for(int z = 0; z < size; z++)
+						{
+							double val = rainPlane.GetValue(x, z);
+							int rain = (int)(val * 255);
+							graphics.setColor(colorMap[rain]);	
+							graphics.drawRect(x, z, x+1, 1+z);
+						}
+					}
+
+
+
+					System.out.println(name+".png Done!");
+					ImageIO.write(outBitmap, "PNG", outFile);
+				}
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+				}
+			}
 		}
 	}
+
 
 	public static void drawMapImage(int xCoord, int zCoord, World world, String name)
 	{

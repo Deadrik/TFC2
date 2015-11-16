@@ -69,7 +69,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 			 * Do palm tree gen on valid islands
 			 */
 			if(c.getElevation() < 0.2 && c.getMoisture().getMoisture() >= Moisture.HIGH.getMoisture() && 
-					m.getParams().getIslandTemp().getTemp() >= ClimateTemp.SUBTROPICAL.getTemp())
+					m.getParams().getIslandTemp().getMapTemp() >= ClimateTemp.SUBTROPICAL.getMapTemp())
 			{
 				for(int l = 0; l < 3; l++)
 				{

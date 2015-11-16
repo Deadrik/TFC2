@@ -16,7 +16,7 @@
 
  This is a port of libnoise ( http://libnoise.sourceforge.net/index.html ).  Original implementation by Jason Bevins
 
-*/
+ */
 
 package com.bioxx.libnoise.module.modifier;
 
@@ -30,6 +30,17 @@ public class Clamp extends Module {
 
 	public Clamp() {
 		super(1);
+	}
+
+	public Clamp(Module m) {
+		this();
+		this.setSourceModule(0, m);
+	}
+
+	public Clamp(Module m, double lower, double upper) {
+		this(m);
+		this.setLowerBound(lower);
+		this.setUpperBound(upper);
 	}
 
 	public double getLowerBound() {

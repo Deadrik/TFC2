@@ -16,7 +16,7 @@
 
  This is a port of libnoise ( http://libnoise.sourceforge.net/index.html ).  Original implementation by Jason Bevins
 
-*/
+ */
 package com.bioxx.libnoise.module.combiner;
 
 import com.bioxx.libnoise.Utils;
@@ -36,7 +36,7 @@ public class Select extends Module {
 	public static final double DEFAULT_SELECT_UPPER_BOUND = 1.0;
 
 	/// Edge-falloff value.
-    double edgeFalloff = DEFAULT_SELECT_EDGE_FALLOFF;
+	double edgeFalloff = DEFAULT_SELECT_EDGE_FALLOFF;
 
 	/// Lower bound of the selection range.
 	double lowerBound = DEFAULT_SELECT_LOWER_BOUND;
@@ -46,6 +46,15 @@ public class Select extends Module {
 
 	public Select() {
 		super(3);
+	}
+
+	public Select(double lower, double upper, double falloff, Module control, Module m0, Module m1) {
+		this();
+		this.setBounds(lower, upper);
+		this.setEdgeFalloff(falloff);
+		this.setControlModule(control);
+		this.setSourceModule(0, m0);
+		this.setSourceModule(1, m1);
 	}
 
 	public Module getControlModule() {
@@ -65,12 +74,12 @@ public class Select extends Module {
 		return edgeFalloff;
 	}
 
-    public void setEdgeFalloff(double edgeFalloff) {
-        // Make sure that the edge falloff curves do not overlap.
-        double boundSize = upperBound - lowerBound;
-        this.edgeFalloff = (edgeFalloff > boundSize / 2) ? boundSize / 2 : edgeFalloff;
+	public void setEdgeFalloff(double edgeFalloff) {
+		// Make sure that the edge falloff curves do not overlap.
+		double boundSize = upperBound - lowerBound;
+		this.edgeFalloff = (edgeFalloff > boundSize / 2) ? boundSize / 2 : edgeFalloff;
 
-    }
+	}
 
 	public double getLowerBound() {
 		return lowerBound;
