@@ -16,7 +16,7 @@ public class RenderBear extends RenderLiving
 
 	public RenderBear(RenderManager renderManager) 
 	{
-		super(renderManager, new ModelBear(), 0.7f);
+		super(renderManager, new ModelBear(), 1.1f);
 		this.shadowSize = 0.8f;
 	}
 

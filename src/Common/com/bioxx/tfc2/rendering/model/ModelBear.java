@@ -145,6 +145,8 @@ public class ModelBear extends ModelBase
 	@Override
 	public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_)
 	{
+		GlStateManager.scale(1.3, 1.3, 1.3);
+		GlStateManager.translate(0.0, -0.35, 0);
 		float f6 = (180F / (float)Math.PI);
 		this.Head.rotateAngleX = p_78087_5_ / (180F / (float)Math.PI);
 		this.Head.rotateAngleY = p_78087_4_ / (180F / (float)Math.PI);

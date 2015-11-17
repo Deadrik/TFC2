@@ -19,13 +19,13 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
 
-public class EntityBear extends EntityAnimal 
+public class EntityLion extends EntityAnimal
 {
-	BearType bearType;
-
-	public EntityBear(World worldIn) 
+	private Gender gender = Gender.Male;
+	public EntityLion(World worldIn) 
 	{
 		super(worldIn);
 		this.setSize(1.5F, 1.7F);
@@ -38,8 +38,20 @@ public class EntityBear extends EntityAnimal
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
-		bearType = BearType.values()[worldIn.rand.nextInt(3)];
+		gender = worldIn.rand.nextBoolean() ? Gender.Male : Gender.Female;
 	}
+
+	public EntityLion(World worldIn, Gender gender) 
+	{
+		this(worldIn);
+		this.gender = gender;
+	}
+
+	public Gender getGender()
+	{
+		return gender;
+	}
+
 
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable) 
@@ -50,7 +62,6 @@ public class EntityBear extends EntityAnimal
 	@Override
 	protected void updateAITick ()
 	{
-		//dataWatcher.updateObject (18, getHealth());
 		this.motionY += 0.03999999910593033D;
 	}
 
@@ -58,12 +69,7 @@ public class EntityBear extends EntityAnimal
 	protected void entityInit ()
 	{
 		super.entityInit ();
-		dataWatcher.addObject (18, bearType.ordinal());
-		/*this.dataWatcher.addObject(13, Integer.valueOf(0)); //sex (1 or 0)
-		this.dataWatcher.addObject(15, Integer.valueOf(0));		//age
-		this.dataWatcher.addObject(22, Integer.valueOf(0)); //Size, strength, aggression, obedience
-		this.dataWatcher.addObject(23, Integer.valueOf(0)); //familiarity, familiarizedToday, pregnant, empty slot
-		this.dataWatcher.addObject(24, String.valueOf("0")); // Time of conception, stored as a string since we can't do long*/
+		dataWatcher.addObject(13, gender.ordinal());
 	}
 
 
@@ -91,7 +97,7 @@ public class EntityBear extends EntityAnimal
 	public void writeEntityToNBT (NBTTagCompound nbt)
 	{
 		super.writeEntityToNBT (nbt);
-		nbt.setInteger("BearType", bearType.ordinal());
+		nbt.setInteger("gender", gender.ordinal());
 	}
 
 
@@ -102,7 +108,7 @@ public class EntityBear extends EntityAnimal
 	public void readEntityFromNBT(NBTTagCompound nbt)
 	{
 		super.readEntityFromNBT(nbt);
-		bearType = BearType.values()[nbt.getInteger("BearType")];
+		this.gender = Gender.values()[nbt.getInteger("gender")];
 	}
 
 
@@ -199,7 +205,7 @@ public class EntityBear extends EntityAnimal
 	@Override
 	public float getEyeHeight ()
 	{
-		return height * 0.8F;
+		return height * 0.85F;
 	}
 
 	@Override
@@ -220,15 +226,5 @@ public class EntityBear extends EntityAnimal
 		{
 			super.handleHealthUpdate (par1);
 		}
-	}
-
-	public BearType getBearType()
-	{
-		return BearType.values()[this.dataWatcher.getWatchableObjectInt(18)];
-	}
-
-	public enum BearType
-	{
-		Brown, Polar, Black;
 	}
 }
