@@ -35,6 +35,9 @@ import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.processing.CaveAttrNode;
 import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.libnoise.model.Plane;
+import com.bioxx.libnoise.model.Segment;
+import com.bioxx.libnoise.module.modifier.Clamp;
+import com.bioxx.libnoise.module.modifier.Curve;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.Core;
@@ -44,6 +47,7 @@ import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
+import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.terrain.BlockDirt;
 import com.bioxx.tfc2.blocks.terrain.BlockGrass;
 import com.bioxx.tfc2.blocks.terrain.BlockGravel;
@@ -567,7 +571,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								if(s.getBlock() != TFCBlocks.SaltWater && s.getBlock() != TFCBlocks.SaltWaterStatic && 
 										s.getBlock() != TFCBlocks.FreshWater && s.getBlock() != TFCBlocks.FreshWaterStatic)
 								{
-								setState(chunkprimer, pos3, Blocks.air.getDefaultState());
+									setState(chunkprimer, pos3, Blocks.air.getDefaultState());
 								}
 								//continue;
 							}
@@ -580,7 +584,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								{
 									fillState = Blocks.air.getDefaultState();
 								}
-								
+
 								if(s.getBlock() != TFCBlocks.SaltWater && s.getBlock() != TFCBlocks.SaltWaterStatic && 
 										s.getBlock() != TFCBlocks.FreshWater && s.getBlock() != TFCBlocks.FreshWaterStatic)
 								{
@@ -959,18 +963,33 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	public void createSpires(ChunkPrimer primer)
 	{
 		//I want to expand on these in the future but for now the concept is sound.
-		double radiusSq = 5 * 5;
+		double radiusSq = 10 * 10;
 		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		for(Center c : this.centersInChunk)
 		{
 			if(c.hasAnyMarkersOf(Marker.Spire))
 			{
+				Perlin perlin = new Perlin();
+				perlin.setSeed((long)c.index+Helper.combineCoords(mapX, mapZ));
+				perlin.setFrequency(4);
+				perlin.setLacunarity(4);
+				perlin.setOctaveCount(2);
+				perlin.setPersistence(0.2);
+				Clamp clamp = new Clamp(perlin, 0, 1);
+				Curve cu = new Curve();
+				cu.setSourceModule(0, clamp);
+				cu.AddControlPoint(0.0, 0.2);
+				cu.AddControlPoint(0.5, 0.5);
+				cu.AddControlPoint(1, 0.9);
+				Segment s = new Segment(cu);
+				s.setAttenuate(true);
+
 				Point p0 = c.point.minus(new Point(islandChunkX, islandChunkZ).toIslandCoord());
 				Random rand = new Random(c.index);
 				int elev = 30 + rand.nextInt(20);
-				for(int x = -10; x < 10; x++)
+				for(int x = -10; x <= 10; x++)
 				{
-					for(int z = -10; z < 10; z++)
+					for(int z = -10; z <= 10; z++)
 					{
 						Point p1 = p0.plus(x, z);
 						//Validation
@@ -987,7 +1006,15 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							int el = elevationMap[(int)p1.y << 4 | (int)p1.x];
 							for(int y = 0; y < elev; y++)
 							{
-								this.setState(primer, new BlockPos((int)p1.x, y+el, (int)p1.y), stone);
+
+								double width = s.getValue((double)y/(double)elev) * 9D;
+								if(y < 4)
+								{
+									width = (4-y);
+								}
+								width *= width;
+								if(p0.distanceSq(p1) < (1d*1d)+width)
+									this.setState(primer, new BlockPos((int)p1.x, y+el, (int)p1.y), stone);
 							}
 							elevationMap[(int)p1.y << 4 | (int)p1.x] += elev;
 						}
