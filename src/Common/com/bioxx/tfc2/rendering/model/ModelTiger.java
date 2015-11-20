@@ -57,9 +57,9 @@ public class ModelTiger extends ModelBase
 
 		ModelRenderer Neck = new ModelRenderer(this, "Neck");
 		Neck.setRotationPoint(0F, 0F, 0F);
-		setRotation(Neck, 0F, 0F, 0F);
+		setRotation(Neck, -0.5235988F, 0F, 0F);
 		Neck.mirror = true;
-		Neck.addBox("Neck", -1.5F, 0.1F, -3F, 3, 3, 5);
+		Neck.addBox("Neck", -1.5F, 0.0F, -3F, 3, 3, 5);
 		HEAD.addChild(Neck);
 
 		BODY = new ModelRenderer(this, "BODY");
