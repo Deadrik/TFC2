@@ -41,6 +41,7 @@ import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
+import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class RenderOverlayHandler
@@ -206,6 +207,7 @@ public class RenderOverlayHandler
 			event.left.add("Rain: "+WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
 					" / "  + " / " + mc.theWorld.isRaining());
 			event.left.add("Temp: " + WeatherManager.getInstance().getTemperature((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
+			event.left.add("Date: " + Timekeeper.getInstance().getSeasonalPeriod());
 			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
 			event.left.add("Index: "+hex.index);
 			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");

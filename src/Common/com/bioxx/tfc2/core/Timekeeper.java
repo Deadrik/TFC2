@@ -30,7 +30,7 @@ public class Timekeeper
 
 	public long getTotalTicks()
 	{
-		return worldObj.getTotalWorldTime();
+		return worldObj.getWorldTime();
 	}
 
 	public Season getSeason()
