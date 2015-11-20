@@ -33,6 +33,8 @@ import com.bioxx.libnoise.module.modifier.Curve;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.modifier.ScalePoint;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.tfc2.api.WeatherManager;
+import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class PrintImageMapCommand extends CommandBase
@@ -227,13 +229,6 @@ public class PrintImageMapCommand extends CommandBase
 			}
 			else if(params[0].equals("test"))
 			{
-				Perlin p0 = new Perlin(world.getSeed(), 0.005, 0.8);
-				p0.setOctaveCount(4);
-				p0.setLacunarity(1.1);
-
-				Clamp c0 = new Clamp(p0);
-
-				Plane rainPlane = new Plane(c0);
 				int size = 512;
 				try 
 				{
@@ -248,17 +243,24 @@ public class PrintImageMapCommand extends CommandBase
 					int zM = ((int)Math.floor(player.posZ) >> 12);
 					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 
-					for(int x = 0; x < size; x++)
+					/*for(int x = 0; x < size; x++)
 					{
 						for(int z = 0; z < size; z++)
 						{
-							double val = rainPlane.GetValue(x, z);
+							double val = line.getValue((double)(world.getWorldTime() >> 9));
 							int rain = (int)(val * 255);
 							graphics.setColor(colorMap[rain]);	
 							graphics.drawRect(x, z, x+1, 1+z);
 						}
+					}*/
+					for(int x = 0; x < size; x++)
+					{
+						//double val = line.getValue((double)(world.getWorldTime() >> 9)+x, (xM >> 12) * 1000000, (zM >> 12) * 1000000);
+						double val = WeatherManager.getInstance().rainModelSummer.getValue(Timekeeper.getInstance().getTotalHalfHours()+x, xM * 1000000, zM * 1000000);
+						int rain = (int)(val * 255);
+						graphics.setColor(colorMap[rain]);	
+						graphics.drawRect(x, 0, x+1, 512);
 					}
-
 
 
 					System.out.println(name+".png Done!");

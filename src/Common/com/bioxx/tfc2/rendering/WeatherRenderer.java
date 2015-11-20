@@ -1,5 +1,7 @@
 package com.bioxx.tfc2.rendering;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -26,7 +28,7 @@ public class WeatherRenderer extends IRenderHandler
 	private static final ResourceLocation locationRainPng = new ResourceLocation("textures/environment/rain.png");
 	private static final ResourceLocation locationSnowPng = new ResourceLocation("textures/environment/snow.png");
 	private int rendererUpdateCount = 0;
-	private int rainSoundCounter = 0;
+	private static int rainSoundCounter = 0;
 	public WeatherRenderer()
 	{
 		for (int i = 0; i < 32; ++i)
@@ -124,7 +126,7 @@ public class WeatherRenderer extends IRenderHandler
 							float f7;
 							double d4;
 
-							if (WeatherManager.getInstance().getTemperature(xCoord, yCoord+20, zCoord) > 0)
+							if (WeatherManager.getInstance().getTemperature(xCoord, yCoord+20, zCoord) > 0.15)
 							{
 								if (b1 != 0)
 								{
@@ -196,13 +198,13 @@ public class WeatherRenderer extends IRenderHandler
 			GlStateManager.disableBlend();
 			GlStateManager.alphaFunc(516, 0.1F);
 			mc.entityRenderer.disableLightmap();
-
-			//addRainParticles(world, mc);
 		}
 	}
 
-	private void addRainParticles(WorldClient worldclient, Minecraft mc)
+	public static void addRainParticles(Random random, int rendererUpdateCount)
 	{
+		Minecraft mc = Minecraft.getMinecraft();
+		WorldClient worldclient = mc.theWorld;
 		double rainStrength = WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
 		if (!mc.gameSettings.fancyGraphics)
@@ -212,7 +214,7 @@ public class WeatherRenderer extends IRenderHandler
 
 		if (rainStrength > 0.0F)
 		{
-			worldclient.rand.setSeed((long)this.rendererUpdateCount * 312987231L);
+			worldclient.rand.setSeed((long)rendererUpdateCount * 312987231L);
 			Entity entity = mc.getRenderViewEntity();
 			BlockPos blockpos = new BlockPos(entity);
 			byte b0 = 10;
@@ -233,19 +235,19 @@ public class WeatherRenderer extends IRenderHandler
 
 			for (int k = 0; k < rainParticles; ++k)
 			{
-				BlockPos blockpos1 = worldclient.getPrecipitationHeight(blockpos.add(worldclient.rand.nextInt(b0) - worldclient.rand.nextInt(b0), 0, worldclient.rand.nextInt(b0) - worldclient.rand.nextInt(b0)));
-				BiomeGenBase biomegenbase = worldclient.getBiomeGenForCoords(blockpos1);
-				BlockPos blockpos2 = blockpos1.down();
+				BlockPos blockPos1 = worldclient.getPrecipitationHeight(blockpos.add(worldclient.rand.nextInt(b0) - worldclient.rand.nextInt(b0), 0, worldclient.rand.nextInt(b0) - worldclient.rand.nextInt(b0)));
+				double temp = WeatherManager.getInstance().getTemperature(blockPos1);
+				BlockPos blockpos2 = blockPos1.down();
 				Block block = worldclient.getBlockState(blockpos2).getBlock();
 
-				if (blockpos1.getY() <= blockpos.getY() + b0 && blockpos1.getY() >= blockpos.getY() - b0 && biomegenbase.canSpawnLightningBolt() && biomegenbase.getFloatTemperature(blockpos1) >= 0.15F)
+				if (blockPos1.getY() <= blockpos.getY() + b0 && blockPos1.getY() >= blockpos.getY() - b0 && temp > 0.15)
 				{
 					float f1 = worldclient.rand.nextFloat();
 					float f2 = worldclient.rand.nextFloat();
 
 					if (block.getMaterial() == Material.lava)
 					{
-						mc.theWorld.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double)((float)blockpos1.getX() + f1), (double)((float)blockpos1.getY() + 0.1F) - block.getBlockBoundsMinY(), (double)((float)blockpos1.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
+						mc.theWorld.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double)((float)blockPos1.getX() + f1), (double)((float)blockPos1.getY() + 0.1F) - block.getBlockBoundsMinY(), (double)((float)blockPos1.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
 					}
 					else if (block.getMaterial() != Material.air)
 					{
@@ -264,9 +266,9 @@ public class WeatherRenderer extends IRenderHandler
 				}
 			}
 
-			if (i > 0 && worldclient.rand.nextInt(3) < this.rainSoundCounter++)
+			if (i > 0 && worldclient.rand.nextInt(3) < rainSoundCounter++)
 			{
-				this.rainSoundCounter = 0;
+				rainSoundCounter = 0;
 
 				if (d1 > (double)(blockpos.getY() + 1) && worldclient.getPrecipitationHeight(blockpos).getY() > MathHelper.floor_float((float)blockpos.getY()))
 				{

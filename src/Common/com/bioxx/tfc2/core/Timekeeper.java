@@ -43,6 +43,11 @@ public class Timekeeper
 		return getTotalTicks() / 1000;
 	}
 
+	public long getTotalHalfHours()
+	{
+		return getTotalTicks() / 500;
+	}
+
 	public double getClockTime()
 	{
 		double time = (getTotalTicks() % 24000) / 1000D;

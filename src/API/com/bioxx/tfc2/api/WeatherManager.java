@@ -28,10 +28,10 @@ public class WeatherManager
 {
 	private static WeatherManager instance;
 	private int rainCounter = 0;
-	private Line rainModelSpring;
-	private Line rainModelSummer;
-	private Line rainModelFall;
-	private Line rainModelWinter;
+	public Line rainModelSpring;
+	public Line rainModelSummer;
+	public Line rainModelFall;
+	public Line rainModelWinter;
 	private Plane temperatureNoise;
 	private World worldObj;
 
@@ -52,6 +52,9 @@ public class WeatherManager
 	}
 
 	/**
+	 * @param model Rain Model
+	 * @param x Island Map XCoord
+	 * @param z Island Map ZCoord
 	 * @return Returns precipitation value from the perlin map
 	 */
 	public double getPrecipitationRaw(Line model, int x, int z)
@@ -59,7 +62,7 @@ public class WeatherManager
 		//We use the x value for moving the noise over time
 		//The y value is used as an offset for the island x coordinate
 		//The z value is used as an offset for the island z coordinate
-		return model.getValue((double)(worldObj.getWorldTime() >> 4), (x >> 12) * 1000000, (z >> 12) * 1000000);
+		return model.getValue(Timekeeper.getInstance().getTotalHalfHours(), x * 1000000, z * 1000000);
 	}
 
 	/**
@@ -69,10 +72,11 @@ public class WeatherManager
 	{
 		IslandMap island = WorldGen.instance.getIslandMap(x >> 12, z >> 12);
 		Line model = getModelForClimate(island, worldObj);
-		double raw = getPrecipitationRaw(model, x, z);
-		double clamp = island.getParams().getIslandMoisture().getInverse();
+		double raw = getPrecipitationRaw(model, x >> 12, z >> 12);
+		//We divide the clamp by two so that there is more rain on average. Just using the clamp itself was too limiting
+		double clamp = island.getParams().getIslandMoisture().getInverse() / 2D;
 		double rain = Math.max(Math.min(raw - clamp, 1.0), 0.0);
-		return Math.max(Math.min(getPrecipitationRaw(model, x, z) - island.getParams().getIslandMoisture().getInverse(), 1.0), 0.0);
+		return rain;
 	}
 
 	public Line getModelForClimate(IslandMap map, World world)
@@ -250,7 +254,7 @@ public class WeatherManager
 		/*
 		 * Rain band module. High frequency causes the rain strength to fluctuate a lot.
 		 */
-		Perlin p0 = new Perlin(worldObj.getSeed(), 0.1, 0.8);
+		Perlin p0 = new Perlin(worldObj.getSeed(), 0.05, 0.8);
 		p0.setOctaveCount(2);
 		p0.setLacunarity(1.1);
 
@@ -262,7 +266,7 @@ public class WeatherManager
 		/*
 		 * Control module - This creates the Large Storms
 		 */
-		Perlin p1 = new Perlin(worldObj.getSeed(), 0.019, 0.1);
+		Perlin p1 = new Perlin(worldObj.getSeed(), 0.008, 0.1);
 
 		/**
 		 * Select module uses the control module to determine how often it will be rainy over the course of the 
@@ -303,7 +307,7 @@ public class WeatherManager
 		/*
 		 * Rain band module. High frequency causes the rain strength to fluctuate a lot.
 		 */
-		Perlin p0 = new Perlin(worldObj.getSeed(), 0.1, 0.8);
+		Perlin p0 = new Perlin(worldObj.getSeed(), 0.05, 0.8);
 		p0.setOctaveCount(2);
 		p0.setLacunarity(1.1);
 
@@ -315,7 +319,7 @@ public class WeatherManager
 		/*
 		 * Control module - This creates the Large Storms
 		 */
-		Perlin p1 = new Perlin(worldObj.getSeed(), 0.019, 0.1);
+		Perlin p1 = new Perlin(worldObj.getSeed(), 0.008, 0.1);
 
 		/**
 		 * Select module uses the control module to determine how often it will be rainy over the course of the 

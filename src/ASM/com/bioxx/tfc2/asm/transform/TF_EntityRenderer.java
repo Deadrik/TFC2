@@ -30,7 +30,7 @@ public class TF_EntityRenderer extends ClassTransformer
 		list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "random", "Ljava/util/Random;"));
 		list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "rendererUpdateCount", "I"));
-		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ClientOverrides","addRainParticles","(Ljava/util/Random;I)V", false));
+		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/rendering/WeatherRenderer","addRainParticles","(Ljava/util/Random;I)V", false));
 		nodes.add(new InstrSet(list, 197, InstrOpType.Replace));
 		this.mcpMethodNodes.put("updateRenderer | ()V", new Patch(nodes, PatchOpType.Modify));
 
@@ -39,7 +39,7 @@ public class TF_EntityRenderer extends ClassTransformer
 		list.add(new FieldInsnNode(Opcodes.GETFIELD, "cji", "j", "Ljava/util/Random;"));
 		list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		list.add(new FieldInsnNode(Opcodes.GETFIELD, "cji", "m", "I"));
-		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ClientOverrides","addRainParticles","(Ljava/util/Random;I)V", false));
+		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/rendering/WeatherRenderer","addRainParticles","(Ljava/util/Random;I)V", false));
 		nodes.add(new InstrSet(list, 197, InstrOpType.Replace));
 		this.obfMethodNodes.put("e | ()V", new Patch(nodes, PatchOpType.Modify));
 	}
