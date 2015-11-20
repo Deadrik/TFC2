@@ -207,7 +207,7 @@ public class RenderOverlayHandler
 			event.left.add("Rain: "+WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
 					" / "  + " / " + mc.theWorld.isRaining());
 			event.left.add("Temp: " + WeatherManager.getInstance().getTemperature((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
-			event.left.add("Date: " + Timekeeper.getInstance().getSeasonalPeriod());
+			event.left.add("Date: " + Timekeeper.getInstance().getSeasonalPeriod() + " | Time: " + Timekeeper.getInstance().getClockTime());
 			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
 			event.left.add("Index: "+hex.index);
 			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");

@@ -102,6 +102,8 @@ public class WeatherManager
 
 	public double getTemperature(int x, int y, int z)
 	{
+		//TODO: Add temperature effect based upon time of day.
+
 		Timekeeper inst = Timekeeper.getInstance();
 		// 1: Find the island information to get the general climate data
 		IslandMap island = WorldGen.instance.getIslandMap(x >> 12, z >> 12);
@@ -110,7 +112,7 @@ public class WeatherManager
 		Season season = Timekeeper.getInstance().getSeason();
 		SeasonalPeriod period = Timekeeper.getInstance().getSeasonalPeriod();
 		// 3: Get local temperature noise
-		double local = temperatureNoise.GetValue(x, z) * climate.getTempVar();
+		double local = temperatureNoise.getModule().GetValue(x, Timekeeper.getInstance().getTotalDays(), z) * climate.getTempVar();
 		// 4: Combine this information and adjust for elevation;
 		double baseMin = climate.getTempMin();
 		double baseMax = climate.getTempMax();

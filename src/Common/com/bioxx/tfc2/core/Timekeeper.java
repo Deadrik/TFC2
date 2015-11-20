@@ -33,6 +33,23 @@ public class Timekeeper
 		return worldObj.getWorldTime();
 	}
 
+	public long getTotalDays()
+	{
+		return getTotalTicks() / 24000;
+	}
+
+	public long getTotalHours()
+	{
+		return getTotalTicks() / 1000;
+	}
+
+	public double getClockTime()
+	{
+		double time = (getTotalTicks() % 24000) / 1000D;
+		time += 6;
+		return time % 24;		
+	}
+
 	public Season getSeason()
 	{
 		long mod = getTotalTicks() % ticksInYear;

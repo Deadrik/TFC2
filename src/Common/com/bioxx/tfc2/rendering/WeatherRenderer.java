@@ -96,24 +96,24 @@ public class WeatherRenderer extends IRenderHandler
 
 					if (biomegenbase.canSpawnLightningBolt() || biomegenbase.getEnableSnow())
 					{
-						int l1 = world.getPrecipitationHeight(blockpos).getY();
+						int yCoord = world.getPrecipitationHeight(blockpos).getY();
 						int i2 = j - b0;
 						int j2 = j + b0;
 
-						if (i2 < l1)
+						if (i2 < yCoord)
 						{
-							i2 = l1;
+							i2 = yCoord;
 						}
 
-						if (j2 < l1)
+						if (j2 < yCoord)
 						{
-							j2 = l1;
+							j2 = yCoord;
 						}
 
 						float f5 = 1.0F;
-						int k2 = l1;
+						int k2 = yCoord;
 
-						if (l1 < l)
+						if (yCoord < l)
 						{
 							k2 = l;
 						}
@@ -121,11 +121,10 @@ public class WeatherRenderer extends IRenderHandler
 						if (i2 != j2)
 						{
 							world.rand.setSeed((long)(xCoord * xCoord * 3121 + xCoord * 45238971 ^ zCoord * zCoord * 418711 + zCoord * 13761));
-							float f6 = biomegenbase.getFloatTemperature(new BlockPos(xCoord, i2, zCoord));
 							float f7;
 							double d4;
 
-							if (world.getWorldChunkManager().getTemperatureAtHeight(f6, l1) >= 0.15F)
+							if (WeatherManager.getInstance().getTemperature(xCoord, yCoord+20, zCoord) > 0)
 							{
 								if (b1 != 0)
 								{
