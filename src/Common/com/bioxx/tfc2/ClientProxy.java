@@ -41,6 +41,7 @@ import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
 import com.bioxx.tfc2.handlers.client.GuiHandler;
 import com.bioxx.tfc2.handlers.client.KeyBindingHandler;
 import com.bioxx.tfc2.handlers.client.RenderOverlayHandler;
+import com.bioxx.tfc2.rendering.MeshDef;
 import com.bioxx.tfc2.rendering.model.RenderBear;
 import com.bioxx.tfc2.rendering.model.RenderBearPanda;
 import com.bioxx.tfc2.rendering.model.RenderCart;
@@ -145,6 +146,344 @@ public class ClientProxy extends CommonProxy
 			}
 		};
 		ModelLoader.setCustomStateMapper(TFCBlocks.Leaves2, ignoreState);
+
+		/**
+		 * Dirt
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Dirt), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
+				for(int l = 0; l < Global.STONE_ALL.length; l++)
+				{
+					String stone = Core.textConvert(Global.STONE_ALL[l]);
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Dirt/" + stone, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Grass
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Grass), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
+				for(int l = 0; l < Global.STONE_ALL.length; l++)
+				{
+					String stone = Core.textConvert(Global.STONE_ALL[l]);
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Grass/" + stone, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Stone
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Stone), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
+				for(int l = 0; l < Global.STONE_ALL.length; l++)
+				{
+					String stone = Core.textConvert(Global.STONE_ALL[l]);
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Stone/" + stone, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Rubble
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Rubble), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
+				for(int l = 0; l < Global.STONE_ALL.length; l++)
+				{
+					String stone = Core.textConvert(Global.STONE_ALL[l]);
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Rubble/" + stone, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Sand
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Sand), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
+				for(int l = 0; l < Global.STONE_ALL.length; l++)
+				{
+					String stone = Core.textConvert(Global.STONE_ALL[l]);
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Sand/" + stone, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Gravel
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Gravel), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
+				for(int l = 0; l < Global.STONE_ALL.length; l++)
+				{
+					String stone = Core.textConvert(Global.STONE_ALL[l]);
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Gravel/" + stone, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * LooseRock
+		 */
+		ModelLoader.setCustomMeshDefinition(TFCItems.LooseRock, new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
+				for(int l = 0; l < Global.STONE_ALL.length; l++)
+				{
+					String stone = Core.textConvert(Global.STONE_ALL[l]);
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":LooseRock/" + stone, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Planks
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Planks), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[WoodType.values().length];
+				for(int l = 0; l < 16; l++)
+				{
+					String wood = Core.textConvert(WoodType.values()[l].getName());
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Saplings
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Sapling), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[WoodType.values().length];
+				for(int l = 0; l < 16; l++)
+				{
+					String wood = Core.textConvert(WoodType.values()[l].getName());
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Logs
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.LogVertical), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[WoodType.values().length];
+				for(int l = 0; l < 16; l++)
+				{
+					String wood = Core.textConvert(WoodType.values()[l].getName());
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Logs/" + wood, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Leaves
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Leaves), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[WoodType.values().length];
+				for(int l = 0; l < 16; l++)
+				{
+					String wood = Core.textConvert(WoodType.values()[l].getName());
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Planks2
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Planks2), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[WoodType.values().length];
+				for(int l = 16; l < WoodType.values().length; l++)
+				{
+					String wood = Core.textConvert(WoodType.values()[l].getName());
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Saplings2
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Sapling2), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[WoodType.values().length];
+				for(int l = 16; l < WoodType.values().length; l++)
+				{
+					String wood = Core.textConvert(WoodType.values()[l].getName());
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Logs2
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.LogVertical2), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[WoodType.values().length];
+				for(int l = 16; l < WoodType.values().length; l++)
+				{
+					String wood = Core.textConvert(WoodType.values()[l].getName());
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Logs/" + wood, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Leaves2
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Leaves2), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[WoodType.values().length];
+				for(int l = 16; l < 18; l++)
+				{
+					String wood = Core.textConvert(WoodType.values()[l].getName());
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory");
+				}
+			}
+
+		});
+
+		/**
+		 * Ore
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Ore), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[WoodType.values().length];
+				for(int l = 0; l < OreType.values().length; l++)
+				{
+					String wood = Core.textConvert(WoodType.values()[l].getName());
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Ore/" + wood, "inventory");
+				}
+			}
+
+		});
+
+		for(int l = 0; l < Global.STONE_ALL.length; l++)
+		{
+			String stone = Core.textConvert(Global.STONE_ALL[l]);
+
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Dirt), Reference.ModID + ":Dirt/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Grass), Reference.ModID + ":Grass/" + stone + "/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Stone), Reference.ModID + ":Stone/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Rubble), Reference.ModID + ":Rubble/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + stone);
+
+			ModelBakery.addVariantName(TFCItems.LooseRock, Reference.ModID + ":LooseRock/" + stone);
+		}
+		for(int l = 0; l < 16; l++)
+		{
+			String wood = Core.textConvert(WoodType.values()[l].getName());
+
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks), Reference.ModID + ":Wood/Planks/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling), Reference.ModID + ":Wood/Saplings/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogVertical), Reference.ModID + ":Wood/Logs/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal), Reference.ModID + ":Wood/Logs/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal2), Reference.ModID + ":Wood/Logs/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural), Reference.ModID + ":Wood/Logs/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves), Reference.ModID + ":Wood/Leaves/" + wood);
+
+		}
+
+		for(int l = 16; l < 19; l++)
+		{
+			String wood = Core.textConvert(WoodType.values()[l].getName());
+
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks2), Reference.ModID + ":Wood/Planks/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling2), Reference.ModID + ":Wood/Saplings/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogVertical2), Reference.ModID + ":Wood/Logs/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal3), Reference.ModID + ":Wood/Logs/" + wood);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural2), Reference.ModID + ":Wood/Logs/" + wood);
+			if(l < 18)
+			{
+				ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves2), Reference.ModID + ":Wood/Leaves/" + wood);
+			}
+		}
+
+		for(int l = 0; l < OreType.values().length; l++)
+		{
+			String ore = Core.textConvert(OreType.values()[l].getName());
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Ore), Reference.ModID + ":Ore/" + ore);
+		}
+
+		RegistryItemQueue.getInstance().registerMeshes();
 	}
 
 	@Override
@@ -154,78 +493,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
 		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
 		MinecraftForge.EVENT_BUS.register(new BackgroundMusicHandler());
-		for(int l = 0; l < Global.STONE_ALL.length; l++)
-		{
-			String stone = Core.textConvert(Global.STONE_ALL[l]);
 
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Dirt), l, new ModelResourceLocation(Reference.ModID + ":Dirt/" + stone, "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Grass), l, new ModelResourceLocation(Reference.ModID + ":Grass/" + stone + "/" + stone, "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Stone), l, new ModelResourceLocation(Reference.ModID + ":Stone/" + stone, "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Rubble), l, new ModelResourceLocation(Reference.ModID + ":Rubble/" + stone, "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Sand), l, new ModelResourceLocation(Reference.ModID + ":Sand/" + stone, "inventory"));
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Gravel), l, new ModelResourceLocation(Reference.ModID + ":Gravel/" + stone, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Dirt), Reference.ModID + ":Dirt/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Grass), Reference.ModID + ":Grass/" + stone + "/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Stone), Reference.ModID + ":Stone/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Rubble), Reference.ModID + ":Rubble/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + stone);
-
-			registerItemMesh(TFCItems.LooseRock, l, new ModelResourceLocation(Reference.ModID + ":LooseRock/" + stone, "inventory"));
-			ModelBakery.addVariantName(TFCItems.LooseRock, Reference.ModID + ":LooseRock/" + stone);
-		}
-		for(int l = 0; l < 16; l++)
-		{
-			String wood = Core.textConvert(WoodType.values()[l].getName());
-
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Planks), l, new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks), Reference.ModID + ":Wood/Planks/" + wood);
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Sapling), l, new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling), Reference.ModID + ":Wood/Saplings/" + wood);
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.LogVertical), l, new ModelResourceLocation(Reference.ModID + ":Wood/Logs/" + wood, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogVertical), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal2), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural), Reference.ModID + ":Wood/Logs/" + wood);
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Leaves), l, new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves), Reference.ModID + ":Wood/Leaves/" + wood);
-
-		}
-
-		for(int l = 16; l < 19; l++)
-		{
-			String wood = Core.textConvert(WoodType.values()[l].getName());
-
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Planks2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks2), Reference.ModID + ":Wood/Planks/" + wood);
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Sapling2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling2), Reference.ModID + ":Wood/Saplings/" + wood);
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.LogVertical2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Logs/" + wood, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogVertical2), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal3), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural2), Reference.ModID + ":Wood/Logs/" + wood);
-			if(l < 18)
-			{
-				registerItemMesh(Item.getItemFromBlock(TFCBlocks.Leaves2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory"));
-				ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves2), Reference.ModID + ":Wood/Leaves/" + wood);
-			}
-			/*else
-			{
-				registerItemMesh(Item.getItemFromBlock(TFCBlocks.Leaves2), l, new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/palm_leaves", "inventory"));
-			}*/
-		}
-
-		for(int l = 0; l < OreType.values().length; l++)
-		{
-			String ore = Core.textConvert(OreType.values()[l].getName());
-
-			registerItemMesh(Item.getItemFromBlock(TFCBlocks.Ore), l, new ModelResourceLocation(Reference.ModID + ":Ore/" + ore, "inventory"));
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Ore), Reference.ModID + ":Ore/" + ore);
-		}
-
-		//registerItemMesh(TFCItems.StoneAxeHead, 0, new ModelResourceLocation(Reference.ModID + ":stone_axe_head", "inventory"));
-
-		RegistryItemQueue.getInstance().registerMeshes();;
 
 		//Entities
 		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart(Minecraft.getMinecraft().getRenderManager()));
@@ -247,9 +515,14 @@ public class ClientProxy extends CommonProxy
 
 	}
 
+	private void registerItemMesh(Item i, ModelResourceLocation mrl)
+	{
+		ModelLoader.setCustomMeshDefinition(i, new MeshDef(mrl));
+	}
+
 	private void registerItemMesh(Item i, int meta, ModelResourceLocation mrl)
 	{
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(i, meta, mrl);
+		ModelLoader.setCustomMeshDefinition(i, new MeshDef(mrl));
 	}
 
 	@Override

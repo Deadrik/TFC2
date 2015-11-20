@@ -71,4 +71,10 @@ public class BlockLooseRocks extends BlockTerra
 	{
 		return TFCItems.LooseRock;
 	}
+
+	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return getMetaFromState(state);
+	}
 }

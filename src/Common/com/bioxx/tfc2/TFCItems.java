@@ -30,7 +30,7 @@ public class TFCItems
 	public static void Load()
 	{
 		TFC.log.info(new StringBuilder().append("[TFC2] Loading Items").toString());
-		LooseRock = registerItem(new ItemLooseRock().setUnlocalizedName("looserock"));
+		LooseRock = registerItemOnly(new ItemLooseRock().setUnlocalizedName("looserock"));
 		StoneAxe = registerItem(new ItemAxe(ToolMaterial.STONE).setUnlocalizedName("stone_axe"));
 		StoneShovel = registerItem(new ItemShovel(ToolMaterial.STONE).setUnlocalizedName("stone_shovel"));
 		StoneKnife = registerItem(new ItemKnife(ToolMaterial.STONE).setUnlocalizedName("stone_knife"));
@@ -54,9 +54,23 @@ public class TFCItems
 		SetupHarvestLevels();
 	}
 
+	/**
+	 * Registers the item with the game registry and also registers a single ItemMeshDefinition for this item.
+	 */
 	private static Item registerItem(Item i)
 	{
 		RegistryItemQueue.getInstance().addFull(i);
+		return i;
+	}
+
+	/**
+	 * Registers the item with the game registry.<br>
+	 * <br>
+	 * Should be used for items that have multiple variants where we need to manually create a MeshDef
+	 */
+	private static Item registerItemOnly(Item i)
+	{
+		RegistryItemQueue.getInstance().addItemOnly(i);
 		return i;
 	}
 

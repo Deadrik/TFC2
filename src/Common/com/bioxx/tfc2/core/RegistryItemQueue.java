@@ -4,9 +4,11 @@ import java.util.LinkedList;
 
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Reference;
+import com.bioxx.tfc2.rendering.MeshDef;
 
 /**
  * This class is meant to facilitate loading simple objects without the need to always write a new line to 
@@ -61,7 +63,7 @@ public class RegistryItemQueue
 		while (!listMesh.isEmpty())
 		{
 			e = listMesh.pop();
-			net.minecraft.client.Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(e.item, 0, new ModelResourceLocation(Reference.ModID + ":"+e.name, "inventory"));
+			ModelLoader.setCustomMeshDefinition(e.item, new MeshDef(new ModelResourceLocation(Reference.ModID + ":"+e.name, "inventory")));
 		}
 
 	}
