@@ -19,11 +19,13 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
 
 public class EntityBear extends EntityAnimal 
 {
 	BearType bearType;
+	Gender gender;
 
 	public EntityBear(World worldIn) 
 	{
@@ -38,7 +40,8 @@ public class EntityBear extends EntityAnimal
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
-		bearType = BearType.values()[worldIn.rand.nextInt(3)];
+		setGender(worldIn.rand.nextBoolean() ? Gender.Male : Gender.Female);
+		setBearType(BearType.values()[worldIn.rand.nextInt(3)]);
 	}
 
 	@Override
@@ -58,12 +61,8 @@ public class EntityBear extends EntityAnimal
 	protected void entityInit ()
 	{
 		super.entityInit ();
-		dataWatcher.addObject (18, bearType.ordinal());
-		/*this.dataWatcher.addObject(13, Integer.valueOf(0)); //sex (1 or 0)
-		this.dataWatcher.addObject(15, Integer.valueOf(0));		//age
-		this.dataWatcher.addObject(22, Integer.valueOf(0)); //Size, strength, aggression, obedience
-		this.dataWatcher.addObject(23, Integer.valueOf(0)); //familiarity, familiarizedToday, pregnant, empty slot
-		this.dataWatcher.addObject(24, String.valueOf("0")); // Time of conception, stored as a string since we can't do long*/
+		dataWatcher.addObject (13, Gender.Male);
+		dataWatcher.addObject (14, BearType.Brown);
 	}
 
 
@@ -92,6 +91,7 @@ public class EntityBear extends EntityAnimal
 	{
 		super.writeEntityToNBT (nbt);
 		nbt.setInteger("BearType", bearType.ordinal());
+		nbt.setInteger("gender", gender.ordinal());
 	}
 
 
@@ -102,7 +102,8 @@ public class EntityBear extends EntityAnimal
 	public void readEntityFromNBT(NBTTagCompound nbt)
 	{
 		super.readEntityFromNBT(nbt);
-		bearType = BearType.values()[nbt.getInteger("BearType")];
+		this.setBearType(BearType.values()[nbt.getInteger("BearType")]);
+		this.setGender(Gender.values()[nbt.getInteger("gender")]);
 	}
 
 
@@ -222,9 +223,21 @@ public class EntityBear extends EntityAnimal
 		}
 	}
 
+	protected void setGender(Gender t)
+	{
+		this.gender = t;
+		this.dataWatcher.updateObject(13, t.ordinal());	
+	}
+
+	protected void setBearType(BearType t)
+	{
+		this.bearType = t;
+		this.dataWatcher.updateObject(14, t.ordinal());	
+	}
+
 	public BearType getBearType()
 	{
-		return BearType.values()[this.dataWatcher.getWatchableObjectInt(18)];
+		return BearType.values()[this.dataWatcher.getWatchableObjectInt(14)];
 	}
 
 	public enum BearType

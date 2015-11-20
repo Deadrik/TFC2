@@ -22,10 +22,11 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
 
-public class EntityLion extends EntityAnimal
+public class EntityTiger extends EntityAnimal
 {
 	private Gender gender = Gender.Male;
-	public EntityLion(World worldIn) 
+	private TigerType tigerType = TigerType.Normal;
+	public EntityTiger(World worldIn) 
 	{
 		super(worldIn);
 		this.setSize(1.5F, 1.7F);
@@ -39,9 +40,10 @@ public class EntityLion extends EntityAnimal
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
 		setGender(worldIn.rand.nextBoolean() ? Gender.Male : Gender.Female);
+		setTigerType(worldIn.rand.nextBoolean() ? TigerType.Normal : TigerType.Snow);
 	}
 
-	public EntityLion(World worldIn, Gender gender) 
+	public EntityTiger(World worldIn, Gender gender) 
 	{
 		this(worldIn);
 		this.gender = gender;
@@ -52,11 +54,6 @@ public class EntityLion extends EntityAnimal
 		return gender;
 	}
 
-	protected void setGender(Gender t)
-	{
-		this.gender = t;
-		this.dataWatcher.updateObject(13, t.ordinal());	
-	}
 
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable) 
@@ -74,7 +71,8 @@ public class EntityLion extends EntityAnimal
 	protected void entityInit ()
 	{
 		super.entityInit ();
-		dataWatcher.addObject(13, gender.ordinal());
+		dataWatcher.addObject(13, Gender.Male.ordinal());
+		dataWatcher.addObject(14, TigerType.Normal.ordinal());
 	}
 
 
@@ -103,6 +101,7 @@ public class EntityLion extends EntityAnimal
 	{
 		super.writeEntityToNBT (nbt);
 		nbt.setInteger("gender", gender.ordinal());
+		nbt.setInteger("tigerType", tigerType.ordinal());
 	}
 
 
@@ -113,7 +112,8 @@ public class EntityLion extends EntityAnimal
 	public void readEntityFromNBT(NBTTagCompound nbt)
 	{
 		super.readEntityFromNBT(nbt);
-		setGender(Gender.values()[nbt.getInteger("gender")]);
+		this.gender = Gender.values()[nbt.getInteger("gender")];
+		setTigerType(TigerType.values()[nbt.getInteger("tigerType")]);
 	}
 
 
@@ -231,5 +231,27 @@ public class EntityLion extends EntityAnimal
 		{
 			super.handleHealthUpdate (par1);
 		}
+	}
+
+	protected void setGender(Gender t)
+	{
+		this.gender = t;
+		this.dataWatcher.updateObject(13, t.ordinal());	
+	}
+
+	protected void setTigerType(TigerType t)
+	{
+		this.tigerType = t;
+		this.dataWatcher.updateObject(14, t.ordinal());	
+	}
+
+	public TigerType getTigerType()
+	{
+		return this.tigerType;
+	}
+
+	public static enum TigerType
+	{
+		Normal, Snow;
 	}
 }
