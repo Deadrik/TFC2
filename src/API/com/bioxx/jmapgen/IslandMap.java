@@ -164,7 +164,7 @@ public class IslandMap
 				q.elevation = 0.0;
 			}
 		}
-
+		sortClockwise();
 		if(!this.islandParams.hasFeature(Feature.NoLand))
 		{
 
@@ -209,7 +209,6 @@ public class IslandMap
 		redistributeMoisture(landCenters(centers));
 		assignMoisturePostRedist();
 
-		sortClockwise();
 		setupBiomeInfo();
 
 		caves.generate();
@@ -1814,20 +1813,20 @@ public class IslandMap
 						double y = 0;
 
 						if(hd == HexDirection.North || hd == HexDirection.South)
-							if((rn.center.index & 1) > 0)
+							if(((rn.center.index >> 1) & 1) > 0)
 							{x = 6 - Attrib.getRiver();}
 							else
 							{x = -6 + Attrib.getRiver();}
 						else if(hd == HexDirection.NorthEast || hd == HexDirection.SouthWest)
 						{
-							if((rn.center.index & 1) > 0)
+							if(((rn.center.index >> 1) & 1) > 0)
 							{y = -6 + Attrib.getRiver(); x = -6 + Attrib.getRiver();}
 							else
 							{y = 6 - Attrib.getRiver(); x = 6 - Attrib.getRiver();}
 						}
 						else if(hd == HexDirection.SouthEast || hd == HexDirection.NorthWest)
 						{
-							if((rn.center.index & 1) > 0)
+							if(((rn.center.index >> 1) & 1) > 0)
 							{y = -6 + Attrib.getRiver(); x = 6 - Attrib.getRiver();}
 							else
 							{y = 6 - Attrib.getRiver(); x = -6 + Attrib.getRiver();}

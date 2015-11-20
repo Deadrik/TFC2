@@ -207,6 +207,7 @@ public class RenderOverlayHandler
 					" / "  + " / " + mc.theWorld.isRaining());
 			event.left.add("Temp: " + WeatherManager.getInstance().getTemperature((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
 			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
+			event.left.add("Index: "+hex.index);
 			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
 			Chunk c = mc.theWorld.getChunkFromBlockCoords(pos);
 			int b = mc.theWorld.getChunkFromBlockCoords(pos).getBiomeArray()[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)] & 0xFF;

@@ -1007,7 +1007,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							for(int y = 0; y < elev; y++)
 							{
 
-								double width = s.getValue((double)y/(double)elev) * 9D;
+								double width = s.getValue((double)y/(double)elev) * 7D;
 								if(y < 4)
 								{
 									width = (4-y);
