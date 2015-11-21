@@ -841,7 +841,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		BlockPos pos, pos2;
 		Spline3D spline;
 		Point iPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
-		Vec3i islandOffset = new Vec3i(iPoint.x, 0, iPoint.y).crossProduct(new Vec3i (-1, -1, -1));
+		Vec3i islandOffset = new Vec3i(iPoint.x, 0, iPoint.y);
 		double wSq = 4;
 
 		for(Center c : centersInChunk)
@@ -857,10 +857,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					wSq = n.getNodeWidth() * n.getNodeWidth();
 					points.clear();
 					if(n.getPrev() != null)
-						points.add(n.getPrevOffset().add(islandOffset));
-					points.add(n.getOffset().add(islandOffset));
+						points.add(n.getPrevOffset().subtract(islandOffset));
+					points.add(n.getOffset().subtract(islandOffset));
 					if(n.getNext() != null)
-						points.add(n.getNextOffset().add(islandOffset));
+						points.add(n.getNextOffset().subtract(islandOffset));
 
 					spline = new Spline3D(points);
 					for(double i = 0; i < 1; i+= 0.03)
