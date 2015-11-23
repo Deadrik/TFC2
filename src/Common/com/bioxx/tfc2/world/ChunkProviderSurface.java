@@ -986,7 +986,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 				Point p0 = c.point.minus(new Point(islandChunkX, islandChunkZ).toIslandCoord());
 				Random rand = new Random(c.index);
-				int elev = 30 + rand.nextInt(20);
+				int elev = 35 + rand.nextInt(20);
 				for(int x = -10; x <= 10; x++)
 				{
 					for(int z = -10; z <= 10; z++)
@@ -1008,13 +1008,13 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							{
 
 								double width = s.getValue((double)y/(double)elev) * 7D;
-								if(y < 4)
+								if(y < 9)
 								{
-									width = (4-y);
+									width = (4-Math.max(y-5, 0));
 								}
 								width *= width;
-								if(p0.distanceSq(p1) < (1d*1d)+width)
-									this.setState(primer, new BlockPos((int)p1.x, y+el, (int)p1.y), stone);
+								if(p0.distanceSq(p1) < 1+width)
+									this.setState(primer, new BlockPos((int)p1.x, y+el-5, (int)p1.y), stone);
 							}
 							elevationMap[(int)p1.y << 4 | (int)p1.x] += elev;
 						}
