@@ -45,8 +45,8 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood
 	}
 
 	/**
-	 * @param time How long should each item last in seconds
-	 * @return
+	 * @param seconds How long should each item last in seconds
+	 * @return this food item to allow chaining
 	 */
 	public ItemTerra setExpiration(int seconds)
 	{

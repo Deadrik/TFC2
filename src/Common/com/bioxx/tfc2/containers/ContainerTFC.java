@@ -30,7 +30,7 @@ public class ContainerTFC extends Container
 
 	/**
 	 * Used by containers that represent items and need to load an item from nbt
-	 * @return 
+	 * @return null, as it is currently ignored
 	 */
 	public ItemStack loadContents(int slot) 
 	{
