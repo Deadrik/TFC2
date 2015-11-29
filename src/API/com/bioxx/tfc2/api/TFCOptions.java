@@ -25,7 +25,7 @@ public class TFCOptions
 		}
 		catch (Exception e)
 		{
-			System.out.println(new StringBuilder().append("[TFC2] Error while trying to add Integer, config wasn't loaded properly!").toString());
+			System.out.println("[TFC2] Error while trying to add Integer, config wasn't loaded properly!");
 		}
 		return value;
 	}
@@ -42,7 +42,7 @@ public class TFCOptions
 		}
 		catch (Exception e)
 		{
-			System.out.println(new StringBuilder().append("[TFC2] Error while trying to add Integer, config wasn't loaded properly!").toString());
+			System.out.println("[TFC2] Error while trying to add Integer, config wasn't loaded properly!");
 		}
 		return value;
 	}
@@ -58,7 +58,7 @@ public class TFCOptions
 		}
 		catch (Exception e)
 		{
-			System.out.println(new StringBuilder().append("[TFC2] Error while trying to add Integer, config wasn't loaded properly!").toString());
+			System.out.println("[TFC2] Error while trying to add Integer, config wasn't loaded properly!");
 		}
 		return value;
 	}
@@ -75,7 +75,7 @@ public class TFCOptions
 		}
 		catch (Exception e)
 		{
-			System.out.println(new StringBuilder().append("[TFC2] Error while trying to add Integer, config wasn't loaded properly!").toString());
+			System.out.println("[TFC2] Error while trying to add Integer, config wasn't loaded properly!");
 		}
 		return value;
 	}
@@ -92,7 +92,7 @@ public class TFCOptions
 		}
 		catch (Exception e)
 		{
-			System.out.println(new StringBuilder().append("[TFC2] Error while trying to add Double, config wasn't loaded properly!").toString());
+			System.out.println("[TFC2] Error while trying to add Double, config wasn't loaded properly!");
 		}
 		return value;
 	}
@@ -107,7 +107,7 @@ public class TFCOptions
 			return prop.getString();
 		} catch (Exception e)
 		{
-			System.out.println(new StringBuilder().append("[TFC2] Error while trying to add String, config wasn't loaded properly!").toString());
+			System.out.println("[TFC2] Error while trying to add String, config wasn't loaded properly!");
 		}
 		return value;
 	}
@@ -123,7 +123,7 @@ public class TFCOptions
 			return prop.getString();
 		} catch (Exception e)
 		{
-			System.out.println(new StringBuilder().append("[TFC2] Error while trying to add String, config wasn't loaded properly!").toString());
+			System.out.println("[TFC2] Error while trying to add String, config wasn't loaded properly!");
 		}
 		return value;
 	}

@@ -52,7 +52,7 @@ public class CraftingManagerTFC
 				String s2 = as[l];
 				k++;
 				j = s2.length();
-				s = new StringBuilder().append(s).append(s2).toString();
+				s = s + s2;
 			}
 		}
 		else
@@ -62,7 +62,7 @@ public class CraftingManagerTFC
 				String s1 = (String)aobj[i++];
 				k++;
 				j = s1.length();
-				s = new StringBuilder().append(s).append(s1).toString();
+				s = s + s1;
 			}
 		}
 		HashMap<Character, ItemStack> hashmap = new HashMap<Character, ItemStack>();

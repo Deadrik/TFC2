@@ -109,9 +109,11 @@ public class GuiKnapping extends GuiContainerTFC
 					y = i / 9;
 					temp[y] += pi.knappingInterface[i] ? " " : "X";
 				}
-				out = out.append("\""+temp[0]+"\",").append("\""+temp[1]+"\",").append("\""+temp[2]+"\",").append("\""+temp[3]+"\",").
-						append("\""+temp[4]+"\",").append("\""+temp[5]+"\",").append("\""+temp[6]+"\",").append("\""+temp[7]+"\",").
-						append("\""+temp[8]+"\"");
+				out = out.append("\"").append(temp[0]).append("\",").append("\"").append(temp[1]).append("\",")
+						.append("\"").append(temp[2]).append("\",").append("\"").append(temp[3]).append("\",")
+						.append("\"").append(temp[4]).append("\",").append("\"").append(temp[5]).append("\",")
+						.append("\"").append(temp[6]).append("\",").append("\"").append(temp[7]).append("\",")
+						.append("\"").append(temp[8]).append("\"");
 				StringSelection selection = new StringSelection(out.toString());
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 				clipboard.setContents(selection, selection);

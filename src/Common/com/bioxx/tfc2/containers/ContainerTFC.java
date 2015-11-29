@@ -30,7 +30,7 @@ public class ContainerTFC extends Container
 
 	/**
 	 * Used by containers that represent items and need to load an item from nbt
-	 * @return 
+	 * @return null, as it is currently ignored
 	 */
 	public ItemStack loadContents(int slot) 
 	{
@@ -220,16 +220,14 @@ public class ContainerTFC extends Container
 
 	public static boolean areItemStacksEqual(ItemStack is1, ItemStack is2)
 	{
-		return is1 == null && is2 == null ? true : is1 != null && is2 != null ? isItemStackEqual(is1, is2) : false;
+		return is1 == null && is2 == null || (is1 != null && is2 != null) && isItemStackEqual(is1, is2);
 	}
 
 	public static boolean isItemStackEqual(ItemStack is1, ItemStack is2)
 	{
-		return is1.stackSize != is2.stackSize ? false :
-			is1.getItem() != is2.getItem() ? false :
-				is1.getItemDamage() != is2.getItemDamage() ? false :
-					!is1.hasTagCompound() && is2.hasTagCompound() ? false :
-						!is1.hasTagCompound() || areCompoundsEqual(is1, is2);
+		return is1.stackSize == is2.stackSize && is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() &&
+					(is1.hasTagCompound() || !is2.hasTagCompound()) &&
+					(!is1.hasTagCompound() || areCompoundsEqual(is1, is2));
 	}
 
 	public static boolean areCompoundsEqual(ItemStack is1, ItemStack is2)

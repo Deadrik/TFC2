@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.api.ore;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import com.bioxx.tfc2.api.types.StoneType;
@@ -39,7 +40,8 @@ public class OreRegistry
 
 	public OreConfig[] getConfigsForStone(StoneType st)
 	{
-		return oreMap.get(st).values().toArray(new OreConfig[0]);
+		Collection<OreConfig> var = oreMap.get(st).values();
+		return var.toArray(new OreConfig[var.size()]);
 	}
 
 	public boolean isOreRegistered(StoneType st, String n)
