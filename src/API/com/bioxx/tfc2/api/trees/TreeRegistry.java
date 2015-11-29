@@ -105,7 +105,7 @@ public class TreeRegistry
 		{
 			String tree = (String) iter.next();
 			//Palm trees are a special case and will always exist on subtropical and tropical islands.
-			if(tree.equals(WoodType.Palm))
+			if(tree.equals(WoodType.Palm.name()))
 				continue;
 			TreeConfig tc = treeFromString(tree);
 			if(tc.minTemp.getMapTemp() <= temp.getMapTemp() && tc.maxTemp.getMapTemp() >= temp.getMapTemp() && 

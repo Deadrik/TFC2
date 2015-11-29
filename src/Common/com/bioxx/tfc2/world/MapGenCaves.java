@@ -282,7 +282,6 @@ public class MapGenCaves extends net.minecraft.world.gen.MapGenCaves
 	 * tries to make the floor the biome's top block
 	 *
 	 * @param data Block data array
-	 * @param index Pre-calculated index into block data
 	 * @param x local X position
 	 * @param y local Y position
 	 * @param z local Z position

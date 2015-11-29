@@ -118,7 +118,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 
 	/**
 	 * Called to transfer a stack from one inventory to the other eg. when shift clicking.
-	 * @return 
+	 * @return null if successful, the original item stack otherwise
 	 */
 	@Override
 	public ItemStack transferStackInSlotTFC(EntityPlayer player, int slotNum)

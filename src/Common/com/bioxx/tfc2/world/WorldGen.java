@@ -38,7 +38,7 @@ import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 public class WorldGen implements IThreadCompleteListener
 {
 	public static WorldGen instance;
-	java.util.Map<Integer, CachedIsland> islandCache;
+	final java.util.Map<Integer, CachedIsland> islandCache;
 	java.util.Map<Integer, CachedIsland> clientIslandCache;
 	World world;
 	public static final int ISLAND_SIZE = 4096;

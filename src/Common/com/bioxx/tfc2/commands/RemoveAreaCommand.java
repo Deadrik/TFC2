@@ -25,7 +25,7 @@ public class RemoveAreaCommand extends CommandBase
 		EntityPlayerMP player = null;
 		try {
 			player = getCommandSenderAsPlayer(sender);
-		} catch (PlayerNotFoundException e) {
+		} catch (PlayerNotFoundException ignored) {
 		}
 		if(player == null)
 			return;
