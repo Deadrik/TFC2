@@ -23,6 +23,7 @@ import com.bioxx.jmapgen.attributes.RiverAttribute;
 import com.bioxx.jmapgen.com.nodename.delaunay.DelaunayUtil;
 import com.bioxx.jmapgen.com.nodename.delaunay.Voronoi;
 import com.bioxx.jmapgen.com.nodename.geom.LineSegment;
+import com.bioxx.jmapgen.dungeon.Dungeon;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.HexDirection;
 import com.bioxx.jmapgen.graph.Center.Marker;
@@ -63,6 +64,7 @@ public class IslandMap
 	public long seed;
 
 	public PathFinder pathfinder;
+	public Vector<Dungeon> dungeons;
 
 	private CaveProcessor caves;
 	private OreProcessor ores;
@@ -80,6 +82,7 @@ public class IslandMap
 		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
+		dungeons = new Vector<Dungeon>();
 	}
 
 	public void newIsland(IslandParameters is) 
@@ -107,6 +110,7 @@ public class IslandMap
 		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
+		dungeons.clear();
 
 		points = this.generateHexagon(SIZE);
 		Rectangle R = new Rectangle();
@@ -128,6 +132,7 @@ public class IslandMap
 		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
+		dungeons.clear();
 
 		points = this.generateHexagon(SIZE);
 		Rectangle R = new Rectangle();
@@ -213,6 +218,16 @@ public class IslandMap
 
 		caves.generate();
 		ores.generate();
+
+		//Generate Dungeons
+		if(!this.getParams().hasFeature(Feature.NoLand))
+		{
+			Dungeon d = new Dungeon();
+			Vector<Center> dungeonCenters = this.getCentersAbove(0.4);
+			d.generate(seed, dungeonCenters.get(this.mapRandom.nextInt(dungeonCenters.size())));
+			dungeons.add(d);
+		}
+
 	}
 
 	private void createSpires()
@@ -2125,6 +2140,15 @@ public class IslandMap
 			nList.appendTag(n);
 		}
 		nbt.setTag("edges", nList);
+
+		nList = new NBTTagList();
+		for(Dungeon d : dungeons)
+		{
+			NBTTagCompound n = new NBTTagCompound();
+			d.writeToNBT(n);
+			nList.appendTag(n);
+		}
+		nbt.setTag("dungeons", nList);
 	}
 
 	public void readFromNBT(NBTTagCompound nbt)
@@ -2183,6 +2207,14 @@ public class IslandMap
 		for(int i = 0; i < edges.size(); i++)
 		{
 			edges.get(i).readFromNBT(edgeList.getCompoundTagAt(i), this);
+		}
+
+		NBTTagList dungeonList = nbt.getTagList("dungeons", 10);
+		for(int i = 0; i < dungeonList.tagCount(); i++)
+		{
+			Dungeon d = new Dungeon();
+			d.readFromNBT(this, dungeonList.getCompoundTagAt(i));
+			dungeons.add(d);
 		}
 	}
 

@@ -6,9 +6,11 @@ import java.util.Random;
 import java.util.Vector;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockColored;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
@@ -30,6 +32,11 @@ import com.bioxx.jmapgen.attributes.CaveAttribute;
 import com.bioxx.jmapgen.attributes.LakeAttribute;
 import com.bioxx.jmapgen.attributes.OreAttribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
+import com.bioxx.jmapgen.dungeon.Dungeon;
+import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor;
+import com.bioxx.jmapgen.dungeon.Dungeon.DungeonLevel;
+import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRect;
+import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRoom;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.processing.CaveAttrNode;
@@ -163,6 +170,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		placeOreSeams(chunkprimer);
 		placeOreLayers(chunkprimer);
 		createSpires(chunkprimer);
+		createDungeons(chunkprimer);
 
 		if(TFCOptions.shouldStripChunks)
 			stripChunk(chunkprimer);
@@ -612,6 +620,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		convertRiverBank(chunkprimer,pos, true);
 	}
+
 	protected void convertRiverBank(ChunkPrimer chunkprimer, BlockPos pos, boolean doAir)
 	{
 		if(pos.getX() >= 0 && pos.getY() >= 0 && pos.getZ() >= 0 && pos.getX() < 16 && pos.getY() < 256 && pos.getZ() < 16)
@@ -725,20 +734,6 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		return chunkprimer.getBlockState(x, y, z).getBlock();
 	}
-
-	private double[] distToSegmentSquared(Point v, Point w, Point local) 
-	{
-		double l2 = dist2(v, w);    
-		if (l2 == 0) return new double[] {dist2(local, v), -1};
-		double t = ((local.x - v.x) * (w.x - v.x) + (local.y - v.y) * (w.y - v.y)) / l2;
-		if (t < 0) return new double[] {dist2(local, v), 0};
-		if (t > 1) return new double[] {dist2(local, w), 1};
-		return new double[] {dist2(local, new Point( v.x + t * (w.x - v.x),  v.y + t * (w.y - v.y) )), t};
-	}
-
-	private double squared(double d) { return d * d; }
-
-	private double dist2(Point v, Point w) { return squared(v.x - w.x) + squared(v.y - w.y); }
 
 	protected void carveCaves(ChunkPrimer chunkprimer)
 	{
@@ -1024,4 +1019,58 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		}
 	}
 
+	public void createDungeons(ChunkPrimer primer)
+	{
+		Point iPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
+		IBlockState state = Blocks.air.getDefaultState();
+
+		if(TFCOptions.shouldStripChunks)
+			state = Blocks.wool.getDefaultState();
+
+		for(Dungeon dungeon : islandMap.dungeons)
+		{
+			for(DungeonLevel level : dungeon.levels)
+			{
+				DungeonRect chunkRect = new DungeonRect((int)iPoint.x, (int)iPoint.y, 16, 16);
+				if(chunkRect.intersects(level.getBoundingBox()))
+				{
+					for(DungeonRoom room : level.rooms)
+					{
+						if(chunkRect.intersects(room.getBoundingBox()))
+						{
+							for(DungeonRect rect : room.rects)
+							{
+								int rx = rect.X - (int)iPoint.x;
+								int rz = rect.Z - (int)iPoint.y;
+
+								for(int x = 0; x < rect.width; x++)
+								{
+									for(int z = 0; z < rect.height; z++)
+									{
+										for(int y = 0; y < 3; y++)
+										{
+											setState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z), state);
+										}
+									}
+								}
+							}
+						}
+					}
+
+					for(DungeonDoor door : level.doors)
+					{
+						int rx = door.location.getX() - (int)chunkRect.getMinX();
+						int rz = door.location.getZ() - (int)chunkRect.getMinZ();
+
+						if(rx >= 0 && rz >= 0 && rx < 16 && rz < 16)
+						{
+							setState(primer, new BlockPos(rx, level.yLevel, rz), state.withProperty(BlockColored.COLOR, EnumDyeColor.BLUE));
+							setState(primer, new BlockPos(rx, level.yLevel+1, rz), state.withProperty(BlockColored.COLOR, EnumDyeColor.BLUE));
+						}
+					}
+				}
+			}
+
+		}
+	}
 }

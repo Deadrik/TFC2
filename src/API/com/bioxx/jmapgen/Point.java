@@ -30,11 +30,26 @@ public class Point extends Point2D
 		return y;
 	}
 
+	/**
+	 * This is the same as getY but since in mc we usually use z instead of y 
+	 * this was added to make code more clear.
+	 */
+	public double getZ() 
+	{
+		return y;
+	}
+
 	@Override
 	public void setLocation(double arg0, double arg1) 
 	{
 		x = arg0;
 		y = arg1;
+	}
+
+	@Override
+	public String toString() 
+	{
+		return x + "," + y;
 	}
 
 	public Point toIslandCoord()
