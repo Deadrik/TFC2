@@ -222,7 +222,7 @@ public class IslandMap
 		//Generate Dungeons
 		if(!this.getParams().hasFeature(Feature.NoLand))
 		{
-			Dungeon d = new Dungeon();
+			Dungeon d = new Dungeon(this);
 			Vector<Center> dungeonCenters = this.getCentersAbove(0.4);
 			d.generate(seed, dungeonCenters.get(this.mapRandom.nextInt(dungeonCenters.size())));
 			dungeons.add(d);
@@ -2212,7 +2212,7 @@ public class IslandMap
 		NBTTagList dungeonList = nbt.getTagList("dungeons", 10);
 		for(int i = 0; i < dungeonList.tagCount(); i++)
 		{
-			Dungeon d = new Dungeon();
+			Dungeon d = new Dungeon(this);
 			d.readFromNBT(this, dungeonList.getCompoundTagAt(i));
 			dungeons.add(d);
 		}

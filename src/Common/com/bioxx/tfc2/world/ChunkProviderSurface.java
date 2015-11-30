@@ -6,11 +6,9 @@ import java.util.Random;
 import java.util.Vector;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockColored;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
@@ -1064,8 +1062,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 						if(rx >= 0 && rz >= 0 && rx < 16 && rz < 16)
 						{
-							setState(primer, new BlockPos(rx, level.yLevel, rz), state.withProperty(BlockColored.COLOR, EnumDyeColor.BLUE));
-							setState(primer, new BlockPos(rx, level.yLevel+1, rz), state.withProperty(BlockColored.COLOR, EnumDyeColor.BLUE));
+							setState(primer, new BlockPos(rx, level.yLevel, rz), state);
+							setState(primer, new BlockPos(rx, level.yLevel+1, rz), state);
 						}
 					}
 				}

@@ -16,10 +16,12 @@ public class Dungeon
 {
 	public Vector<DungeonLevel> levels;
 	public Center entrance;
+	private IslandMap islandMap;
 
-	public Dungeon()
+	public Dungeon(IslandMap map)
 	{
 		levels = new Vector<DungeonLevel>();
+		islandMap = map;
 	}
 
 	public void generate(long seed, Center start)
@@ -39,7 +41,7 @@ public class Dungeon
 				dl.generate(r, (int)entrance.point.getX(), (int)entrance.point.getZ(), this);
 
 			levels.add(dl);
-			dl.yLevel = 50 - 5 * i;
+			dl.yLevel = islandMap.convertHeightToMC(entrance.getElevation())-25 - 5 * i;
 			while(stairRoom == null)
 			{
 				DungeonRoom room = dl.rooms.get(r.nextInt(dl.rooms.size()));
