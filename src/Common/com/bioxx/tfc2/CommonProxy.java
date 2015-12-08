@@ -25,6 +25,7 @@ import com.bioxx.tfc2.core.Recipes;
 import com.bioxx.tfc2.entity.EntityBear;
 import com.bioxx.tfc2.entity.EntityBearPanda;
 import com.bioxx.tfc2.entity.EntityCart;
+import com.bioxx.tfc2.entity.EntityElephant;
 import com.bioxx.tfc2.entity.EntityLion;
 import com.bioxx.tfc2.entity.EntityRhino;
 import com.bioxx.tfc2.entity.EntityTiger;
@@ -80,6 +81,7 @@ public class CommonProxy
 		EntityRegistry.registerModEntity(EntityLion.class, "Lion", 3, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 		EntityRegistry.registerModEntity(EntityTiger.class, "Tiger", 4, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 		EntityRegistry.registerModEntity(EntityRhino.class, "Rhino", 5, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(EntityElephant.class, "Elephant", 6, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 	}
 
 	public void postInit(FMLPostInitializationEvent event)
