@@ -35,6 +35,7 @@ import com.bioxx.tfc2.entity.EntityBear;
 import com.bioxx.tfc2.entity.EntityBearPanda;
 import com.bioxx.tfc2.entity.EntityCart;
 import com.bioxx.tfc2.entity.EntityLion;
+import com.bioxx.tfc2.entity.EntityRhino;
 import com.bioxx.tfc2.entity.EntityTiger;
 import com.bioxx.tfc2.handlers.client.BackgroundMusicHandler;
 import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
@@ -46,6 +47,7 @@ import com.bioxx.tfc2.rendering.model.RenderBear;
 import com.bioxx.tfc2.rendering.model.RenderBearPanda;
 import com.bioxx.tfc2.rendering.model.RenderCart;
 import com.bioxx.tfc2.rendering.model.RenderLion;
+import com.bioxx.tfc2.rendering.model.RenderRhino;
 import com.bioxx.tfc2.rendering.model.RenderTiger;
 
 public class ClientProxy extends CommonProxy
@@ -501,6 +503,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityBearPanda.class, new RenderBearPanda(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLion.class, new RenderLion(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTiger.class, new RenderTiger(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityRhino.class, new RenderRhino(Minecraft.getMinecraft().getRenderManager()));
 
 		//Disable vanilla UI elements
 		GuiIngameForge.renderHealth = false;

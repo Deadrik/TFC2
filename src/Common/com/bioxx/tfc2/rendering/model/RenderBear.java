@@ -11,8 +11,8 @@ import com.bioxx.tfc2.entity.EntityBear.BearType;
 
 public class RenderBear extends RenderLiving
 {
-	static ResourceLocation texBrown = new ResourceLocation(Reference.ModID+":"+"textures/mob/Bear_Brown.png");
-	static ResourceLocation texPolar = new ResourceLocation(Reference.ModID+":"+"textures/mob/Bear_Polar.png");
+	static ResourceLocation texBrown = new ResourceLocation(Reference.ModID+":"+"textures/mob/bear_brown.png");
+	static ResourceLocation texPolar = new ResourceLocation(Reference.ModID+":"+"textures/mob/bear_polar.png");
 
 	public RenderBear(RenderManager renderManager) 
 	{

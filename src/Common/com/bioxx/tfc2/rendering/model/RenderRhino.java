@@ -7,13 +7,13 @@ import net.minecraft.util.ResourceLocation;
 
 import com.bioxx.tfc2.Reference;
 
-public class RenderBearPanda extends RenderLiving
+public class RenderRhino extends RenderLiving
 {
-	ResourceLocation tex = new ResourceLocation(Reference.ModID+":"+"textures/mob/bear_panda.png");
+	ResourceLocation tex = new ResourceLocation(Reference.ModID+":"+"textures/mob/rhino.png");
 
-	public RenderBearPanda(RenderManager renderManager) 
+	public RenderRhino(RenderManager renderManager) 
 	{
-		super(renderManager, new ModelBearPanda(), 0.7f);
+		super(renderManager, new ModelRhino(), 0.7f);
 		this.shadowSize = 0.8f;
 	}
 

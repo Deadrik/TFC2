@@ -11,4 +11,10 @@ public class EntityBearPanda extends EntityBear
 	}
 
 
+	@Override
+	protected void entityInit ()
+	{
+		super.entityInit ();
+		dataWatcher.updateObject (14, BearType.Panda.ordinal());
+	}
 }

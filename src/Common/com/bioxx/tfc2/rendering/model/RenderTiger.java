@@ -11,8 +11,8 @@ import com.bioxx.tfc2.entity.EntityTiger.TigerType;
 
 public class RenderTiger extends RenderLiving
 {
-	static ResourceLocation texTiger = new ResourceLocation(Reference.ModID+":"+"textures/mob/Tiger.png");
-	static ResourceLocation texTigerSnow = new ResourceLocation(Reference.ModID+":"+"textures/mob/TigerSnow.png");
+	static ResourceLocation texTiger = new ResourceLocation(Reference.ModID+":"+"textures/mob/tiger.png");
+	static ResourceLocation texTigerSnow = new ResourceLocation(Reference.ModID+":"+"textures/mob/tiger_snow.png");
 
 	public RenderTiger(RenderManager renderManager) 
 	{

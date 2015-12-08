@@ -22,12 +22,11 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
 
-public class EntityBear extends EntityAnimal 
+public class EntityRhino extends EntityAnimal 
 {
-	BearType bearType;
 	Gender gender;
 
-	public EntityBear(World worldIn) 
+	public EntityRhino(World worldIn) 
 	{
 		super(worldIn);
 		this.setSize(1.5F, 1.7F);
@@ -41,7 +40,6 @@ public class EntityBear extends EntityAnimal
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
 		setGender(worldIn.rand.nextBoolean() ? Gender.Male : Gender.Female);
-		setBearType(BearType.values()[worldIn.rand.nextInt(3)]);
 	}
 
 	@Override
@@ -62,7 +60,6 @@ public class EntityBear extends EntityAnimal
 	{
 		super.entityInit ();
 		dataWatcher.addObject (13, Gender.Male.ordinal());
-		dataWatcher.addObject (14, BearType.Brown.ordinal());
 	}
 
 
@@ -90,7 +87,6 @@ public class EntityBear extends EntityAnimal
 	public void writeEntityToNBT (NBTTagCompound nbt)
 	{
 		super.writeEntityToNBT (nbt);
-		nbt.setInteger("BearType", bearType.ordinal());
 		nbt.setInteger("gender", gender.ordinal());
 	}
 
@@ -102,7 +98,6 @@ public class EntityBear extends EntityAnimal
 	public void readEntityFromNBT(NBTTagCompound nbt)
 	{
 		super.readEntityFromNBT(nbt);
-		this.setBearType(BearType.values()[nbt.getInteger("BearType")]);
 		this.setGender(Gender.values()[nbt.getInteger("gender")]);
 	}
 
@@ -227,21 +222,5 @@ public class EntityBear extends EntityAnimal
 	{
 		this.gender = t;
 		this.dataWatcher.updateObject(13, t.ordinal());	
-	}
-
-	protected void setBearType(BearType t)
-	{
-		this.bearType = t;
-		this.dataWatcher.updateObject(14, t.ordinal());	
-	}
-
-	public BearType getBearType()
-	{
-		return BearType.values()[this.dataWatcher.getWatchableObjectInt(14)];
-	}
-
-	public enum BearType
-	{
-		Brown, Polar, Black, Panda;
 	}
 }

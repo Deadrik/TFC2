@@ -11,7 +11,7 @@ import com.bioxx.tfc2.entity.EntityCart;
 
 public class RenderCart extends Render
 {
-	ResourceLocation tex = new ResourceLocation(Reference.ModID+":"+"textures/mob/Cart.png");
+	ResourceLocation tex = new ResourceLocation(Reference.ModID+":"+"textures/mob/cart.png");
 
 	ModelCart mainModel;
 

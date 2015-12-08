@@ -11,8 +11,8 @@ import com.bioxx.tfc2.entity.EntityLion;
 
 public class RenderLion extends RenderLiving
 {
-	static ResourceLocation texLion = new ResourceLocation(Reference.ModID+":"+"textures/mob/Lion.png");
-	static ResourceLocation texLioness = new ResourceLocation(Reference.ModID+":"+"textures/mob/Lioness.png");
+	static ResourceLocation texLion = new ResourceLocation(Reference.ModID+":"+"textures/mob/lion.png");
+	static ResourceLocation texLioness = new ResourceLocation(Reference.ModID+":"+"textures/mob/lioness.png");
 
 	public RenderLion(RenderManager renderManager) 
 	{
