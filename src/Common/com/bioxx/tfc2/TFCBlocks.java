@@ -26,6 +26,7 @@ import com.bioxx.tfc2.blocks.BlockSaltWater;
 import com.bioxx.tfc2.blocks.BlockSaltWaterStatic;
 import com.bioxx.tfc2.blocks.BlockSapling;
 import com.bioxx.tfc2.blocks.BlockSapling2;
+import com.bioxx.tfc2.blocks.BlockStoneBrick;
 import com.bioxx.tfc2.blocks.BlockVegetation;
 import com.bioxx.tfc2.blocks.terrain.BlockDirt;
 import com.bioxx.tfc2.blocks.terrain.BlockGrass;
@@ -70,6 +71,7 @@ public class TFCBlocks
 	public static Block Leaves2;
 	public static Block Ore;
 	public static Block ClimbingRocks;
+	public static Block StoneBrick;
 
 	public static void LoadBlocks()
 	{
@@ -106,6 +108,7 @@ public class TFCBlocks
 		Leaves2 = new BlockLeaves2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves2");
 		Ore = new BlockOre().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("ore");
 		ClimbingRocks = new BlockClimbingRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("climbing_rock");
+		StoneBrick = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonebrick");
 	}
 
 	public static void RegisterBlocks()
@@ -144,6 +147,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Leaves2, ItemWood.class, "leaves2");
 		GameRegistry.registerBlock(Ore, ItemOre.class, "ore");
 		GameRegistry.registerBlock(ClimbingRocks, "climbing_rock");
+		GameRegistry.registerBlock(StoneBrick, ItemStone.class, "stonebrick");
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);

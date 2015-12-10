@@ -51,6 +51,7 @@ global.willow=Willow
 # Most of the terrain blocks have the same unlocalized name as vanilla, so they can be left out.
 tile.stone.name=Stone
 tile.rubble.name=Rubble
+tile.stonebrick.name=Stone Bricks
 
 #=================
 #= Wooden Blocks =

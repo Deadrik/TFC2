@@ -1,5 +1,8 @@
 {
-    "parent": "tfc2:block/Stone/Blueschist",
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "tfc2:blocks/rocks/Blueschist Raw"
+    },
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],
