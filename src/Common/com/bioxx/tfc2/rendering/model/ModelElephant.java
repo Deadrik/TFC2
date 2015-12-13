@@ -22,15 +22,15 @@ public class ModelElephant extends ModelBase
 		setTextureOffset("Body.Body", 36, 58);
 		setTextureOffset("Body.Tail", 49, 53);
 		setTextureOffset("Head.Head", 89, 23);
+		setTextureOffset("Head.TuskRightEnd", 56, 39);
+		setTextureOffset("Head.TuskLeftEnd", 56, 39);
 		setTextureOffset("TrunkTop.TrunkTop", 143, 0);
 		setTextureOffset("TrunkMiddle.TrunkMid", 143, 14);
 		setTextureOffset("TrunkEnd.TrunkEnd", 143, 27);
 		setTextureOffset("EarLeft.EarLeft", 50, 0);
 		setTextureOffset("EarRight.EarRight", 50, 0);
 		setTextureOffset("TuskRightBack.TuskRightBack", 50, 21);
-		setTextureOffset("TuskRightBack.TuskRightMiddle", 56, 39);
-		setTextureOffset("TuskLeft.TuskLeftBack", 50, 21);
-		setTextureOffset("TuskLeft.TuskLeftMiddle", 56, 39);
+		setTextureOffset("TuskLeftBack.TuskLeftBack", 50, 21);
 		setTextureOffset("LegRightRear.LegRtRearUpper", 0, 0);
 		setTextureOffset("LegRightRear.LegRtRearLower", 0, 86);
 		setTextureOffset("LegRightRear.LegRtRearFoot", 0, 113);
@@ -55,6 +55,8 @@ public class ModelElephant extends ModelBase
 		setRotation(Head, 0F, 0F, 0F);
 		Head.mirror = true;
 		Head.addBox("Head", -6F, -7F, -15F, 12, 20, 15);
+		Head.addBox("TuskRightEnd", -7F, 18.5F, -26.5F, 2, 2, 10);
+		Head.addBox("TuskLeftEnd", 5F, 18.5F, -26.5F, 2, 2, 10);
 		ModelRenderer TrunkTop = new ModelRenderer(this, "TrunkTop");
 		TrunkTop.setRotationPoint(0F, 13F, -12F);
 		setRotation(TrunkTop, 0F, 0F, 0F);
@@ -92,15 +94,13 @@ public class ModelElephant extends ModelBase
 		setRotation(TuskRightBack, 0.7853982F, 0F, 0F);
 		TuskRightBack.mirror = true;
 		TuskRightBack.addBox("TuskRightBack", -1.5F, -1.5F, -15F, 3, 3, 15);
-		TuskRightBack.addBox("TuskRightMiddle", -1F, 9.5F, -19.6F, 2, 2, 10);
 		Head.addChild(TuskRightBack);
-		ModelRenderer TuskLeft = new ModelRenderer(this, "TuskLeft");
-		TuskLeft.setRotationPoint(6F, 9F, -7F);
-		setRotation(TuskLeft, 0.7853982F, 0F, 0F);
-		TuskLeft.mirror = true;
-		TuskLeft.addBox("TuskLeftBack", -1.5F, -1.5F, -15F, 3, 3, 15);
-		TuskLeft.addBox("TuskLeftMiddle", -1F, 9.5F, -19.6F, 2, 2, 10);
-		Head.addChild(TuskLeft);
+		ModelRenderer TuskLeftBack = new ModelRenderer(this, "TuskLeftBack");
+		TuskLeftBack.setRotationPoint(6F, 9F, -7F);
+		setRotation(TuskLeftBack, 0.7853982F, 0F, 0F);
+		TuskLeftBack.mirror = true;
+		TuskLeftBack.addBox("TuskLeftBack", -1.5F, -1.5F, -15F, 3, 3, 15);
+		Head.addChild(TuskLeftBack);
 		LegRightRear = new ModelRenderer(this, "LegRightRear");
 		LegRightRear.setRotationPoint(-4F, -15F, 14F);
 		setRotation(LegRightRear, 0F, 0F, 0F);
@@ -186,13 +186,14 @@ public class ModelElephant extends ModelBase
 	public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_)
 	{
 		float f6 = (180F / (float)Math.PI);
+		float rotationDiv = 2;
 		this.Head.rotateAngleX = p_78087_5_ / (180F / (float)Math.PI);
 		this.Head.rotateAngleY = p_78087_4_ / (180F / (float)Math.PI);
 		this.Body.rotateAngleX = 0;//((float)Math.PI / 2F);
-		this.LegLeftFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_/2;
-		this.LegLeftRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_/2;
-		this.LegRightFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_/2;
-		this.LegRightRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_/2;
+		this.LegLeftFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_/ rotationDiv;
+		this.LegLeftRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_/ rotationDiv;
+		this.LegRightFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_/ rotationDiv;
+		this.LegRightRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_/ rotationDiv;
 	}
 
 }

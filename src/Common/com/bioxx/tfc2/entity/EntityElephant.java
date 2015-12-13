@@ -25,6 +25,7 @@ import com.bioxx.tfc2.core.TFC_Sounds;
 public class EntityElephant extends EntityAnimal 
 {
 	Gender gender;
+	ElephantType elephantType;
 
 	public EntityElephant(World worldIn) 
 	{
@@ -40,6 +41,7 @@ public class EntityElephant extends EntityAnimal
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
 		setGender(worldIn.rand.nextBoolean() ? Gender.Male : Gender.Female);
+		setElephantType(ElephantType.Elephant);
 	}
 
 	@Override
@@ -60,6 +62,7 @@ public class EntityElephant extends EntityAnimal
 	{
 		super.entityInit ();
 		dataWatcher.addObject (13, Gender.Male.ordinal());
+		dataWatcher.addObject (14, ElephantType.Elephant.ordinal());
 	}
 
 
@@ -87,6 +90,7 @@ public class EntityElephant extends EntityAnimal
 	public void writeEntityToNBT (NBTTagCompound nbt)
 	{
 		super.writeEntityToNBT (nbt);
+		nbt.setInteger("ElephantType", elephantType.ordinal());
 		nbt.setInteger("gender", gender.ordinal());
 	}
 
@@ -98,6 +102,7 @@ public class EntityElephant extends EntityAnimal
 	public void readEntityFromNBT(NBTTagCompound nbt)
 	{
 		super.readEntityFromNBT(nbt);
+		this.setElephantType(ElephantType.values()[nbt.getInteger("ElephantType")]);
 		this.setGender(Gender.values()[nbt.getInteger("gender")]);
 	}
 
@@ -222,5 +227,21 @@ public class EntityElephant extends EntityAnimal
 	{
 		this.gender = t;
 		this.dataWatcher.updateObject(13, t.ordinal());	
+	}
+
+	protected void setElephantType(ElephantType t)
+	{
+		this.elephantType = t;
+		this.dataWatcher.updateObject(14, t.ordinal());	
+	}
+
+	public ElephantType getBearType()
+	{
+		return ElephantType.values()[this.dataWatcher.getWatchableObjectInt(14)];
+	}
+
+	public enum ElephantType
+	{
+		Elephant;
 	}
 }

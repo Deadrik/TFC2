@@ -6,10 +6,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 import com.bioxx.tfc2.Reference;
+import com.bioxx.tfc2.entity.EntityElephant;
+import com.bioxx.tfc2.entity.EntityElephant.ElephantType;
 
 public class RenderElephant extends RenderLiving
 {
-	ResourceLocation tex = new ResourceLocation(Reference.ModID+":"+"textures/mob/elephant.png");
+	ResourceLocation eletex = new ResourceLocation(Reference.ModID+":"+"textures/mob/elephant.png");
 
 	public RenderElephant(RenderManager renderManager) 
 	{
@@ -17,9 +19,17 @@ public class RenderElephant extends RenderLiving
 		this.shadowSize = 0.8f;
 	}
 
+	protected ResourceLocation getEntityTexture(EntityElephant entity) 
+	{
+		if(entity.getBearType() == ElephantType.Elephant)
+			return eletex;
+		else
+			return eletex;
+	}
+
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) 
 	{
-		return tex;
+		return getEntityTexture((EntityElephant)entity);
 	}
 }
