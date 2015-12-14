@@ -36,6 +36,7 @@ import com.bioxx.tfc2.entity.EntityBearPanda;
 import com.bioxx.tfc2.entity.EntityCart;
 import com.bioxx.tfc2.entity.EntityElephant;
 import com.bioxx.tfc2.entity.EntityLion;
+import com.bioxx.tfc2.entity.EntityMammoth;
 import com.bioxx.tfc2.entity.EntityRhino;
 import com.bioxx.tfc2.entity.EntityTiger;
 import com.bioxx.tfc2.handlers.client.BackgroundMusicHandler;
@@ -49,6 +50,7 @@ import com.bioxx.tfc2.rendering.model.RenderBearPanda;
 import com.bioxx.tfc2.rendering.model.RenderCart;
 import com.bioxx.tfc2.rendering.model.RenderElephant;
 import com.bioxx.tfc2.rendering.model.RenderLion;
+import com.bioxx.tfc2.rendering.model.RenderMammoth;
 import com.bioxx.tfc2.rendering.model.RenderRhino;
 import com.bioxx.tfc2.rendering.model.RenderTiger;
 
@@ -467,7 +469,6 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Rubble), Reference.ModID + ":Rubble/" + stone);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + stone);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + stone);
-
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.StoneBrick), Reference.ModID + ":StoneBrick/" + stone);
 			ModelBakery.addVariantName(TFCItems.LooseRock, Reference.ModID + ":LooseRock/" + stone);
 		}
@@ -526,6 +527,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityTiger.class, new RenderTiger(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityRhino.class, new RenderRhino(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityElephant.class, new RenderElephant(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityMammoth.class, new RenderMammoth(Minecraft.getMinecraft().getRenderManager()));
 
 		//Disable vanilla UI elements
 		GuiIngameForge.renderHealth = false;

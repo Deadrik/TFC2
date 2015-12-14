@@ -27,6 +27,7 @@ import com.bioxx.tfc2.entity.EntityBearPanda;
 import com.bioxx.tfc2.entity.EntityCart;
 import com.bioxx.tfc2.entity.EntityElephant;
 import com.bioxx.tfc2.entity.EntityLion;
+import com.bioxx.tfc2.entity.EntityMammoth;
 import com.bioxx.tfc2.entity.EntityRhino;
 import com.bioxx.tfc2.entity.EntityTiger;
 import com.bioxx.tfc2.handlers.CreateSpawnHandler;
@@ -75,6 +76,10 @@ public class CommonProxy
 
 		FMLCommonHandler.instance().bus().register(new PlayerTracker());
 
+		registerEntities();
+	}
+
+	protected void registerEntities() {
 		EntityRegistry.registerModEntity(EntityCart.class, "Cart", 0, TFC.instance, 80, 3, true, 0x000000, 0x00ff00);
 		EntityRegistry.registerModEntity(EntityBear.class, "Bear", 1, TFC.instance, 80, 3, true, 0x000000, 0xff0000);
 		EntityRegistry.registerModEntity(EntityBearPanda.class, "BearPanda", 2, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
@@ -82,6 +87,7 @@ public class CommonProxy
 		EntityRegistry.registerModEntity(EntityTiger.class, "Tiger", 4, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 		EntityRegistry.registerModEntity(EntityRhino.class, "Rhino", 5, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 		EntityRegistry.registerModEntity(EntityElephant.class, "Elephant", 6, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(EntityMammoth.class, "Mammoth", 7, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 	}
 
 	public void postInit(FMLPostInitializationEvent event)
