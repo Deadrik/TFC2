@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
+import java.util.List;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -9,11 +10,14 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -82,7 +86,13 @@ public class BlockLeaves extends BlockTerra
 	@Override
 	public boolean isOpaqueCube()
 	{
-		return !this.isTransparent;
+		return false;//!this.isTransparent;
+	}
+
+	@Override
+	public boolean isVisuallyOpaque()
+	{
+		return false;
 	}
 
 	@Override
@@ -134,6 +144,12 @@ public class BlockLeaves extends BlockTerra
 	}
 
 	@Override
+	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
+	{
+
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public EnumWorldBlockLayer getBlockLayer()
 	{
@@ -156,5 +172,11 @@ public class BlockLeaves extends BlockTerra
 	public int damageDropped(IBlockState state)
 	{
 		return ((WoodType)state.getValue(META_PROPERTY)).getMeta();
+	}
+
+	@Override
+	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
+	{
+		return true;
 	}
 }

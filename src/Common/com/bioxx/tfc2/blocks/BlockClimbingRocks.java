@@ -111,6 +111,12 @@ public class BlockClimbingRocks extends BlockTerra
 	}
 
 	@Override
+	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
+	{
+		return true;
+	}
+
+	@Override
 	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
 	{
 
