@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.TFCItems;
@@ -64,6 +65,12 @@ public class BlockLooseRocks extends BlockTerra
 	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
 	{
 
+	}
+
+	@Override
+	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
+	{
+		return true;
 	}
 
 	@Override
