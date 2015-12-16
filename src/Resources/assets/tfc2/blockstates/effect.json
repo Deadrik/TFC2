@@ -1,4 +1,8 @@
 {
+	"forge_marker" : 1,
+	"defaults": {
+		"model": "tfc2:Effects/Acid"
+	},
     "variants": {
         "effect=fire":  { "model": "tfc2:Effects/Fire" },
         "effect=water":  { "model": "tfc2:Effects/Water" },

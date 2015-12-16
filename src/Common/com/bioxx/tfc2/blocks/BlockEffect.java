@@ -6,6 +6,8 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.api.types.EffectType;
 
@@ -19,6 +21,15 @@ public class BlockEffect extends BlockTerra
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setBlockBounds(0, 0, 0, 1, 0.001f, 1);
 		this.fullBlock = false;
+	}
+
+	@Override
+	public int getLightValue(IBlockAccess world, BlockPos pos)
+	{
+		IBlockState block = world.getBlockState(pos);
+		if(block.getValue(META_PROPERTY) == EffectType.Acid)
+			return 4;
+		else return getLightValue();
 	}
 
 	@Override

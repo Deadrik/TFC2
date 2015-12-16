@@ -126,7 +126,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Gravel, ItemStone.class, "gravel");
 		GameRegistry.registerBlock(Planks, ItemWood.class, "planks");
 		GameRegistry.registerBlock(Planks2, ItemWood.class, "planks2");
-		GameRegistry.registerBlock(Effect, "effect");
+		GameRegistry.registerBlock(Effect, ItemOre.class, "effect");
 		GameRegistry.registerBlock(Vegetation, "vegetation");
 		GameRegistry.registerBlock(LooseRocks, "loose_rock");
 		GameRegistry.registerBlock(FreshWater, "freshwater");
