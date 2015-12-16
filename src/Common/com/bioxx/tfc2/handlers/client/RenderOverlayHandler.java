@@ -231,7 +231,7 @@ public class RenderOverlayHandler
 				if(cattrib.nodes.size() > 0)
 				{
 					event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------Cave-------");
-					event.left.add("Cave: ");	
+					event.left.add("Cave: "+cattrib.nodes.size());	
 				}
 			}
 

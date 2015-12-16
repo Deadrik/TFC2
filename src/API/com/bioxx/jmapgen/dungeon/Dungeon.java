@@ -4,19 +4,31 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.Vector;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor.DoorType;
 import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.blocks.BlockStoneBrick;
 
 public class Dungeon
 {
 	public Vector<DungeonLevel> levels;
 	public Center entrance;
 	private IslandMap islandMap;
+	public IBlockState floorType;
+	public IBlockState wallType;
+	public IBlockState ceilingType;
+	public int roomHeight = 3;
+	public boolean usesEvenRooms = false;//this is for dungeons that should use double doors instead of single
 
 	public Dungeon(IslandMap map)
 	{
@@ -41,7 +53,7 @@ public class Dungeon
 				dl.generate(r, (int)entrance.point.getX(), (int)entrance.point.getZ(), this);
 
 			levels.add(dl);
-			dl.yLevel = islandMap.convertHeightToMC(entrance.getElevation())-25 - 5 * i;
+			dl.yLevel = 64+islandMap.convertHeightToMC(entrance.getElevation())-25 - (roomHeight+2) * i;
 			while(stairRoom == null)
 			{
 				DungeonRoom room = dl.rooms.get(r.nextInt(dl.rooms.size()));
@@ -49,24 +61,66 @@ public class Dungeon
 					stairRoom = room;
 			}
 		}
+
+		//Choose what materials are to be used for dungeon construction
+		if(r.nextBoolean())
+		{
+			if(r.nextBoolean())
+				floorType = Core.getPlanks(WoodType.getTypeFromString(islandMap.getParams().getCommonTree()));
+			else if(r.nextBoolean())
+				floorType = Core.getPlanks(WoodType.getTypeFromString(islandMap.getParams().getUncommonTree()));
+			else
+				floorType = Core.getPlanks(WoodType.getTypeFromString(islandMap.getParams().getRareTree()));
+		}
+		else 
+		{
+			floorType = TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, islandMap.getParams().getSurfaceRock());
+		}
+
+		//Walls are always stone, not wood
+		wallType = TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, islandMap.getParams().getSurfaceRock());
+
+		if(r.nextBoolean())
+		{
+			if(r.nextBoolean())
+				ceilingType = Core.getPlanks(WoodType.getTypeFromString(islandMap.getParams().getCommonTree()));
+			else if(r.nextBoolean())
+				ceilingType = Core.getPlanks(WoodType.getTypeFromString(islandMap.getParams().getUncommonTree()));
+			else
+				ceilingType = Core.getPlanks(WoodType.getTypeFromString(islandMap.getParams().getRareTree()));
+		}
+		else 
+		{
+			ceilingType = TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, islandMap.getParams().getSurfaceRock());
+		}
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		NBTTagCompound dungeonNBT = new NBTTagCompound();
 		NBTTagList listNBT = new NBTTagList();
 		for(DungeonLevel dr : levels)
 		{
 			listNBT.appendTag(dr.writeToNBT());
 		}
-		nbt.setTag("roomList", listNBT);
+		nbt.setTag("levels", listNBT);
 		nbt.setInteger("entrance", entrance.index);
-		dungeonNBT.setTag("levels", listNBT);
+
+		nbt.setInteger("floorTypeBlock", Block.getIdFromBlock(floorType.getBlock()));
+		nbt.setInteger("floorTypeMeta", floorType.getBlock().getMetaFromState(floorType));
+
+		nbt.setInteger("wallTypeBlock", Block.getIdFromBlock(wallType.getBlock()));
+		nbt.setInteger("wallTypeMeta", wallType.getBlock().getMetaFromState(wallType));
+
+		nbt.setInteger("ceilingTypeBlock", Block.getIdFromBlock(ceilingType.getBlock()));
+		nbt.setInteger("ceilingTypeMeta", ceilingType.getBlock().getMetaFromState(ceilingType));
+
+		nbt.setInteger("roomHeight", roomHeight);
+		nbt.setBoolean("usesEvenRooms", usesEvenRooms);
 	}
 
 	public void readFromNBT(IslandMap map, NBTTagCompound nbt)
 	{
-		NBTTagList list = nbt.getTagList("roomList", 10);
+		NBTTagList list = nbt.getTagList("levels", 10);
 		for(int i = 0; i < list.tagCount(); i++)
 		{
 			NBTTagCompound aNBT = list.getCompoundTagAt(i);
@@ -75,6 +129,12 @@ public class Dungeon
 			levels.add(level);
 		}
 		entrance = map.centers.get(nbt.getInteger("entrance"));
+		floorType = Block.getStateById(nbt.getInteger("floorTypeBlock")).getBlock().getStateFromMeta(nbt.getInteger("floorTypeMeta"));
+		wallType = Block.getStateById(nbt.getInteger("wallTypeBlock")).getBlock().getStateFromMeta(nbt.getInteger("wallTypeMeta"));
+		ceilingType = Block.getStateById(nbt.getInteger("ceilingTypeBlock")).getBlock().getStateFromMeta(nbt.getInteger("ceilingTypeMeta"));
+
+		roomHeight = nbt.getInteger("roomHeight");
+		usesEvenRooms = nbt.getBoolean("usesEvenRooms");
 	}
 
 	public static class DungeonLevel
@@ -121,18 +181,6 @@ public class Dungeon
 			for(DungeonRoom dr : rooms)
 			{
 				//while we're at it, we'll update the bounds for the bounding box
-				/*if(dr.getBoundingBox().getMinX() < boundingBox.getMinX())
-					boundingBox.X = dr.getBoundingBox().getMinX();
-
-				if(dr.getBoundingBox().getMinZ() < boundingBox.getMinZ())
-					boundingBox.Z = dr.getBoundingBox().getMinZ();
-
-				if(dr.getBoundingBox().getMaxX() > boundingBox.getMaxX())
-					boundingBox.width = dr.getBoundingBox().getMaxX() - boundingBox.getMinX();
-
-				if(dr.getBoundingBox().getMaxZ() > boundingBox.getMaxZ())
-					boundingBox.height = dr.getBoundingBox().getMaxZ() - boundingBox.getMinZ();*/
-
 				int xm  = Math.min(boundingBox.getMinX(), dr.getBoundingBox().getMinX());
 				int zm  = Math.min(boundingBox.getMinZ(), dr.getBoundingBox().getMinZ());
 				int w  = Math.max(boundingBox.getMaxX() - boundingBox.getMinX(), dr.getBoundingBox().getMaxX() - boundingBox.getMinX());
@@ -173,9 +221,13 @@ public class Dungeon
 							{
 								//Create a new door for these rooms
 								DungeonDoor door = new DungeonDoor(ap.location, dr, collidedRoom);
+								door.doorType = DoorType.Ruins2x2;
+								if(dungeon.roomHeight > 3)
+									door.doorType = DoorType.Ruins3x2;
 								if(rooms.contains(collidedRoom))
 									dr.addDoors(door);
 								collidedRoom.addDoors(door);
+								doors.add(door);
 							}
 						}
 					}
@@ -449,7 +501,7 @@ public class Dungeon
 
 		public static enum DoorType
 		{
-			Standard, Trapdoor, SpiralStairs;
+			Standard, Tall, DoubleLeft, DoubleRight, TallDoubleLeft, TallDoubleRight, Ruins2x2, Ruins3x2;
 		}
 
 	}

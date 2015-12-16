@@ -14,6 +14,11 @@ import net.minecraft.world.chunk.Chunk;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.blocks.BlockLeaves;
+import com.bioxx.tfc2.blocks.BlockLeaves2;
+import com.bioxx.tfc2.blocks.BlockLogNatural;
+import com.bioxx.tfc2.blocks.BlockLogNatural2;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.InventoryPlayerTFC;
 
@@ -178,5 +183,28 @@ public class Core
 	public static void setPlayerFoodStats(EntityPlayer player, FoodStatsTFC foodstats)
 	{
 		foodstats.writeNBT(player.getEntityData());
+	}
+
+	public static IBlockState getPlanks(WoodType w)
+	{
+		if(w.getMeta() >= 16)
+			return TFCBlocks.Planks2.getDefaultState().withProperty(BlockLogNatural2.META_PROPERTY, w);
+		return TFCBlocks.Planks.getDefaultState().withProperty(BlockLogNatural.META_PROPERTY, w);
+	}
+
+	public static IBlockState getNaturalLog(WoodType w)
+	{
+		if(w == WoodType.Palm)
+			return TFCBlocks.LogNaturalPalm.getDefaultState();
+		if(w.getMeta() >= 16)
+			return TFCBlocks.LogNatural2.getDefaultState().withProperty(BlockLogNatural2.META_PROPERTY, w);
+		return TFCBlocks.LogNatural.getDefaultState().withProperty(BlockLogNatural.META_PROPERTY, w);
+	}
+
+	public static IBlockState getLeaves(WoodType w)
+	{
+		if(w.getMeta() >= 16)
+			return TFCBlocks.Leaves2.getDefaultState().withProperty(BlockLeaves2.META_PROPERTY, w);
+		return TFCBlocks.Leaves.getDefaultState().withProperty(BlockLeaves.META_PROPERTY, w);
 	}
 }

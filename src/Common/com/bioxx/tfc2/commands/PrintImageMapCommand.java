@@ -23,7 +23,6 @@ import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
 import com.bioxx.jmapgen.dungeon.Dungeon;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor.DoorType;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonLevel;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRect;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRoom;
@@ -315,8 +314,6 @@ public class PrintImageMapCommand extends CommandBase
 						for(DungeonDoor door : room.doors)
 						{
 							graphics.setColor(Color.white);
-							if(door.doorType == DoorType.SpiralStairs)
-								graphics.setColor(Color.CYAN);
 							graphics.fillRect(door.location.getX()+size2-(int)d.entrance.point.getX(), door.location.getZ()+size2-(int)d.entrance.point.getZ(), 1, 1);
 						}
 				}

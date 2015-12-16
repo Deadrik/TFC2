@@ -32,6 +32,7 @@ import com.bioxx.jmapgen.attributes.OreAttribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
 import com.bioxx.jmapgen.dungeon.Dungeon;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor;
+import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor.DoorType;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonLevel;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRect;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRoom;
@@ -739,7 +740,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		BlockPos pos, pos2;
 		Spline3D spline;
 		Point iPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
-		Vec3i islandOffset = new Vec3i(iPoint.x, 0, iPoint.y).crossProduct(new Vec3i (-1, -1, -1));
+		Vec3i islandOffset = new Vec3i(iPoint.x, 0, iPoint.y);
 		double wSq = 4;
 
 		for(Center c : centersInChunk)
@@ -1030,11 +1031,12 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			for(DungeonLevel level : dungeon.levels)
 			{
 				DungeonRect chunkRect = new DungeonRect((int)iPoint.x, (int)iPoint.y, 16, 16);
-				if(chunkRect.intersects(level.getBoundingBox()))
+				//We expand the bounding boxes so that we wont have issues at chunk edges.
+				if(chunkRect.expand(1).intersects(level.getBoundingBox().expand(1)))
 				{
 					for(DungeonRoom room : level.rooms)
 					{
-						if(chunkRect.intersects(room.getBoundingBox()))
+						if(chunkRect.expand(1).intersects(room.getBoundingBox().expand(1)))
 						{
 							for(DungeonRect rect : room.rects)
 							{
@@ -1045,9 +1047,24 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								{
 									for(int z = 0; z < rect.height; z++)
 									{
-										for(int y = 0; y < 3; y++)
+										for(int y = 0; y < dungeon.roomHeight; y++)
 										{
+											if(getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z)).getBlock() != TFCBlocks.Stone)
+												continue;
 											setState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z), state);
+											if(y == 0)
+												setState(primer, new BlockPos(rx+x, level.yLevel+y-1, rz+z), dungeon.floorType);
+											if(y == 2)
+												setState(primer, new BlockPos(rx+x, level.yLevel+y+1, rz+z), dungeon.ceilingType);
+
+											if(x == 0 && getState(primer, new BlockPos(rx+x-1, level.yLevel+y, rz+z)).getBlock() != Blocks.air)
+												setState(primer, new BlockPos(rx+x-1, level.yLevel+y, rz+z), dungeon.wallType);
+											if(x == rect.width-1 && getState(primer, new BlockPos(rx+x+1, level.yLevel+y, rz+z)).getBlock() != Blocks.air)
+												setState(primer, new BlockPos(rx+x+1, level.yLevel+y, rz+z), dungeon.wallType);
+											if(z == 0 && getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z-1)).getBlock() != Blocks.air)
+												setState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z-1), dungeon.wallType);
+											if(z == rect.height-1 && getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z+1)).getBlock() != Blocks.air)
+												setState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z+1), dungeon.wallType);
 										}
 									}
 								}
@@ -1059,16 +1076,95 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						int rx = door.location.getX() - (int)chunkRect.getMinX();
 						int rz = door.location.getZ() - (int)chunkRect.getMinZ();
+						state = Blocks.air.getDefaultState();
+
 
 						if(rx >= 0 && rz >= 0 && rx < 16 && rz < 16)
 						{
+							if(door.doorType == DoorType.Ruins2x2 || door.doorType == DoorType.Ruins3x2)
+							{
+								state = TFCBlocks.Rubble.getStateFromMeta(dungeon.wallType.getBlock().getMetaFromState(dungeon.wallType));
+								setState(primer, new BlockPos(rx, level.yLevel, rz), state);
+								setState(primer, new BlockPos(rx, level.yLevel+1, rz), state);
+								if(door.doorType == DoorType.Ruins3x2)
+									setState(primer, new BlockPos(rx, level.yLevel+2, rz), state);
+
+								if(getState(primer, new BlockPos(rx+1, level.yLevel, rz)) == dungeon.wallType)
+								{
+									setState(primer, new BlockPos(rx+1, level.yLevel, rz), state);
+									setState(primer, new BlockPos(rx+1, level.yLevel+1, rz), state);
+									if(door.doorType == DoorType.Ruins3x2)
+										setState(primer, new BlockPos(rx+1, level.yLevel+2, rz), state);
+								}
+								else if(getState(primer, new BlockPos(rx, level.yLevel, rz+1)) == dungeon.wallType)
+								{
+									setState(primer, new BlockPos(rx, level.yLevel, rz+1), state);
+									setState(primer, new BlockPos(rx, level.yLevel+1, rz+1), state);
+									if(door.doorType == DoorType.Ruins3x2)
+										setState(primer, new BlockPos(rx, level.yLevel+2, rz+1), state);
+								}
+
+
+								continue;
+							}
+							setState(primer, new BlockPos(rx, level.yLevel-1, rz), dungeon.floorType);
 							setState(primer, new BlockPos(rx, level.yLevel, rz), state);
 							setState(primer, new BlockPos(rx, level.yLevel+1, rz), state);
+							//dungSurroundBlock(primer, new BlockPos(rx, level.yLevel, rz), state, dungeon.wallType, dungeon.floorType, dungeon.wallType);
+							//dungSurroundBlock(primer, new BlockPos(rx, level.yLevel+1, rz), state, dungeon.wallType, dungeon.floorType, dungeon.wallType);
+							if(door.doorType == DoorType.Tall || door.doorType == DoorType.TallDoubleLeft || door.doorType == DoorType.TallDoubleRight)
+							{
+								setState(primer, new BlockPos(rx, level.yLevel+2, rz), state);
+								//dungSurroundBlock(primer, new BlockPos(rx, level.yLevel+2, rz), state, dungeon.wallType, dungeon.floorType, dungeon.wallType);
+							}
 						}
 					}
 				}
 			}
 
+		}
+	}
+
+	public void dungSurroundBlock(ChunkPrimer primer, BlockPos pos, IBlockState center, IBlockState up, IBlockState down, IBlockState side)
+	{
+		IBlockState state = getState(primer, pos.up());
+		if(state.getBlock() != center.getBlock())
+		{
+			setState(primer, pos.up(), up);
+		}
+
+		state = getState(primer, pos.down());
+		if(state.getBlock() != center.getBlock())
+		{
+			setState(primer, pos.down(), down);
+		}
+
+		state = getState(primer, pos.west());
+		if(state.getBlock() != Blocks.air)
+		{
+			setState(primer, pos.west(), side);
+			setState(primer, pos.west().up(), side);
+		}
+
+		state = getState(primer, pos.east());
+		if(state.getBlock() != Blocks.air)
+		{
+			setState(primer, pos.east(), side);
+			setState(primer, pos.east().up(), side);
+		}
+
+		state = getState(primer, pos.north());
+		if(state.getBlock() != Blocks.air)
+		{
+			setState(primer, pos.north(), side);
+			setState(primer, pos.north().up(), side);
+		}
+
+		state = getState(primer, pos.south());
+		if(state.getBlock() != Blocks.air)
+		{
+			setState(primer, pos.south(), side);
+			setState(primer, pos.south().up(), side);
 		}
 	}
 }
