@@ -1001,14 +1001,14 @@ public class IslandMap
 		if (x != null && v.indexOf(x) < 0) { v.add(x); }
 	}
 
-	// Determine elevations and water at Voronoi corners. By
+	/* Determine elevations and water at Voronoi corners. By
 	// construction, we have no local minima. This is important for
 	// the downslope vectors later, which are used in the river
 	// construction algorithm. Also by construction, inlets/bays
 	// push low elevation areas inland, which means many rivers end
 	// up flowing out through them. Also by construction, lakes
 	// often end up on river paths because they don't raise the
-	// elevation as much as other terrain does.
+	// elevation as much as other terrain does.*/
 	private int assignCornerElevations() 
 	{
 		Corner baseCorner, adjacentCorner;
@@ -1130,11 +1130,11 @@ public class IslandMap
 		return locationsOut;
 	}
 
-	// Change the overall distribution of elevations so that lower
+	/* Change the overall distribution of elevations so that lower
 	// elevations are more common than higher
 	// elevations. Specifically, we want elevation X to have frequency
 	// (1-X).  To do this we will sort the corners, then set each
-	// corner to its desired elevation.
+	// corner to its desired elevation.*/
 	public void redistributeElevations(Vector<Corner> locations) 
 	{
 		// SCALE_FACTOR increases the mountain area. At 1.0 the maximum
@@ -1963,11 +1963,11 @@ public class IslandMap
 		}
 	}
 
-	// Assign a biome type to each polygon. If it has
+	/* Assign a biome type to each polygon. If it has
 	// ocean/coast/water, then that's the biome; otherwise it depends
 	// on low/high elevation and low/medium/high moisture. This is
 	// roughly based on the Whittaker diagram but adapted to fit the
-	// needs of the island map generator.
+	// needs of the island map generator.*/
 	public BiomeType getBiome(Center p) 
 	{
 		if (p.hasMarker(Marker.Ocean)) {

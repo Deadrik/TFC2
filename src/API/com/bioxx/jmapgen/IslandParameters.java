@@ -261,7 +261,7 @@ public class IslandParameters
 		SmallCraters(0.2, "Small Crater"), 
 		LargeCrater(0.2, "Large Crater"), 
 		Canyons(0.3, "Canyons"),
-		NoLand(0.3,"NO LAND"),
+		NoLand(0.3,"NO LAND", false),
 		LowLand(0.1,"Low Land"),
 		MineralRich(0.05,"Mineral Rich"),
 		Spires(0.05,"Spires");
@@ -269,11 +269,19 @@ public class IslandParameters
 		public final double rarity;
 		private String name;
 		private static RandomCollection<Feature> pot = new RandomCollection<Feature>();
+		private boolean shouldGen = true;
 
 		private Feature(double r, String n)
 		{
 			rarity = r;
 			name = n;
+		}
+
+		private Feature(double r, String n, boolean gen)
+		{
+			rarity = r;
+			name = n;
+			shouldGen = gen;
 		}
 
 		public static void setupFeatures(Random r)
@@ -282,7 +290,10 @@ public class IslandParameters
 			if(pot.size() == 0)
 			{
 				for(Feature f : Feature.values())
-					pot.add(f.rarity, f);
+				{
+					if(f.shouldGen)
+						pot.add(f.rarity, f);
+				}
 			}
 		}
 
