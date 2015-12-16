@@ -33,6 +33,7 @@ import com.bioxx.jmapgen.attributes.CaveAttribute;
 import com.bioxx.jmapgen.attributes.OreAttribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
 import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.processing.CaveAttrNode;
 import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
@@ -232,6 +233,10 @@ public class RenderOverlayHandler
 				{
 					event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------Cave-------");
 					event.left.add("Cave: "+cattrib.nodes.size());	
+					for(CaveAttrNode n : cattrib.nodes)
+					{
+						event.left.add("  *"+n.getOffset());	
+					}
 				}
 			}
 

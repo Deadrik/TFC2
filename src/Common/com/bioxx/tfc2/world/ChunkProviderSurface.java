@@ -753,10 +753,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					wSq = n.getNodeWidth() * n.getNodeWidth();
 					points.clear();
 					if(n.getPrev() != null)
-						points.add(n.getPrevOffset().add(islandOffset));
-					points.add(n.getOffset().add(islandOffset));
+						points.add(n.getPrevOffset());
+					points.add(n.getOffset());
 					if(n.getNext() != null)
-						points.add(n.getNextOffset().add(islandOffset));
+						points.add(n.getNextOffset());
 
 					spline = new Spline3D(points);
 					for(double i = 0; i < 1; i+= 0.05)
@@ -783,17 +783,18 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							pos2 = (BlockPos) it.next();
 							if(pos.distanceSqToCenter(pos2.getX(), pos2.getY(), pos2.getZ()) <= wSq)
 							{
-								if(pos2.getX() >= 0 && pos2.getY() >= 0 && pos2.getZ() >= 0 && pos2.getX() < 16 && pos2.getY() < 256 && pos2.getZ() < 16)
+								BlockPos pos3 = pos2.subtract(islandOffset);
+								if(pos3.getX() >= 0 && pos3.getY() >= 0 && pos3.getZ() >= 0 && pos3.getX() < 16 && pos3.getY() < 256 && pos3.getZ() < 16)
 								{
-									state = getState(chunkprimer, pos2);
+									state = getState(chunkprimer, pos3);
 									Block b = state.getBlock();
 									if(b != Blocks.bedrock && b.getMaterial() != Material.water)
 									{
-										down = getState(chunkprimer, pos2.down());
-										up = getState(chunkprimer, pos2.up());
+										down = getState(chunkprimer, pos3.down());
+										up = getState(chunkprimer, pos3.up());
 										if(Core.isDirt(down))
 										{
-											setState(chunkprimer, pos2.down(), TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, down.getValue(BlockDirt.META_PROPERTY)));
+											setState(chunkprimer, pos3.down(), TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, down.getValue(BlockDirt.META_PROPERTY)));
 										}
 
 										if(down.getBlock().getMaterial() == Material.water)
@@ -802,7 +803,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 										if(up.getBlock().getMaterial() == Material.water)
 											continue;
 
-										if(n.isSeaCave() && pos2.getY() < Global.SEALEVEL)
+										if(n.isSeaCave() && pos3.getY() < Global.SEALEVEL)
 											fillBlock = TFCBlocks.SaltWaterStatic.getDefaultState();
 										else if(c.hasAttribute(Attribute.River))
 										{
@@ -813,11 +814,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 										if(TFCOptions.shouldStripChunks)
 											fillBlock = Blocks.wool.getDefaultState();
 
-										setState(chunkprimer, pos2, fillBlock);
+										setState(chunkprimer, pos3, fillBlock);
 
 										if(Core.isSoil(up) && !Core.isGrass(up))
 										{
-											setState(chunkprimer, pos2.up(), TFCBlocks.Stone.getDefaultState().withProperty(BlockStone.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+											setState(chunkprimer, pos3.up(), TFCBlocks.Stone.getDefaultState().withProperty(BlockStone.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
 										}
 									}
 								}

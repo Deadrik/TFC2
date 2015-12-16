@@ -118,7 +118,7 @@ public class TFC
 		Configuration config;
 		try
 		{
-			config = new Configuration(new File(TFC.proxy.getMinecraftDir(), "/config/Options.cfg"));
+			config = new Configuration(new File(TFC.proxy.getMinecraftDir(), "/config/TFCOptions.cfg"));
 			config.load();
 		} catch (Exception e) {
 			log.info(new StringBuilder().append("[TFC2] Error while trying to access settings configuration!").toString());
