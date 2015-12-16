@@ -21,7 +21,7 @@ public class RenderElephant extends RenderLiving
 
 	protected ResourceLocation getEntityTexture(EntityElephant entity) 
 	{
-		if(entity.getBearType() == ElephantType.Elephant)
+		if(entity.getElephantType() == ElephantType.Elephant)
 			return eletex;
 		else
 			return eletex;

@@ -22,15 +22,15 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
 
-public class EntityElephant extends EntityAnimal 
+public class EntityBoar extends EntityAnimal 
 {
 	Gender gender;
-	ElephantType elephantType;
+	BoarStage elephantType;
 
-	public EntityElephant(World worldIn) 
+	public EntityBoar(World worldIn) 
 	{
 		super(worldIn);
-		this.setSize(1.8F, 2.5F);
+		this.setSize(1.0F, 1.0F);
 		((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIMate(this, 0.8D));
@@ -41,7 +41,7 @@ public class EntityElephant extends EntityAnimal
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
 		setGender(worldIn.rand.nextBoolean() ? Gender.Male : Gender.Female);
-		setElephantType(ElephantType.Elephant);
+		setBoarStage(worldIn.rand.nextBoolean() ? BoarStage.Black : BoarStage.Brown);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class EntityElephant extends EntityAnimal
 	{
 		super.entityInit ();
 		dataWatcher.addObject (13, Gender.Male.ordinal());
-		dataWatcher.addObject (14, ElephantType.Elephant.ordinal());
+		dataWatcher.addObject (14, BoarStage.Black.ordinal());
 	}
 
 
@@ -90,7 +90,7 @@ public class EntityElephant extends EntityAnimal
 	public void writeEntityToNBT (NBTTagCompound nbt)
 	{
 		super.writeEntityToNBT (nbt);
-		nbt.setInteger("ElephantType", elephantType.ordinal());
+		nbt.setInteger("BoarStage", elephantType.ordinal());
 		nbt.setInteger("gender", gender.ordinal());
 	}
 
@@ -102,7 +102,7 @@ public class EntityElephant extends EntityAnimal
 	public void readEntityFromNBT(NBTTagCompound nbt)
 	{
 		super.readEntityFromNBT(nbt);
-		this.setElephantType(ElephantType.values()[nbt.getInteger("ElephantType")]);
+		this.setBoarStage(BoarStage.values()[nbt.getInteger("BoarStage")]);
 		this.setGender(Gender.values()[nbt.getInteger("gender")]);
 	}
 
@@ -229,19 +229,19 @@ public class EntityElephant extends EntityAnimal
 		this.dataWatcher.updateObject(13, t.ordinal());	
 	}
 
-	protected void setElephantType(ElephantType t)
+	protected void setBoarStage(BoarStage t)
 	{
 		this.elephantType = t;
 		this.dataWatcher.updateObject(14, t.ordinal());	
 	}
 
-	public ElephantType getElephantType()
+	public BoarStage getBoarStage()
 	{
-		return ElephantType.values()[this.dataWatcher.getWatchableObjectInt(14)];
+		return BoarStage.values()[this.dataWatcher.getWatchableObjectInt(14)];
 	}
 
-	public enum ElephantType
+	public enum BoarStage
 	{
-		Elephant;
+		Black, Brown, Pink1, Pink2, Pink3;
 	}
 }

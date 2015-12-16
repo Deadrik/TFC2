@@ -33,6 +33,7 @@ import com.bioxx.tfc2.blocks.BlockLeaves2;
 import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.entity.EntityBear;
 import com.bioxx.tfc2.entity.EntityBearPanda;
+import com.bioxx.tfc2.entity.EntityBoar;
 import com.bioxx.tfc2.entity.EntityCart;
 import com.bioxx.tfc2.entity.EntityElephant;
 import com.bioxx.tfc2.entity.EntityLion;
@@ -47,6 +48,7 @@ import com.bioxx.tfc2.handlers.client.RenderOverlayHandler;
 import com.bioxx.tfc2.rendering.MeshDef;
 import com.bioxx.tfc2.rendering.model.RenderBear;
 import com.bioxx.tfc2.rendering.model.RenderBearPanda;
+import com.bioxx.tfc2.rendering.model.RenderBoar;
 import com.bioxx.tfc2.rendering.model.RenderCart;
 import com.bioxx.tfc2.rendering.model.RenderElephant;
 import com.bioxx.tfc2.rendering.model.RenderLion;
@@ -510,6 +512,7 @@ public class ClientProxy extends CommonProxy
 		RegistryItemQueue.getInstance().registerMeshes();
 	}
 
+
 	@Override
 	public void init(FMLInitializationEvent event)
 	{
@@ -528,6 +531,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityRhino.class, new RenderRhino(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityElephant.class, new RenderElephant(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityMammoth.class, new RenderMammoth(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBoar.class, new RenderBoar(Minecraft.getMinecraft().getRenderManager()));
 
 		//Disable vanilla UI elements
 		GuiIngameForge.renderHealth = false;
