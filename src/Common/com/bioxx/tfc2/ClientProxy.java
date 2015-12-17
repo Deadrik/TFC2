@@ -463,6 +463,24 @@ public class ClientProxy extends CommonProxy
 
 		});
 
+		/**
+		 * StoneSmooth
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.StoneSmooth), new MeshDef()
+		{
+			@Override
+			public void Setup()
+			{
+				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
+				for(int l = 0; l < Global.STONE_ALL.length; l++)
+				{
+					String stone = Core.textConvert(Global.STONE_ALL[l]);
+					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":StoneSmooth/" + stone, "inventory");
+				}
+			}
+
+		});
+
 		for(int l = 0; l < Global.STONE_ALL.length; l++)
 		{
 			String stone = Core.textConvert(Global.STONE_ALL[l]);
@@ -474,6 +492,7 @@ public class ClientProxy extends CommonProxy
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + stone);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + stone);
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.StoneBrick), Reference.ModID + ":StoneBrick/" + stone);
+			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.StoneSmooth), Reference.ModID + ":StoneSmooth/" + stone);
 			ModelBakery.addVariantName(TFCItems.LooseRock, Reference.ModID + ":LooseRock/" + stone);
 		}
 		for(int l = 0; l < 16; l++)

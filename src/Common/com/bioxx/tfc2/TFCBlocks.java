@@ -72,6 +72,7 @@ public class TFCBlocks
 	public static Block Ore;
 	public static Block ClimbingRocks;
 	public static Block StoneBrick;
+	public static Block StoneSmooth;
 
 	public static void LoadBlocks()
 	{
@@ -109,6 +110,7 @@ public class TFCBlocks
 		Ore = new BlockOre().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("ore");
 		ClimbingRocks = new BlockClimbingRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("climbing_rock");
 		StoneBrick = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonebrick");
+		StoneSmooth = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonesmooth");
 	}
 
 	public static void RegisterBlocks()
@@ -148,6 +150,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(Ore, ItemOre.class, "ore");
 		GameRegistry.registerBlock(ClimbingRocks, "climbing_rock");
 		GameRegistry.registerBlock(StoneBrick, ItemStone.class, "stonebrick");
+		GameRegistry.registerBlock(StoneSmooth, ItemStone.class, "stonesmooth");
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);

@@ -52,6 +52,7 @@ global.willow=Willow
 tile.stone.name=Stone
 tile.rubble.name=Rubble
 tile.stonebrick.name=Stone Bricks
+tile.stonesmooth.name=Smoothed Stone
 
 #=================
 #= Wooden Blocks =

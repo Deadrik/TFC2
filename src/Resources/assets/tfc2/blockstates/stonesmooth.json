@@ -1,0 +1,30 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"all": "tfc2:blocks/rocks/Granite Smooth",
+			"particle": "tfc2:blocks/rocks/Granite Smooth"
+		},
+		"model": "cube_all"
+	},
+	"variants": {
+		"stone" : {
+			"granite": {"textures": {"all": "tfc2:blocks/rocks/Granite Smooth"}},
+			"diorite": {"textures": {"all": "tfc2:blocks/rocks/Diorite Smooth"}},
+			"gabbro": {"textures": {"all": "tfc2:blocks/rocks/Gabbro Smooth"}},
+			"shale": {"textures": {"all": "tfc2:blocks/rocks/Shale Smooth"}},
+			"claystone": {"textures": {"all": "tfc2:blocks/rocks/Claystone Smooth"}},
+			"limestone": {"textures": {"all": "tfc2:blocks/rocks/Limestone Smooth"}},
+			"dolomite": {"textures": {"all": "tfc2:blocks/rocks/Dolomite Smooth"}},
+			"chert": {"textures": {"all": "tfc2:blocks/rocks/Chert Smooth"}},
+			"rhyolite": {"textures": {"all": "tfc2:blocks/rocks/Rhyolite Smooth"}},
+			"basalt": {"textures": {"all": "tfc2:blocks/rocks/Basalt Smooth"}},
+			"andesite": {"textures": {"all": "tfc2:blocks/rocks/Andesite Smooth"}},
+			"dacite": {"textures": {"all": "tfc2:blocks/rocks/Dacite Smooth"}},
+			"blueschist": {"textures": {"all": "tfc2:blocks/rocks/Blueschist Smooth"}},
+			"schist": {"textures": {"all": "tfc2:blocks/rocks/Schist Smooth"}},
+			"gneiss": {"textures": {"all": "tfc2:blocks/rocks/Gneiss Smooth"}},
+			"marble": {"textures": {"all": "tfc2:blocks/rocks/Marble Smooth"}}
+		}
+	}
+}
