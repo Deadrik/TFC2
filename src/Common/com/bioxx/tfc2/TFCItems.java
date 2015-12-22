@@ -26,6 +26,11 @@ public class TFCItems
 	public static Item StoneHoeHead;
 
 	public static Item FoodCabbage;
+	public static Item FoodBeefRaw;
+	public static Item FoodBeefCooked;
+	public static Item FoodBanana;
+	public static Item FoodBarleyBread;
+	public static Item FoodCheese;
 
 	public static void Load()
 	{
@@ -42,7 +47,11 @@ public class TFCItems
 		StoneHoeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_hoe_head"));
 
 		FoodCabbage = registerItem(new ItemFoodTFC(EnumFoodGroup.Vegetable, 1f, 1).setExpiration(3600).setUnlocalizedName("food_cabbage"));
-
+		FoodBeefRaw = registerItem(new ItemFoodTFC(EnumFoodGroup.Protein, 1f, 1).setExpiration(360).setUnlocalizedName("food_beefraw"));
+		FoodBeefCooked = registerItem(new ItemFoodTFC(EnumFoodGroup.Protein, 1f, 1).setExpiration(360).setUnlocalizedName("food_beefcooked"));
+		FoodBanana = registerItem(new ItemFoodTFC(EnumFoodGroup.Fruit, 1f, 1).setExpiration(3600).setUnlocalizedName("food_banana"));
+		FoodBarleyBread = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setExpiration(3600).setUnlocalizedName("food_barleybread"));
+		FoodCheese = registerItem(new ItemFoodTFC(EnumFoodGroup.Dairy, 1f, 1).setExpiration(7200).setUnlocalizedName("food_cheese"));
 
 	}
 
