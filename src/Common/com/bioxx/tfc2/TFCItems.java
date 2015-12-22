@@ -41,7 +41,7 @@ public class TFCItems
 		StoneKnifeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_knife_head"));
 		StoneHoeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_hoe_head"));
 
-		FoodCabbage = registerItem(new ItemFoodTFC(EnumFoodGroup.Vegetable).setExpiration(3600).setUnlocalizedName("food_cabbage"));
+		FoodCabbage = registerItem(new ItemFoodTFC(EnumFoodGroup.Vegetable, 1f, 1).setExpiration(3600).setUnlocalizedName("food_cabbage"));
 
 
 	}

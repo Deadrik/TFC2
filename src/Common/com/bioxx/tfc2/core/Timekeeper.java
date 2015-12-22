@@ -12,6 +12,7 @@ public class Timekeeper
 	public static final long ticksInYear = 2304000L;//24000*96
 	public static final long ticksInSeason = ticksInYear/4;
 	public static final long ticksInPeriod = ticksInSeason/3;
+	public static final long HOUR_LENGTH = 1000;
 
 	public static Timekeeper getInstance()
 	{

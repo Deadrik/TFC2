@@ -8,6 +8,9 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.bioxx.tfc2.api.interfaces.IFood;
+import com.bioxx.tfc2.core.Food;
+
 public class ContainerTFC extends Container
 {
 	public int bagsSlotNum;
@@ -38,9 +41,81 @@ public class ContainerTFC extends Container
 	}
 
 	@Override
-	public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
+	/**
+	 * Handles slot click.
+	 *  
+	 * @param mode 0 = basic click, 1 = shift click, 2 = hotbar, 3 = pick block, 4 = drop, 5 = ?, 6 = double click
+	 */
+	public ItemStack slotClick(int slotID, int clickedButton, int mode, EntityPlayer p)
 	{
-		ItemStack is = super.slotClick(par1, par2, par3, par4EntityPlayer);
+		if (slotID >= 0 && slotID < this.inventorySlots.size())
+		{
+			Slot sourceSlot = (Slot) this.inventorySlots.get(slotID);
+			ItemStack slotStack = sourceSlot.getStack();
+
+			//This section is for merging foods with differing expirations.
+			if(mode == 0 && clickedButton == 0 && slotStack != null && p.inventory.getItemStack() != null)
+			{
+				ItemStack itemstack4 = p.inventory.getItemStack();
+				if (slotStack.getItem() == itemstack4.getItem() && slotStack.getMetadata() == itemstack4.getMetadata() && ContainerTFC.areCompoundsEqual(slotStack, itemstack4))
+				{
+					if(slotStack.getItem() instanceof IFood && itemstack4.getItem() instanceof IFood)
+					{
+						long ex1 = Food.getDecayTimer(slotStack);
+						long ex2 = Food.getDecayTimer(itemstack4);
+						if(ex2 < ex1)
+							Food.setDecayTimer(slotStack, ex2);
+					}
+
+					int l1 = clickedButton == 0 ? itemstack4.stackSize : 1;
+
+					if (l1 > sourceSlot.getItemStackLimit(itemstack4) - slotStack.stackSize)
+					{
+						l1 = sourceSlot.getItemStackLimit(itemstack4) - slotStack.stackSize;
+					}
+
+					if (l1 > itemstack4.getMaxStackSize() - slotStack.stackSize)
+					{
+						l1 = itemstack4.getMaxStackSize() - slotStack.stackSize;
+					}
+
+					itemstack4.splitStack(l1);
+
+					if (itemstack4.stackSize == 0)
+					{
+						p.inventory.setItemStack((ItemStack)null);
+					}
+
+					slotStack.stackSize += l1;
+					return null;
+				}
+				else if (itemstack4.stackSize <= sourceSlot.getItemStackLimit(itemstack4))
+				{
+					sourceSlot.putStack(itemstack4);
+					p.inventory.setItemStack(slotStack);
+				}
+			}
+
+			// Hotbar press to remove from crafting output
+			if (mode == 2 && slotID == 0 && slotStack != null)
+			{
+				//Removed During Port
+				//CraftingHandler.preCraft(p, slotStack, craftMatrix);
+			}
+			// S and D hotkeys for trimming/combining food
+			else if (mode == 7 && slotID >= 9 && slotID < 45)
+			{
+				if (sourceSlot.canTakeStack(p))
+				{
+					Slot destSlot = (Slot) this.inventorySlots.get(clickedButton);
+					destSlot.putStack(slotStack);
+					sourceSlot.putStack(null);
+					return null;
+				}
+			}
+		}
+
+		ItemStack is = super.slotClick(slotID, clickedButton, mode, player);
 		saveContents(is);
 		return is;
 	}
@@ -66,8 +141,7 @@ public class ContainerTFC extends Container
 
 				if (slotstack != null
 						&& slotstack.getItem() == is.getItem()
-						//&& !is.getHasSubtypes()
-						&& is.getItemDamage() == slotstack.getItemDamage()
+						&& (!is.getHasSubtypes() || is.getMetadata() == slotstack.getMetadata())
 						&& ItemStack.areItemStackTagsEqual(is, slotstack)
 						&& slotstack.stackSize < slot.getSlotStackLimit())
 				{
@@ -226,8 +300,8 @@ public class ContainerTFC extends Container
 	public static boolean isItemStackEqual(ItemStack is1, ItemStack is2)
 	{
 		return is1.stackSize == is2.stackSize && is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() &&
-					(is1.hasTagCompound() || !is2.hasTagCompound()) &&
-					(!is1.hasTagCompound() || areCompoundsEqual(is1, is2));
+				(is1.hasTagCompound() || !is2.hasTagCompound()) &&
+				(!is1.hasTagCompound() || areCompoundsEqual(is1, is2));
 	}
 
 	public static boolean areCompoundsEqual(ItemStack is1, ItemStack is2)
@@ -248,6 +322,9 @@ public class ContainerTFC extends Container
 		float temp4 = TFC_ItemHeat.getTemp(is2);
 		is3Tags.removeTag("temp");
 		is4Tags.removeTag("temp");*/
+
+		is3Tags.removeTag("Expiration");
+		is4Tags.removeTag("Expiration");
 
 		return is3Tags.equals(is4Tags) /*&&  Math.abs(temp3 - temp4) < 5*/;
 	}

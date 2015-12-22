@@ -24,15 +24,4 @@ public interface IFood
 	 * @return Is this item usable in meals
 	 */
 	boolean isUsable(ItemStack is);
-
-	int getTasteSweet(ItemStack is);
-
-	int getTasteSour(ItemStack is);
-
-	int getTasteSalty(ItemStack is);
-
-	int getTasteBitter(ItemStack is);
-
-	int getTasteSavory(ItemStack is);
-
 }

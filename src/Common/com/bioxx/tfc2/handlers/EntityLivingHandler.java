@@ -7,6 +7,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.client.event.FOVUpdateEvent;
@@ -18,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 
 public class EntityLivingHandler
@@ -39,7 +41,17 @@ public class EntityLivingHandler
 			if(!player.worldObj.isRemote)
 			{
 				//Tick Decay
-				//Core.handleItemTicking(player.inventory.mainInventory, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);//Removed on port
+				for(int i = 0; i < player.inventory.mainInventory.length; i++)
+				{
+					ItemStack is = player.inventory.mainInventory[i];
+					if(is != null && is.getItem() instanceof IUpdateInInventory)
+					{
+						((IUpdateInInventory)is.getItem()).inventoryUpdate(player, is);
+						if(is.stackSize == 0)
+							player.inventory.mainInventory[i] = null;
+					}
+				}
+
 				//Handle Food
 
 

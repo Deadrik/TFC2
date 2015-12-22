@@ -1,5 +1,7 @@
 package com.bioxx.tfc2.handlers.client;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -11,6 +13,7 @@ import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.entity.EntityCart;
 import com.bioxx.tfc2.gui.GuiCart;
+import com.bioxx.tfc2.gui.GuiInventoryTFC;
 import com.bioxx.tfc2.gui.GuiKnapping;
 
 public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
@@ -44,7 +47,7 @@ public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
 	@SubscribeEvent
 	public void openGuiHandler(GuiOpenEvent event)
 	{
-		/*if(event.gui instanceof GuiInventory && !(event.gui instanceof GuiInventoryTFC))
-			event.gui = new GuiInventoryTFC(Minecraft.getMinecraft().thePlayer);*/
+		if(event.gui instanceof GuiInventory && !(event.gui instanceof GuiInventoryTFC))
+			event.gui = new GuiInventoryTFC(Minecraft.getMinecraft().thePlayer);
 	}
 }

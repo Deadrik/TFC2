@@ -35,6 +35,7 @@ import com.bioxx.tfc2.entity.EntityTiger;
 import com.bioxx.tfc2.handlers.CreateSpawnHandler;
 import com.bioxx.tfc2.handlers.EntityLivingHandler;
 import com.bioxx.tfc2.handlers.GuiHandler;
+import com.bioxx.tfc2.handlers.JoinWorldHandler;
 import com.bioxx.tfc2.handlers.PlayerTracker;
 import com.bioxx.tfc2.handlers.ServerTickHandler;
 import com.bioxx.tfc2.handlers.WorldLoadHandler;
@@ -100,6 +101,7 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(new CreateSpawnHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldLoadHandler());
 		MinecraftForge.EVENT_BUS.register(new EntityLivingHandler());
+		MinecraftForge.EVENT_BUS.register(new JoinWorldHandler());
 		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
 	}
 

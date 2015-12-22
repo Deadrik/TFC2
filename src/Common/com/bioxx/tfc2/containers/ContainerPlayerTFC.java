@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.api.interfaces.IFood;
+import com.bioxx.tfc2.core.Food;
 import com.bioxx.tfc2.core.PlayerInventory;
 
 public class ContainerPlayerTFC extends ContainerPlayer
@@ -139,7 +140,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	{
 		ItemStack origStack = null;
 		Slot slot = (Slot) this.inventorySlots.get(slotNum);
-		Slot equipmentSlot = (Slot) this.inventorySlots.get(50);
+		//Slot equipmentSlot = (Slot) this.inventorySlots.get(50);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -249,35 +250,186 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	}
 
 	@Override
-	public ItemStack slotClick(int sourceSlotID, int destSlotID, int clickType, EntityPlayer p)
+	protected boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean useEndIndex)
 	{
-		if (sourceSlotID >= 0 && sourceSlotID < this.inventorySlots.size())
+		boolean flag1 = false;
+		int k = startIndex;
+
+		if (useEndIndex)
 		{
-			Slot sourceSlot = (Slot) this.inventorySlots.get(sourceSlotID);
+			k = endIndex - 1;
+		}
+
+		Slot slot;
+		ItemStack itemstack1;
+
+		if (stack.isStackable())
+		{
+			while (stack.stackSize > 0 && (!useEndIndex && k < endIndex || useEndIndex && k >= startIndex))
+			{
+				slot = (Slot)this.inventorySlots.get(k);
+				itemstack1 = slot.getStack();
+
+				if (itemstack1 != null && 
+						itemstack1.getItem() == stack.getItem() && 
+						(!stack.getHasSubtypes() || stack.getMetadata() == itemstack1.getMetadata()) && 
+						ContainerTFC.areCompoundsEqual(stack, itemstack1))
+				{
+					if(stack.getItem() instanceof IFood && itemstack1.getItem() instanceof IFood)
+					{
+						long ex1 = Food.getDecayTimer(stack);
+						long ex2 = Food.getDecayTimer(itemstack1);
+						if(ex1 < ex2)
+							Food.setDecayTimer(itemstack1, ex1);
+					}
+
+					int l = itemstack1.stackSize + stack.stackSize;
+
+					if (l <= stack.getMaxStackSize())
+					{
+						stack.stackSize = 0;
+						itemstack1.stackSize = l;
+						slot.onSlotChanged();
+						flag1 = true;
+					}
+					else if (itemstack1.stackSize < stack.getMaxStackSize())
+					{
+						stack.stackSize -= stack.getMaxStackSize() - itemstack1.stackSize;
+						itemstack1.stackSize = stack.getMaxStackSize();
+						slot.onSlotChanged();
+						flag1 = true;
+					}
+				}
+
+				if (useEndIndex)
+				{
+					--k;
+				}
+				else
+				{
+					++k;
+				}
+			}
+		}
+
+		if (stack.stackSize > 0)
+		{
+			if (useEndIndex)
+			{
+				k = endIndex - 1;
+			}
+			else
+			{
+				k = startIndex;
+			}
+
+			while (!useEndIndex && k < endIndex || useEndIndex && k >= startIndex)
+			{
+				slot = (Slot)this.inventorySlots.get(k);
+				itemstack1 = slot.getStack();
+
+				if (itemstack1 == null && slot.isItemValid(stack)) // Forge: Make sure to respect isItemValid in the slot.
+				{
+					slot.putStack(stack.copy());
+					slot.onSlotChanged();
+					stack.stackSize = 0;
+					flag1 = true;
+					break;
+				}
+
+				if (useEndIndex)
+				{
+					--k;
+				}
+				else
+				{
+					++k;
+				}
+			}
+		}
+
+		return flag1;
+	}
+
+
+	@Override
+	/**
+	 * Handles slot click.
+	 *  
+	 * @param mode 0 = basic click, 1 = shift click, 2 = hotbar, 3 = pick block, 4 = drop, 5 = ?, 6 = double click
+	 */
+	public ItemStack slotClick(int slotID, int clickedButton, int mode, EntityPlayer p)
+	{
+		if (slotID >= 0 && slotID < this.inventorySlots.size())
+		{
+			Slot sourceSlot = (Slot) this.inventorySlots.get(slotID);
 			ItemStack slotStack = sourceSlot.getStack();
 
+			//This section is for merging foods with differing expirations.
+			if(mode == 0 && clickedButton == 0 && slotStack != null && p.inventory.getItemStack() != null)
+			{
+				ItemStack itemstack4 = p.inventory.getItemStack();
+				if (slotStack.getItem() == itemstack4.getItem() && slotStack.getMetadata() == itemstack4.getMetadata() && ContainerTFC.areCompoundsEqual(slotStack, itemstack4))
+				{
+					if(slotStack.getItem() instanceof IFood && itemstack4.getItem() instanceof IFood)
+					{
+						long ex1 = Food.getDecayTimer(slotStack);
+						long ex2 = Food.getDecayTimer(itemstack4);
+						if(ex2 < ex1)
+							Food.setDecayTimer(slotStack, ex2);
+					}
+
+					int l1 = clickedButton == 0 ? itemstack4.stackSize : 1;
+
+					if (l1 > sourceSlot.getItemStackLimit(itemstack4) - slotStack.stackSize)
+					{
+						l1 = sourceSlot.getItemStackLimit(itemstack4) - slotStack.stackSize;
+					}
+
+					if (l1 > itemstack4.getMaxStackSize() - slotStack.stackSize)
+					{
+						l1 = itemstack4.getMaxStackSize() - slotStack.stackSize;
+					}
+
+					itemstack4.splitStack(l1);
+
+					if (itemstack4.stackSize == 0)
+					{
+						p.inventory.setItemStack((ItemStack)null);
+					}
+
+					slotStack.stackSize += l1;
+					return null;
+				}
+				else if (itemstack4.stackSize <= sourceSlot.getItemStackLimit(itemstack4))
+				{
+					sourceSlot.putStack(itemstack4);
+					p.inventory.setItemStack(slotStack);
+				}
+			}
+
 			// Hotbar press to remove from crafting output
-			if (clickType == 2 && sourceSlotID == 0 && slotStack != null)
+			if (mode == 2 && slotID == 0 && slotStack != null)
 			{
 				//Removed During Port
 				//CraftingHandler.preCraft(p, slotStack, craftMatrix);
 			}
 			// S and D hotkeys for trimming/combining food
-			else if (clickType == 7 && sourceSlotID >= 9 && sourceSlotID < 45)
+			else if (mode == 7 && slotID >= 9 && slotID < 45)
 			{
 				if (sourceSlot.canTakeStack(p))
 				{
-					Slot destSlot = (Slot) this.inventorySlots.get(destSlotID);
+					Slot destSlot = (Slot) this.inventorySlots.get(clickedButton);
 					destSlot.putStack(slotStack);
 					sourceSlot.putStack(null);
 					return null;
 				}
 			}
 			// Couldn't figure out what was causing the food dupe with a full inventory, so we're just going to block shift clicking for that case.
-			else if (clickType == 1 && sourceSlotID == 0 && isInventoryFull() && slotStack != null && slotStack.getItem() instanceof IFood)
+			else if (mode == 1 && slotID == 0 && isInventoryFull() && slotStack != null && slotStack.getItem() instanceof IFood)
 				return null;
 		}
-		return super.slotClick(sourceSlotID, destSlotID, clickType, p);
+		return super.slotClick(slotID, clickedButton, mode, p);
 	}
 
 	protected boolean isCraftingGridFull()

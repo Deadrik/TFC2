@@ -1,7 +1,5 @@
 package com.bioxx.tfc2.core;
 
-import java.util.Random;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -65,41 +63,31 @@ public class FoodStatsTFC
 	{
 		if(!player.worldObj.isRemote)
 		{
-			/*BodyTempStats bodyTemp = TFC_Core.getBodyTempStats(player);
-			float temp = TFC_Climate.getHeightAdjustedTemp(player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
-
-			float tempWaterMod = temp;
-			if(tempWaterMod >= 25)
-				tempWaterMod = (tempWaterMod-25)*0.2f;
-			else
-				tempWaterMod = 0;*/
-
+			Timekeeper time = Timekeeper.instance;
 			/*
 			 * Standard filling reduction based upon time.
 			 */
-			/*if(this.foodTimer < TFC_Time.startTime)
+			if (time.getTotalTicks() - this.foodTimer >= Timekeeper.HOUR_LENGTH && !player.capabilities.isCreativeMode)
 			{
-				this.foodTimer = TFC_Time.startTime;
-				this.foodHealTimer = TFC_Time.startTime;
-				this.waterTimer = TFC_Time.startTime;
-			}
+				//Increase our timer
+				this.foodTimer += Timekeeper.HOUR_LENGTH;
 
-			if (TFC_Time.getTotalTicks() - this.foodTimer >= TFC_Time.HOUR_LENGTH && !player.capabilities.isCreativeMode)
-			{
-				this.foodTimer += TFC_Time.HOUR_LENGTH;
 				float drainMult = 1.0f;
+
+				//We dont want the player to starve to death while sleeping
 				if(player.isPlayerSleeping())
 				{
 					drainMult = 0.50f;
 				}
+
 				//Water
 				if(player.isSprinting())
-					waterLevel -= 5+(tempWaterMod);
+					waterLevel -= 5;
 				if(!player.capabilities.isCreativeMode)
-					waterLevel -= bodyTemp.getExtraWater()*drainMult;
+					waterLevel -= 1;
 
 				//Food
-				float hunger = (1 + foodExhaustionLevel + bodyTemp.getExtraFood()) * drainMult;
+				float hunger = (1 + foodExhaustionLevel) * drainMult;
 				if(this.satisfaction >= hunger)
 				{
 					satisfaction -= hunger; 
@@ -119,6 +107,9 @@ public class FoodStatsTFC
 					satProtein = false; satFruit = false; satVeg = false; satDairy = false; satGrain = false;
 				}
 
+				/*
+				 * Reduce nutrients
+				 */
 				if (this.stomachLevel <= 0)
 				{
 					reduceNutrition(0.0024F);//3x penalty for starving
@@ -143,58 +134,38 @@ public class FoodStatsTFC
 				sendUpdate = true;
 			}
 
-			//Heal or hurt the player based on hunger.
-			if (TFC_Time.getTotalTicks() - this.foodHealTimer >= TFC_Time.HOUR_LENGTH/2)
+			if(!player.capabilities.isCreativeMode)
 			{
-				this.foodHealTimer += TFC_Time.HOUR_LENGTH/2;
+				for(;waterTimer < time.getTotalTicks();  waterTimer++)
+				{
+					//Reduce the player's water for normal living
+					waterLevel -= 1;
+					if(waterLevel < 0)
+						waterLevel = 0;
+					/*if(!Core.isPlayerInDebugMode(player) && waterLevel == 0 && temp > 35)
+						player.attackEntityFrom(new DamageSource("heatStroke").setDamageBypassesArmor().setDamageIsAbsolute(), 2);*/
+				}
+			}
+
+			//Heal or hurt the player based on hunger.
+			if (time.getTotalTicks() - this.foodHealTimer >= Timekeeper.HOUR_LENGTH/2)
+			{
+				this.foodHealTimer += Timekeeper.HOUR_LENGTH/2;
 
 				if (this.stomachLevel >= this.getMaxStomach(player)/4 && player.shouldHeal())
 				{
 					//Player heals 1% per 30 in game minutes
 					player.heal((int) (player.getMaxHealth() * 0.01f));
 				}
-				else if (this.stomachLevel <= 0 && getNutritionHealthModifier() < 0.85f && !TFC_Core.isPlayerInDebugMode(player) && player.getSleepTimer() == 0)
+				else if (this.stomachLevel <= 0 && getNutritionHealthModifier() < 0.85f && !Core.isPlayerInDebugMode(player) && player.getSleepTimer() == 0)
 				{
 					//Players loses health at a rate of 5% per 30 minutes if they are starving
 					//Disabled so that the penalty for not eating is now entirely based upon nutrition.
 					//player.attackEntityFrom(DamageSource.starve, Math.max((int) (player.getMaxHealth() * 0.05f), 10));
 				}
-			}*/
-
-			/*if(!player.capabilities.isCreativeMode)
-			{
-				for(;waterTimer < TFC_Time.getTotalTicks();  waterTimer++)
-				{
-					//Reduce the player's water for normal living
-					waterLevel -= 1+(tempWaterMod/2);
-					if(waterLevel < 0)
-						waterLevel = 0;
-					if(!Core.isPlayerInDebugMode(player) && waterLevel == 0 && temp > 35)
-						player.attackEntityFrom(new DamageSource("heatStroke").setDamageBypassesArmor().setDamageIsAbsolute(), 2);
-				}
-			}*/
+			}
 		}
 	}
-
-	/*public void clientUpdate()
-	{
-		if(Minecraft.getMinecraft().entityRenderer instanceof EntityRendererTFC)
-		{
-			EntityRendererTFC erTFC = (EntityRendererTFC) Minecraft.getMinecraft().entityRenderer;
-			if((erTFC.getCurrentShaderLocation() == null || !erTFC.getCurrentShaderLocation().equals(wastedBlur)) && soberTime > TFC_Time.getTotalTicks()+8000)
-			{
-				erTFC.setManualShader(wastedBlur);
-			}
-			else if((erTFC.getCurrentShaderLocation() == null || !erTFC.getCurrentShaderLocation().equals(drunkBlur)) && soberTime > TFC_Time.getTotalTicks()+4000 && soberTime <= TFC_Time.getTotalTicks()+8000)
-			{
-				erTFC.setManualShader(drunkBlur);
-			}
-			else if(erTFC.getManualShaderBeingUsed() && soberTime <= TFC_Time.getTotalTicks()+4000)
-			{
-				erTFC.deactivateManualShader();
-			}
-		}
-	}*/
 
 	protected void reduceNutrition(float amount) 
 	{
@@ -328,23 +299,6 @@ public class FoodStatsTFC
 	public void setSatisfaction(float par1, int[] fg)
 	{
 		this.satisfaction = Math.min(par1, 10);
-		for(int i = 0; i < fg.length; i++)
-		{
-			/*if(fg[i] != -1)
-			{
-				EnumFoodGroup efg = FoodRegistry.getInstance().getFoodGroup(fg[i]);
-				switch(efg)
-				{
-				case Protein:satProtein = true;break;
-				case Grain:satGrain = true;break;
-				case Fruit:satFruit = true;break;
-				case Vegetable:satVeg = true;break;
-				case Dairy:satDairy = true;break;
-				default:
-					break;
-				}
-			}*/
-		}
 	}
 
 	public long getPlayerFoodSeed()
@@ -358,39 +312,6 @@ public class FoodStatsTFC
 			nameSeed = seed + player.worldObj.getSeed();
 		}
 		return nameSeed;
-	}
-
-	/***
-	 * @return Returns an array containing taste preferences in the following order: Sweetness, Sourness, Saltiness, Bitterness, Savoriness
-	 */
-	public int[] getPrefTaste()
-	{
-		Random r = new Random(getPlayerFoodSeed());
-		return new int[]
-				{ 20 + r.nextInt(70), 20 + r.nextInt(70), 20 + r.nextInt(70), 20 + r.nextInt(70), 20 + r.nextInt(70) };
-	}
-
-	public float getTasteFactor(ItemStack food)
-	{
-		//Random R = new Random(getPlayerFoodSeed());
-		float tasteFactor = 0.85f;
-		int[] tastePref = getPrefTaste();
-
-		/*tasteFactor += getTasteDistanceFactor(tastePref[0], ((IFood)food.getItem()).getTasteSweet(food));
-		tasteFactor += getTasteDistanceFactor(tastePref[1], ((IFood)food.getItem()).getTasteSour(food));
-		tasteFactor += getTasteDistanceFactor(tastePref[2], ((IFood)food.getItem()).getTasteSalty(food));
-		tasteFactor += getTasteDistanceFactor(tastePref[3], ((IFood)food.getItem()).getTasteBitter(food));
-		tasteFactor += getTasteDistanceFactor(tastePref[4], ((IFood)food.getItem()).getTasteSavory(food));*/
-
-		return tasteFactor;
-	}
-
-	public float getTasteDistanceFactor(int pref, int val)
-	{
-		int abs = Math.abs(pref-val);
-		if(abs < 11)
-			return (10-abs)*0.01f;
-		return 0;
 	}
 
 	public float getNutritionHealthModifier()
