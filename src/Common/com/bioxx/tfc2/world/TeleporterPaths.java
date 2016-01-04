@@ -1,6 +1,8 @@
 package com.bioxx.tfc2.world;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -13,10 +15,12 @@ import net.minecraft.world.WorldServer;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.Spline3D;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.PortalAttribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.BlockPortal;
 import com.bioxx.tfc2.world.generators.WorldGenPortals;
 
@@ -42,6 +46,7 @@ public class TeleporterPaths extends Teleporter
 			if (!this.placeInExistingPortal(entity, yaw))
 			{
 				this.makePortal(entity);
+				makePath(entity);
 				this.placeInExistingPortal(entity, yaw);
 			}
 		}
@@ -51,17 +56,8 @@ public class TeleporterPaths extends Teleporter
 			int playerZ = MathHelper.floor_double(entity.posZ);
 			IslandMap islandMap = WorldGen.instance.getIslandMap(playerX >> 12, playerZ >> 12);
 			Center closest = islandMap.getClosestCenter(new Point(playerX % 4096,playerZ % 4096));
-			if(!closest.hasAttribute(Attribute.Portal))
-			{
-				for(Center c : closest.neighbors)
-				{
-					if(c.hasAttribute(Attribute.Portal))
-					{
-						closest = c;
-						break;
-					}
-				}
-			}
+			//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
+			closest = this.getPortalNeighbor(closest);
 
 			BlockPos pos = new BlockPos((playerX >> 12)*4096+closest.point.x, 64+islandMap.convertHeightToMC(closest.getElevation()), (playerZ >> 12)*4096+closest.point.y);
 			//Find portal
@@ -84,11 +80,11 @@ public class TeleporterPaths extends Teleporter
 	private BlockPos findPortal(BlockPos pos)
 	{
 		IBlockState state;
-		for(int x = -3; x < 4; x++)
+		for(int x = -30; x < 31; x++)
 		{
-			for(int z = -3; z < 4; z++)
+			for(int z = -30; z < 31; z++)
 			{
-				for(int y = -3; y < 4; y++)
+				for(int y = -20; y < 20; y++)
 				{
 					state = this.worldServerInstance.getBlockState(pos.add(x, y, z));
 					if(state.getBlock() == TFCBlocks.Portal && (Boolean)state.getValue(BlockPortal.CENTER) == true)
@@ -175,12 +171,98 @@ public class TeleporterPaths extends Teleporter
 		int playerZ = MathHelper.floor_double(entityIn.posZ);
 		IslandMap islandMap = WorldGen.instance.getIslandMap(((playerX*8) >> 12), ((playerZ*8) >> 12));
 		Center closest = islandMap.getClosestCenter(new Point((playerX*8) % 4096,(playerZ*8) % 4096));
-
+		//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
+		closest = this.getPortalNeighbor(closest);
 		BlockPos portalPos = new BlockPos(entityIn);
 
 		WorldGenPortals.BuildPortalSchem(worldServerInstance, closest, portalPos, islandMap, true);
 
 		return true;
+	}
+
+	public boolean makePath(Entity entityIn)
+	{
+		int playerX = MathHelper.floor_double(entityIn.posX);
+		int playerZ = MathHelper.floor_double(entityIn.posZ);
+		int xM = ((playerX*8) >> 12);
+		int zM = ((playerZ*8) >> 12);
+		int xI = xM * 4096;
+		int zI = zM * 4096;
+		int xP = (playerX*8) % 4096;
+		int zP = (playerZ*8) % 4096;
+
+		IslandMap islandMap = WorldGen.instance.getIslandMap(xM, zM);
+		Center closest = islandMap.getClosestCenter(new Point(xP,zP));
+
+		//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
+		closest = this.getPortalNeighbor(closest);
+
+		BlockPos portalPos = new BlockPos(entityIn);
+		PortalAttribute startAttr = (PortalAttribute) closest.getAttribute(Attribute.Portal);
+		int destX = Helper.getXCoord(startAttr.destMapID);
+		int destZ = Helper.getYCoord(startAttr.destMapID);
+		IslandMap destMap = WorldGen.instance.getIslandMap(destX, destZ);
+		Center dest = destMap.getPortalForFacing(startAttr.direction.getOpposite());
+		PortalAttribute endAttr = (PortalAttribute) dest.getAttribute(Attribute.Portal);
+
+		double factor = 1/this.worldServerInstance.provider.getMovementFactor();
+
+
+		BlockPos start = closest.point.toBlockPos().add(xI, 64+islandMap.convertHeightToMC(closest.getElevation()), zI);
+		start = new BlockPos(start.getX() * factor, start.getY(), start.getZ() * factor);
+		BlockPos end = dest.point.toBlockPos().add(destX * 4096, 64+destMap.convertHeightToMC(dest.getElevation()), destZ * 4096);
+		end = new BlockPos(end.getX() * factor, end.getY(), end.getZ() * factor);
+
+		//Create the spline if it does not exist
+		if(startAttr.getSpline() == null)
+		{
+			//Copy the spline from the other side if it exists for some reason
+			if(endAttr.getSpline() != null)
+			{
+				startAttr.setPath(endAttr.getPath());
+			}
+			else//Otherwise create new
+			{
+				Random r = new Random(closest.index + dest.index);
+				ArrayList<BlockPos> list = new ArrayList<BlockPos>();
+				list.add(start);
+				list.add(end);
+				Spline3D spline = new Spline3D(list);
+				list = new ArrayList<BlockPos>();
+				list.add(start);
+				double loc = 1D / 7D;
+				for(int i = 1; i < 6; i++)
+				{
+					BlockPos pos = spline.getPoint((double)i*loc);
+					pos = pos.add(-30+r.nextInt(61), -10+r.nextInt(21), -30+r.nextInt(61));
+					list.add(pos);
+				}
+				list.add(end);
+				startAttr.setPath(list);
+				endAttr.setPath(list);
+			}
+		}
+
+		WorldGenPortals.BuildPath(worldServerInstance, start, end, startAttr.getSpline());
+
+		WorldGenPortals.BuildPortalSchem(worldServerInstance, dest, end, destMap, true);
+
+		return true;
+	}
+
+	public Center getPortalNeighbor(Center closest)
+	{
+		if(!closest.hasAttribute(Attribute.Portal))
+		{
+			for(Center c : closest.neighbors)
+			{
+				if(c.hasAttribute(Attribute.Portal))
+				{
+					return c;
+				}
+			}
+		}
+		return closest;
 	}
 
 	/**

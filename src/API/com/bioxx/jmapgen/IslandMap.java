@@ -235,6 +235,17 @@ public class IslandMap
 
 	}
 
+	public Center getPortalForFacing(EnumFacing facing)
+	{
+		for(Center c : centers)
+		{
+			if(c.hasAttribute(Attribute.Portal) && ((PortalAttribute)c.getAttribute(Attribute.Portal)).direction == facing)
+				return c;
+		}
+
+		return null;
+	}
+
 	private void createSpires()
 	{
 		if(!this.getParams().hasFeature(Feature.Spires))

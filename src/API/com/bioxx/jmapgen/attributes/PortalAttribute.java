@@ -39,6 +39,11 @@ public class PortalAttribute extends Attribute
 		spline = new Spline3D(path);
 	}
 
+	public ArrayList<BlockPos> getPath()
+	{
+		return path;
+	}
+
 	/**
 	 * @return returns a spline path from the list of BlockPos in path, may return null if path is not set.
 	 */

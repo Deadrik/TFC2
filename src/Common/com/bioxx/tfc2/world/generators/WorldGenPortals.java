@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.Point;
+import com.bioxx.jmapgen.Spline3D;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.PortalAttribute;
 import com.bioxx.jmapgen.graph.Center;
@@ -38,13 +39,13 @@ public class WorldGenPortals implements IWorldGenerator
 		chunkX = chunkX * 16;
 		chunkZ = chunkZ * 16;
 
-		int xM = (chunkX >> 12);
-		int zM = (chunkZ >> 12);
-		int xMLocal = chunkX & 4095;
-		int zMLocal = chunkZ & 4095;
-
 		if(world.provider.getDimensionId() == 0)
 		{
+			int xM = (chunkX >> 12);
+			int zM = (chunkZ >> 12);
+			int xMLocal = chunkX & 4095;
+			int zMLocal = chunkZ & 4095;
+
 			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 			Point ip = new Point(xMLocal, zMLocal);
 			Point p = new Point(chunkX, chunkZ);
@@ -66,6 +67,21 @@ public class WorldGenPortals implements IWorldGenerator
 				}
 			}
 		}
+		/*else if(world.provider.getDimensionId() == 2)
+		{
+			chunkX = chunkX*8 * 16;
+			chunkZ = chunkZ*8 * 16;
+			int xM = (chunkX >> 12);
+			int zM = (chunkZ >> 12);
+			int xMLocal = chunkX & 4095;
+			int zMLocal = chunkZ & 4095;
+
+			IslandMap islandMap = WorldGen.instance.getIslandMap(chunkX >> 12, chunkZ >> 12);
+			Center closest = islandMap.getClosestCenter(new Point(chunkX % 4096, chunkZ % 4096));
+
+			Point ip = new Point(xMLocal, zMLocal);
+			Point p = new Point(chunkX, chunkZ);
+		}*/
 	}
 
 	public static void BuildPortalSchem(World world, Center c, BlockPos portalPos, IslandMap map, boolean flip) {
@@ -126,6 +142,26 @@ public class WorldGenPortals implements IWorldGenerator
 			if(state.getBlock() != Blocks.air)
 			{
 				world.setBlockState(localPos, state);
+			}
+		}
+	}
+
+	public static void BuildPath(World world, BlockPos start, BlockPos End, Spline3D spline)
+	{
+		for(double len = 0; len < 1; len += 0.001)
+		{
+			BlockPos pos = spline.getPoint(len);
+			for(int x = -2; x < 3; x++)
+			{
+				for(int z = -2; z < 3; z++)
+				{
+					double dist = pos.distanceSqToCenter(pos.getX()+x+0.5, pos.getY()+0.5, pos.getZ()+z+0.5);
+					if(dist < 5)
+					{
+						if(world.isAirBlock(pos.add(x, 0, z)))
+							world.setBlockState(pos.add(x, 0, z), TFCBlocks.StoneSmooth.getDefaultState());
+					}
+				}
 			}
 		}
 	}
