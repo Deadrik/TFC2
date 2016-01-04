@@ -607,7 +607,7 @@ public class IslandMap
 		boolean found = false;
 
 		//North portal location
-		while(!found)
+		while(!found && this.getParams().getZCoord() > -4)
 		{
 			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.North) : mapRandom.nextBoolean() ? 
 					temp.getNeighbor(HexDirection.NorthEast) : temp.getNeighbor(HexDirection.NorthWest));
@@ -631,7 +631,7 @@ public class IslandMap
 		//South portal location
 		temp = start;
 		found = false;
-		while(!found)
+		while(!found && this.getParams().getZCoord() < 4)
 		{
 			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.South) : mapRandom.nextBoolean() ? 
 					temp.getNeighbor(HexDirection.SouthEast) : temp.getNeighbor(HexDirection.SouthWest));

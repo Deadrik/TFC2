@@ -234,7 +234,7 @@ public class TeleporterPaths extends Teleporter
 				for(int i = 1; i < 6; i++)
 				{
 					BlockPos pos = spline.getPoint((double)i*loc);
-					pos = pos.add(-30+r.nextInt(61), -10+r.nextInt(21), -30+r.nextInt(61));
+					pos = pos.add(-30+r.nextInt(61), -5+r.nextInt(11), -30+r.nextInt(61));
 					list.add(pos);
 				}
 				list.add(end);

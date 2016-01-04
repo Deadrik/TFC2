@@ -7,9 +7,11 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.world.WorldSettings.GameType;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -27,9 +29,17 @@ public class EntityLivingHandler
 	@SubscribeEvent
 	public void onEntityLivingUpdate(LivingUpdateEvent event)
 	{
-		if (event.entityLiving instanceof EntityPlayer)
+		if (event.entityLiving instanceof EntityPlayerMP)
 		{
-			EntityPlayer player = (EntityPlayer)event.entityLiving;
+			EntityPlayerMP player = (EntityPlayerMP)event.entityLiving;
+
+			//If the player enters the portal realm then set them to adventure mode to prevent altering the world
+			if(player.worldObj.provider.getDimensionId() == 2 && !player.capabilities.isCreativeMode)
+				player.setGameType(GameType.ADVENTURE);
+			else if(player.worldObj.provider.getDimensionId() == 0 && !player.capabilities.isCreativeMode)
+				player.setGameType(GameType.SURVIVAL);
+
+
 			//Set Max Health
 			float newMaxHealth = FoodStatsTFC.getMaxHealth(player);
 			float oldMaxHealth = (float)player.getEntityAttribute(SharedMonsterAttributes.maxHealth).getAttributeValue();

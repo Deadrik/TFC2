@@ -67,21 +67,6 @@ public class WorldGenPortals implements IWorldGenerator
 				}
 			}
 		}
-		/*else if(world.provider.getDimensionId() == 2)
-		{
-			chunkX = chunkX*8 * 16;
-			chunkZ = chunkZ*8 * 16;
-			int xM = (chunkX >> 12);
-			int zM = (chunkZ >> 12);
-			int xMLocal = chunkX & 4095;
-			int zMLocal = chunkZ & 4095;
-
-			IslandMap islandMap = WorldGen.instance.getIslandMap(chunkX >> 12, chunkZ >> 12);
-			Center closest = islandMap.getClosestCenter(new Point(chunkX % 4096, chunkZ % 4096));
-
-			Point ip = new Point(xMLocal, zMLocal);
-			Point p = new Point(chunkX, chunkZ);
-		}*/
 	}
 
 	public static void BuildPortalSchem(World world, Center c, BlockPos portalPos, IslandMap map, boolean flip) {
