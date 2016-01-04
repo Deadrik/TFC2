@@ -125,7 +125,7 @@ public class WorldProviderSurface extends WorldProvider
 	{
 		if (!getHasNoSky())
 		{
-			if (!worldObj.isRemote)
+			if (!worldObj.isRemote && worldObj.provider.getDimensionId() == 0)
 			{
 				worldObj.getWorldInfo().setRainTime(48000);
 				worldObj.getWorldInfo().setRaining(false);
@@ -185,11 +185,14 @@ public class WorldProviderSurface extends WorldProvider
 				while (iterator.hasNext())
 				{
 					EntityPlayerMP player = (EntityPlayerMP) iterator.next();
-					float old = player.getEntityData().getFloat("oldPrecipitation");
-					float precip = (float)WeatherManager.getInstance().getPreciptitation((int)player.posX, (int)player.posZ);
-					if(precip != old)
+					if(!player.isDead && player.dimension == 0)
 					{
-						player.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(7, precip));
+						float old = player.getEntityData().getFloat("oldPrecipitation");
+						float precip = (float)WeatherManager.getInstance().getPreciptitation((int)player.posX, (int)player.posZ);
+						if(precip != old)
+						{
+							player.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(7, precip));
+						}
 					}
 				}
 

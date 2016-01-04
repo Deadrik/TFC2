@@ -39,9 +39,11 @@ import com.bioxx.tfc2.handlers.JoinWorldHandler;
 import com.bioxx.tfc2.handlers.PlayerTracker;
 import com.bioxx.tfc2.handlers.ServerTickHandler;
 import com.bioxx.tfc2.handlers.WorldLoadHandler;
+import com.bioxx.tfc2.world.WorldProviderPaths;
 import com.bioxx.tfc2.world.WorldProviderSurface;
 import com.bioxx.tfc2.world.generators.WorldGenGrass;
 import com.bioxx.tfc2.world.generators.WorldGenLooseRock;
+import com.bioxx.tfc2.world.generators.WorldGenPortals;
 import com.bioxx.tfc2.world.generators.WorldGenTreeTest;
 
 public class CommonProxy
@@ -49,14 +51,17 @@ public class CommonProxy
 
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 0);
-		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 0);
-		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 10);
+		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
+		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 5);
 
 		DimensionManager.unregisterDimension(0);
 		DimensionManager.unregisterProviderType(0);
 		DimensionManager.registerProviderType(0, WorldProviderSurface.class, true);
+		DimensionManager.registerProviderType(2, WorldProviderPaths.class, true);
 		DimensionManager.registerDimension(0, 0);
+		DimensionManager.registerDimension(2, 2);
 
 		ResourceLocation still = Core.CreateRes(Reference.getResID()+"blocks/water_still");
 		ResourceLocation flow = Core.CreateRes(Reference.getResID()+"blocks/water_flow");

@@ -21,9 +21,11 @@ import com.bioxx.tfc2.blocks.BlockLogNatural;
 import com.bioxx.tfc2.blocks.BlockLogNatural2;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.InventoryPlayerTFC;
+import com.bioxx.tfc2.core.PortalSchematic;
 
 public class Core 
 {
+	public static PortalSchematic PortalSchematic;
 	public static Block getGroundAboveSeaLevel(World world, BlockPos pos)
 	{
 		BlockPos blockpos1;

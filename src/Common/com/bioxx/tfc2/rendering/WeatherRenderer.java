@@ -205,6 +205,8 @@ public class WeatherRenderer extends IRenderHandler
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		WorldClient worldclient = mc.theWorld;
+		if(worldclient.provider.getDimensionId() != 0)
+			return;
 		double rainStrength = WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
 		if (!mc.gameSettings.fancyGraphics)

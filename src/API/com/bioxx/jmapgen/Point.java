@@ -2,6 +2,8 @@ package com.bioxx.jmapgen;
 
 import java.awt.geom.Point2D;
 
+import net.minecraft.util.BlockPos;
+
 public class Point extends Point2D
 {
 	public double x, y;
@@ -127,5 +129,10 @@ public class Point extends Point2D
 	public Point midpoint(Point p)
 	{
 		return new Point((x + p.x)/2, (y + p.y)/2);
+	}
+
+	public BlockPos toBlockPos()
+	{
+		return new BlockPos(x, 0, y);
 	}
 }

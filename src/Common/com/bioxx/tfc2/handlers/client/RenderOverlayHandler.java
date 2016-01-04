@@ -235,7 +235,7 @@ public class RenderOverlayHandler
 					event.left.add("Cave: "+cattrib.nodes.size());	
 					for(CaveAttrNode n : cattrib.nodes)
 					{
-						event.left.add("  *"+n.getOffset());	
+						//event.left.add("  *"+n.getOffset());	
 					}
 				}
 			}

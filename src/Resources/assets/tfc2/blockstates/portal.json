@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "axis=z,center=false": { "model": "portal_ew" },
+        "axis=z,center=true": { "model": "portal_ew" },
+        "axis=x,center=false": { "model": "portal_ns" },
+        "axis=x,center=true": { "model": "portal_ns" }
+    }
+}

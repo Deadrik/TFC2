@@ -13,6 +13,7 @@ public abstract class Attribute
 	public static UUID Lake = UUID.fromString("ddc68a75-9b5b-4659-aac0-2ec2208c8ffe");
 	public static UUID Cave = UUID.fromString("af4caad2-9915-4641-83d6-d631862f7220");
 	public static UUID Ore = UUID.fromString("1f05a154-df49-4b01-84d8-46a4d162f125");
+	public static UUID Portal = UUID.fromString("8712bb03-da52-4bbb-a0a6-849e38ac243d");
 
 	public UUID id;
 

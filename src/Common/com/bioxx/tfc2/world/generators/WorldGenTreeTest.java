@@ -198,13 +198,13 @@ public class WorldGenTreeTest implements IWorldGenerator
 		}
 		else if(rot == 1)
 		{
-			localX = treeX + localPos.getX();
-			localZ = treeZ + localPos.getZ() * -1;
+			localX = treeX + localPos.getZ();
+			localZ = treeZ + localPos.getX() * -1;
 		}
 		else if(rot == 2)
 		{
-			localX = treeX  + localPos.getX() * -1;
-			localZ = treeZ + localPos.getZ();
+			localX = treeX  + localPos.getZ() * -1;
+			localZ = treeZ + localPos.getX();
 		}
 
 		IBlockState block = tc.wood;

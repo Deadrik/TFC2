@@ -13,12 +13,14 @@ import java.util.Vector;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.CanyonAttribute;
 import com.bioxx.jmapgen.attributes.GorgeAttribute;
 import com.bioxx.jmapgen.attributes.LakeAttribute;
+import com.bioxx.jmapgen.attributes.PortalAttribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
 import com.bioxx.jmapgen.com.nodename.delaunay.DelaunayUtil;
 import com.bioxx.jmapgen.com.nodename.delaunay.Voronoi;
@@ -35,6 +37,7 @@ import com.bioxx.jmapgen.pathfinding.PathFinder;
 import com.bioxx.jmapgen.processing.CaveProcessor;
 import com.bioxx.jmapgen.processing.OreProcessor;
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.util.Helper;
 
 public class IslandMap 
 {
@@ -218,6 +221,8 @@ public class IslandMap
 
 		caves.generate();
 		ores.generate();
+
+		createPortals();
 
 		//Generate Dungeons
 		if(!this.getParams().hasFeature(Feature.NoLand))
@@ -583,6 +588,107 @@ public class IslandMap
 			}
 		}
 	}
+
+	private void createPortals()
+	{
+		Center start = this.getClosestCenter(new Point(2048, 2048));
+		Center temp = start;
+		boolean found = false;
+
+		//North portal location
+		while(!found)
+		{
+			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.North) : mapRandom.nextBoolean() ? 
+					temp.getNeighbor(HexDirection.NorthEast) : temp.getNeighbor(HexDirection.NorthWest));
+
+			//If this isn't a suitable hex then we displace in a random direction and continue from there
+			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			{
+				temp = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				continue;
+			}
+
+			//Once we get low enough then we look for something suitable
+			if(temp.getElevation() < 0.3)
+			{
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.NORTH);
+				temp.addAttribute(pa);
+				found = true;
+			}
+		}
+		System.out.println("North: "+temp.point);
+		//South portal location
+		temp = start;
+		found = false;
+		while(!found)
+		{
+			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.South) : mapRandom.nextBoolean() ? 
+					temp.getNeighbor(HexDirection.SouthEast) : temp.getNeighbor(HexDirection.SouthWest));
+
+			//If this isn't a suitable hex then we displace in a random direction and continue from there
+			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			{
+				temp = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				continue;
+			}
+
+			//Once we get low enough then we look for something suitable
+			if(temp.getElevation() < 0.3)
+			{
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()+1), EnumFacing.SOUTH);
+				temp.addAttribute(pa);
+				found = true;
+			}
+		}
+		System.out.println("South: "+temp.point);
+		//East portal location
+		temp = start;
+		found = false;
+		while(!found)
+		{
+			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.SouthEast) : temp.getNeighbor(HexDirection.NorthEast));
+
+			//If this isn't a suitable hex then we displace in a random direction and continue from there
+			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			{
+				temp = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				continue;
+			}
+
+			//Once we get low enough then we look for something suitable
+			if(temp.getElevation() < 0.3)
+			{
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()+1, this.islandParams.getZCoord()), EnumFacing.EAST);
+				temp.addAttribute(pa);
+				found = true;
+			}
+		}
+		System.out.println("East: "+temp.point);
+		//West portal location
+		temp = start;
+		found = false;
+		while(!found)
+		{
+			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.SouthWest) : temp.getNeighbor(HexDirection.NorthWest));
+
+			//If this isn't a suitable hex then we displace in a random direction and continue from there
+			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			{
+				temp = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				continue;
+			}
+
+			//Once we get low enough then we look for something suitable
+			if(temp.getElevation() < 0.3)
+			{
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()-1, this.islandParams.getZCoord()), EnumFacing.WEST);
+				temp.addAttribute(pa);
+				found = true;
+			}
+		}
+		System.out.println("West: "+temp.point);
+	}
+
 
 	public Center getHighestNeighbor(Center c)
 	{

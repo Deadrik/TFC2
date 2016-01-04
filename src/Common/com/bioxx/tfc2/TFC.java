@@ -33,6 +33,7 @@ import com.bioxx.tfc2.commands.RegenChunkCommand;
 import com.bioxx.tfc2.commands.RemoveAreaCommand;
 import com.bioxx.tfc2.commands.StripChunkCommand;
 import com.bioxx.tfc2.commands.TeleportInIslandCommand;
+import com.bioxx.tfc2.core.PortalSchematic;
 import com.bioxx.tfc2.handlers.PlayerTracker;
 import com.bioxx.tfc2.networking.client.ClientMapPacket;
 import com.bioxx.tfc2.networking.server.KnappingUpdatePacket;
@@ -68,6 +69,9 @@ public class TFC
 
 		//Register tree types and load tree schematics
 		loadTrees();
+
+		Core.PortalSchematic = new PortalSchematic("/assets/tfc2/schematics/portal.schematic", "portal");
+		Core.PortalSchematic.Load();
 
 	}
 
