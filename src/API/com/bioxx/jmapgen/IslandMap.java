@@ -616,8 +616,9 @@ public class IslandMap
 			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
 			{
 				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
-				if(temp2 != null)
+				if(temp2 == null)
 					temp = temp.getRandomNeighbor(mapRandom);
+				else temp = temp2;
 				continue;
 			}
 
@@ -642,8 +643,9 @@ public class IslandMap
 			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
 			{
 				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
-				if(temp2 != null)
+				if(temp2 == null)
 					temp = temp.getRandomNeighbor(mapRandom);
+				else temp = temp2;
 				continue;
 			}
 
@@ -667,8 +669,9 @@ public class IslandMap
 			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
 			{
 				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
-				if(temp2 != null)
+				if(temp2 == null)
 					temp = temp.getRandomNeighbor(mapRandom);
+				else temp = temp2;
 				continue;
 			}
 
@@ -692,8 +695,9 @@ public class IslandMap
 			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
 			{
 				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
-				if(temp2 != null)
+				if(temp2 == null)
 					temp = temp.getRandomNeighbor(mapRandom);
+				else temp = temp2;
 				continue;
 			}
 
