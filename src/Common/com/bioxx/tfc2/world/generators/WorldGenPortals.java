@@ -145,7 +145,7 @@ public class WorldGenPortals implements IWorldGenerator
 		{
 			BlockPos pos = spline.getPoint(len);
 			int radius = 2;
-			if(len == 0 || len >= 1)
+			if(len == 0 || len >= 0.998)
 				radius = 8;
 			for(int x = -radius; x <= radius; x++)
 			{
