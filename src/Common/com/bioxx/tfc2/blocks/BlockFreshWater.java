@@ -6,12 +6,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.TFCBlocks;
 
@@ -111,6 +114,44 @@ public class BlockFreshWater extends BlockFluidClassic {
 		else
 		{
 			world.setBlockState(pos, TFCBlocks.FreshWater.getDefaultState().withProperty(LEVEL, state.getValue(LEVEL)), 2);
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	{
+		double d0 = (double)pos.getX();
+		double d1 = (double)pos.getY();
+		double d2 = (double)pos.getZ();
+
+
+		int i = ((Integer)state.getValue(LEVEL)).intValue();
+
+		if (i > 0 && i < 8)
+		{
+			if (rand.nextInt(64) == 0)
+			{
+				worldIn.playSound(d0 + 0.5D, d1 + 0.5D, d2 + 0.5D, "liquid.water", rand.nextFloat() * 0.25F + 0.75F, rand.nextFloat() * 1.0F + 0.5F, false);
+			}
+		}
+		else if (rand.nextInt(10) == 0)
+		{
+			worldIn.spawnParticle(EnumParticleTypes.SUSPENDED, d0 + (double)rand.nextFloat(), d1 + (double)rand.nextFloat(), d2 + (double)rand.nextFloat(), 0.0D, 0.0D, 0.0D, new int[0]);
+		}
+
+		if (rand.nextInt(10) == 0 && World.doesBlockHaveSolidTopSurface(worldIn, pos.down()))
+		{
+			Material material = worldIn.getBlockState(pos.down(2)).getBlock().getMaterial();
+
+			if (!material.blocksMovement() && !material.isLiquid())
+			{
+				double d3 = d0 + (double)rand.nextFloat();
+				double d5 = d1 - 1.05D;
+				double d7 = d2 + (double)rand.nextFloat();
+
+				worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d3, d5, d7, 0.0D, 0.0D, 0.0D, new int[0]);
+			}
 		}
 	}
 }
