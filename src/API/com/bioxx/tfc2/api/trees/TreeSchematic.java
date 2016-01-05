@@ -11,6 +11,7 @@ public class TreeSchematic extends Schematic
 {
 	private int size;
 	private WoodType type;
+	private int baseCount = 0;
 
 	public TreeSchematic(String p, String f, WoodType w)
 	{
@@ -27,7 +28,12 @@ public class TreeSchematic extends Schematic
 			for(SchemBlock b : blockMap)
 			{
 				if(b.state.getBlock() != Blocks.air)
+				{
+					if(b.pos.getY() == 0)
+						baseCount++;
 					map.add(b);
+				}
+
 			}
 			blockMap = map;
 
@@ -42,6 +48,11 @@ public class TreeSchematic extends Schematic
 			return true;
 		}
 		return false;
+	}
+
+	public int getBaseCount()
+	{
+		return this.baseCount;
 	}
 
 	public int getGrowthStage()

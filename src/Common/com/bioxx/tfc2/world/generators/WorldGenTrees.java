@@ -27,7 +27,7 @@ import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.world.ChunkManager;
 import com.bioxx.tfc2.world.WorldGen;
 
-public class WorldGenTreeTest implements IWorldGenerator
+public class WorldGenTrees implements IWorldGenerator
 {
 	TreeSchemManager tsm;
 	TreeConfig tc;
@@ -80,23 +80,29 @@ public class WorldGenTreeTest implements IWorldGenerator
 			for(int l = 0; l < numTrees; l++)
 			{
 				double rarity = random.nextDouble();
+				TreeReturn out;
 				if(rarity > 0.9)
-					gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getRareTree());
+					out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getRareTree());
 				else if(rarity > 0.6)
-					gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getUncommonTree());
+					out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getUncommonTree());
 				else
-					gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getCommonTree());
+					out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getCommonTree());
+
+				if(out.baseCount > 4)
+				{
+					numTrees -= 1;
+				}
 			}
 		}
 	}
 
-	private boolean gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m, String wood) 
+	private TreeReturn gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m, String wood) 
 	{
 		tsm = TreeRegistry.instance.managerFromString(wood);
 		tc = TreeRegistry.instance.treeFromString(wood);
 
 		if(tsm == null || tc == null)
-			return false;
+			return new TreeReturn(TreeReturnEnum.None, 0);
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
 		treePos = world.getHeight(treePos);
@@ -105,7 +111,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		if(c.hasMarker(Marker.Ocean))
 		{
-			return false;
+			return new TreeReturn(TreeReturnEnum.None, 0);
 		}
 
 		int growthStage = 0;
@@ -117,22 +123,25 @@ public class WorldGenTreeTest implements IWorldGenerator
 		{
 			growthStage = random.nextInt(2);
 		}
-		boolean grown = false;
+		TreeReturnEnum grown = TreeReturnEnum.None;
 
-		for(;growthStage >= 0 && !grown; growthStage--)
+		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
 
 			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
-				grown = genTree(schem, tc, world, random, treePos);
+				if(genTree(schem, tc, world, random, treePos))
+				{
+					grown = TreeReturnEnum.fromSize(growthStage);
+				}
 			}
 		}
 
-		return grown;
+		return new TreeReturn(grown, schem.getBaseCount());
 	}
 
-	private boolean genPalm(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m) 
+	private TreeReturn genPalm(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m) 
 	{
 		tsm = TreeRegistry.instance.managerFromString(WoodType.Palm.getName());
 		tc = TreeRegistry.instance.treeFromString(WoodType.Palm.getName());
@@ -143,22 +152,25 @@ public class WorldGenTreeTest implements IWorldGenerator
 
 		if(c.hasMarker(Marker.Ocean))
 		{
-			return false;
+			return new TreeReturn(TreeReturnEnum.None, 0);
 		}
 
 		int growthStage = random.nextInt(3);
-		boolean grown = false;
-		for(;growthStage >= 0 && !grown; growthStage--)
+		TreeReturnEnum grown = TreeReturnEnum.None;
+		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
 
 			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
-				grown = genTree(schem, tc, world, random, treePos);
+				if(genTree(schem, tc, world, random, treePos))
+				{
+					grown = TreeReturnEnum.fromSize(growthStage);
+				}
 			}
 		}
 
-		return grown;
+		return new TreeReturn(grown, schem.getBaseCount());
 	}
 
 
@@ -172,9 +184,9 @@ public class WorldGenTreeTest implements IWorldGenerator
 		int id;
 		int meta;
 
-		int baseX = pos.getX() - 1;
+		int baseX = pos.getX()+1;
 		int baseY = pos.getY();
-		int baseZ = pos.getZ() - 1;
+		int baseZ = pos.getZ()+1;
 
 		for(SchemBlock b : schem.getBlockMap())
 		{
@@ -187,23 +199,23 @@ public class WorldGenTreeTest implements IWorldGenerator
 	private void Process(World world, int treeX, int treeY, int treeZ, TreeConfig tc,
 			Schematic schem, BlockPos localPos, int rot, IBlockState state)
 	{
-		int localX = treeX + localPos.getX() * -1;
-		int localZ = treeZ + localPos.getZ() * -1;
+		int localX = treeX + (localPos.getX() * -1) - 2;
+		int localZ = treeZ + (localPos.getZ() * -1) - 2;
 		int localY = treeY + localPos.getY();
 
 		if(rot == 0)
 		{
-			localX = treeX + localPos.getX();
-			localZ = treeZ + localPos.getZ();
+			localX = treeX + localPos.getX() + 1;
+			localZ = treeZ + localPos.getZ() + 1;
 		}
 		else if(rot == 1)
 		{
 			localX = treeX + localPos.getZ();
-			localZ = treeZ + localPos.getX() * -1;
+			localZ = treeZ + (localPos.getX() * -1) - 2;
 		}
 		else if(rot == 2)
 		{
-			localX = treeX  + localPos.getZ() * -1;
+			localX = treeX  + (localPos.getZ() * -1) -2;
 			localZ = treeZ + localPos.getX();
 		}
 
@@ -237,6 +249,7 @@ public class WorldGenTreeTest implements IWorldGenerator
 		int radius = Math.max(1, growthStage);
 		int count = 0;
 
+		//this should validate the ground
 		for(int i = -radius; i <= radius; i++)
 		{
 			for(int k = -radius; k <= radius; k++)
@@ -274,5 +287,32 @@ public class WorldGenTreeTest implements IWorldGenerator
 		}
 
 		return true;
+	}
+
+	private class TreeReturn
+	{
+		public final TreeReturnEnum size;
+		public final int baseCount;
+
+		public TreeReturn(TreeReturnEnum e, int c)
+		{
+			size = e;
+			baseCount = c;
+		}
+	}
+
+	private enum TreeReturnEnum
+	{
+		None, Small, Normal, Large;
+
+		public static TreeReturnEnum fromSize(int size)
+		{
+			if(size == 0)
+				return Small;
+			else if(size == 1)
+				return Normal;
+			else
+				return Large;
+		}
 	}
 }

@@ -44,7 +44,7 @@ import com.bioxx.tfc2.world.WorldProviderSurface;
 import com.bioxx.tfc2.world.generators.WorldGenGrass;
 import com.bioxx.tfc2.world.generators.WorldGenLooseRock;
 import com.bioxx.tfc2.world.generators.WorldGenPortals;
-import com.bioxx.tfc2.world.generators.WorldGenTreeTest;
+import com.bioxx.tfc2.world.generators.WorldGenTrees;
 
 public class CommonProxy
 {
@@ -52,7 +52,7 @@ public class CommonProxy
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 0);
-		GameRegistry.registerWorldGenerator(new WorldGenTreeTest(), 10);
+		GameRegistry.registerWorldGenerator(new WorldGenTrees(), 10);
 		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
 		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 5);
 
