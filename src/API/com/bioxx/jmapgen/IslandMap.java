@@ -603,7 +603,7 @@ public class IslandMap
 	private void createPortals()
 	{
 		Center start = this.getClosestCenter(new Point(2048, 2048));
-		Center temp = start;
+		Center temp = start, temp2 = null;
 		boolean found = false;
 
 		//North portal location
@@ -615,7 +615,9 @@ public class IslandMap
 			//If this isn't a suitable hex then we displace in a random direction and continue from there
 			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
 			{
-				temp = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				if(temp2 != null)
+					temp = temp.getRandomNeighbor(mapRandom);
 				continue;
 			}
 
@@ -639,7 +641,9 @@ public class IslandMap
 			//If this isn't a suitable hex then we displace in a random direction and continue from there
 			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
 			{
-				temp = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				if(temp2 != null)
+					temp = temp.getRandomNeighbor(mapRandom);
 				continue;
 			}
 
@@ -662,7 +666,9 @@ public class IslandMap
 			//If this isn't a suitable hex then we displace in a random direction and continue from there
 			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
 			{
-				temp = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				if(temp2 != null)
+					temp = temp.getRandomNeighbor(mapRandom);
 				continue;
 			}
 
@@ -685,7 +691,9 @@ public class IslandMap
 			//If this isn't a suitable hex then we displace in a random direction and continue from there
 			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
 			{
-				temp = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				if(temp2 != null)
+					temp = temp.getRandomNeighbor(mapRandom);
 				continue;
 			}
 
