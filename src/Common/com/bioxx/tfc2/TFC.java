@@ -9,17 +9,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.trees.TreeConfig;
@@ -28,17 +21,15 @@ import com.bioxx.tfc2.api.trees.TreeSchematic;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
-import com.bioxx.tfc2.commands.PrintImageMapCommand;
-import com.bioxx.tfc2.commands.RegenChunkCommand;
-import com.bioxx.tfc2.commands.RemoveAreaCommand;
-import com.bioxx.tfc2.commands.StripChunkCommand;
-import com.bioxx.tfc2.commands.TeleportInIslandCommand;
+import com.bioxx.tfc2.commands.*;
 import com.bioxx.tfc2.core.PortalSchematic;
 import com.bioxx.tfc2.handlers.PlayerTracker;
 import com.bioxx.tfc2.networking.client.ClientMapPacket;
 import com.bioxx.tfc2.networking.server.KnappingUpdatePacket;
 import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 import com.bioxx.tfc2.world.WorldGen;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Reference.ModID, name = Reference.ModName, version = Reference.ModVersion, useMetadata = false, dependencies = Reference.ModDependencies)
 public class TFC
@@ -134,6 +125,8 @@ public class TFC
 		String ENGINE_HEADER = "Engine";
 		String DEBUG_HEADER = "Debug";
 
+		//Game
+		TFCOptions.torchBurnTime = TFCOptions.getIntFor(config, GAMEL_HEADER, "torchBurnTime", 48, "This is how many in-game hours torches will last before burning out. Set to 0 for infinitely burning torches.");
 		//Engine
 		TFCOptions.maxThreadsForIslandGen = TFCOptions.getIntFor(config, ENGINE_HEADER, "maxThreadsForIslandGen", 1, "Maximum number of neighboring islands that can be pregenerated at once. Setting this higher may reduce performance.");
 		//Debug

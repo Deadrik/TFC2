@@ -12,6 +12,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
@@ -31,32 +32,10 @@ import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.api.util.KeyBindings;
 import com.bioxx.tfc2.blocks.BlockLeaves2;
 import com.bioxx.tfc2.core.RegistryItemQueue;
-import com.bioxx.tfc2.entity.EntityBear;
-import com.bioxx.tfc2.entity.EntityBearPanda;
-import com.bioxx.tfc2.entity.EntityBison;
-import com.bioxx.tfc2.entity.EntityBoar;
-import com.bioxx.tfc2.entity.EntityCart;
-import com.bioxx.tfc2.entity.EntityElephant;
-import com.bioxx.tfc2.entity.EntityLion;
-import com.bioxx.tfc2.entity.EntityMammoth;
-import com.bioxx.tfc2.entity.EntityRhino;
-import com.bioxx.tfc2.entity.EntityTiger;
-import com.bioxx.tfc2.handlers.client.BackgroundMusicHandler;
-import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
-import com.bioxx.tfc2.handlers.client.GuiHandler;
-import com.bioxx.tfc2.handlers.client.KeyBindingHandler;
-import com.bioxx.tfc2.handlers.client.RenderOverlayHandler;
+import com.bioxx.tfc2.entity.*;
+import com.bioxx.tfc2.handlers.client.*;
 import com.bioxx.tfc2.rendering.MeshDef;
-import com.bioxx.tfc2.rendering.model.RenderBear;
-import com.bioxx.tfc2.rendering.model.RenderBearPanda;
-import com.bioxx.tfc2.rendering.model.RenderBison;
-import com.bioxx.tfc2.rendering.model.RenderBoar;
-import com.bioxx.tfc2.rendering.model.RenderCart;
-import com.bioxx.tfc2.rendering.model.RenderElephant;
-import com.bioxx.tfc2.rendering.model.RenderLion;
-import com.bioxx.tfc2.rendering.model.RenderMammoth;
-import com.bioxx.tfc2.rendering.model.RenderRhino;
-import com.bioxx.tfc2.rendering.model.RenderTiger;
+import com.bioxx.tfc2.rendering.model.*;
 
 public class ClientProxy extends CommonProxy
 {
@@ -481,6 +460,12 @@ public class ClientProxy extends CommonProxy
 
 		});
 
+		/**
+		 * Torches
+		 */
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.TorchOn), new MeshDef(new ModelResourceLocation(Reference.ModID + ":torch_on", "inventory")));
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.TorchOff), new MeshDef(new ModelResourceLocation(Reference.ModID + ":torch_off", "inventory")));
+
 		for(int l = 0; l < Global.STONE_ALL.length; l++)
 		{
 			String stone = Core.textConvert(Global.STONE_ALL[l]);
@@ -529,6 +514,9 @@ public class ClientProxy extends CommonProxy
 			String ore = Core.textConvert(OreType.values()[l].getName());
 			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Ore), Reference.ModID + ":Ore/" + ore);
 		}
+
+		ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.TorchOn), Reference.ModID + ":torch_on");
+		ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.TorchOff), Reference.ModID + ":torch_off");
 
 		RegistryItemQueue.getInstance().registerMeshes();
 	}

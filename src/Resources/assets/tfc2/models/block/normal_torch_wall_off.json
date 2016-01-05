@@ -1,0 +1,6 @@
+{
+    "parent": "tfc2:block/torch_wall_off",
+    "textures": {
+        "torch_off": "tfc2:blocks/torch_off"
+    }
+}

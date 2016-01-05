@@ -2,44 +2,22 @@ package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.api.TFCFluids;
-import com.bioxx.tfc2.blocks.BlockClimbingRocks;
-import com.bioxx.tfc2.blocks.BlockEffect;
-import com.bioxx.tfc2.blocks.BlockFreshWater;
-import com.bioxx.tfc2.blocks.BlockFreshWaterStatic;
-import com.bioxx.tfc2.blocks.BlockLeaves;
-import com.bioxx.tfc2.blocks.BlockLeaves2;
-import com.bioxx.tfc2.blocks.BlockLogHorizontal;
-import com.bioxx.tfc2.blocks.BlockLogHorizontal2;
-import com.bioxx.tfc2.blocks.BlockLogHorizontal3;
-import com.bioxx.tfc2.blocks.BlockLogNatural;
-import com.bioxx.tfc2.blocks.BlockLogNatural2;
-import com.bioxx.tfc2.blocks.BlockLogNaturalPalm;
-import com.bioxx.tfc2.blocks.BlockLogVertical;
-import com.bioxx.tfc2.blocks.BlockLogVertical2;
-import com.bioxx.tfc2.blocks.BlockLooseRocks;
-import com.bioxx.tfc2.blocks.BlockPlanks;
-import com.bioxx.tfc2.blocks.BlockPlanks2;
-import com.bioxx.tfc2.blocks.BlockPortal;
-import com.bioxx.tfc2.blocks.BlockSaltWater;
-import com.bioxx.tfc2.blocks.BlockSaltWaterStatic;
-import com.bioxx.tfc2.blocks.BlockSapling;
-import com.bioxx.tfc2.blocks.BlockSapling2;
-import com.bioxx.tfc2.blocks.BlockStoneBrick;
-import com.bioxx.tfc2.blocks.BlockVegetation;
-import com.bioxx.tfc2.blocks.terrain.BlockDirt;
-import com.bioxx.tfc2.blocks.terrain.BlockGrass;
-import com.bioxx.tfc2.blocks.terrain.BlockGravel;
-import com.bioxx.tfc2.blocks.terrain.BlockOre;
-import com.bioxx.tfc2.blocks.terrain.BlockRubble;
-import com.bioxx.tfc2.blocks.terrain.BlockSand;
-import com.bioxx.tfc2.blocks.terrain.BlockStone;
+import com.bioxx.tfc2.blocks.*;
+import com.bioxx.tfc2.blocks.liquids.BlockFreshWater;
+import com.bioxx.tfc2.blocks.liquids.BlockFreshWaterStatic;
+import com.bioxx.tfc2.blocks.liquids.BlockSaltWater;
+import com.bioxx.tfc2.blocks.liquids.BlockSaltWaterStatic;
+import com.bioxx.tfc2.blocks.terrain.*;
+import com.bioxx.tfc2.blocks.vanilla.BlockTorchTFC;
 import com.bioxx.tfc2.items.itemblocks.ItemOre;
 import com.bioxx.tfc2.items.itemblocks.ItemSoil;
 import com.bioxx.tfc2.items.itemblocks.ItemStone;
 import com.bioxx.tfc2.items.itemblocks.ItemWood;
+import com.bioxx.tfc2.tileentities.TileTorch;
 
 public class TFCBlocks
 {
@@ -77,6 +55,8 @@ public class TFCBlocks
 	public static Block Portal;
 	public static Block PortalStone;
 	public static Block PortalStoneSwitch;
+	public static Block TorchOn;
+	public static Block TorchOff;
 
 	public static void LoadBlocks()
 	{
@@ -116,6 +96,8 @@ public class TFCBlocks
 		StoneBrick = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonebrick");
 		StoneSmooth = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonesmooth");
 		Portal = new BlockPortal().setHardness(0F).setUnlocalizedName("portal");
+		TorchOn = new BlockTorchTFC(true).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_on");
+		TorchOff = new BlockTorchTFC(false).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_off");
 	}
 
 	public static void RegisterBlocks()
@@ -157,6 +139,10 @@ public class TFCBlocks
 		GameRegistry.registerBlock(StoneBrick, ItemStone.class, "stonebrick");
 		GameRegistry.registerBlock(StoneSmooth, ItemStone.class, "stonesmooth");
 		GameRegistry.registerBlock(Portal, "portal");
+		GameRegistry.registerBlock(TorchOn, "torch_on");
+		GameRegistry.registerBlock(TorchOff, "torch_off");
+
+		GameRegistry.registerTileEntity(TileTorch.class, "torch_TFC2");
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);

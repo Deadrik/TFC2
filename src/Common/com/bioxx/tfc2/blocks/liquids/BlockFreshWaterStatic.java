@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.blocks;
+package com.bioxx.tfc2.blocks.liquids;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

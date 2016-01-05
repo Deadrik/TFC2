@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.blocks;
+package com.bioxx.tfc2.blocks.liquids;
 
 import java.util.Random;
 
@@ -18,9 +18,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.TFCBlocks;
 
-public class BlockSaltWater extends BlockFluidClassic {
+public class BlockFreshWater extends BlockFluidClassic {
 
-	public BlockSaltWater(Fluid fluid, Material material) 
+	public BlockFreshWater(Fluid fluid, Material material) 
 	{
 		super(fluid, material);
 		this.setTickRate(3);
@@ -98,7 +98,7 @@ public class BlockSaltWater extends BlockFluidClassic {
 	{
 		super.updateTick(world, pos, state, rand);
 		int myLevel = ((Integer)state.getValue(LEVEL)).intValue();
-		if(state.getBlock() == this && myLevel > 0)
+		if(state.getBlock() == this && ((Integer)state.getValue(LEVEL)).intValue() > 0)
 		{
 			int count = 0;
 			if(isSourceBlock(world, pos.north())) count++;
@@ -108,12 +108,12 @@ public class BlockSaltWater extends BlockFluidClassic {
 
 			if(count > 1)
 			{
-				world.setBlockState(pos, TFCBlocks.SaltWaterStatic.getDefaultState().withProperty(LEVEL, 0));
+				world.setBlockState(pos, TFCBlocks.FreshWaterStatic.getDefaultState().withProperty(LEVEL, 0));
 			}
 		}
 		else
 		{
-			world.setBlockState(pos, TFCBlocks.SaltWater.getDefaultState().withProperty(LEVEL, state.getValue(LEVEL)), 2);
+			world.setBlockState(pos, TFCBlocks.FreshWater.getDefaultState().withProperty(LEVEL, state.getValue(LEVEL)), 2);
 		}
 	}
 

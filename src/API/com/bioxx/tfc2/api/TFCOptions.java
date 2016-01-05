@@ -14,6 +14,8 @@ public class TFCOptions
 	public static int healthGainRate = 20;
 	public static int healthGainCap = 3000;
 
+	public static int torchBurnTime = 48;
+
 	public static boolean getBooleanFor(Configuration config,String heading, String item, boolean value)
 	{
 		if (config == null)
