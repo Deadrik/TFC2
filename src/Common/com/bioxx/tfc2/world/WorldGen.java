@@ -166,6 +166,13 @@ public class WorldGen implements IThreadCompleteListener
 		Global.EVENT_BUS.post(preEvent);
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
 		mapgen.newIsland(preEvent.params);
+
+		mapgen.getIslandData().islandLevel = Math.abs(x);
+		if(x == 0)
+		{
+			mapgen.getIslandData().unlockIsland();
+		}
+
 		mapgen.generateFull();
 		IslandGenEvent.Post postEvent = new IslandGenEvent.Post(mapgen);
 		Global.EVENT_BUS.post(postEvent);
@@ -339,11 +346,11 @@ public class WorldGen implements IThreadCompleteListener
 					island.islandData.getParams().getZCoord());
 			if (file1 != null)
 			{
-				NBTTagCompound dataNBT = new NBTTagCompound();
-				island.islandData.writeToNBT(dataNBT);
+				NBTTagCompound islandNBT = new NBTTagCompound();
+				island.islandData.writeToNBT(islandNBT);
 
 				NBTTagCompound finalNBT = new NBTTagCompound();
-				finalNBT.setTag("data", dataNBT);
+				finalNBT.setTag("mapdata", islandNBT);
 				island.islandData.getParams().writeToNBT(finalNBT);
 
 				finalNBT.setLong("lastAccess", island.lastAccess);
@@ -375,7 +382,7 @@ public class WorldGen implements IThreadCompleteListener
 				long seed = world.getSeed()+Helper.combineCoords(x, z);
 				IslandMap m = new IslandMap(ISLAND_SIZE, seed);
 				m.newIsland(ip);
-				m.readFromNBT(nbt.getCompoundTag("data"));
+				m.readFromNBT(nbt.getCompoundTag("mapdata"));
 				CachedIsland ci = new CachedIsland(m);
 				ci.lastAccess = nbt.getLong("lastAccess");
 				islandCache.put(Helper.combineCoords(x, z), ci);

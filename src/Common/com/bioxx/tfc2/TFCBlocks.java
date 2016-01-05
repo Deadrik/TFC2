@@ -54,7 +54,6 @@ public class TFCBlocks
 	public static Block StoneSmooth;
 	public static Block Portal;
 	public static Block PortalStone;
-	public static Block PortalStoneSwitch;
 	public static Block TorchOn;
 	public static Block TorchOff;
 
@@ -96,6 +95,7 @@ public class TFCBlocks
 		StoneBrick = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonebrick");
 		StoneSmooth = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonesmooth");
 		Portal = new BlockPortal().setHardness(0F).setUnlocalizedName("portal");
+		PortalStone = new BlockPortalStone().setHardness(-1F).setUnlocalizedName("portalstone");
 		TorchOn = new BlockTorchTFC(true).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_on");
 		TorchOff = new BlockTorchTFC(false).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_off");
 	}
@@ -139,6 +139,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(StoneBrick, ItemStone.class, "stonebrick");
 		GameRegistry.registerBlock(StoneSmooth, ItemStone.class, "stonesmooth");
 		GameRegistry.registerBlock(Portal, "portal");
+		GameRegistry.registerBlock(PortalStone, "portalstone");
 		GameRegistry.registerBlock(TorchOn, "torch_on");
 		GameRegistry.registerBlock(TorchOff, "torch_off");
 

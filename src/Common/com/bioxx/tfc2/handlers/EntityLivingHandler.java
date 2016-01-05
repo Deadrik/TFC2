@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.WorldSettings.GameType;
+
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -20,9 +21,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
 import com.bioxx.tfc2.core.FoodStatsTFC;
+import com.bioxx.tfc2.world.WorldGen;
 
 public class EntityLivingHandler
 {
@@ -37,7 +40,13 @@ public class EntityLivingHandler
 			if(player.worldObj.provider.getDimensionId() == 2 && !player.capabilities.isCreativeMode)
 				player.setGameType(GameType.ADVENTURE);
 			else if(player.worldObj.provider.getDimensionId() == 0 && !player.capabilities.isCreativeMode)
-				player.setGameType(GameType.SURVIVAL);
+			{
+				IslandMap map = WorldGen.instance.getIslandMap((int)player.posX >> 12, (int)player.posZ >> 12);
+				if(map.getIslandData().isIslandUnlocked)
+					player.setGameType(GameType.SURVIVAL);
+				else
+					player.setGameType(GameType.ADVENTURE);
+			}
 
 
 			//Set Max Health

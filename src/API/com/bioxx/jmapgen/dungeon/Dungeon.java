@@ -82,12 +82,14 @@ public class Dungeon
 
 		if(r.nextBoolean())
 		{
-			if(r.nextBoolean())
+			if(r.nextBoolean() && WoodType.getTypeFromString(islandMap.getParams().getCommonTree()) != WoodType.Palm)
 				ceilingType = Core.getPlanks(WoodType.getTypeFromString(islandMap.getParams().getCommonTree()));
-			else if(r.nextBoolean())
+			else if(r.nextBoolean() && WoodType.getTypeFromString(islandMap.getParams().getUncommonTree()) != WoodType.Palm)
 				ceilingType = Core.getPlanks(WoodType.getTypeFromString(islandMap.getParams().getUncommonTree()));
-			else
+			else if(WoodType.getTypeFromString(islandMap.getParams().getCommonTree()) != WoodType.Palm)
 				ceilingType = Core.getPlanks(WoodType.getTypeFromString(islandMap.getParams().getRareTree()));
+			else
+				ceilingType = TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, islandMap.getParams().getSurfaceRock());
 		}
 		else 
 		{

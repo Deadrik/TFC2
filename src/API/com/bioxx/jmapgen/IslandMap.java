@@ -4,35 +4,22 @@
 package com.bioxx.jmapgen;
 
 import java.awt.Rectangle;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 import com.bioxx.jmapgen.IslandParameters.Feature;
-import com.bioxx.jmapgen.attributes.Attribute;
-import com.bioxx.jmapgen.attributes.CanyonAttribute;
-import com.bioxx.jmapgen.attributes.GorgeAttribute;
-import com.bioxx.jmapgen.attributes.LakeAttribute;
-import com.bioxx.jmapgen.attributes.PortalAttribute;
-import com.bioxx.jmapgen.attributes.RiverAttribute;
+import com.bioxx.jmapgen.attributes.*;
 import com.bioxx.jmapgen.com.nodename.delaunay.DelaunayUtil;
 import com.bioxx.jmapgen.com.nodename.delaunay.Voronoi;
 import com.bioxx.jmapgen.com.nodename.geom.LineSegment;
 import com.bioxx.jmapgen.dungeon.Dungeon;
-import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.*;
 import com.bioxx.jmapgen.graph.Center.HexDirection;
 import com.bioxx.jmapgen.graph.Center.Marker;
-import com.bioxx.jmapgen.graph.Corner;
-import com.bioxx.jmapgen.graph.CornerElevationSorter;
-import com.bioxx.jmapgen.graph.Edge;
-import com.bioxx.jmapgen.graph.MoistureComparator;
 import com.bioxx.jmapgen.pathfinding.PathFinder;
 import com.bioxx.jmapgen.processing.CaveProcessor;
 import com.bioxx.jmapgen.processing.OreProcessor;
@@ -46,11 +33,10 @@ public class IslandMap
 	boolean builtVoronoi = false;
 	// Passed in by the caller:
 	public int SIZE;
-	// Island shape is controlled by the islandRandom seed and the
-	// type of island, passed in when we set the island shape. The
-	// islandShape function uses both of them to determine whether any
-	// point should be water or land.
+
 	protected IslandParameters islandParams;
+
+	protected IslandData islandData;
 	// Island details are controlled by this random generator. The
 	// initial map upon loading is always deterministic, but
 	// subsequent maps reset this random number generator with a
@@ -95,11 +81,17 @@ public class IslandMap
 		NUM_POINTS = is.SIZE*4;
 		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 		is.createShape(seed);
+		islandData = new IslandData();
 	}
 
 	public IslandParameters getParams()
 	{
 		return this.islandParams;
+	}
+
+	public IslandData getIslandData()
+	{
+		return this.islandData;
 	}
 
 	public void generateFake()
@@ -2164,6 +2156,14 @@ public class IslandMap
 	}
 
 	/**
+	 * @param p This blockPos should be in World Coords
+	 */
+	public Center getClosestCenter(BlockPos p)
+	{
+		return getClosestCenter(new Point(p.getX() % 4096, p.getZ() % 4096));
+	}
+
+	/**
 	 * @return nearest Center point for the containing hex
 	 */
 	public Center getClosestCenter(Point p)
@@ -2278,6 +2278,10 @@ public class IslandMap
 			nList.appendTag(n);
 		}
 		nbt.setTag("dungeons", nList);
+
+		NBTTagCompound dataNBT = new NBTTagCompound();
+		this.islandData.writeToNBT(dataNBT);
+		nbt.setTag("data", dataNBT);
 	}
 
 	public void readFromNBT(NBTTagCompound nbt)
@@ -2345,6 +2349,9 @@ public class IslandMap
 			d.readFromNBT(this, dungeonList.getCompoundTagAt(i));
 			dungeons.add(d);
 		}
+
+		this.islandData = new IslandData();
+		islandData.readFromNBT(nbt.getCompoundTag("data"));
 	}
 
 

@@ -1,0 +1,21 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"all": "tfc2:blocks/Portal Stone",
+			"end": "tfc2:blocks/Portal Stone",
+			"particle": "tfc2:blocks/Portal Stone"
+		},
+		"model": "cube_column"
+	},
+	"variants": {
+		"state" : {
+			"none": {"model": "cube_all", "textures": {"all": "tfc2:blocks/Portal Stone"}},
+			"enabled": {"textures": {"side": "tfc2:blocks/Portal Stone Enabled"}},
+			"disabled": {"textures": {"side": "tfc2:blocks/Portal Stone Disabled"}},
+			"locked": {"textures": {"side": "tfc2:blocks/Portal Stone Locked"}},
+			"gate": {"model": "cube_all", "textures": {"all": "tfc2:blocks/Portal Stone Gate"}}
+		}
+	}
+}
+

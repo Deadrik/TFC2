@@ -9,6 +9,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 import com.bioxx.jmapgen.IslandMap;
@@ -20,9 +21,9 @@ import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.Schematic.SchemBlock;
-import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.api.types.PortalEnumType;
 import com.bioxx.tfc2.blocks.BlockPortal;
-import com.bioxx.tfc2.blocks.BlockStoneSmooth;
+import com.bioxx.tfc2.blocks.BlockPortalStone;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class WorldGenPortals implements IWorldGenerator
@@ -109,11 +110,18 @@ public class WorldGenPortals implements IWorldGenerator
 
 			if(state.getBlock() == Blocks.stone && state.getValue(BlockStone.VARIANT) == BlockStone.EnumType.STONE)
 			{
-				state = TFCBlocks.StoneSmooth.getDefaultState().withProperty(BlockStoneSmooth.META_PROPERTY, StoneType.Marble);
+				state = TFCBlocks.PortalStone.getDefaultState().withProperty(BlockPortalStone.META_PROPERTY, PortalEnumType.None);
 			}
 			else if(state.getBlock() == Blocks.stone && state.getValue(BlockStone.VARIANT) == BlockStone.EnumType.GRANITE)
 			{
-				state = TFCBlocks.StoneSmooth.getDefaultState().withProperty(BlockStoneSmooth.META_PROPERTY, StoneType.Blueschist);
+				if(map.getIslandData().getPortalState(dir) != PortalEnumType.Enabled)
+					state = TFCBlocks.PortalStone.getDefaultState().withProperty(BlockPortalStone.META_PROPERTY, PortalEnumType.Gate);
+				else
+					state = Blocks.air.getDefaultState();
+			}
+			else if(state.getBlock() == Blocks.planks)
+			{
+				state = TFCBlocks.PortalStone.getDefaultState().withProperty(BlockPortalStone.META_PROPERTY, map.getIslandData().getPortalState(dir));
 			}
 			else if(state.getBlock() == Blocks.stained_glass)
 			{
@@ -133,18 +141,21 @@ public class WorldGenPortals implements IWorldGenerator
 
 	public static void BuildPath(World world, BlockPos start, BlockPos End, Spline3D spline)
 	{
-		for(double len = 0; len < 1; len += 0.001)
+		for(double len = 0; len <= 1; len += 0.001)
 		{
 			BlockPos pos = spline.getPoint(len);
-			for(int x = -2; x < 3; x++)
+			int radius = 2;
+			if(len == 0 || len >= 1)
+				radius = 8;
+			for(int x = -radius; x <= radius; x++)
 			{
-				for(int z = -2; z < 3; z++)
+				for(int z = -radius; z <= radius; z++)
 				{
 					double dist = pos.distanceSqToCenter(pos.getX()+x+0.5, pos.getY()+0.5, pos.getZ()+z+0.5);
-					if(dist < 5)
+					if(dist < radius * radius)
 					{
 						if(world.isAirBlock(pos.add(x, 0, z)))
-							world.setBlockState(pos.add(x, 0, z), TFCBlocks.StoneSmooth.getDefaultState());
+							world.setBlockState(pos.add(x, 0, z), TFCBlocks.PortalStone.getDefaultState());
 					}
 				}
 			}

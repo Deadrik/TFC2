@@ -20,6 +20,7 @@ import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.PortalAttribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.types.PortalEnumType;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.BlockPortal;
 import com.bioxx.tfc2.world.generators.WorldGenPortals;
@@ -209,9 +210,9 @@ public class TeleporterPaths extends Teleporter
 
 
 		BlockPos start = closest.point.toBlockPos().add(xI, 64+islandMap.convertHeightToMC(closest.getElevation()), zI);
-		start = new BlockPos(start.getX() * factor, start.getY(), start.getZ() * factor);
+		start = new BlockPos(start.getX() * factor, start.getY()-1, start.getZ() * factor);
 		BlockPos end = dest.point.toBlockPos().add(destX * 4096, 64+destMap.convertHeightToMC(dest.getElevation()), destZ * 4096);
-		end = new BlockPos(end.getX() * factor, end.getY(), end.getZ() * factor);
+		end = new BlockPos(end.getX() * factor, end.getY()-1, end.getZ() * factor);
 
 		//Create the spline if it does not exist
 		if(startAttr.getSpline() == null)
@@ -243,8 +244,10 @@ public class TeleporterPaths extends Teleporter
 			}
 		}
 
-		WorldGenPortals.BuildPath(worldServerInstance, start, end, startAttr.getSpline());
+		if(destMap.getIslandData().getPortalState(endAttr.direction) == PortalEnumType.Disabled)
+			destMap.getIslandData().enablePortal(endAttr.direction);
 
+		WorldGenPortals.BuildPath(worldServerInstance, start, end, startAttr.getSpline());
 		WorldGenPortals.BuildPortalSchem(worldServerInstance, dest, end, destMap, true);
 
 		return true;
