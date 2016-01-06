@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 import com.bioxx.jmapgen.IslandMap;
@@ -36,6 +37,9 @@ public class WorldGenTrees implements IWorldGenerator
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
 	{
+		if(world.provider.getDimensionId() != 0)
+			return;
+
 		chunkX *= 16;
 		chunkZ *= 16;
 

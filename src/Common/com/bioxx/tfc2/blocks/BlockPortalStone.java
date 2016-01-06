@@ -86,7 +86,7 @@ public class BlockPortalStone extends BlockTerra
 		{
 			BlockPos scaledPos = new BlockPos(pos.getX() * 8, pos.getY(), pos.getZ() * 8);
 			map = WorldGen.instance.getIslandMap(scaledPos.getX() >> 12, scaledPos.getZ() >> 12);
-			Center c = map.getClosestCenter(scaledPos);
+			Center c = getPortalNeighbor(map.getClosestCenter(scaledPos));
 			pa = (PortalAttribute) c.getAttribute(Attribute.Portal);
 			if(map.getIslandData().getPortalState(pa.direction) != portalstate)
 			{
@@ -119,6 +119,21 @@ public class BlockPortalStone extends BlockTerra
 				toggleGate(worldIn, pos.west().down(3), pState);
 			}
 		}
+	}
+
+	private Center getPortalNeighbor(Center closest)
+	{
+		if(!closest.hasAttribute(Attribute.Portal))
+		{
+			for(Center c : closest.neighbors)
+			{
+				if(c.hasAttribute(Attribute.Portal))
+				{
+					return c;
+				}
+			}
+		}
+		return closest;
 	}
 
 	private boolean toggleGate(World worldIn, BlockPos pos, PortalEnumType pState)

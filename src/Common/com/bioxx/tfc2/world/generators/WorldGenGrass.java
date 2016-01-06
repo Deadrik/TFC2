@@ -7,6 +7,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 import com.bioxx.tfc2.Core;
@@ -22,6 +23,9 @@ public class WorldGenGrass implements IWorldGenerator
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
 	{
+		if(world.provider.getDimensionId() != 0)
+			return;
+
 		Chunk c = world.getChunkFromChunkCoords(chunkX, chunkZ);
 		chunkX *= 16;
 		chunkZ *= 16;
