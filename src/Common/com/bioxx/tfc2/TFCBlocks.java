@@ -94,7 +94,7 @@ public class TFCBlocks
 		ClimbingRocks = new BlockClimbingRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("climbing_rock");
 		StoneBrick = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonebrick");
 		StoneSmooth = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonesmooth");
-		Portal = new BlockPortal().setHardness(-1F).setResistance(6000000f).setStepSound(Block.soundTypeStone).setUnlocalizedName("portal");
+		Portal = new BlockPortal().setHardness(-1F).setResistance(6000000f).setStepSound(Block.soundTypeStone).setUnlocalizedName("portal").setLightOpacity(3).setLightLevel(0.5f);
 		PortalStone = new BlockPortalStone().setHardness(-1F).setResistance(6000000f).setUnlocalizedName("portalstone");
 		TorchOn = new BlockTorchTFC(true).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_on");
 		TorchOff = new BlockTorchTFC(false).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_off");
