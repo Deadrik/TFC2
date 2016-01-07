@@ -18,9 +18,9 @@ public abstract class TileTFC extends TileEntity
 		readNonSyncableNBT(getTileData());
 	}
 
-	public abstract void readSyncableNBT(NBTTagCompound compound);
+	public abstract void readSyncableNBT(NBTTagCompound nbt);
 
-	public abstract void readNonSyncableNBT(NBTTagCompound compound);
+	public abstract void readNonSyncableNBT(NBTTagCompound nbt);
 
 	@Override
 	@Deprecated
@@ -35,12 +35,12 @@ public abstract class TileTFC extends TileEntity
 	/**
 	 * Any Tags saved here should be synced to clients
 	 */
-	public abstract void writeSyncableNBT(NBTTagCompound compound);
+	public abstract void writeSyncableNBT(NBTTagCompound nbt);
 
 	/**
 	 * Any Tags saved here will only be known serverside
 	 */
-	public abstract void writeNonSyncableNBT(NBTTagCompound compound);
+	public abstract void writeNonSyncableNBT(NBTTagCompound nbt);
 
 	@Override
 	public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.S35PacketUpdateTileEntity pkt)

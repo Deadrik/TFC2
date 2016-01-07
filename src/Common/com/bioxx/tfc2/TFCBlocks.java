@@ -2,6 +2,7 @@ package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.tileentity.TileEntity;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -17,6 +18,7 @@ import com.bioxx.tfc2.items.itemblocks.ItemOre;
 import com.bioxx.tfc2.items.itemblocks.ItemSoil;
 import com.bioxx.tfc2.items.itemblocks.ItemStone;
 import com.bioxx.tfc2.items.itemblocks.ItemWood;
+import com.bioxx.tfc2.tileentities.TileCrop;
 import com.bioxx.tfc2.tileentities.TileTorch;
 
 public class TFCBlocks
@@ -143,7 +145,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(TorchOn, "torch_on");
 		GameRegistry.registerBlock(TorchOff, "torch_off");
 
-		GameRegistry.registerTileEntity(TileTorch.class, "torch_TFC2");
+
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);
@@ -153,5 +155,16 @@ public class TFCBlocks
 		LogHorizontal.setHarvestLevel("axe", 1);
 		LogHorizontal2.setHarvestLevel("axe", 1);
 		LogHorizontal3.setHarvestLevel("axe", 1);
+	}
+
+	public static void RegisterTileEntites()
+	{
+		registerTileEntity(TileTorch.class, "torch");
+		registerTileEntity(TileCrop.class, "crop");
+	}
+
+	private static void registerTileEntity(Class<? extends TileEntity> c, String id)
+	{
+		GameRegistry.registerTileEntity(c, Reference.ModID+":"+id);
 	}
 }

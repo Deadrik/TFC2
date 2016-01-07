@@ -73,26 +73,28 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 	 * 3. NBT Methods
 	 ***********************************************************************************/
 	@Override
-	public void readSyncableNBT(NBTTagCompound compound)
+	public void readSyncableNBT(NBTTagCompound nbt)
 	{
-		cropType = Crop.fromID(compound.getInteger("cropType"));
+		cropType = Crop.fromID(nbt.getInteger("cropType"));
 	}
 
 	@Override
-	public void readNonSyncableNBT(NBTTagCompound compound)
+	public void readNonSyncableNBT(NBTTagCompound nbt)
 	{
-		isWild = compound.getBoolean("isWild");
+		isWild = nbt.getBoolean("isWild");
+		plantedTimeStamp = nbt.getLong("plantedTimeStamp");
 	}
 
 	@Override
-	public void writeSyncableNBT(NBTTagCompound compound)
+	public void writeSyncableNBT(NBTTagCompound nbt)
 	{
-		compound.setInteger("cropType", this.cropType.getID());
+		nbt.setInteger("cropType", this.cropType.getID());
 	}
 
 	@Override
-	public void writeNonSyncableNBT(NBTTagCompound compound)
+	public void writeNonSyncableNBT(NBTTagCompound nbt)
 	{
-		compound.setBoolean("isWild", isWild);
+		nbt.setBoolean("isWild", isWild);
+		nbt.setLong("plantedTimeStamp", plantedTimeStamp);
 	}
 }
