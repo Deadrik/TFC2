@@ -1,11 +1,8 @@
 package com.bioxx.tfc2.tileentities;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 
-public class TileTorch extends TileEntity
+public class TileTorch extends TileTFC
 {
 	private int torchTimer;
 	NBTTagCompound torchTileData;
@@ -32,49 +29,23 @@ public class TileTorch extends TileEntity
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound)
+	public void readSyncableNBT(NBTTagCompound compound) 
 	{
-		super.readFromNBT(compound);
-		if (compound.hasKey("TFC2Data"))
-		{
-			this.torchTileData = compound.getCompoundTag("TFC2Data");
-			torchTimer = torchTileData.getInteger("torchTimer");
-		}
+		torchTimer = compound.getInteger("torchTimer");
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound compound)
-	{
-		super.writeToNBT(compound);
-		torchTileData.setInteger("torchTimer", torchTimer);
-		compound.setTag("TFC2Data", this.torchTileData);
+	public void readNonSyncableNBT(NBTTagCompound compound) {
+
 	}
 
-	/**
-	 * Gets a {@link NBTTagCompound} that can be used to store custom data for this tile entity.
-	 * It will be written, and read from disc, so it persists over world saves.
-	 *
-	 * @return A compound tag for custom data
-	 */
 	@Override
-	public NBTTagCompound getTileData()
-	{
-		if (this.torchTileData == null)
-		{
-			this.torchTileData = new NBTTagCompound();
-		}
-		return this.torchTileData;
+	public void writeSyncableNBT(NBTTagCompound compound) {
+		compound.setInteger("torchTimer", torchTimer);
 	}
 
-	/**
-	 * Allows for a specialized description packet to be created. This is often used to sync tile entity data from the
-	 * server to the client easily. For example this is used by signs to synchronise the text to be displayed.
-	 */
 	@Override
-	public Packet getDescriptionPacket()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.pos, 0, nbt);
+	public void writeNonSyncableNBT(NBTTagCompound compound) {
+
 	}
 }
