@@ -37,14 +37,14 @@ public class EntityLivingHandler
 			EntityPlayerMP player = (EntityPlayerMP)event.entityLiving;
 
 			//If the player enters the portal realm then set them to adventure mode to prevent altering the world
-			if(player.worldObj.provider.getDimensionId() == 2 && !player.capabilities.isCreativeMode)
+			if(player.worldObj.provider.getDimensionId() == 2 && !player.capabilities.isCreativeMode && !player.isSpectator())
 				player.setGameType(GameType.ADVENTURE);
-			else if(player.worldObj.provider.getDimensionId() == 0 && !player.capabilities.isCreativeMode)
+			else if(player.worldObj.provider.getDimensionId() == 0 && !player.capabilities.isCreativeMode && !player.isSpectator())
 			{
 				IslandMap map = WorldGen.instance.getIslandMap((int)player.posX >> 12, (int)player.posZ >> 12);
-				if(map.getIslandData().isIslandUnlocked)
+				if(map.getIslandData().isIslandUnlocked && !player.isSpectator())
 					player.setGameType(GameType.SURVIVAL);
-				else
+				else if(!player.isSpectator())
 					player.setGameType(GameType.ADVENTURE);
 			}
 
