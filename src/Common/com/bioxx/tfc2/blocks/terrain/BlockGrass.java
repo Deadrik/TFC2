@@ -18,6 +18,7 @@ import net.minecraft.world.ChunkCache;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,13 +32,9 @@ import com.bioxx.tfc2.world.WorldGen;
 public class BlockGrass extends BlockTerra
 {
 	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
-	/** Whether this fence connects in the northern direction */
 	public static final PropertyBool NORTH = PropertyBool.create("north");
-	/** Whether this fence connects in the eastern direction */
 	public static final PropertyBool EAST = PropertyBool.create("east");
-	/** Whether this fence connects in the southern direction */
 	public static final PropertyBool SOUTH = PropertyBool.create("south");
-	/** Whether this fence connects in the western direction */
 	public static final PropertyBool WEST = PropertyBool.create("west");
 
 	public BlockGrass()
@@ -48,10 +45,57 @@ public class BlockGrass extends BlockTerra
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
 	}
 
+	/*******************************************************************************
+	 * 1. Content
+	 *******************************************************************************/
 	@Override
-	protected BlockState createBlockState()
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
-		return new BlockState(this, new IProperty[] { META_PROPERTY, NORTH, SOUTH, EAST, WEST });
+		if(world.isRemote)
+			return;
+
+		if(world.getBlockState(pos.north()).getBlock() == TFCBlocks.Dirt && world.isAirBlock(pos.north().up()) && rand.nextInt(10) == 0)
+		{
+			world.setBlockState(pos.north(), this.getDefaultState().withProperty(META_PROPERTY, world.getBlockState(pos.north()).getValue(BlockDirt.META_PROPERTY)));
+		}
+
+		if(world.getBlockState(pos.south()).getBlock() == TFCBlocks.Dirt && world.isAirBlock(pos.south().up()) && rand.nextInt(10) == 0)
+		{
+			world.setBlockState(pos.south(), this.getDefaultState().withProperty(META_PROPERTY, world.getBlockState(pos.south()).getValue(BlockDirt.META_PROPERTY)));
+		}
+
+		if(world.getBlockState(pos.east()).getBlock() == TFCBlocks.Dirt && world.isAirBlock(pos.east().up()) && rand.nextInt(10) == 0)
+		{
+			world.setBlockState(pos.east(), this.getDefaultState().withProperty(META_PROPERTY, world.getBlockState(pos.east()).getValue(BlockDirt.META_PROPERTY)));
+		}
+
+		if(world.getBlockState(pos.west()).getBlock() == TFCBlocks.Dirt && world.isAirBlock(pos.west().up()) && rand.nextInt(10) == 0)
+		{
+			world.setBlockState(pos.west(), this.getDefaultState().withProperty(META_PROPERTY, world.getBlockState(pos.west()).getValue(BlockDirt.META_PROPERTY)));
+		}
+	}
+
+	@Override
+	public void onPlantGrow(World world, BlockPos pos, BlockPos source)
+	{
+		IBlockState myState = world.getBlockState(pos);
+		int meta = ((Integer)myState.getValue(BlockGrass.META_PROPERTY)).intValue();
+		world.setBlockState(pos, TFCBlocks.Dirt.getDefaultState().withProperty(META_PROPERTY, meta), 2);
+	}
+
+	@Override
+	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
+	{
+		IBlockState state = world.getBlockState(pos);
+		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
+		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
+
+		if(plantable == TFCBlocks.Sapling)
+			return true;
+		if(plantable == TFCBlocks.Sapling2)
+			return true;
+
+		return false;
 	}
 
 	@Override
@@ -66,27 +110,9 @@ public class BlockGrass extends BlockTerra
 		return 3;
 	}
 
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		Block block = world.getBlockState(pos.up()).getBlock();
-		return state.withProperty(NORTH, world.getBlockState(pos.north().down()).getBlock() == TFCBlocks.Grass).withProperty(
-				SOUTH, world.getBlockState(pos.south().down()).getBlock() == TFCBlocks.Grass).withProperty(
-						EAST, world.getBlockState(pos.east().down()).getBlock() == TFCBlocks.Grass).withProperty(
-								WEST, world.getBlockState(pos.west().down()).getBlock() == TFCBlocks.Grass);
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return this.getDefaultState().withProperty(META_PROPERTY, StoneType.getStoneTypeFromMeta(meta));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
-	}
+	/*******************************************************************************
+	 * 2. Rendering
+	 *******************************************************************************/
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -127,40 +153,35 @@ public class BlockGrass extends BlockTerra
 		return EnumWorldBlockLayer.CUTOUT_MIPPED;
 	}
 
-	/**
-	 * Called when a plant grows on this block, only implemented for saplings using the WorldGen*Trees classes right now.
-	 * Modder may implement this for custom plants.
-	 * This does not use ForgeDirection, because large/huge trees can be located in non-representable direction,
-	 * so the source location is specified.
-	 * Currently this just changes the block to dirt if it was grass.
-	 *
-	 * Note: This happens DURING the generation, the generation may not be complete when this is called.
-	 *
-	 * @param world Current world
-	 * @param pos Block position in world
-	 * @param source Source plant's position in world
-	 */
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
 	@Override
-	public void onPlantGrow(World world, BlockPos pos, BlockPos source)
+	protected BlockState createBlockState()
 	{
-		IBlockState myState = world.getBlockState(pos);
-		int meta = ((Integer)myState.getValue(BlockGrass.META_PROPERTY)).intValue();
-		world.setBlockState(pos, TFCBlocks.Dirt.getDefaultState().withProperty(META_PROPERTY, meta), 2);
+		return new BlockState(this, new IProperty[] { META_PROPERTY, NORTH, SOUTH, EAST, WEST });
 	}
 
 	@Override
-	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		IBlockState state = world.getBlockState(pos);
-		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
-		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
+		Block block = world.getBlockState(pos.up()).getBlock();
+		return state.withProperty(NORTH, world.getBlockState(pos.north().down()).getBlock() == TFCBlocks.Grass).withProperty(
+				SOUTH, world.getBlockState(pos.south().down()).getBlock() == TFCBlocks.Grass).withProperty(
+						EAST, world.getBlockState(pos.east().down()).getBlock() == TFCBlocks.Grass).withProperty(
+								WEST, world.getBlockState(pos.west().down()).getBlock() == TFCBlocks.Grass);
+	}
 
-		if(plantable == TFCBlocks.Sapling)
-			return true;
-		if(plantable == TFCBlocks.Sapling2)
-			return true;
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(META_PROPERTY, StoneType.getStoneTypeFromMeta(meta));
+	}
 
-		return false;
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
 	}
 
 }

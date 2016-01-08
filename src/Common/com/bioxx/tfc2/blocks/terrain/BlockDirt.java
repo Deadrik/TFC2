@@ -11,8 +11,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.blocks.BlockTerra;
 import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.blocks.BlockTerra;
 
 public class BlockDirt extends BlockTerra
 {
@@ -23,6 +23,33 @@ public class BlockDirt extends BlockTerra
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
+
+	/*******************************************************************************
+	 * 1. Content
+	 *******************************************************************************/
+
+	@Override
+	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
+	{
+		IBlockState state = world.getBlockState(pos);
+		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
+		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
+
+		if(plantable == TFCBlocks.Sapling)
+			return true;
+
+		return false;
+	}
+
+	/*******************************************************************************
+	 * 2. Rendering
+	 *******************************************************************************/
+
+
+
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
 
 	@Override
 	protected BlockState createBlockState()
@@ -40,18 +67,5 @@ public class BlockDirt extends BlockTerra
 	public int getMetaFromState(IBlockState state)
 	{
 		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
-	}
-
-	@Override
-	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
-	{
-		IBlockState state = world.getBlockState(pos);
-		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
-		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
-
-		if(plantable == TFCBlocks.Sapling)
-			return true;
-
-		return false;
 	}
 }
