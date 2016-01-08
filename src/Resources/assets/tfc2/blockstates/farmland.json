@@ -1,0 +1,29 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"dirt": "tfc2:blocks/soil/Dirt Granite"
+		},
+		"model": "farmland"
+	},
+	"variants": {
+		"stone" : {
+			"granite": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Granite", "top": "tfc2:blocks/farmland/Farmland Granite", "particle": "tfc2:blocks/soil/Dirt Granite"}},
+			"diorite": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Diorite", "top": "tfc2:blocks/farmland/Farmland Diorite", "particle": "tfc2:blocks/soil/Dirt Diorite"}},
+			"gabbro": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Gabbro", "top": "tfc2:blocks/farmland/Farmland Gabbro", "particle": "tfc2:blocks/soil/Dirt Gabbro"}},
+			"shale": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Shale", "top": "tfc2:blocks/farmland/Farmland Shale", "particle": "tfc2:blocks/soil/Dirt Shale"}},
+			"claystone": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Claystone", "top": "tfc2:blocks/farmland/Farmland Claystone", "particle": "tfc2:blocks/soil/Dirt Claystone"}},
+			"limestone": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Limestone", "top": "tfc2:blocks/farmland/Farmland Limestone", "particle": "tfc2:blocks/soil/Dirt Limestone"}},
+			"dolomite": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Dolomite", "top": "tfc2:blocks/farmland/Farmland Dolomite", "particle": "tfc2:blocks/soil/Dirt Dolomite"}},
+			"chert": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Chert", "top": "tfc2:blocks/farmland/Farmland Chert", "particle": "tfc2:blocks/soil/Dirt Chert"}},
+			"rhyolite": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Rhyolite", "top": "tfc2:blocks/farmland/Farmland Rhyolite", "particle": "tfc2:blocks/soil/Dirt Rhyolite"}},
+			"basalt": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Basalt", "top": "tfc2:blocks/farmland/Farmland Basalt", "particle": "tfc2:blocks/soil/Dirt Basalt"}},
+			"andesite": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Andesite", "top": "tfc2:blocks/farmland/Farmland Andesite", "particle": "tfc2:blocks/soil/Dirt Andesite"}},
+			"dacite": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Dacite", "top": "tfc2:blocks/farmland/Farmland Dacite", "particle": "tfc2:blocks/soil/Dirt Dacite"}},
+			"blueschist": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Blueschist", "top": "tfc2:blocks/farmland/Farmland Blueschist", "particle": "tfc2:blocks/soil/Dirt Blueschist"}},
+			"schist": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Schist", "top": "tfc2:blocks/farmland/Farmland Schist", "particle": "tfc2:blocks/soil/Dirt Schist"}},
+			"gneiss": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Gneiss", "top": "tfc2:blocks/farmland/Farmland Gneiss", "particle": "tfc2:blocks/soil/Dirt Gneiss"}},
+			"marble": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Marble", "top": "tfc2:blocks/farmland/Farmland Marble", "particle": "tfc2:blocks/soil/Dirt Marble"}}
+		}
+	}
+}

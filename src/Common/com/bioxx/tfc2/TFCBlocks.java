@@ -19,6 +19,7 @@ import com.bioxx.tfc2.items.itemblocks.ItemSoil;
 import com.bioxx.tfc2.items.itemblocks.ItemStone;
 import com.bioxx.tfc2.items.itemblocks.ItemWood;
 import com.bioxx.tfc2.tileentities.TileCrop;
+import com.bioxx.tfc2.tileentities.TileFarmland;
 import com.bioxx.tfc2.tileentities.TileTorch;
 
 public class TFCBlocks
@@ -59,6 +60,7 @@ public class TFCBlocks
 	public static Block TorchOn;
 	public static Block TorchOff;
 	public static Block Crop;
+	public static Block Farmland;
 
 	public static void LoadBlocks()
 	{
@@ -102,6 +104,7 @@ public class TFCBlocks
 		TorchOn = new BlockTorchTFC(true).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_on");
 		TorchOff = new BlockTorchTFC(false).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_off");
 		Crop = new BlockCrop().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("crop");
+		Farmland = new BlockFarmland().setHardness(2F).setStepSound(Block.soundTypeGravel).setUnlocalizedName("farmland");
 	}
 
 	public static void RegisterBlocks()
@@ -147,6 +150,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(TorchOn, "torch_on");
 		GameRegistry.registerBlock(TorchOff, "torch_off");
 		GameRegistry.registerBlock(Crop, "crop");
+		GameRegistry.registerBlock(Farmland, "farmland");
 
 
 		LogNatural.setHarvestLevel("axe", 1);
@@ -163,6 +167,7 @@ public class TFCBlocks
 	{
 		registerTileEntity(TileTorch.class, "torch");
 		registerTileEntity(TileCrop.class, "crop");
+		registerTileEntity(TileFarmland.class, "farmland");
 	}
 
 	private static void registerTileEntity(Class<? extends TileEntity> c, String id)

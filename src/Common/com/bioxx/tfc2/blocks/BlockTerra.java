@@ -129,9 +129,9 @@ public abstract class BlockTerra extends Block
 		{
 		case Desert: return this == TFCBlocks.Sand || this == net.minecraft.init.Blocks.hardened_clay || this == net.minecraft.init.Blocks.stained_hardened_clay || this == TFCBlocks.Dirt;
 		case Nether: return this == Blocks.soul_sand;
-		case Crop:   return this == Blocks.farmland;
+		case Crop:   return this == TFCBlocks.Farmland;
 		case Cave:   return isSideSolid(world, pos, EnumFacing.UP);
-		case Plains: return this == TFCBlocks.Grass || this == TFCBlocks.Dirt || this == net.minecraft.init.Blocks.farmland;
+		case Plains: return this == TFCBlocks.Grass || this == TFCBlocks.Dirt || this == TFCBlocks.Farmland;
 		case Water:  return getMaterial() == Material.water && ((Integer)state.getValue(BlockLiquid.LEVEL)) == 0;
 		case Beach:
 			boolean isBeach = this == TFCBlocks.Grass || this == TFCBlocks.Dirt || this == TFCBlocks.Sand;

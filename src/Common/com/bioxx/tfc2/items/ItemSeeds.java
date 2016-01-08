@@ -7,7 +7,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.Crop;
 import com.bioxx.tfc2.tileentities.TileCrop;
@@ -27,7 +26,7 @@ public class ItemSeeds extends ItemTerra
 			return false;
 
 		IBlockState soil = worldIn.getBlockState(pos);
-		if(side == EnumFacing.UP && Core.isSoil(soil) && worldIn.isAirBlock(pos.up()))
+		if(side == EnumFacing.UP && soil.getBlock() == TFCBlocks.Farmland && worldIn.isAirBlock(pos.up()))
 		{
 			worldIn.setBlockState(pos.up(), TFCBlocks.Crop.getDefaultState());
 			TileCrop tc = (TileCrop) worldIn.getTileEntity(pos.up());
