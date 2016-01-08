@@ -26,7 +26,6 @@ public class Schematic implements ISchematic
 	protected NBTTagList entities;
 	protected String path;
 	protected String filename;
-	protected int id;
 	protected ArrayList<SchemBlock> blockMap;
 
 	public Schematic(String p, String f)
@@ -84,31 +83,18 @@ public class Schematic implements ISchematic
 					}
 				}
 			}
-
-			int num = path.indexOf('_') + 1;
-			id = Integer.parseInt(path.substring(num, num + 2));
-		}
-		catch (NumberFormatException n)
-		{
-			System.out.println("TFC NFE: " + path); return false;
 		}
 		catch (FileNotFoundException e)
 		{
-			//System.out.println("TFC FileNotFound: " + path); 
+			System.out.println("TFC FileNotFound: " + path); 
 			return false;
 		}
 		catch (IOException e)
 		{
-			//System.out.println("TFC IOException: " + path); 
+			System.out.println("TFC IOException: " + path); 
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return id;
 	}
 
 	@Override

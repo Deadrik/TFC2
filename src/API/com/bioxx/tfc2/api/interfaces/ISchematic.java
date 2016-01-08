@@ -68,12 +68,6 @@ public interface ISchematic
 	public int getCenterZ();
 
 	/**
-	 * Used for lookups in the schematic list.
-	 * @return File Index number
-	 */
-	public int getIndex();
-
-	/**
 	 * @return Returns an Arraylist containing every block in this schematic for iteration
 	 */
 	public ArrayList<SchemBlock> getBlockMap();	
