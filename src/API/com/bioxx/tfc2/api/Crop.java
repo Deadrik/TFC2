@@ -1,12 +1,15 @@
 package com.bioxx.tfc2.api;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 
 import net.minecraft.util.IStringSerializable;
 
-public class Crop implements IStringSerializable
+import com.bioxx.tfc2.api.types.ClimateTemp;
+
+public class Crop implements IStringSerializable, Comparable
 {
-	public static ArrayList<Crop> cropList = new ArrayList<Crop>();
+	public static final ArrayList<Crop> cropList = new ArrayList<Crop>();
 
 	public static Crop Corn = new Crop("corn", 0, 6);
 	public static Crop Cabbage = new Crop("cabbage", 1, 6).setGrowthPeriod(24);
@@ -16,11 +19,17 @@ public class Crop implements IStringSerializable
 	int id;
 	float initialGrowthPeriod = 32f;//Time in days
 	int numberOfGrowthStages = 6;
+	EnumSet<ClimateTemp> wildGrowthZones = EnumSet.allOf(ClimateTemp.class);
 
 	public Crop(String n, int id, int numGrowthStages)
 	{
 		name = n;
 		this.id = id;
+	}
+
+	public static void registerCrop(Crop c)
+	{
+		cropList.add(c);
 	}
 
 	@Override
@@ -45,6 +54,14 @@ public class Crop implements IStringSerializable
 		return initialGrowthPeriod;
 	}
 
+	public void setClimateZones(ClimateTemp... ct)
+	{
+		for(ClimateTemp c : ct)
+		{
+			wildGrowthZones.add(c);
+		}
+	}
+
 	public static Crop fromID(int id)
 	{
 		for(Crop c : Crop.cropList)
@@ -60,5 +77,20 @@ public class Crop implements IStringSerializable
 	public String getName() 
 	{
 		return name;
+	}
+
+	@Override
+	public int compareTo(Object o)
+	{
+		if(o instanceof Crop)
+		{
+			if(((Crop)o).id < id)
+				return -1;
+			else if(((Crop)o).id == id)
+				return 0;
+			else if(((Crop)o).id > id)
+				return 1;
+		}
+		return -1;
 	}
 }

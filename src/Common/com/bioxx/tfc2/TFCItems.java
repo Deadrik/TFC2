@@ -3,15 +3,10 @@ package com.bioxx.tfc2;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 
+import com.bioxx.tfc2.api.Crop;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import com.bioxx.tfc2.core.RegistryItemQueue;
-import com.bioxx.tfc2.items.ItemAxe;
-import com.bioxx.tfc2.items.ItemFoodTFC;
-import com.bioxx.tfc2.items.ItemHoe;
-import com.bioxx.tfc2.items.ItemKnife;
-import com.bioxx.tfc2.items.ItemLooseRock;
-import com.bioxx.tfc2.items.ItemShovel;
-import com.bioxx.tfc2.items.ItemToolHead;
+import com.bioxx.tfc2.items.*;
 
 public class TFCItems 
 {
@@ -31,6 +26,10 @@ public class TFCItems
 	public static Item FoodBanana;
 	public static Item FoodBarleyBread;
 	public static Item FoodCheese;
+
+	public static Item SeedsCorn;
+	public static Item SeedsCabbage;
+	public static Item SeedsTomato;
 
 	public static void Load()
 	{
@@ -53,6 +52,9 @@ public class TFCItems
 		FoodBarleyBread = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setExpiration(3600).setUnlocalizedName("food_barleybread"));
 		FoodCheese = registerItem(new ItemFoodTFC(EnumFoodGroup.Dairy, 1f, 1).setExpiration(7200).setUnlocalizedName("food_cheese"));
 
+		SeedsCorn = registerItem(new ItemSeeds(Crop.Corn).setUnlocalizedName("seeds_corn"));
+		SeedsCabbage = registerItem(new ItemSeeds(Crop.Cabbage).setUnlocalizedName("seeds_cabbage"));
+		SeedsTomato = registerItem(new ItemSeeds(Crop.Tomato).setUnlocalizedName("seeds_tomato"));
 	}
 
 	public static void Register()

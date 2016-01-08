@@ -12,18 +12,15 @@ import com.bioxx.tfc2.core.Timekeeper;
 public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 {
 	long plantedTimeStamp = 0;
-	boolean isWild;
-	Crop cropType;
+	long lastTick = 0;
+	double growth = 0;
+	boolean isWild = false;
+	Crop cropType = Crop.Corn;
 	UUID farmerID;
 
 	public TileCrop()
 	{
-		isWild = false;
-	}
-
-	public TileCrop(boolean isWild)
-	{
-		this.isWild = isWild;
+		plantedTimeStamp = Timekeeper.getInstance().getTotalTicks();
 	}
 
 	/***********************************************************************************
@@ -33,9 +30,9 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 	public void update() 
 	{
 		Timekeeper time = Timekeeper.getInstance();
-		if(time.getTotalTicks() > plantedTimeStamp + Timekeeper.HOUR_LENGTH)
+		if(time.getTotalTicks() > lastTick + Timekeeper.HOUR_LENGTH)
 		{
-			plantedTimeStamp += Timekeeper.HOUR_LENGTH;
+			lastTick += Timekeeper.HOUR_LENGTH;
 
 			//TODO Grow stuff here
 		}
@@ -83,6 +80,7 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 	{
 		isWild = nbt.getBoolean("isWild");
 		plantedTimeStamp = nbt.getLong("plantedTimeStamp");
+		farmerID = new UUID(nbt.getLong("farmerID_least"), nbt.getLong("farmerID_most"));
 	}
 
 	@Override
@@ -96,5 +94,7 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 	{
 		nbt.setBoolean("isWild", isWild);
 		nbt.setLong("plantedTimeStamp", plantedTimeStamp);
+		nbt.setLong("farmerID_least", this.farmerID.getLeastSignificantBits());
+		nbt.setLong("farmerID_most", this.farmerID.getMostSignificantBits());
 	}
 }

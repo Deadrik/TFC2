@@ -58,6 +58,7 @@ public class TFCBlocks
 	public static Block PortalStone;
 	public static Block TorchOn;
 	public static Block TorchOff;
+	public static Block Crop;
 
 	public static void LoadBlocks()
 	{
@@ -100,6 +101,7 @@ public class TFCBlocks
 		PortalStone = new BlockPortalStone().setHardness(-1F).setResistance(6000000f).setUnlocalizedName("portalstone");
 		TorchOn = new BlockTorchTFC(true).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_on");
 		TorchOff = new BlockTorchTFC(false).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_off");
+		Crop = new BlockCrop().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("crop");
 	}
 
 	public static void RegisterBlocks()
@@ -144,7 +146,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(PortalStone, "portalstone");
 		GameRegistry.registerBlock(TorchOn, "torch_on");
 		GameRegistry.registerBlock(TorchOff, "torch_off");
-
+		GameRegistry.registerBlock(Crop, "crop");
 
 
 		LogNatural.setHarvestLevel("axe", 1);

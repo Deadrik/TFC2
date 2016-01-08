@@ -1,0 +1,33 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {"cross": "tfc2:blocks/plants/crops/Corn (1)"},
+		"model": "tallgrass"
+	},
+	"variants": {
+		"crop=corn,stage=0" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Corn (1)"}},
+		"crop=corn,stage=1" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Corn (2)"}},
+		"crop=corn,stage=2" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Corn (3)"}},
+		"crop=corn,stage=3" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Corn (4)"}},
+		"crop=corn,stage=4" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Corn (5)"}},
+		"crop=corn,stage=5" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Corn (6)"}},
+		"crop=corn,stage=6" : {"model": "tallgrass"},
+		"crop=corn,stage=7" : {"model": "tallgrass"},
+		"crop=cabbage,stage=0" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Cabbage (1)"}},
+		"crop=cabbage,stage=1" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Cabbage (2)"}},
+		"crop=cabbage,stage=2" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Cabbage (3)"}},
+		"crop=cabbage,stage=3" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Cabbage (4)"}},
+		"crop=cabbage,stage=4" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Cabbage (5)"}},
+		"crop=cabbage,stage=5" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Cabbage (6)"}},
+		"crop=cabbage,stage=6" : {"model": "tallgrass"},
+		"crop=cabbage,stage=7" : {"model": "tallgrass"},
+		"crop=tomato,stage=0" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Tomato (1)"}},
+		"crop=tomato,stage=1" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Tomato (2)"}},
+		"crop=tomato,stage=2" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Tomato (3)"}},
+		"crop=tomato,stage=3" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Tomato (4)"}},
+		"crop=tomato,stage=4" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Tomato (5)"}},
+		"crop=tomato,stage=5" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Tomato (6)"}},
+		"crop=tomato,stage=6" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Tomato (7)"}},
+		"crop=tomato,stage=7" : {"model": "tallgrass","textures": {"cross": "tfc2:blocks/plants/crops/Tomato (8)"}}
+	}
+}

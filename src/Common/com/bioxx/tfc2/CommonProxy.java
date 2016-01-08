@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import com.bioxx.tfc2.api.Crop;
 import com.bioxx.tfc2.api.TFCFluids;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
@@ -55,6 +56,7 @@ public class CommonProxy
 		TFCFluids.FRESHWATER = new FluidTFC("freshwater", still, flow).setBaseColor(0xff001945);
 		FluidRegistry.registerFluid(TFCFluids.SALTWATER);
 		FluidRegistry.registerFluid(TFCFluids.FRESHWATER);
+		registerCrops();
 		TFCBlocks.LoadBlocks();
 		TFCBlocks.RegisterBlocks();
 		TFCBlocks.RegisterTileEntites();
@@ -112,6 +114,13 @@ public class CommonProxy
 		OreRegistry.getInstance().registerOre(OreType.Malachite.getName(), new OreConfig(VeinType.Seam, TFCBlocks.Ore, OreType.Malachite, /*wMin*/1, /*wMax*/1, /*hMin*/1, /*hMax*/1).setRarity(20).setMinSeamLength(3).setMaxSeamLength(10), new StoneType[] {StoneType.Marble});
 		OreRegistry.getInstance().registerOre(OreType.NativeGold.getName(), new OreConfig(VeinType.Seam, TFCBlocks.Ore, OreType.NativeGold, /*wMin*/1, /*wMax*/1, /*hMin*/1, /*hMax*/1).setRarity(8).setMinSeamLength(4).setMaxSeamLength(8), StoneType.getForSubTypes(StoneType.SubType.IgneousIntrusive, StoneType.SubType.IgneousExtrusive));
 		OreRegistry.getInstance().registerOre(OreType.Galena.getName(), new OreConfig(VeinType.Seam, TFCBlocks.Ore, OreType.Galena, /*wMin*/1, /*wMax*/2, /*hMin*/1, /*hMax*/2).setRarity(2), StoneType.getForSubTypes(StoneType.SubType.Metamorphic, StoneType.SubType.IgneousExtrusive));
+	}
+
+	protected void registerCrops()
+	{
+		Crop.registerCrop(Crop.Corn);
+		Crop.registerCrop(Crop.Cabbage);
+		Crop.registerCrop(Crop.Tomato);
 	}
 
 	public void registerGuiHandler()
