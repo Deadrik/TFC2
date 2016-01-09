@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.api.Crop;
+import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCFluids;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
@@ -97,6 +98,7 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(new EntityLivingHandler());
 		MinecraftForge.EVENT_BUS.register(new JoinWorldHandler());
 		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
+		Global.EVENT_BUS.register(new HexUpdateHandler());
 	}
 
 	protected void setupOre()

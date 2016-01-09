@@ -16,6 +16,7 @@ public class CachedIsland
 	public CachedIsland(IslandMap island)
 	{
 		islandData = island;
+		updateQueue = new LinkedList<Center>();
 		updateQueue.addAll(island.centers);
 	}
 
@@ -29,7 +30,7 @@ public class CachedIsland
 	{
 		for(int i = 0; i < 50; i++)
 		{
-			Center c = updateQueue.getFirst();
+			Center c = updateQueue.pollFirst();
 			HexUpdateEvent hue = new HexUpdateEvent(islandData, c);
 			Global.EVENT_BUS.post(hue);
 			updateQueue.addLast(c);
