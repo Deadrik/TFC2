@@ -1,11 +1,6 @@
 package com.bioxx.jmapgen.graph;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.UUID;
-import java.util.Vector;
+import java.util.*;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -38,6 +33,8 @@ public class Center
 
 	public HashMap<UUID, Attribute> attribMap;
 
+	private NBTTagCompound customNBT;
+
 	public Center()
 	{
 		index = 0;
@@ -45,6 +42,7 @@ public class Center
 		borders = new Vector<Edge>();
 		corners = new Vector<Corner>();
 		attribMap = new HashMap<UUID, Attribute>();
+		customNBT = new NBTTagCompound();
 	}
 
 	public Center(int i)
@@ -342,6 +340,8 @@ public class Center
 			attribList.appendTag(attribNBT);
 		}
 		nbt.setTag("attribMap", attribList);
+
+		nbt.setTag("CustomData", this.customNBT);
 	}
 
 	public void readFromNBT(NBTTagCompound nbt, IslandMap m)
@@ -383,13 +383,22 @@ public class Center
 					this.attribMap.put(((Attribute)o).id, (Attribute)o);
 				}
 			}
-
+			this.customNBT = nbt.getCompoundTag("CustomData");
 		} 
 		catch (Exception e) 
 		{
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * @return Access to an nbt tag used specifically for saving custom data to a hex.
+	 */
+	public NBTTagCompound getCustomNBT()
+	{
+		return this.customNBT;
+	}
+
 
 	/**
 	 * Used for reading stored nbt information

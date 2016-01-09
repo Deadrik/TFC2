@@ -19,6 +19,7 @@ import com.bioxx.jmapgen.Spline3D;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.PortalAttribute;
 import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.PortalEnumType;
 import com.bioxx.tfc2.api.util.Helper;
@@ -112,7 +113,7 @@ public class TeleporterPaths extends Teleporter
 		BlockPos object = BlockPos.ORIGIN;
 		long k = ChunkCoordIntPair.chunkXZ2Int(playerX, playerZ);
 
-		IslandMap islandMap = WorldGen.instance.getIslandMap(((playerX*8) >> 12), ((playerZ*8) >> 12));
+		IslandMap islandMap = Core.getMapForWorld(worldServerInstance, entityIn.getPosition());
 		Center closest = islandMap.getClosestCenter(new Point((playerX*8) % 4096,(playerZ*8) % 4096));
 		//Check if we already have a portal position cached here
 		if (this.destinationCoordinateCache.containsItem(k))

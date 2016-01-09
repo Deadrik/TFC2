@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.handlers;
 
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
@@ -21,6 +22,7 @@ public class ServerTickHandler
 				{
 					WorldGen.instance.trimCache();
 					WorldGen.instance.buildFromQueue();
+					WorldGen.instance.runUpdateLoop();
 				}
 			}			
 		}

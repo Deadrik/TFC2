@@ -4,7 +4,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TileFarmland extends TileTFC
 {
-	long lastTick = 0;
 
 	public TileFarmland()
 	{

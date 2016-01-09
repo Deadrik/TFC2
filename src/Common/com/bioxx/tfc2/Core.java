@@ -12,8 +12,7 @@ import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
-import org.apache.commons.lang3.text.WordUtils;
-
+import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.BlockLeaves;
 import com.bioxx.tfc2.blocks.BlockLeaves2;
@@ -22,6 +21,8 @@ import com.bioxx.tfc2.blocks.BlockLogNatural2;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.InventoryPlayerTFC;
 import com.bioxx.tfc2.core.PortalSchematic;
+import com.bioxx.tfc2.world.WorldGen;
+import org.apache.commons.lang3.text.WordUtils;
 
 public class Core 
 {
@@ -208,5 +209,14 @@ public class Core
 		if(w.getMeta() >= 16)
 			return TFCBlocks.Leaves2.getDefaultState().withProperty(BlockLeaves2.META_PROPERTY, w);
 		return TFCBlocks.Leaves.getDefaultState().withProperty(BlockLeaves.META_PROPERTY, w);
+	}
+
+	public static IslandMap getMapForWorld(World w, BlockPos pos)
+	{
+		if(w.provider.getDimensionId() == 2)
+		{
+			return WorldGen.instance.getIslandMap(pos.getX() >> 9, pos.getZ() >> 9);
+		}
+		return WorldGen.instance.getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
 	}
 }

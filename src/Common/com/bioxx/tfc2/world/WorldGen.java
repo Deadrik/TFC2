@@ -3,11 +3,7 @@ package com.bioxx.tfc2.world;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Queue;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -15,6 +11,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -423,6 +420,14 @@ public class WorldGen implements IThreadCompleteListener
 				buildThreads[i].addListener(this);
 				buildThreads[i].start();
 			}
+		}
+	}
+
+	public void runUpdateLoop()
+	{
+		for(CachedIsland ci : islandCache.values())
+		{
+			ci.update();
 		}
 	}
 
