@@ -31,6 +31,7 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 	boolean isWild = false;
 	Crop cropType = Crop.Corn;
 	UUID farmerID;
+	int hexID = -1;
 	Center closestHex;
 
 	public TileCrop()
@@ -49,9 +50,14 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 		{
 			lastTick += Timekeeper.HOUR_LENGTH;
 			IslandMap map = Core.getMapForWorld(getWorld(), getPos());
-			if(this.closestHex == null)
+			if(this.closestHex == null && hexID < 0)
 			{
 				closestHex = map.getClosestCenter(getPos());
+				hexID = closestHex.index;
+			}
+			else if(this.closestHex == null)
+			{
+				this.closestHex = Core.getMapForWorld(getWorld(), getPos()).centers.get(hexID);
 			}
 
 			NBTTagCompound nbt = closestHex.getCustomNBT().getCompoundTag("TFC2_Data");
@@ -149,7 +155,7 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 		isWild = nbt.getBoolean("isWild");
 		plantedTimeStamp = nbt.getLong("plantedTimeStamp");
 		farmerID = new UUID(nbt.getLong("farmerID_least"), nbt.getLong("farmerID_most"));
-		this.closestHex = Core.getMapForWorld(getWorld(), getPos()).centers.get(nbt.getInteger("hexID"));
+		this.hexID = nbt.getInteger("hexID");
 	}
 
 	@Override
@@ -166,6 +172,6 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 		nbt.setLong("plantedTimeStamp", plantedTimeStamp);
 		nbt.setLong("farmerID_least", this.farmerID.getLeastSignificantBits());
 		nbt.setLong("farmerID_most", this.farmerID.getMostSignificantBits());
-		nbt.setInteger("hexID", this.closestHex.index);
+		nbt.setInteger("hexID", hexID);
 	}
 }
