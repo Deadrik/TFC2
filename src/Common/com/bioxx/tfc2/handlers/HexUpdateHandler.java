@@ -5,6 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.bioxx.tfc2.api.events.HexUpdateEvent;
+import com.bioxx.tfc2.core.Timekeeper;
+import com.bioxx.tfc2.tileentities.TileCrop;
 
 public class HexUpdateHandler 
 {
@@ -12,9 +14,22 @@ public class HexUpdateHandler
 	public void handle(HexUpdateEvent event)
 	{
 		NBTTagCompound nbt = event.centerToUpdate.getCustomNBT();
-		if(nbt.hasKey("nutrientData"))
+		if(nbt.hasKey("TFC2_Data"))
 		{
-			//TODO Refill Nutrient Levels
+			NBTTagCompound data = nbt.getCompoundTag("TFC2_Data");
+			if(data.hasKey("CropData"))
+			{
+				NBTTagCompound cropData = data.getCompoundTag("CropData");
+				long lastRegenTick = cropData.getLong("lastRegenTick");
+				if(lastRegenTick + Timekeeper.ticksInPeriod < Timekeeper.getInstance().getTotalTicks())
+				{
+					cropData.setLong("lastRegenTick", lastRegenTick + Timekeeper.ticksInPeriod);
+					float nutrients = cropData.getFloat("nutrients");
+					float maxNutrients = TileCrop.GetMaxNutrients(event.map);
+					cropData.setFloat("nutrients", Math.min(maxNutrients, nutrients + maxNutrients/4));
+				}
+			}
+			data.setInteger("hydration", Math.max(0, data.getInteger("hydration")-5));
 		}
 	}
 }

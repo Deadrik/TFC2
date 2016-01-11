@@ -21,10 +21,11 @@ public class Crop implements IStringSerializable, Comparable
 	int numberOfGrowthStages = 6;
 	EnumSet<ClimateTemp> wildGrowthZones = EnumSet.allOf(ClimateTemp.class);
 
-	public Crop(String n, int id, int numGrowthStages)
+	public Crop(String name, int id, int numGrowthStages)
 	{
-		name = n;
+		this.name = name;
 		this.id = id;
+		this.numberOfGrowthStages = numGrowthStages;
 	}
 
 	public static void registerCrop(Crop c)
@@ -41,6 +42,11 @@ public class Crop implements IStringSerializable, Comparable
 	public int getID()
 	{
 		return id;
+	}
+
+	public int getGrowthStages()
+	{
+		return numberOfGrowthStages;
 	}
 
 	public Crop setGrowthPeriod(float g)

@@ -38,7 +38,7 @@ public class BlockCrop extends BlockTerra implements ITileEntityProvider
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
 		TileCrop tc = (TileCrop) worldIn.getTileEntity(pos);
-		return state.withProperty(CROPTYPE, tc.getCropType());
+		return state.withProperty(CROPTYPE, tc.getCropType()).withProperty(GROWTH, tc.getGrowthStage());
 	}
 
 	@Override

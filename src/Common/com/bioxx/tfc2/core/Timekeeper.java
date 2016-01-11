@@ -13,6 +13,7 @@ public class Timekeeper
 	public static final long ticksInSeason = ticksInYear/4;
 	public static final long ticksInPeriod = ticksInSeason/3;
 	public static final long HOUR_LENGTH = 1000;
+	public static final long DAY_LENGTH = 24000;
 
 	public static Timekeeper getInstance()
 	{
@@ -27,6 +28,11 @@ public class Timekeeper
 	public Timekeeper(World world)
 	{
 		worldObj = world;
+	}
+
+	public int getHoursInPeriod()
+	{
+		return  8 * 24;
 	}
 
 	public long getTotalTicks()

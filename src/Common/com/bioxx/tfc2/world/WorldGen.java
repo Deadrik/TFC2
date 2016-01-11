@@ -184,7 +184,7 @@ public class WorldGen implements IThreadCompleteListener
 		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
 		Random r = new Random(seed);
 		id.setCoords(x, z);
-		int fcount = 1+r.nextInt(2+r.nextInt(2));
+		int fcount = 2+r.nextInt(2+r.nextInt(3));
 		Feature.setupFeatures(r);
 		//Choose Features
 		for(int i = 0; i < fcount; i++)
