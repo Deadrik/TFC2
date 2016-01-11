@@ -22,7 +22,6 @@ public class BlockFreshWaterStatic extends BlockFreshWater
 	{
 		super(fluid, material);
 		this.setTickRandomly(true);
-		this.setTickRate(10);
 	}
 
 	@Override
@@ -49,7 +48,20 @@ public class BlockFreshWaterStatic extends BlockFreshWater
 			if(!nbt.hasKey("TFC2_Data"))
 				nbt.setTag("TFC2_Data", new NBTTagCompound());
 			data = nbt.getCompoundTag("TFC2_Data");
-			data.setInteger("hydration", (int)Math.min(data.getInteger("hydration")+1, 10000));
+			byte[] hydrationArray = data.getByteArray("hydration");
+			if(hydrationArray.length == 0)
+			{
+				hydrationArray = new byte[64];
+			}
+			int layer = (int)Math.floor(pos.getY()/4);
+			hydrationArray[layer] = (byte)Math.min(hydrationArray[layer]+1, 255);
+
+			if(layer > 0)
+				hydrationArray[layer-1] = (byte)Math.min(hydrationArray[layer-1]+1, 255);
+			if(layer < 63)
+				hydrationArray[layer+1] = (byte)Math.min(hydrationArray[layer+1]+1, 255);
+
+			data.setByteArray("hydration", hydrationArray);
 		}
 	}
 

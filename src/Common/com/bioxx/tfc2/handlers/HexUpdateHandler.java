@@ -29,7 +29,20 @@ public class HexUpdateHandler
 					cropData.setFloat("nutrients", Math.min(maxNutrients, nutrients + maxNutrients/4));
 				}
 			}
-			data.setInteger("hydration", Math.max(0, data.getInteger("hydration")-5));
+			if(data.hasKey("hydration"))
+			{
+				byte[] hydrationArray = data.getByteArray("hydration");
+				int waterLevel = 0;
+				for(int i = 0; i < 64; i++)
+				{
+					hydrationArray[i] = (byte)Math.max(0, hydrationArray[i]-5);
+					waterLevel += hydrationArray[i];
+				}
+				if(waterLevel > 0)
+					data.setByteArray("hydration", hydrationArray);
+				else
+					data.removeTag("hydration");
+			}
 		}
 	}
 }

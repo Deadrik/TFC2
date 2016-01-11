@@ -70,7 +70,8 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 			if(!data.hasKey("nutrients"))
 				data.setFloat("nutrients", GetMaxNutrients(map));
 
-			boolean isIrrigated = nbt.getInteger("hydration") > 100;
+			byte[] hydrationArray = nbt.getByteArray("hydration");
+			boolean isIrrigated = (hydrationArray[(int)Math.floor(pos.getY()/4)] & 0xFF) > 100;
 			float nutrients = data.getFloat("nutrients");
 			float toGrow = 1f;
 
