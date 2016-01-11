@@ -9,12 +9,12 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.api.WeatherManager;
 import com.bioxx.tfc2.rendering.SkyRenderer;
 import com.bioxx.tfc2.rendering.WeatherRenderer;
 

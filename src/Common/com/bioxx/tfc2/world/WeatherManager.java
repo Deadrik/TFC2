@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.api;
+package com.bioxx.tfc2.world;
 
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -12,12 +12,12 @@ import com.bioxx.libnoise.module.modifier.Clamp;
 import com.bioxx.libnoise.module.modifier.TranslatePoint;
 import com.bioxx.libnoise.module.source.Const;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.Season;
 import com.bioxx.tfc2.api.types.SeasonalPeriod;
 import com.bioxx.tfc2.core.Timekeeper;
-import com.bioxx.tfc2.world.WorldGen;
 
 /**
  * This class acts as the overall weather manager for all islands. A perlin map 
@@ -27,6 +27,9 @@ import com.bioxx.tfc2.world.WorldGen;
 public class WeatherManager 
 {
 	private static WeatherManager instance;
+	private static final float[] hourlyTempMod = new float[] {0.90f/*12am*/, 0.88f, 0.86f, 0.84f, 0.82f, 0.8f, 0.81f/*6am*/, 
+		0.82f, 0.84f, 0.86f, 0.88f, 0.9f, 0.92f/*12pm*/, 0.94f, 0.96f, 0.98f, 1.0f, 0.99f, 0.98f/*6pm*/, 0.97f, 0.96f, 0.95f, 0.94f, 0.92f};
+
 	private int rainCounter = 0;
 	public Line rainModelSpring;
 	public Line rainModelSummer;
@@ -34,6 +37,7 @@ public class WeatherManager
 	public Line rainModelWinter;
 	private Plane temperatureNoise;
 	private World worldObj;
+
 
 	public WeatherManager(World world)
 	{
@@ -101,27 +105,24 @@ public class WeatherManager
 
 	public double getTemperature(BlockPos pos)
 	{
-		return getTemperature(pos.getX(), pos.getY(), pos.getZ());
+		Timekeeper inst = Timekeeper.getInstance();
+		// 1: Find the island information to get the general climate data
+		IslandMap island = Core.getMapForWorld(worldObj, pos);
+		ClimateTemp climate = island.getParams().getIslandTemp();
+		// 2: Get seasonal data to combine with the island information
+		SeasonalPeriod period = Timekeeper.getInstance().getSeasonalPeriod();
+		// 3: Get local temperature noise
+		double local = temperatureNoise.getModule().GetValue(pos.getX(), Timekeeper.getInstance().getTotalDays(), pos.getZ()) * climate.getTempVar();
+		// 4: Combine this information and adjust for elevation;
+		double baseMin = climate.getTempMin();
+		double baseMax = climate.getTempMax();
+		double elevationModifier = (((pos.getY()-64)/192D)*8.0);
+		return (baseMin + ((baseMax - baseMin)*period.getTempMultiplier()) + local) * hourlyTempMod[Timekeeper.getInstance().getClockTime()] - elevationModifier;
 	}
 
 	public double getTemperature(int x, int y, int z)
 	{
-		//TODO: Add temperature effect based upon time of day.
-
-		Timekeeper inst = Timekeeper.getInstance();
-		// 1: Find the island information to get the general climate data
-		IslandMap island = WorldGen.instance.getIslandMap(x >> 12, z >> 12);
-		ClimateTemp climate = island.getParams().getIslandTemp();
-		// 2: Get seasonal data to combine with the island information
-		Season season = Timekeeper.getInstance().getSeason();
-		SeasonalPeriod period = Timekeeper.getInstance().getSeasonalPeriod();
-		// 3: Get local temperature noise
-		double local = temperatureNoise.getModule().GetValue(x, Timekeeper.getInstance().getTotalDays(), z) * climate.getTempVar();
-		// 4: Combine this information and adjust for elevation;
-		double baseMin = climate.getTempMin();
-		double baseMax = climate.getTempMax();
-		double elevationModifier = (((y-64)/192D)*8.0);
-		return baseMin + ((baseMax - baseMin)*period.getTempMultiplier()) + local - elevationModifier;
+		return getTemperature(new BlockPos(x, y, z));
 	}
 
 

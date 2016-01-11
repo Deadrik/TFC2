@@ -55,11 +55,11 @@ public class Timekeeper
 		return getTotalTicks() / 500;
 	}
 
-	public double getClockTime()
+	public int getClockTime()
 	{
-		double time = (getTotalTicks() % 24000) / 1000D;
+		long time = (getTotalTicks() % 24000) / 1000;
 		time += 6;
-		return time % 24;		
+		return (int)(time % 24);		
 	}
 
 	public Season getSeason()

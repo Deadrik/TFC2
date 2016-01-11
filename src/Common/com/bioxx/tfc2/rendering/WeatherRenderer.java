@@ -15,11 +15,12 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
+
 import net.minecraftforge.client.IRenderHandler;
 
 import org.lwjgl.opengl.GL11;
 
-import com.bioxx.tfc2.api.WeatherManager;
+import com.bioxx.tfc2.world.WeatherManager;
 
 public class WeatherRenderer extends IRenderHandler
 {
@@ -126,7 +127,7 @@ public class WeatherRenderer extends IRenderHandler
 							float f7;
 							double d4;
 
-							if (WeatherManager.getInstance().getTemperature(xCoord, yCoord+20, zCoord) > 0.15)
+							if (WeatherManager.getInstance().getTemperature(xCoord, yCoord+20, zCoord) > 0.16)
 							{
 								if (b1 != 0)
 								{

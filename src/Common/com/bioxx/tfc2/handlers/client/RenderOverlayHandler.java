@@ -26,6 +26,8 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import org.lwjgl.opengl.GL11;
 
+import com.bioxx.tfc2.world.WeatherManager;
+
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.Point;
@@ -38,7 +40,6 @@ import com.bioxx.jmapgen.processing.CaveAttrNode;
 import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
-import com.bioxx.tfc2.api.WeatherManager;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.PlayerInfo;

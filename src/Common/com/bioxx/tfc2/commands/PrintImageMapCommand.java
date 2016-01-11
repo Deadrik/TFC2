@@ -17,6 +17,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import com.bioxx.tfc2.world.WeatherManager;
+
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.attributes.Attribute;
@@ -38,7 +40,6 @@ import com.bioxx.libnoise.module.modifier.Curve;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.modifier.ScalePoint;
 import com.bioxx.libnoise.module.source.Perlin;
-import com.bioxx.tfc2.api.WeatherManager;
 import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.world.WorldGen;
 
