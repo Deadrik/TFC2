@@ -2,8 +2,10 @@ package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
@@ -218,5 +220,14 @@ public class Core
 			return WorldGen.instance.getIslandMap(pos.getX() >> 9, pos.getZ() >> 9);
 		}
 		return WorldGen.instance.getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
+	}
+
+	public static void dropItem(World world, double posX, double posY, double posZ, ItemStack is)
+	{
+		EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
+		ei.motionX = -0.07+world.rand.nextFloat() * 0.14;
+		ei.motionY = 0.15;
+		ei.motionZ = -0.07+world.rand.nextFloat() * 0.14;
+		world.spawnEntityInWorld(ei);
 	}
 }

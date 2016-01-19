@@ -24,4 +24,6 @@ public interface IFood
 	 * @return Is this item usable in meals
 	 */
 	boolean isUsable(ItemStack is);
+
+	long getExpirationTimer(ItemStack is);
 }

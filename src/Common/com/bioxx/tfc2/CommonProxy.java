@@ -2,6 +2,7 @@ package com.bioxx.tfc2;
 
 import java.io.File;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.common.DimensionManager;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.api.Crop;
+import com.bioxx.tfc2.api.FoodRegistry;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCFluids;
 import com.bioxx.tfc2.api.ore.OreConfig;
@@ -63,8 +65,9 @@ public class CommonProxy
 		TFCBlocks.RegisterTileEntites();
 		TFCItems.Load();
 		TFCItems.Register();
-		TFCFluids.SALTWATER.setBlock(TFCBlocks.SaltWater).setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());
-		TFCFluids.FRESHWATER.setBlock(TFCBlocks.FreshWater).setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());
+		registerCropProduce();//Must run after item setup
+		TFCFluids.SALTWATER.setBlock(TFCBlocks.SaltWater).setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());//Must run after block setup
+		TFCFluids.FRESHWATER.setBlock(TFCBlocks.FreshWater).setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());//Must run after block setup
 		setupOre();
 	}
 
@@ -123,6 +126,14 @@ public class CommonProxy
 		Crop.registerCrop(Crop.Corn);
 		Crop.registerCrop(Crop.Cabbage);
 		Crop.registerCrop(Crop.Tomato);
+	}
+
+	protected void registerCropProduce()
+	{
+		FoodRegistry.getInstance().registerCropProduce(Crop.Corn, new ItemStack(TFCItems.FoodCornWhole, 1, 0));
+		FoodRegistry.getInstance().registerCropProduce(Crop.Corn, new ItemStack(TFCItems.FoodCabbage, 1, 0));
+		FoodRegistry.getInstance().registerCropProduce(Crop.Cabbage, new ItemStack(TFCItems.FoodCabbage, 1, 0));
+		FoodRegistry.getInstance().registerCropProduce(Crop.Tomato, new ItemStack(TFCItems.FoodTomato, 1, 0));
 	}
 
 	public void registerGuiHandler()

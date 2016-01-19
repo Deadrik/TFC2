@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,10 +47,28 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	 * @param seconds How long should each item last in seconds
 	 * @return this food item to allow chaining
 	 */
-	public ItemTerra setExpiration(int seconds)
+	public ItemFoodTFC setExpiration(int seconds)
 	{
 		expiration = seconds*20;
 		return this;
+	}
+
+	public ItemFoodTFC setIsEdible(boolean isEdible)
+	{
+		edible = isEdible;
+		return this;
+	}
+
+	public ItemFoodTFC setCanUseRaw(boolean canUseRaw)
+	{
+		canBeUsedRaw = canUseRaw;
+		return this;
+	}
+
+	@Override
+	public long getExpirationTimer(ItemStack is)
+	{
+		return expiration;
 	}
 
 	@Override
@@ -59,7 +78,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 		super.addInformation(is, player, arraylist, flag);
 		long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime();
 
-		if(time < 0)
+		if(time <= 0)
 		{
 			arraylist.add(EnumChatFormatting.RED+"Expired x"+Math.min(1+(time / expiration)* (-1), is.stackSize));
 		}
@@ -77,7 +96,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 		ItemStack is = new ItemStack(itemIn, 1, 0);
 		NBTTagCompound nbt = new NBTTagCompound();
 		is.setTagCompound(nbt);
-		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+expiration);
+		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+getExpirationTimer(is));
 		subItems.add(is);
 	}
 

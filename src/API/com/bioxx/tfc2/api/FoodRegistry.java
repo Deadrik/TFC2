@@ -1,11 +1,15 @@
 package com.bioxx.tfc2.api;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 public class FoodRegistry 
 {
@@ -26,6 +30,8 @@ public class FoodRegistry
 	private int dairyCount = 10000000;
 	private Map<Integer, Item> dairyMap;
 
+	private Multimap<String, ItemStack> cropMap;
+
 	private FoodRegistry()
 	{
 		proteinMap = new HashMap<Integer, Item>();
@@ -33,6 +39,22 @@ public class FoodRegistry
 		fruitMap = new HashMap<Integer, Item>();
 		grainMap = new HashMap<Integer, Item>();
 		dairyMap = new HashMap<Integer, Item>();
+		cropMap = ArrayListMultimap.create();
+	}
+
+	public void registerCropProduce(String crop, ItemStack i)
+	{
+		cropMap.put(crop, i);
+	}
+
+	public void registerCropProduce(Crop crop, ItemStack i)
+	{
+		cropMap.put(crop.getName(), i);
+	}
+
+	public Collection<ItemStack> getProduceForCrop(String crop)
+	{
+		return cropMap.get(crop);
 	}
 
 	public int registerFood(EnumFoodGroup efg, Item i)

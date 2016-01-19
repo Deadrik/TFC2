@@ -1,7 +1,5 @@
 package com.bioxx.tfc2.core;
 
-import java.util.Calendar;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -33,10 +31,13 @@ public class Food
 		{
 			return is.getTagCompound();
 		}
+		else if (is != null && !is.hasTagCompound())
+		{
+			is.setTagCompound(new NBTTagCompound());
+			return is.getTagCompound();
+		}
 		else
 		{
-			//TerraFirmaCraft.LOG.error(TFC_Core.translate("error.error") + " " + is.getUnlocalizedName() + " " +
-			//		TFC_Core.translate("error.NBT") + " " + TFC_Core.translate("error.Contact"));
 			return new NBTTagCompound();
 		}
 	}
@@ -127,7 +128,7 @@ public class Food
 			return nbt.getLong("Expiration");
 		else
 			//return (int) TFC_Time.getTotalHours(); //Removed when porting
-			return Calendar.getInstance().getTimeInMillis();
+			return Timekeeper.getInstance().getTotalTicks();
 	}
 
 	public static boolean isDried(ItemStack is)

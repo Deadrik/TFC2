@@ -10,12 +10,16 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.api.types.StoneType;
 
@@ -30,6 +34,40 @@ public class BlockLooseRocks extends BlockTerra
 		this.setBlockBounds(0.2f, 0, 0.2f, 0.8f, 0.1f, 0.8f);
 		setShowInCreative(false);
 	}
+
+	/*******************************************************************************
+	 * 1. Content
+	 *******************************************************************************/
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+	{
+		if(worldIn.isRemote)
+			return false;
+		worldIn.setBlockToAir(pos);
+		Core.dropItem(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, new ItemStack(getItemDropped(state, worldIn.rand, 0), 1, this.getMetaFromState(state)));
+		return true;
+	}	
+
+	/*******************************************************************************
+	 * 2. Rendering
+	 *******************************************************************************/
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube()
+	{
+		return false;
+	}
+
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
 
 	@Override
 	protected BlockState createBlockState()
@@ -47,18 +85,6 @@ public class BlockLooseRocks extends BlockTerra
 	public int getMetaFromState(IBlockState state)
 	{
 		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
-	}
-
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube()
-	{
-		return false;
 	}
 
 	@Override
