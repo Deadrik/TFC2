@@ -542,6 +542,10 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityMammoth.class, new RenderMammoth(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBoar.class, new RenderBoar(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBison.class, new RenderBison(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxRed.class, new RenderFoxRed());
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxArctic.class, new RenderFoxArctic());
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxDesert.class, new RenderFoxDesert());
+		RenderingRegistry.registerEntityRenderingHandler(EntityHippo.class, new RenderHippo());
 
 		//Disable vanilla UI elements
 		GuiIngameForge.renderHealth = false;
