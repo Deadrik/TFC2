@@ -14,18 +14,24 @@ public class Crop implements IStringSerializable, Comparable
 	public static Crop Corn = new Crop("corn", 0, 6);
 	public static Crop Cabbage = new Crop("cabbage", 1, 6).setGrowthPeriod(24);
 	public static Crop Tomato = new Crop("tomato", 2, 8);
+	public static Crop Wheat = new Crop("wheat", 3, 8);
+	public static Crop Barley = new Crop("barley", 6, 8);
+	public static Crop Rye = new Crop("rye", 4, 8);
+	public static Crop Oat = new Crop("oat", 5, 8);
+	public static Crop Rice = new Crop("rice", 7, 8);
 
 	String name;
 	int id;
 	float initialGrowthPeriod = 32f;//Time in days
 	int numberOfGrowthStages = 6;
-	EnumSet<ClimateTemp> wildGrowthZones = EnumSet.allOf(ClimateTemp.class);
+	EnumSet<ClimateTemp> wildGrowthZones = EnumSet.noneOf(ClimateTemp.class);
 
 	public Crop(String name, int id, int numGrowthStages)
 	{
 		this.name = name;
 		this.id = id;
 		this.numberOfGrowthStages = numGrowthStages;
+		addClimateZones(ClimateTemp.TEMPERATE, ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL);
 	}
 
 	public static void registerCrop(Crop c)
@@ -60,12 +66,13 @@ public class Crop implements IStringSerializable, Comparable
 		return initialGrowthPeriod;
 	}
 
-	public void setClimateZones(ClimateTemp... ct)
+	public Crop addClimateZones(ClimateTemp... ct)
 	{
 		for(ClimateTemp c : ct)
 		{
 			wildGrowthZones.add(c);
 		}
+		return this;
 	}
 
 	public static Crop fromID(int id)

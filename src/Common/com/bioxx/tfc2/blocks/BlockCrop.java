@@ -161,4 +161,10 @@ public class BlockCrop extends BlockTerra implements ITileEntityProvider
 	{
 		return null;
 	}
+
+	@Override
+	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
+	{
+		return true;
+	}
 }

@@ -130,14 +130,23 @@ public class CommonProxy
 		Crop.registerCrop(Crop.Corn);
 		Crop.registerCrop(Crop.Cabbage);
 		Crop.registerCrop(Crop.Tomato);
+		Crop.registerCrop(Crop.Wheat);
+		Crop.registerCrop(Crop.Barley);
+		Crop.registerCrop(Crop.Rye);
+		Crop.registerCrop(Crop.Oat);
+		Crop.registerCrop(Crop.Rice);
 	}
 
 	protected void registerCropProduce()
 	{
 		FoodRegistry.getInstance().registerCropProduce(Crop.Corn, new ItemStack(TFCItems.FoodCornWhole, 1, 0));
-		FoodRegistry.getInstance().registerCropProduce(Crop.Corn, new ItemStack(TFCItems.FoodCabbage, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Cabbage, new ItemStack(TFCItems.FoodCabbage, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Tomato, new ItemStack(TFCItems.FoodTomato, 1, 0));
+		FoodRegistry.getInstance().registerCropProduce(Crop.Wheat, new ItemStack(TFCItems.FoodWheatWhole, 1, 0));
+		FoodRegistry.getInstance().registerCropProduce(Crop.Barley, new ItemStack(TFCItems.FoodBarleyWhole, 1, 0));
+		FoodRegistry.getInstance().registerCropProduce(Crop.Rye, new ItemStack(TFCItems.FoodRyeWhole, 1, 0));
+		FoodRegistry.getInstance().registerCropProduce(Crop.Oat, new ItemStack(TFCItems.FoodOatWhole, 1, 0));
+		FoodRegistry.getInstance().registerCropProduce(Crop.Rice, new ItemStack(TFCItems.FoodRiceWhole, 1, 0));
 	}
 
 	public void registerGuiHandler()

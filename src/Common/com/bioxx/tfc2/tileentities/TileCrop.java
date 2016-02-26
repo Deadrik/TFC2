@@ -37,6 +37,7 @@ public class TileCrop extends TileTFC implements IUpdatePlayerListBox
 	public TileCrop()
 	{
 		plantedTimeStamp = Timekeeper.getInstance().getTotalTicks();
+		lastTick = plantedTimeStamp;
 	}
 
 	/***********************************************************************************
