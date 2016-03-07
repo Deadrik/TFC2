@@ -1,14 +1,14 @@
 {
   "modListVersion": 2,
   "modList": [{
-    "modid": "terrafirmacraft",
-    "name": "TerraFirmaCraft",
-    "description": "TerraFirmaCraft is a total conversion for minecraft that tries to bring hardcore believability to minecraft.",
+    "modid": "tfc2",
+    "name": "TerraFirmaCraft 2",
+    "description": "TerraFirmaCraft 2 is a total conversion for minecraft that tries to bring hardcore believability to minecraft.",
     "version": "${mod_version}",
     "mcversion": "${minecraft_version}",
     "url" : "http://www.terrafirmacraft.com/download/change-log/",
     "updateUrl": "",
-    "authorList": [ "bioxx", "dunkleosteus" ],
+    "authorList": [ "bioxx", "kittychanley" ],
     "credits": "",
     "logoFile": "/assets/textures/gui/TFCLogo.png",
     "screenshots": [  ],

@@ -203,6 +203,57 @@
       "frog1"
     ]
   },
+  
+  "mob.fox.say": {
+    "category": "ambient",
+    "sounds": [
+      "foxIdle1"
+    ]
+  },
+  
+  "mob.fox.hurt": {
+    "category": "ambient",
+    "sounds": [
+      "foxHurt1"
+    ]
+  },
+  
+  "mob.fox.death": {
+    "category": "ambient",
+    "sounds": [
+      "foxDeath1"
+    ]
+  },
+  
+  "mob.lion.say": {
+    "category": "ambient",
+    "sounds": [
+      "lionIdle1"
+    ]
+  },
+  
+  "mob.lion.hurt": {
+    "category": "ambient",
+    "sounds": [
+      "lionHurt1"
+    ]
+  },
+  
+  "mob.lion.death": {
+    "category": "ambient",
+    "sounds": [
+      "lionDeath1"
+    ]
+  },
+  
+  "knapping": {
+    "category": "master",
+    "sounds": [
+      {name="stone_knapping", pitch = 1.0},
+      {name="stone_knapping", pitch = 0.8},
+      {name="stone_knapping", pitch = 1.2},
+    ]
+  },
 
   "music.tfc": {
     "category": "music",
