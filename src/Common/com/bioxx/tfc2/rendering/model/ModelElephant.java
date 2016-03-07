@@ -10,10 +10,10 @@ public class ModelElephant extends ModelBase
 {
 	ModelRenderer Body;
 	ModelRenderer Head;
-	ModelRenderer LegRightRear;
-	ModelRenderer LegRightFront;
-	ModelRenderer LegLeftFront;
-	ModelRenderer LegLeftRear;
+	ModelRenderer LeftLegRear;
+	ModelRenderer LeftLegFront;
+	ModelRenderer RightLegRear;
+	ModelRenderer RightLegFront;
 
 	public ModelElephant()
 	{
@@ -22,113 +22,108 @@ public class ModelElephant extends ModelBase
 		setTextureOffset("Body.Body", 36, 58);
 		setTextureOffset("Body.Tail", 49, 53);
 		setTextureOffset("Head.Head", 89, 23);
-		setTextureOffset("Head.TuskRightEnd", 56, 39);
-		setTextureOffset("Head.TuskLeftEnd", 56, 39);
-		setTextureOffset("TrunkTop.TrunkTop", 143, 0);
-		setTextureOffset("TrunkMiddle.TrunkMid", 143, 14);
-		setTextureOffset("TrunkEnd.TrunkEnd", 143, 27);
+		setTextureOffset("TuskRight.TuskRight", 50, 21);
+		setTextureOffset("End.End", 56, 39);
+		setTextureOffset("TuskLeft.TuskLeft", 50, 21);
+		setTextureOffset("End.End", 56, 39);
+		setTextureOffset("Head.TrunkTop", 143, 0);
+		setTextureOffset("Head.TrunkMid", 143, 14);
+		setTextureOffset("Head.TrunkEnd", 143, 27);
 		setTextureOffset("EarLeft.EarLeft", 50, 0);
 		setTextureOffset("EarRight.EarRight", 50, 0);
-		setTextureOffset("TuskRightBack.TuskRightBack", 50, 21);
-		setTextureOffset("TuskLeftBack.TuskLeftBack", 50, 21);
-		setTextureOffset("LegRightRear.LegRtRearUpper", 0, 0);
-		setTextureOffset("LegRightRear.LegRtRearLower", 0, 86);
-		setTextureOffset("LegRightRear.LegRtRearFoot", 0, 113);
-		setTextureOffset("LegRightFront.LegRtFrontUpper", 0, 43);
-		setTextureOffset("LegRightFront.LegRtFntLower", 0, 86);
-		setTextureOffset("LegRightFront.LegRtRearFoot", 0, 113);
-		setTextureOffset("LegLeftFront.LegLftFrntUpper", 0, 43);
-		setTextureOffset("LegLeftFront.LegLftFrntLower", 0, 86);
-		setTextureOffset("LegLeftFront.LegLftFrntFoot", 0, 113);
-		setTextureOffset("LegLeftRear.LegLftRearUpper", 0, 0);
-		setTextureOffset("LegLeftRear.LegLftRearLower", 0, 86);
-		setTextureOffset("LegLeftRear.LegLftRearFoot", 0, 113);
+		setTextureOffset("LeftLegRear.Upper", 0, 0);
+		setTextureOffset("LeftLegRear.Lower", 0, 86);
+		setTextureOffset("LeftLegRear.Foot", 0, 113);
+		setTextureOffset("LeftLegFront.Upper", 0, 0);
+		setTextureOffset("LeftLegFront.Lower", 0, 86);
+		setTextureOffset("LeftLegFront.Foot", 0, 113);
+		setTextureOffset("RightLegRear.Upper", 0, 0);
+		setTextureOffset("RightLegRear.Lower", 0, 86);
+		setTextureOffset("RightLegRear.Foot", 0, 113);
+		setTextureOffset("RightLegFront.Upper", 0, 0);
+		setTextureOffset("RightLegFront.Lower", 0, 86);
+		setTextureOffset("RightLegFront.Foot", 0, 113);
 
-		Body = new ModelRenderer(this, "Body");
-		Body.setRotationPoint(0F, -14F, 0F);
+
+		Body = new ModelRenderer(this,"Body");
+		Body.setRotationPoint(0F ,-14F, 0F);
 		setRotation(Body, 0F, 0F, 0F);
-		Body.mirror = true;
-		Body.addBox("Body", -10F, -12F, -20F, 20, 25, 45);
-		Body.addBox("Tail", -1F, -8F, 25F, 2, 25, 2);
-		Head = new ModelRenderer(this, "Head");
-		Head.setRotationPoint(0F, -20F, -20F);
+		Body.addBox("Body",-10F, -12F, -20F, 20, 25, 45);
+		Body.addBox("Tail",-1F, -8F, 25F, 2, 25, 2);
+
+		Head = new ModelRenderer(this,"Head");
+		Head.setRotationPoint(0F ,-20F, -20F);
 		setRotation(Head, 0F, 0F, 0F);
-		Head.mirror = true;
-		Head.addBox("Head", -6F, -7F, -15F, 12, 20, 15);
-		Head.addBox("TuskRightEnd", -7F, 18.5F, -26.5F, 2, 2, 10);
-		Head.addBox("TuskLeftEnd", 5F, 18.5F, -26.5F, 2, 2, 10);
-		ModelRenderer TrunkTop = new ModelRenderer(this, "TrunkTop");
-		TrunkTop.setRotationPoint(0F, 13F, -12F);
-		setRotation(TrunkTop, 0F, 0F, 0F);
-		TrunkTop.mirror = true;
-		TrunkTop.addBox("TrunkTop", -3F, 0F, -3F, 6, 8, 6);
-		ModelRenderer TrunkMiddle = new ModelRenderer(this, "TrunkMiddle");
-		TrunkMiddle.setRotationPoint(0F, 8F, 0F);
-		setRotation(TrunkMiddle, 0F, 0F, 0F);
-		TrunkMiddle.mirror = true;
-		TrunkMiddle.addBox("TrunkMid", -2.5F, 0F, -2.5F, 5, 8, 5);
-		ModelRenderer TrunkEnd = new ModelRenderer(this, "TrunkEnd");
-		TrunkEnd.setRotationPoint(0F, 8F, 0F);
-		setRotation(TrunkEnd, 0F, 0F, 0F);
-		TrunkEnd.mirror = true;
-		TrunkEnd.addBox("TrunkEnd", -2F, 0F, -2F, 4, 8, 4);
-		TrunkMiddle.addChild(TrunkEnd);
-		TrunkTop.addChild(TrunkMiddle);
-		Head.addChild(TrunkTop);
-		ModelRenderer EarLeft = new ModelRenderer(this, "EarLeft");
-		EarLeft.setRotationPoint(5F, -5F, -5F);
-		setRotation(EarLeft, 0F, -0.6108652F, -0.3490659F);
-		EarLeft.mirror = true;
-		EarLeft.addBox("EarLeft", -3F, 0F, -1F, 15, 20, 1);
-		Head.addChild(EarLeft);
-		ModelRenderer EarRight = new ModelRenderer(this, "EarRight");
-		EarRight.setRotationPoint(-5F, -5F, -5F);
-		setRotation(EarRight, 0F, 0.6108652F, 0.3490659F);
-		EarRight.mirror = true;
-		EarRight.mirror = true;
-		EarRight.addBox("EarRight", -12F, 0F, -1F, 15, 20, 1);
-		EarRight.mirror = false;
-		Head.addChild(EarRight);
-		ModelRenderer TuskRightBack = new ModelRenderer(this, "TuskRightBack");
-		TuskRightBack.setRotationPoint(-6F, 9F, -7F);
-		setRotation(TuskRightBack, 0.7853982F, 0F, 0F);
-		TuskRightBack.mirror = true;
-		TuskRightBack.addBox("TuskRightBack", -1.5F, -1.5F, -15F, 3, 3, 15);
-		Head.addChild(TuskRightBack);
-		ModelRenderer TuskLeftBack = new ModelRenderer(this, "TuskLeftBack");
-		TuskLeftBack.setRotationPoint(6F, 9F, -7F);
-		setRotation(TuskLeftBack, 0.7853982F, 0F, 0F);
-		TuskLeftBack.mirror = true;
-		TuskLeftBack.addBox("TuskLeftBack", -1.5F, -1.5F, -15F, 3, 3, 15);
-		Head.addChild(TuskLeftBack);
-		LegRightRear = new ModelRenderer(this, "LegRightRear");
-		LegRightRear.setRotationPoint(-4F, -15F, 14F);
-		setRotation(LegRightRear, 0F, 0F, 0F);
-		LegRightRear.mirror = true;
-		LegRightRear.addBox("LegRtRearUpper", -10F, -7F, -7F, 10, 25, 15);
-		LegRightRear.addBox("LegRtRearLower", -9F, 18F, -2F, 8, 15, 8);
-		LegRightRear.addBox("LegRtRearFoot", -9.5F, 33F, -2.5F, 9, 6, 9);
-		LegRightFront = new ModelRenderer(this, "LegRightFront");
-		LegRightFront.setRotationPoint(-4F, -14F, -11F);
-		setRotation(LegRightFront, 0F, 0F, 0F);
-		LegRightFront.mirror = true;
-		LegRightFront.addBox("LegRtFrontUpper", -10F, -7F, -7F, 10, 22, 15);
-		LegRightFront.addBox("LegRtFntLower", -9F, 13F, -3F, 8, 19, 8);
-		LegRightFront.addBox("LegRtRearFoot", -9.5F, 32F, -3.5F, 9, 6, 9);
-		LegLeftFront = new ModelRenderer(this, "LegLeftFront");
-		LegLeftFront.setRotationPoint(4F, -14F, -11F);
-		setRotation(LegLeftFront, 0F, 0F, 0F);
-		LegLeftFront.mirror = true;
-		LegLeftFront.addBox("LegLftFrntUpper", 0F, -7F, -7F, 10, 22, 15);
-		LegLeftFront.addBox("LegLftFrntLower", 1F, 13F, -3F, 8, 19, 8);
-		LegLeftFront.addBox("LegLftFrntFoot", 0.5F, 32F, -3.5F, 9, 6, 9);
-		LegLeftRear = new ModelRenderer(this, "LegLeftRear");
-		LegLeftRear.setRotationPoint(4F, -15F, 14F);
-		setRotation(LegLeftRear, 0F, 0F, 0F);
-		LegLeftRear.mirror = true;
-		LegLeftRear.addBox("LegLftRearUpper", 0F, -7F, -7F, 10, 25, 15);
-		LegLeftRear.addBox("LegLftRearLower", 1F, 18F, -2F, 8, 15, 8);
-		LegLeftRear.addBox("LegLftRearFoot", 0.5F, 33F, -2.5F, 9, 6, 9);
+		Head.addBox("Head",-6F, -7F, -15F, 12, 20, 15);
+		Head.addBox("TrunkTop",-3F, 0F, -3F, 6, 8, 6);
+		Head.addBox("TrunkMid",-2.5F, 0F, -2.5F, 5, 8, 5);
+		Head.addBox("TrunkEnd",-2F, 0F, -2F, 4, 8, 4);
+
+		ModelRenderer Head_TuskRight = new ModelRenderer(this,"TuskRight");
+		Head_TuskRight.addBox("TuskRight", -1.5F, -1.5F, -15F, 3, 3, 15);
+		Head_TuskRight.setRotationPoint(-6F, 9F, -7F);
+		setRotation(Head_TuskRight, 0.7853982F, 0F, 0F);
+		Head.addChild(Head_TuskRight);
+
+		ModelRenderer TuskRight_End = new ModelRenderer(this,"End");
+		TuskRight_End.addBox("End", -1F, 9.5F, -19.8F, 2, 2, 10);
+		TuskRight_End.setRotationPoint(0F, 0F, 0F);
+		setRotation(TuskRight_End, -0.7853982F, 0F, 0F);
+		Head_TuskRight.addChild(TuskRight_End);
+
+		ModelRenderer Head_TuskLeft = new ModelRenderer(this,"TuskLeft");
+		Head_TuskLeft.addBox("TuskLeft", -1.5F, -1.5F, -15F, 3, 3, 15);
+		Head_TuskLeft.setRotationPoint(6F, 9F, -7F);
+		setRotation(Head_TuskLeft, 0.7853982F, 0F, 0F);
+		Head.addChild(Head_TuskLeft);
+
+		ModelRenderer TuskLeft_End = new ModelRenderer(this,"End");
+		TuskLeft_End.addBox("End", -1F, 9.5F, -19.8F, 2, 2, 10);
+		TuskLeft_End.setRotationPoint(0F, 0F, 0F);
+		setRotation(TuskLeft_End, -0.7853982F, 0F, 0F);
+		Head_TuskLeft.addChild(TuskLeft_End);
+
+		ModelRenderer Head_EarLeft = new ModelRenderer(this,"EarLeft");
+		Head_EarLeft.addBox("EarLeft", -3F, 0F, -1F, 15, 20, 1);
+		Head_EarLeft.setRotationPoint(5F, -5F, -5F);
+		setRotation(Head_EarLeft, 0F, -0.6108652F, -0.3490658F);
+		Head.addChild(Head_EarLeft);
+
+		ModelRenderer Head_EarRight = new ModelRenderer(this,"EarRight");
+		Head_EarRight.mirror = true;
+		Head_EarRight.addBox("EarRight", -12F, 0F, -1F, 15, 20, 1);
+		Head_EarRight.mirror = false;
+		Head_EarRight.setRotationPoint(-5F, -5F, -5F);
+		setRotation(Head_EarRight, 0F, 0.6108652F, 0.3490658F);
+		Head.addChild(Head_EarRight);
+
+		LeftLegRear = new ModelRenderer(this,"LeftLegRear");
+		LeftLegRear.setRotationPoint(4F ,-15F, 14F);
+		setRotation(LeftLegRear, 0F, 0F, 0F);
+		LeftLegRear.addBox("Upper",0F, -7F, -7F, 10, 25, 15);
+		LeftLegRear.addBox("Lower",1F, 18F, -2F, 8, 15, 8);
+		LeftLegRear.addBox("Foot",0.5F, 33F, -2.5F, 9, 6, 9);
+
+		LeftLegFront = new ModelRenderer(this,"LeftLegFront");
+		LeftLegFront.setRotationPoint(4F ,-14F, -11F);
+		setRotation(LeftLegFront, 0F, 0F, 0F);
+		LeftLegFront.addBox("Upper",0F, -7F, -7F, 10, 22, 15);
+		LeftLegFront.addBox("Lower",1F, 13F, -3F, 8, 19, 8);
+		LeftLegFront.addBox("Foot",0.5F, 32F, -3.5F, 9, 6, 9);
+
+		RightLegRear = new ModelRenderer(this,"RightLegRear");
+		RightLegRear.setRotationPoint(-4F ,-15F, 14F);
+		setRotation(RightLegRear, 0F, 0F, 0F);
+		RightLegRear.addBox("Upper",-10F, -7F, -7F, 10, 25, 15);
+		RightLegRear.addBox("Lower",-9F, 18F, -2F, 8, 15, 8);
+		RightLegRear.addBox("Foot",-9.5F, 33F, -2.5F, 9, 6, 9);
+
+		RightLegFront = new ModelRenderer(this,"RightLegFront");
+		RightLegFront.setRotationPoint(-4F ,-14F, -11F);
+		setRotation(RightLegFront, 0F, 0F, 0F);
+		RightLegFront.addBox("Upper",-10F, -7F, -7F, 10, 22, 15);
+		RightLegFront.addBox("Lower",-9F, 13F, -3F, 8, 19, 8);
+		RightLegFront.addBox("Foot",-9.5F, 32F, -3.5F, 9, 6, 9);
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)
@@ -157,10 +152,10 @@ public class ModelElephant extends ModelBase
 			GlStateManager.scale(1.0F / f6, 1.0F / f6, 1.0F / f6);
 			GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
 			this.Body.render(scale);
-			LegLeftFront.render(scale);
-			LegLeftRear.render(scale);
-			LegRightFront.render(scale);
-			LegRightRear.render(scale);
+			LeftLegFront.render(scale);
+			LeftLegRear.render(scale);
+			RightLegFront.render(scale);
+			RightLegRear.render(scale);
 			GlStateManager.popMatrix();
 		}
 		else
@@ -169,10 +164,10 @@ public class ModelElephant extends ModelBase
 			GlStateManager.translate(0.0F, 0.0F, -0.5F);
 			this.Head.render(scale);
 			this.Body.render(scale);
-			LegLeftFront.render(scale);
-			LegLeftRear.render(scale);
-			LegRightFront.render(scale);
-			LegRightRear.render(scale);
+			LeftLegFront.render(scale);
+			LeftLegRear.render(scale);
+			RightLegFront.render(scale);
+			RightLegRear.render(scale);
 			GlStateManager.popMatrix();
 		}
 	}
@@ -190,10 +185,10 @@ public class ModelElephant extends ModelBase
 		this.Head.rotateAngleX = p_78087_5_ / (180F / (float)Math.PI);
 		this.Head.rotateAngleY = p_78087_4_ / (180F / (float)Math.PI);
 		this.Body.rotateAngleX = 0;//((float)Math.PI / 2F);
-		this.LegLeftFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_/ rotationDiv;
-		this.LegLeftRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_/ rotationDiv;
-		this.LegRightFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_/ rotationDiv;
-		this.LegRightRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_/ rotationDiv;
+		this.LeftLegFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_/ rotationDiv;
+		this.LeftLegRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_/ rotationDiv;
+		this.RightLegFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_/ rotationDiv;
+		this.RightLegRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_/ rotationDiv;
 	}
 
 }
