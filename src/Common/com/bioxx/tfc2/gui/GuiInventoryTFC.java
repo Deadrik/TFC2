@@ -5,6 +5,7 @@ import java.util.Collection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -16,7 +17,6 @@ import net.minecraft.stats.AchievementList;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
@@ -56,7 +56,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		int l = this.guiTop;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, 86);
 		//Draw the player avatar
-		drawPlayerModel(k + 51, l + 75, 30, k + 51 - this.xSizeLow, l + 75 - 50 - this.ySizeLow, this.mc.thePlayer);
+		GuiInventoryTFC.drawPlayerModel(k + 51, l + 75, 30, k + 51 - this.xSizeLow, l + 75 - 50 - this.ySizeLow, this.mc.thePlayer);
 
 		PlayerInventory.drawInventory(this, width, height, ySize - PlayerInventory.invYSize);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -80,44 +80,44 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		GL11.glDisable(GL11.GL_BLEND);
 	}*/
 
-	public static void drawPlayerModel(int par0, int par1, int par2, float par3, float par4, EntityLivingBase par5EntityLivingBase)
+	public static void drawPlayerModel(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent)
 	{
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-		GL11.glPushMatrix();
-		GL11.glTranslatef(par0, par1, 50.0F);
-		GL11.glScalef(-par2, par2, par2);
-		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-		float f2 = par5EntityLivingBase.renderYawOffset;
-		float f3 = par5EntityLivingBase.rotationYaw;
-		float f4 = par5EntityLivingBase.rotationPitch;
-		float f5 = par5EntityLivingBase.prevRotationYawHead;
-		float f6 = par5EntityLivingBase.rotationYawHead;
-		GL11.glRotatef(135.0F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.enableColorMaterial();
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float)posX, (float)posY, 50.0F);
+		GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
+		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+		float f2 = ent.renderYawOffset;
+		float f3 = ent.rotationYaw;
+		float f4 = ent.rotationPitch;
+		float f5 = ent.prevRotationYawHead;
+		float f6 = ent.rotationYawHead;
+		GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
-		GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-((float)Math.atan(par4 / 40.0F)) * 20.0F, 1.0F, 0.0F, 0.0F);
-		par5EntityLivingBase.renderYawOffset = (float)Math.atan(par3 / 40.0F) * 20.0F;
-		par5EntityLivingBase.rotationYaw = (float)Math.atan(par3 / 40.0F) * 40.0F;
-		par5EntityLivingBase.rotationPitch = -((float)Math.atan(par4 / 40.0F)) * 20.0F;
-		par5EntityLivingBase.rotationYawHead = par5EntityLivingBase.rotationYaw;
-		par5EntityLivingBase.prevRotationYawHead = par5EntityLivingBase.rotationYaw;
-		GL11.glTranslatef(0.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+		ent.renderYawOffset = (float)Math.atan((double)(mouseX / 40.0F)) * 20.0F;
+		ent.rotationYaw = (float)Math.atan((double)(mouseX / 40.0F)) * 40.0F;
+		ent.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
+		ent.rotationYawHead = ent.rotationYaw;
+		ent.prevRotationYawHead = ent.rotationYaw;
+		GlStateManager.translate(0.0F, 0.0F, 0.0F);
 		RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
 		rendermanager.setPlayerViewY(180.0F);
 		rendermanager.setRenderShadow(false);
-		rendermanager.renderEntityWithPosYaw(par5EntityLivingBase, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+		rendermanager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 		rendermanager.setRenderShadow(true);
-		par5EntityLivingBase.renderYawOffset = f2;
-		par5EntityLivingBase.rotationYaw = f3;
-		par5EntityLivingBase.rotationPitch = f4;
-		par5EntityLivingBase.prevRotationYawHead = f5;
-		par5EntityLivingBase.rotationYawHead = f6;
-		GL11.glPopMatrix();
+		ent.renderYawOffset = f2;
+		ent.rotationYaw = f3;
+		ent.rotationPitch = f4;
+		ent.prevRotationYawHead = f5;
+		ent.rotationYawHead = f6;
+		GlStateManager.popMatrix();
 		RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GlStateManager.disableTexture2D();
+		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 	}
 
 	@Override

@@ -15,7 +15,6 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -46,11 +45,112 @@ public class ClientProxy extends CommonProxy
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		super.preInit(event);
+		setupBlockMeshes();
+	}
 
-		B3DLoader.instance.addDomain(Reference.ModID);
+	@Override
+	public void init(FMLInitializationEvent event)
+	{
+		super.init(event);
+		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
+		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
+		MinecraftForge.EVENT_BUS.register(new BackgroundMusicHandler());
+
+
+		//Entities
+		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBear.class, new RenderBear(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBearPanda.class, new RenderBearPanda(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityLion.class, new RenderLion(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityTiger.class, new RenderTiger(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityRhino.class, new RenderRhino(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityElephant.class, new RenderElephant(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityMammoth.class, new RenderMammoth(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBoar.class, new RenderBoar(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBison.class, new RenderBison(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxRed.class, new RenderFoxRed());
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxArctic.class, new RenderFoxArctic());
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxDesert.class, new RenderFoxDesert());
+		RenderingRegistry.registerEntityRenderingHandler(EntityHippo.class, new RenderHippo());
+
+		//Disable vanilla UI elements
+		GuiIngameForge.renderHealth = false;
+		GuiIngameForge.renderArmor = false;
+		GuiIngameForge.renderExperiance = false;
+	}
+
+	@Override
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		super.postInit(event);
+
+	}
+
+	private void registerItemMesh(Item i, ModelResourceLocation mrl)
+	{
+		ModelLoader.setCustomMeshDefinition(i, new MeshDef(mrl));
+	}
+
+	private void registerItemMesh(Item i, int meta, ModelResourceLocation mrl)
+	{
+		ModelLoader.setCustomMeshDefinition(i, new MeshDef(mrl));
+	}
+
+	@Override
+	public File getMinecraftDir()
+	{
+		return Minecraft.getMinecraft().mcDataDir;
+	}
+
+	@Override
+	public void registerKeys()
+	{
+		//KeyBindings.addKeyBinding(KeyBindingHandler.Key_CombatMode);
+		//KeyBindings.addIsRepeating(false);
+		//ClientRegistry.registerKeyBinding(KeyBindingHandler.Key_ToolMode);
+		//ClientRegistry.registerKeyBinding(KeyBindingHandler.Key_LockTool);
+		ClientRegistry.registerKeyBinding(KeyBindingHandler.Key_CombatMode);
+		//uploadKeyBindingsToGame();
+	}
+
+	@Override
+	public void registerKeyBindingHandler()
+	{
+		FMLCommonHandler.instance().bus().register(new KeyBindingHandler());
+	}
+
+	@Override
+	public void uploadKeyBindingsToGame()
+	{
+		GameSettings settings = Minecraft.getMinecraft().gameSettings;
+		KeyBinding[] tfcKeyBindings = KeyBindings.gatherKeyBindings();
+		KeyBinding[] allKeys = new KeyBinding[settings.keyBindings.length + tfcKeyBindings.length];
+		System.arraycopy(settings.keyBindings, 0, allKeys, 0, settings.keyBindings.length);
+		System.arraycopy(tfcKeyBindings, 0, allKeys, settings.keyBindings.length, tfcKeyBindings.length);
+		settings.keyBindings = allKeys;
+		settings.loadOptions();
+	}
+
+	@Override
+	public boolean isClientSide()
+	{
+		return true;
+	}
+
+	@Override
+	public void registerGuiHandler()
+	{
+		NetworkRegistry.INSTANCE.registerGuiHandler(TFC.instance, new GuiHandler());
+		// Register Gui Event Handler
+		MinecraftForge.EVENT_BUS.register(new GuiHandler());
+	}
+
+	//Keep at the bottom of the file so its not a nuisence
+	private void setupBlockMeshes() 
+	{
 		OBJLoader.instance.addDomain(Reference.ModID);
-		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.LeavesPalm), 0, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Leaves2), 18, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
+
+		//Setup Liquid Blocks
 		Item fresh = Item.getItemFromBlock(TFCBlocks.FreshWater);
 		Item salt = Item.getItemFromBlock(TFCBlocks.SaltWater);
 		Item saltstatic = Item.getItemFromBlock(TFCBlocks.SaltWaterStatic);
@@ -123,7 +223,11 @@ public class ClientProxy extends CommonProxy
 				return freshwaterLocation;
 			}
 		});
+		//End Liquids
 
+		//This creates a new ModelResourceLocation for this item:meta combination
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Leaves2), 18, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
+		//Change the StateMapper for this block so that it will point to a different file for a specific Property
 		StateMapperBase ignoreState = new StateMapperBase() {
 			@Override
 			protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) 
@@ -520,103 +624,4 @@ public class ClientProxy extends CommonProxy
 
 		RegistryItemQueue.getInstance().registerMeshes();
 	}
-
-
-	@Override
-	public void init(FMLInitializationEvent event)
-	{
-		super.init(event);
-		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
-		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
-		MinecraftForge.EVENT_BUS.register(new BackgroundMusicHandler());
-
-
-		//Entities
-		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBear.class, new RenderBear(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBearPanda.class, new RenderBearPanda(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityLion.class, new RenderLion(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTiger.class, new RenderTiger(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityRhino.class, new RenderRhino(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityElephant.class, new RenderElephant(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityMammoth.class, new RenderMammoth(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBoar.class, new RenderBoar(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBison.class, new RenderBison(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFoxRed.class, new RenderFoxRed());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFoxArctic.class, new RenderFoxArctic());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFoxDesert.class, new RenderFoxDesert());
-		RenderingRegistry.registerEntityRenderingHandler(EntityHippo.class, new RenderHippo());
-
-		//Disable vanilla UI elements
-		GuiIngameForge.renderHealth = false;
-		GuiIngameForge.renderArmor = false;
-		GuiIngameForge.renderExperiance = false;
-	}
-
-	@Override
-	public void postInit(FMLPostInitializationEvent event)
-	{
-		super.postInit(event);
-
-	}
-
-	private void registerItemMesh(Item i, ModelResourceLocation mrl)
-	{
-		ModelLoader.setCustomMeshDefinition(i, new MeshDef(mrl));
-	}
-
-	private void registerItemMesh(Item i, int meta, ModelResourceLocation mrl)
-	{
-		ModelLoader.setCustomMeshDefinition(i, new MeshDef(mrl));
-	}
-
-	@Override
-	public File getMinecraftDir()
-	{
-		return Minecraft.getMinecraft().mcDataDir;
-	}
-
-	@Override
-	public void registerKeys()
-	{
-		//KeyBindings.addKeyBinding(KeyBindingHandler.Key_CombatMode);
-		//KeyBindings.addIsRepeating(false);
-		//ClientRegistry.registerKeyBinding(KeyBindingHandler.Key_ToolMode);
-		//ClientRegistry.registerKeyBinding(KeyBindingHandler.Key_LockTool);
-		ClientRegistry.registerKeyBinding(KeyBindingHandler.Key_CombatMode);
-		//uploadKeyBindingsToGame();
-	}
-
-	@Override
-	public void registerKeyBindingHandler()
-	{
-		FMLCommonHandler.instance().bus().register(new KeyBindingHandler());
-	}
-
-	@Override
-	public void uploadKeyBindingsToGame()
-	{
-		GameSettings settings = Minecraft.getMinecraft().gameSettings;
-		KeyBinding[] tfcKeyBindings = KeyBindings.gatherKeyBindings();
-		KeyBinding[] allKeys = new KeyBinding[settings.keyBindings.length + tfcKeyBindings.length];
-		System.arraycopy(settings.keyBindings, 0, allKeys, 0, settings.keyBindings.length);
-		System.arraycopy(tfcKeyBindings, 0, allKeys, settings.keyBindings.length, tfcKeyBindings.length);
-		settings.keyBindings = allKeys;
-		settings.loadOptions();
-	}
-
-	@Override
-	public boolean isClientSide()
-	{
-		return true;
-	}
-
-	@Override
-	public void registerGuiHandler()
-	{
-		NetworkRegistry.INSTANCE.registerGuiHandler(TFC.instance, new GuiHandler());
-		// Register Gui Event Handler
-		MinecraftForge.EVENT_BUS.register(new GuiHandler());
-	}
-
 }
