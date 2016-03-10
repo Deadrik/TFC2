@@ -10,15 +10,16 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.*;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,7 +28,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.world.WorldGen;
 
-public class BlockVegetation extends BlockTerra
+public class BlockVegetation extends BlockTerra implements IPlantable
 {
 	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("veg", VegType.class);
 	/** Whether this fence connects in the northern direction */
@@ -44,6 +45,42 @@ public class BlockVegetation extends BlockTerra
 	}
 
 	@Override
+	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	{
+		super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+		checkAndDropBlock(worldIn, pos, state);
+	}
+
+	@Override
+	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	{
+		checkAndDropBlock(worldIn, pos, state);
+	}
+
+	protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state)
+	{
+		if (!canBlockStay(worldIn, pos, state))
+		{
+			dropBlockAsItem(worldIn, pos, state, 0);
+			worldIn.setBlockState(pos, Blocks.air.getDefaultState(), 3);
+		}
+	}
+
+	public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)
+	{
+		BlockPos down = pos.down();
+		IBlockState soil = worldIn.getBlockState(down);
+		if (state.getBlock() != this) 
+			return canPlaceBlockOn(soil);
+		return soil.getBlock().canSustainPlant(worldIn, down, EnumFacing.UP, this);
+	}
+
+	protected boolean canPlaceBlockOn(IBlockState state)
+	{
+		return Core.isSoil(state);
+	}
+
+	@Override
 	protected BlockState createBlockState()
 	{
 		return new BlockState(this, new IProperty[] { META_PROPERTY, IS_ON_STONE});
@@ -52,7 +89,7 @@ public class BlockVegetation extends BlockTerra
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(this);
+		return null;
 	}
 
 	@Override
@@ -175,5 +212,19 @@ public class BlockVegetation extends BlockTerra
 			}
 			return null;
 		}
+	}
+
+	@Override
+	public EnumPlantType getPlantType(IBlockAccess paramIBlockAccess, BlockPos paramBlockPos) {
+		return EnumPlantType.Plains;
+	}
+
+	@Override
+	public IBlockState getPlant(IBlockAccess world, BlockPos pos) 
+	{
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() != this) 
+			return getDefaultState();
+		return state;
 	}
 }
