@@ -101,7 +101,7 @@ public class BlockGrass extends BlockTerra
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(this);
+		return Item.getItemFromBlock(TFCBlocks.Dirt);
 	}
 
 	@Override
