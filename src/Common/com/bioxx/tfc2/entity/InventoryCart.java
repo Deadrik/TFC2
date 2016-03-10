@@ -1,28 +1,18 @@
 package com.bioxx.tfc2.entity;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInvBasic;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.google.common.collect.Lists;
-
 public class InventoryCart implements IInventory 
 {
 	private String inventoryTitle;
 	private int slotsCount;
 	private ItemStack[] inventoryContents;
-	private List field_70480_d;
 	private boolean hasCustomName;
-	private static final String __OBFID = "CL_00001514";
 
 	public InventoryCart(String title, boolean customName, int slotCount)
 	{
@@ -30,27 +20,6 @@ public class InventoryCart implements IInventory
 		this.hasCustomName = customName;
 		this.slotsCount = slotCount;
 		this.inventoryContents = new ItemStack[slotCount];
-	}
-
-	@SideOnly(Side.CLIENT)
-	public InventoryCart(IChatComponent title, int slotCount)
-	{
-		this(title.getUnformattedText(), true, slotCount);
-	}
-
-	public void func_110134_a(IInvBasic p_110134_1_)
-	{
-		if (this.field_70480_d == null)
-		{
-			this.field_70480_d = Lists.newArrayList();
-		}
-
-		this.field_70480_d.add(p_110134_1_);
-	}
-
-	public void func_110132_b(IInvBasic p_110132_1_)
-	{
-		this.field_70480_d.remove(p_110132_1_);
 	}
 
 	/**
@@ -224,8 +193,11 @@ public class InventoryCart implements IInventory
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int paramInt) {
-		return null;
+	public ItemStack removeStackFromSlot(int i) 
+	{
+		ItemStack is = inventoryContents[i];
+		inventoryContents[i] = null;
+		return is;
 	}
 
 }
