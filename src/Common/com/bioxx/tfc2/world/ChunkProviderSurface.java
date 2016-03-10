@@ -295,6 +295,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 3)
 						{
 							chunkprimer.setBlockState(x, y, z, sand);
+							chunkprimer.setBlockState(x, y-1, z, sand);
+							chunkprimer.setBlockState(x, y-2, z, sand);
 						}
 					}
 
