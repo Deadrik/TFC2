@@ -1,0 +1,8 @@
+{
+	"forge_marker": 1,
+    "parent": "tfc2:item/DefaultItem",
+    "textures": {
+        "layer0": "tfc2:items/food/Wheat Ground"
+    },
+    "transform": "forge:default-tool"
+}

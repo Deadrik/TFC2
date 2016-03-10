@@ -9,6 +9,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
@@ -56,9 +57,9 @@ public class WeatherRenderer extends IRenderHandler
 		{
 			mc.entityRenderer.enableLightmap();
 			Entity entity = mc.getRenderViewEntity();
-			int i = MathHelper.floor_double(entity.posX);
-			int j = MathHelper.floor_double(entity.posY);
-			int k = MathHelper.floor_double(entity.posZ);
+			int entityX = MathHelper.floor_double(entity.posX);
+			int entityY = MathHelper.floor_double(entity.posY);
+			int entityZ = MathHelper.floor_double(entity.posZ);
 			Tessellator tessellator = Tessellator.getInstance();
 			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 			GlStateManager.disableCull();
@@ -66,135 +67,131 @@ public class WeatherRenderer extends IRenderHandler
 			GlStateManager.enableBlend();
 			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 			GlStateManager.alphaFunc(516, 0.1F);
-			double d0 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)partialTicks;
-			double d1 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)partialTicks;
-			double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)partialTicks;
-			int l = MathHelper.floor_double(d1);
-			byte b0 = 5;
+			double partialX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
+			double partialY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
+			double partialZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
+			int l = MathHelper.floor_double(partialY);
+			int precipDensity = 5;
 
 			if (mc.gameSettings.fancyGraphics)
 			{
-				b0 = 10;
+				precipDensity = 10;
 			}
 
-			byte b1 = -1;
-			float f2 = (float)this.rendererUpdateCount + partialTicks;
-
-			if (mc.gameSettings.fancyGraphics)
-			{
-				b0 = 10;
-			}
-
+			int j1 = -1;
+			float f1 = this.rendererUpdateCount + partialTicks;
+			worldrenderer.setTranslation(-partialX, -partialY, -partialZ);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
-			for (int zCoord = k - b0; zCoord <= k + b0; ++zCoord)
+			for (int z = entityZ - precipDensity; z <= entityZ + precipDensity; z++)
 			{
-				for (int xCoord = i - b0; xCoord <= i + b0; ++xCoord)
+				for (int x = entityX - precipDensity; x <= entityX + precipDensity; x++)
 				{
-					int k1 = (zCoord - k + 16) * 32 + xCoord - i + 16;
-					float f3 = this.rainXCoords[k1] * 0.5F;
-					float f4 = this.rainYCoords[k1] * 0.5F;
-					BlockPos blockpos = new BlockPos(xCoord, 0, zCoord);
-					BiomeGenBase biomegenbase = world.getBiomeGenForCoords(blockpos);
+					int index = (z - entityZ + 16) * 32 + x - entityX + 16;
+					double d3 = this.rainXCoords[index] * 0.5D;
+					double d4 = this.rainYCoords[index] * 0.5D;
+					blockpos$mutableblockpos.set(x, 0, z);
+					BiomeGenBase biomegenbase = world.getBiomeGenForCoords(blockpos$mutableblockpos);
 
-					if (biomegenbase.canSpawnLightningBolt() || biomegenbase.getEnableSnow())
+					if ((biomegenbase.canRain()) || (biomegenbase.getEnableSnow()))
 					{
-						int yCoord = world.getPrecipitationHeight(blockpos).getY();
-						int i2 = j - b0;
-						int j2 = j + b0;
+						int j2 = world.getPrecipitationHeight(blockpos$mutableblockpos).getY();
+						int k2 = entityY - precipDensity;
+						int l2 = entityY + precipDensity;
 
-						if (i2 < yCoord)
+						if (k2 < j2)
 						{
-							i2 = yCoord;
+							k2 = j2;
 						}
 
-						if (j2 < yCoord)
+						if (l2 < j2)
 						{
-							j2 = yCoord;
+							l2 = j2;
 						}
 
-						float f5 = 1.0F;
-						int k2 = yCoord;
+						int i3 = j2;
 
-						if (yCoord < l)
+						if (j2 < l)
 						{
-							k2 = l;
+							i3 = l;
 						}
 
-						if (i2 != j2)
+						if (k2 != l2)
 						{
-							world.rand.setSeed((long)(xCoord * xCoord * 3121 + xCoord * 45238971 ^ zCoord * zCoord * 418711 + zCoord * 13761));
-							float f7;
-							double d4;
+							world.rand.setSeed(x * x * 3121 + x * 45238971 ^ z * z * 418711 + z * 13761);
+							blockpos$mutableblockpos.set(x, k2, z);
+							float f2 = biomegenbase.getFloatTemperature(blockpos$mutableblockpos);
 
-							if (WeatherManager.getInstance().getTemperature(xCoord, yCoord+20, zCoord) > 0.16)
+							if (world.getWorldChunkManager().getTemperatureAtHeight(f2, j2) >= 0.15F)
 							{
-								if (b1 != 0)
+								if (j1 != 0)
 								{
-									if (b1 >= 0)
+									if (j1 >= 0)
 									{
 										tessellator.draw();
 									}
 
-									b1 = 0;
+									j1 = 0;
 									mc.getTextureManager().bindTexture(locationRainPng);
-									worldrenderer.startDrawingQuads();
+									worldrenderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 								}
 
-								f7 = ((float)(this.rendererUpdateCount + xCoord * xCoord * 3121 + xCoord * 45238971 + zCoord * zCoord * 418711 + zCoord * 13761 & 31) + partialTicks) / 32.0F * (3.0F + world.rand.nextFloat());
-								double d3 = (double)((float)xCoord + 0.5F) - entity.posX;
-								d4 = (double)((float)zCoord + 0.5F) - entity.posZ;
-								float f9 = MathHelper.sqrt_double(d3 * d3 + d4 * d4) / (float)b0;
-								float f10 = 1.0F;
-								worldrenderer.setBrightness(world.getCombinedLight(new BlockPos(xCoord, k2, zCoord), 0));
-								worldrenderer.setColorRGBA_F(f10, f10, f10, ((1.0F - f9 * f9) * 0.5F + 0.5F) * (float)rainStrength);
-								worldrenderer.setTranslation(-d0 * 1.0D, -d1 * 1.0D, -d2 * 1.0D);
-								worldrenderer.addVertexWithUV((double)((float)xCoord - f3) + 0.5D, (double)i2, (double)((float)zCoord - f4) + 0.5D, (double)(0.0F * f5), (double)((float)i2 * f5 / 4.0F + f7 * f5));
-								worldrenderer.addVertexWithUV((double)((float)xCoord + f3) + 0.5D, (double)i2, (double)((float)zCoord + f4) + 0.5D, (double)(1.0F * f5), (double)((float)i2 * f5 / 4.0F + f7 * f5));
-								worldrenderer.addVertexWithUV((double)((float)xCoord + f3) + 0.5D, (double)j2, (double)((float)zCoord + f4) + 0.5D, (double)(1.0F * f5), (double)((float)j2 * f5 / 4.0F + f7 * f5));
-								worldrenderer.addVertexWithUV((double)((float)xCoord - f3) + 0.5D, (double)j2, (double)((float)zCoord - f4) + 0.5D, (double)(0.0F * f5), (double)((float)j2 * f5 / 4.0F + f7 * f5));
-								worldrenderer.setTranslation(0.0D, 0.0D, 0.0D);
+								double d5 = ((this.rendererUpdateCount + x * x * 3121 + x * 45238971 + z * z * 418711 + z * 13761 & 0x1F) + partialTicks) / 32.0D * (3.0D + world.rand.nextDouble());
+								double offsetX = x + 0.5F - entity.posX;
+								double offsetZ = z + 0.5F - entity.posZ;
+								float f3 = MathHelper.sqrt_double(offsetX * offsetX + offsetZ * offsetZ) / precipDensity;
+								float precipAlpha = ((1.0F - f3 * f3) * 0.5F + 0.5F) * (float)rainStrength;
+								blockpos$mutableblockpos.set(x, i3, z);
+								int j3 = world.getCombinedLight(blockpos$mutableblockpos, 0);
+								int k3 = (j3 >> 16 & 0xFFFF);
+								int l3 = (j3 & 0xFFFF);
+								worldrenderer.pos(x - d3 + 0.5D, k2, z - d4 + 0.5D).tex(0.0D, k2 * 0.25D + d5).color(1.0F, 1.0F, 1.0F, precipAlpha).lightmap(k3, l3).endVertex();
+								worldrenderer.pos(x + d3 + 0.5D, k2, z + d4 + 0.5D).tex(1.0D, k2 * 0.25D + d5).color(1.0F, 1.0F, 1.0F, precipAlpha).lightmap(k3, l3).endVertex();
+								worldrenderer.pos(x + d3 + 0.5D, l2, z + d4 + 0.5D).tex(1.0D, l2 * 0.25D + d5).color(1.0F, 1.0F, 1.0F, precipAlpha).lightmap(k3, l3).endVertex();
+								worldrenderer.pos(x - d3 + 0.5D, l2, z - d4 + 0.5D).tex(0.0D, l2 * 0.25D + d5).color(1.0F, 1.0F, 1.0F, precipAlpha).lightmap(k3, l3).endVertex();
 							}
 							else
 							{
-								if (b1 != 1)
+								if (j1 != 1)
 								{
-									if (b1 >= 0)
+									if (j1 >= 0)
 									{
 										tessellator.draw();
 									}
 
-									b1 = 1;
+									j1 = 1;
 									mc.getTextureManager().bindTexture(locationSnowPng);
-									worldrenderer.startDrawingQuads();
+									worldrenderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 								}
 
-								f7 = ((float)(this.rendererUpdateCount & 511) + partialTicks) / 512.0F;
-								float f13 = world.rand.nextFloat() + f2 * 0.01F * (float)world.rand.nextGaussian();
-								float f8 = world.rand.nextFloat() + f2 * (float)world.rand.nextGaussian() * 0.001F;
-								d4 = (double)((float)xCoord + 0.5F) - entity.posX;
-								double d5 = (double)((float)zCoord + 0.5F) - entity.posZ;
-								float f11 = MathHelper.sqrt_double(d4 * d4 + d5 * d5) / (float)b0;
-								float f12 = 1.0F;
-								worldrenderer.setBrightness((world.getCombinedLight(new BlockPos(xCoord, k2, zCoord), 0) * 3 + 15728880) / 4);
-								worldrenderer.setColorRGBA_F(f12, f12, f12, ((1.0F - f11 * f11) * 0.3F + 0.5F) * (float)rainStrength);
-								worldrenderer.setTranslation(-d0 * 1.0D, -d1 * 1.0D, -d2 * 1.0D);
-								worldrenderer.addVertexWithUV((double)((float)xCoord - f3) + 0.5D, (double)i2, (double)((float)zCoord - f4) + 0.5D, (double)(0.0F * f5 + f13), (double)((float)i2 * f5 / 4.0F + f7 * f5 + f8));
-								worldrenderer.addVertexWithUV((double)((float)xCoord + f3) + 0.5D, (double)i2, (double)((float)zCoord + f4) + 0.5D, (double)(1.0F * f5 + f13), (double)((float)i2 * f5 / 4.0F + f7 * f5 + f8));
-								worldrenderer.addVertexWithUV((double)((float)xCoord + f3) + 0.5D, (double)j2, (double)((float)zCoord + f4) + 0.5D, (double)(1.0F * f5 + f13), (double)((float)j2 * f5 / 4.0F + f7 * f5 + f8));
-								worldrenderer.addVertexWithUV((double)((float)xCoord - f3) + 0.5D, (double)j2, (double)((float)zCoord - f4) + 0.5D, (double)(0.0F * f5 + f13), (double)((float)j2 * f5 / 4.0F + f7 * f5 + f8));
-								worldrenderer.setTranslation(0.0D, 0.0D, 0.0D);
+								double d8 = ((this.rendererUpdateCount & 0x1FF) + partialTicks) / 512.0F;
+								double d9 = world.rand.nextDouble() + f1 * 0.01D * (float)world.rand.nextGaussian();
+								double d10 = world.rand.nextDouble() + f1 * (float)world.rand.nextGaussian() * 0.001D;
+								double d11 = x + 0.5F - entity.posX;
+								double d12 = z + 0.5F - entity.posZ;
+								float f6 = MathHelper.sqrt_double(d11 * d11 + d12 * d12) / precipDensity;
+								float precipAlpha = ((1.0F - f6 * f6) * 0.3F + 0.5F) * (float)rainStrength;
+								blockpos$mutableblockpos.set(x, i3, z);
+								int i4 = (world.getCombinedLight(blockpos$mutableblockpos, 0) * 3 + 15728880) / 4;
+								int j4 = (i4 >> 16 & 0xFFFF);
+								int k4 = (i4 & 0xFFFF);
+								worldrenderer.pos(x - d3 + 0.5D, k2, z - d4 + 0.5D).tex(0.0D + d9, k2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, precipAlpha).lightmap(j4, k4).endVertex();
+								worldrenderer.pos(x + d3 + 0.5D, k2, z + d4 + 0.5D).tex(1.0D + d9, k2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, precipAlpha).lightmap(j4, k4).endVertex();
+								worldrenderer.pos(x + d3 + 0.5D, l2, z + d4 + 0.5D).tex(1.0D + d9, l2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, precipAlpha).lightmap(j4, k4).endVertex();
+								worldrenderer.pos(x - d3 + 0.5D, l2, z - d4 + 0.5D).tex(0.0D + d9, l2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, precipAlpha).lightmap(j4, k4).endVertex();
 							}
 						}
 					}
 				}
 			}
 
-			if (b1 >= 0)
+			if (j1 >= 0)
 			{
 				tessellator.draw();
 			}
 
+			worldrenderer.setTranslation(0.0D, 0.0D, 0.0D);
 			GlStateManager.enableCull();
 			GlStateManager.disableBlend();
 			GlStateManager.alphaFunc(516, 0.1F);

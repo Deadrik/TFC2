@@ -3,14 +3,7 @@ package com.bioxx.tfc2.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIFollowParent;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMate;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -221,7 +214,7 @@ public class EntityLion extends EntityAnimal
 	}
 
 	@Override
-	public void handleHealthUpdate (byte par1)
+	public void handleStatusUpdate (byte par1)
 	{
 		if (par1 == 8)
 		{
@@ -229,7 +222,7 @@ public class EntityLion extends EntityAnimal
 		}
 		else
 		{
-			super.handleHealthUpdate (par1);
+			super.handleStatusUpdate (par1);
 		}
 	}
 }

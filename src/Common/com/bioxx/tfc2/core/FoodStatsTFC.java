@@ -3,6 +3,7 @@ package com.bioxx.tfc2.core;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -303,7 +304,7 @@ public class FoodStatsTFC
 
 	public long getPlayerFoodSeed()
 	{
-		if(nameSeed == Long.MIN_VALUE)
+		/*if(nameSeed == Long.MIN_VALUE)
 		{
 			long seed = 0;
 			byte[] nameBytes = player.getCommandSenderName().getBytes();
@@ -311,7 +312,8 @@ public class FoodStatsTFC
 				seed+=b;
 			nameSeed = seed + player.worldObj.getSeed();
 		}
-		return nameSeed;
+		return nameSeed;*/
+		return 0;
 	}
 
 	public float getNutritionHealthModifier()

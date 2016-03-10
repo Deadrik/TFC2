@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -89,7 +90,7 @@ public class EntityCart extends Entity
 	 * returns the bounding box for this entity
 	 */
 	@Override
-	public AxisAlignedBB getBoundingBox()
+	public AxisAlignedBB getEntityBoundingBox()
 	{
 		AxisAlignedBB aabb = super.getEntityBoundingBox();
 		if(isBeingPulled())
@@ -98,12 +99,6 @@ public class EntityCart extends Entity
 			aabb = aabb.contract(0.15, 0.55, 0.15);
 
 		return aabb;
-	}
-
-	@Override
-	public AxisAlignedBB getEntityBoundingBox()
-	{
-		return super.getEntityBoundingBox();
 	}
 
 	@Override

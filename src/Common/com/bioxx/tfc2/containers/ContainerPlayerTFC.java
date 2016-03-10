@@ -2,13 +2,10 @@ package com.bioxx.tfc2.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ContainerPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotCrafting;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -126,7 +123,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 
 			for (int i = 0; i < 9; ++i)
 			{
-				ItemStack itemstack = this.craftMatrix.getStackInSlotOnClosing(i);
+				ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
 				if (itemstack != null)
 					player.dropPlayerItemWithRandomChoice(itemstack, false);
 			}

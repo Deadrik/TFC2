@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -25,8 +26,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import org.lwjgl.opengl.GL11;
-
-import com.bioxx.tfc2.world.WeatherManager;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
@@ -45,6 +44,7 @@ import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.core.Timekeeper;
+import com.bioxx.tfc2.world.WeatherManager;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class RenderOverlayHandler
@@ -270,17 +270,17 @@ public class RenderOverlayHandler
 		}
 	}
 
-	public void drawTexturedModalRect(int par1, int par2, int par3, int par4, int par5, int par6)
+	public void drawTexturedModalRect(float xCoord, float yCoord, int minU, int minV, int maxU, int maxV)
 	{
 		float f = 0.00390625F;
 		float f1 = 0.00390625F;
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		worldrenderer.startDrawingQuads();
-		worldrenderer.addVertexWithUV(par1 + 0, par2 + par6, 0.0, (par3 + 0) * f, (par4 + par6) * f1);
-		worldrenderer.addVertexWithUV(par1 + par5, par2 + par6, 0.0, (par3 + par5) * f, (par4 + par6) * f1);
-		worldrenderer.addVertexWithUV(par1 + par5, par2 + 0, 0.0, (par3 + par5) * f, (par4 + 0) * f1);
-		worldrenderer.addVertexWithUV(par1 + 0, par2 + 0, 0.0, (par3 + 0) * f, (par4 + 0) * f1);
+		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		worldrenderer.pos(xCoord + 0.0F, yCoord + maxV, 0).tex((minU + 0) * f, (minV + maxV) * f1).endVertex();
+		worldrenderer.pos(xCoord + maxU, yCoord + maxV, 0).tex((minU + maxU) * f, (minV + maxV) * f1).endVertex();
+		worldrenderer.pos(xCoord + maxU, yCoord + 0.0F, 0).tex((minU + maxU) * f, (minV + 0) * f1).endVertex();
+		worldrenderer.pos(xCoord + 0.0F, yCoord + 0.0F, 0).tex((minU + 0) * f, (minV + 0) * f1).endVertex();
 		tessellator.draw();
 	}
 }

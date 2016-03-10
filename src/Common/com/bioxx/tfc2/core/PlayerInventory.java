@@ -108,7 +108,7 @@ public class PlayerInventory
 	{
 		par1Slot.slotNumber = container.inventorySlots.size();
 		container.inventorySlots.add(par1Slot);
-		container.inventoryItemStacks.add((Object)null);
+		container.inventoryItemStacks.add((ItemStack)null);
 		return par1Slot;
 	}
 

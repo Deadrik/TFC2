@@ -251,7 +251,7 @@
     "sounds": [
       {name="stone_knapping", pitch = 1.0},
       {name="stone_knapping", pitch = 0.8},
-      {name="stone_knapping", pitch = 1.2},
+      {name="stone_knapping", pitch = 1.2}
     ]
   },
 

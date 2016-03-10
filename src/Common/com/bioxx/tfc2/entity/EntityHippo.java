@@ -199,7 +199,7 @@ public class EntityHippo extends EntityAnimal
 	}
 
 	@Override
-	public void handleHealthUpdate (byte par1)
+	public void handleStatusUpdate (byte par1)
 	{
 		if (par1 == 8)
 		{
@@ -207,7 +207,7 @@ public class EntityHippo extends EntityAnimal
 		}
 		else
 		{
-			super.handleHealthUpdate (par1);
+			super.handleStatusUpdate (par1);
 		}
 	}
 

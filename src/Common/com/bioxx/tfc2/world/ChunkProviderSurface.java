@@ -16,21 +16,11 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
-import net.minecraft.world.gen.MapGenBase;
 
-import com.bioxx.jmapgen.BiomeType;
-import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.*;
 import com.bioxx.jmapgen.IslandParameters.Feature;
-import com.bioxx.jmapgen.Point;
-import com.bioxx.jmapgen.Spline2D;
-import com.bioxx.jmapgen.Spline3D;
-import com.bioxx.jmapgen.attributes.Attribute;
-import com.bioxx.jmapgen.attributes.CanyonAttribute;
-import com.bioxx.jmapgen.attributes.CaveAttribute;
-import com.bioxx.jmapgen.attributes.LakeAttribute;
-import com.bioxx.jmapgen.attributes.OreAttribute;
-import com.bioxx.jmapgen.attributes.RiverAttribute;
-import com.bioxx.jmapgen.dungeon.Dungeon;
+import com.bioxx.jmapgen.attributes.*;
+import com.bioxx.jmapgen.dungeon.*;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor.DoorType;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonLevel;
@@ -85,8 +75,6 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	 */
 	private static Point[][] hexSamplePoints;
 
-	private MapGenBase caveGenerator;
-
 	public ChunkProviderSurface(World worldIn, long seed, boolean enableMapFeatures, String rules) 
 	{
 		super(worldIn, seed, enableMapFeatures, rules);
@@ -125,8 +113,6 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		sb2.setBias(0.5);
 
 		turbMap = new Plane(sb2);
-
-		this.caveGenerator = new MapGenCaves();
 	}
 
 	private Point hex_corner(double size, int i)

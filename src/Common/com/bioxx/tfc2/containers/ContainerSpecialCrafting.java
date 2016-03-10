@@ -59,7 +59,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		super.onContainerClosed(player);
 		if (!this.worldObj.isRemote)
 		{
-			ItemStack is = this.craftResult.getStackInSlotOnClosing(0);
+			ItemStack is = this.craftResult.getStackInSlot(0);
 			if (is != null)
 				player.entityDropItem(is, 0);
 		}

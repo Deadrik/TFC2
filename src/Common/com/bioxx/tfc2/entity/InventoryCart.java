@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -99,25 +100,6 @@ public class InventoryCart implements IInventory
 	}
 
 	/**
-	 * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
-	 * like when you close a workbench GUI.
-	 */
-	@Override
-	public ItemStack getStackInSlotOnClosing(int index)
-	{
-		if (this.inventoryContents[index] != null)
-		{
-			ItemStack itemstack = this.inventoryContents[index];
-			this.inventoryContents[index] = null;
-			return itemstack;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
 	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
 	 */
 	@Override
@@ -140,15 +122,6 @@ public class InventoryCart implements IInventory
 	public int getSizeInventory()
 	{
 		return this.slotsCount;
-	}
-
-	/**
-	 * Gets the name of this command sender (usually username, but possibly "Rcon")
-	 */
-	@Override
-	public String getCommandSenderName()
-	{
-		return this.inventoryTitle;
 	}
 
 	/**
@@ -175,7 +148,7 @@ public class InventoryCart implements IInventory
 	@Override
 	public IChatComponent getDisplayName()
 	{
-		return (IChatComponent)(this.hasCustomName() ? new ChatComponentText(this.getCommandSenderName()) : new ChatComponentTranslation(this.getCommandSenderName(), new Object[0]));
+		return (IChatComponent)(this.hasCustomName() ? new ChatComponentText(this.getName()) : new ChatComponentTranslation(this.getName(), new Object[0]));
 	}
 
 	/**
@@ -243,6 +216,16 @@ public class InventoryCart implements IInventory
 		{
 			this.inventoryContents[i] = null;
 		}
+	}
+
+	@Override
+	public String getName() {
+		return this.inventoryTitle;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int paramInt) {
+		return null;
 	}
 
 }

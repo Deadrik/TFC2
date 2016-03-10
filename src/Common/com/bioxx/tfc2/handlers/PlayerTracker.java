@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.handlers;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
@@ -20,7 +21,7 @@ public class PlayerTracker
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event)
 	{
 		PlayerManagerTFC.getInstance().players.add(new PlayerInfo(
-				event.player.getCommandSenderName(),
+				event.player.getName(),
 				event.player.getUniqueID()));
 
 		if(event.player.worldObj.isRemote || event.player.dimension != 0)

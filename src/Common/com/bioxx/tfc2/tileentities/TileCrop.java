@@ -5,7 +5,7 @@ import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.gui.IUpdatePlayerListBox;
+import net.minecraft.util.ITickable;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
@@ -14,7 +14,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.Crop;
 import com.bioxx.tfc2.core.Timekeeper;
 
-public class TileCrop extends TileTFC implements IUpdatePlayerListBox
+public class TileCrop extends TileTFC implements ITickable
 {
 	/**
 	 * With this amount of nutrients and a replenishment of 25% per month 

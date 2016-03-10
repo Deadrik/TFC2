@@ -1,12 +1,12 @@
 package com.bioxx.tfc2.core;
 
-import net.minecraft.command.server.CommandTestForBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTUtil;
 
 import com.bioxx.tfc2.Core;
 
@@ -26,25 +26,6 @@ public class InventoryPlayerTFC extends InventoryPlayer {
 	}
 
 	@Override
-	public void readFromNBT(NBTTagList par1NBTTagList)
-	{
-		super.readFromNBT(par1NBTTagList);
-		this.extraEquipInventory = new ItemStack[Core.getExtraEquipInventorySize()];
-
-		NBTTagList extraList = player.getEntityData().getTagList("ExtraInventory", 10);
-
-		for (int i = 0; i < extraList.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound = extraList.getCompoundTagAt(i);
-			ItemStack itemstack = ItemStack.loadItemStackFromNBT(nbttagcompound);
-			if (itemstack != null)
-			{
-				extraEquipInventory[i] = itemstack;
-			}
-		}
-	}
-
-	@Override
 	/**
 	 * Returns the stack in slot i
 	 */
@@ -61,32 +42,7 @@ public class InventoryPlayerTFC extends InventoryPlayer {
 			aitemstack = this.extraEquipInventory;
 		}
 		return aitemstack[par1];
-	}
 
-	@Override
-	public ItemStack getStackInSlotOnClosing(int par1)
-	{
-		ItemStack[] aitemstack = this.mainInventory;
-
-		if (par1 >= this.mainInventory.length + this.extraEquipInventory.length)
-		{
-			aitemstack = this.armorInventory;
-			par1 -= this.mainInventory.length + this.extraEquipInventory.length;
-		}
-		else if(par1 >= this.mainInventory.length){
-			par1-= aitemstack.length;
-			aitemstack = this.extraEquipInventory;
-		}
-		if (aitemstack[par1] != null)
-		{
-			ItemStack itemstack = aitemstack[par1];
-			aitemstack[par1] = null;
-			return itemstack;
-		}
-		else
-		{
-			return null;
-		}
 	}
 
 	/**
@@ -111,7 +67,7 @@ public class InventoryPlayerTFC extends InventoryPlayer {
 		{
 			itemstack = this.extraEquipInventory[l];
 
-			if (itemstack != null && (itemIn == null || itemstack.getItem() == itemIn) && (metadataIn <= -1 || itemstack.getMetadata() == metadataIn) && (itemNBT == null || CommandTestForBlock.func_175775_a(itemNBT, itemstack.getTagCompound(), true)))
+			if (itemstack != null && (itemIn == null || itemstack.getItem() == itemIn) && (metadataIn <= -1 || itemstack.getMetadata() == metadataIn) && (itemNBT == null || (NBTUtil.func_181123_a(itemNBT, itemstack.getTagCompound(), true))))
 			{
 				i1 = removeCount <= 0 ? itemstack.stackSize : Math.min(removeCount - k, itemstack.stackSize);
 				k += i1;
@@ -270,6 +226,25 @@ public class InventoryPlayerTFC extends InventoryPlayer {
 			this.extraEquipInventory[i] = ItemStack.copyItemStack(par1InventoryPlayer.extraEquipInventory[i]);
 		}
 		super.copyInventory(par1InventoryPlayer);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagList par1NBTTagList)
+	{
+		super.readFromNBT(par1NBTTagList);
+		this.extraEquipInventory = new ItemStack[Core.getExtraEquipInventorySize()];
+
+		NBTTagList extraList = player.getEntityData().getTagList("ExtraInventory", 10);
+
+		for (int i = 0; i < extraList.tagCount(); ++i)
+		{
+			NBTTagCompound nbttagcompound = extraList.getCompoundTagAt(i);
+			ItemStack itemstack = ItemStack.loadItemStackFromNBT(nbttagcompound);
+			if (itemstack != null)
+			{
+				extraEquipInventory[i] = itemstack;
+			}
+		}
 	}
 
 	@Override

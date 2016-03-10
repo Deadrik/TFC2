@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -17,6 +18,7 @@ import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
+import com.bioxx.tfc2.core.TFC_Sounds;
 
 public class GuiKnappingButton extends GuiButton 
 {
@@ -85,22 +87,24 @@ public class GuiKnappingButton extends GuiButton
 		}
 	}
 
-	private void drawLocal()
+	protected void drawLocal()
 	{
-		Tessellator localTessellator = Tessellator.getInstance();
-		WorldRenderer localWorldRenderer = localTessellator.getWorldRenderer();
-		localWorldRenderer.startDrawingQuads();
-		localWorldRenderer.addVertexWithUV(xPosition + 0, yPosition + 16, this.zLevel, 0, 1);
-		localWorldRenderer.addVertexWithUV(xPosition + 16, yPosition + 16, this.zLevel, 1, 1);
-		localWorldRenderer.addVertexWithUV(xPosition + 16, yPosition + 0, this.zLevel, 1, 0);
-		localWorldRenderer.addVertexWithUV(xPosition + 0, yPosition + 0, this.zLevel, 0, 0);
-		localTessellator.draw();
+		float f = 0.00390625F;
+		float f1 = 0.00390625F;
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		worldrenderer.pos(xPosition + 0, yPosition + 16, this.zLevel).tex(0, 1).endVertex();
+		worldrenderer.pos(xPosition + 16, yPosition + 16, this.zLevel).tex(1, 1).endVertex();
+		worldrenderer.pos(xPosition + 16, yPosition + 0, this.zLevel).tex(1, 0).endVertex();
+		worldrenderer.pos(xPosition + 0, yPosition + 0, this.zLevel).tex(0, 0).endVertex();
+		tessellator.draw();
 	}
 
 	@Override
 	public void playPressSound(SoundHandler paramSoundHandler)
 	{
-		paramSoundHandler.playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+		paramSoundHandler.playSound(PositionedSoundRecord.create(new ResourceLocation(TFC_Sounds.KNAPPING), 1.0F));
 	}
 
 	public void highlight(boolean b)
