@@ -9,14 +9,20 @@ import net.minecraft.world.World;
 
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.Crop;
+import com.bioxx.tfc2.api.interfaces.IRegisterSelf;
 import com.bioxx.tfc2.tileentities.TileCrop;
 
-public class ItemSeeds extends ItemTerra 
+public class ItemSeeds extends ItemTerra implements IRegisterSelf
 {
-	Crop cropToPlant;
-	public ItemSeeds(Crop c)
+	Crop[] cropToPlant = new Crop[]{Crop.Corn, Crop.Cabbage, Crop.Tomato, Crop.Wheat, Crop.Barley, Crop.Rye, Crop.Oat, Crop.Rice, 
+			Crop.Corn, Crop.Corn, Crop.Corn, Crop.Corn, Crop.Corn, Crop.Corn, Crop.Corn, Crop.Corn, Crop.Corn, Crop.Corn};
+	public ItemSeeds()
 	{
-		cropToPlant = c;
+		this.hasSubtypes = true;
+		this.maxSubTypeMeta = 1;
+		this.subTypeNames = new String[] {"seeds_corn", "seeds_cabbage", "seeds_tomato", "seeds_wheat", "seeds_barley", "seeds_rye", 
+				"seeds_oat", "seeds_rice", "seeds_potato", "seeds_onion", "seeds_garlic", "seeds_carrot", "seeds_sugarcane", "seeds_yellowbellpepper", 
+				"seeds_redbellpepper", "seeds_soybean", "seeds_greenbean", "seeds_squash"};
 	}
 
 	@Override
@@ -30,10 +36,16 @@ public class ItemSeeds extends ItemTerra
 		{
 			worldIn.setBlockState(pos.up(), TFCBlocks.Crop.getDefaultState());
 			TileCrop tc = (TileCrop) worldIn.getTileEntity(pos.up());
-			tc.setCropType(cropToPlant);
+			tc.setCropType(cropToPlant[stack.getItemDamage()]);
 			tc.setFarmerID(playerIn);
 		}
 
 		return true;
+	}
+
+	@Override
+	public String[] getSubTypeNames() 
+	{
+		return subTypeNames;
 	}
 }

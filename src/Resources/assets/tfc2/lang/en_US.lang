@@ -60,4 +60,10 @@ tile.stonesmooth.name=Smoothed Stone
 
 tile.planks.name=Wood Planks
 
+#=========
+#= Seeds =
+#=========
+item.seeds.seeds_corn=Seeds Corn
+item.seeds.seeds_cabbage=Seeds Cabbage
+
 item.looserock.name=Rock

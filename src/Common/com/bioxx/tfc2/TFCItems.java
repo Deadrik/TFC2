@@ -1,9 +1,12 @@
 package com.bioxx.tfc2;
 
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 
-import com.bioxx.tfc2.api.Crop;
+import net.minecraftforge.client.model.ModelLoader;
+
+import com.bioxx.tfc2.api.interfaces.IRegisterSelf;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.items.*;
@@ -98,24 +101,7 @@ public class TFCItems
 	public static Item FoodCheese;
 
 	//Seeds
-	public static Item SeedsCorn;
-	public static Item SeedsCabbage;
-	public static Item SeedsTomato;
-	public static Item SeedsWheat;
-	public static Item SeedsBarley;
-	public static Item SeedsRye;
-	public static Item SeedsOat;
-	public static Item SeedsRice;
-	public static Item SeedsPotato;
-	public static Item SeedsOnion;
-	public static Item SeedsGarlic;
-	public static Item SeedsCarrot;
-	public static Item SeedsSugarcane;
-	public static Item SeedsYellowBellPepper;
-	public static Item SeedsRedBellPepper;
-	public static Item SeedsSoybean;
-	public static Item SeedsGreenbean;
-	public static Item SeedsSquash;
+	public static Item Seeds;
 
 	public static void Load()
 	{
@@ -161,14 +147,7 @@ public class TFCItems
 		FoodCheese = registerItem(new ItemFoodTFC(EnumFoodGroup.Dairy, 1f, 1).setExpiration(7200).setUnlocalizedName("food_cheese"));
 
 
-		SeedsCorn = registerItem(new ItemSeeds(Crop.Corn).setUnlocalizedName("seeds_corn"));
-		SeedsCabbage = registerItem(new ItemSeeds(Crop.Cabbage).setUnlocalizedName("seeds_cabbage"));
-		SeedsTomato = registerItem(new ItemSeeds(Crop.Tomato).setUnlocalizedName("seeds_tomato"));
-		SeedsWheat = registerItem(new ItemSeeds(Crop.Wheat).setUnlocalizedName("seeds_wheat"));
-		SeedsBarley = registerItem(new ItemSeeds(Crop.Barley).setUnlocalizedName("seeds_barley"));
-		SeedsRye = registerItem(new ItemSeeds(Crop.Rye).setUnlocalizedName("seeds_rye"));
-		SeedsOat = registerItem(new ItemSeeds(Crop.Oat).setUnlocalizedName("seeds_oat"));
-		SeedsRice = registerItem(new ItemSeeds(Crop.Rice).setUnlocalizedName("seeds_rice"));
+		Seeds = registerItemOnly(new ItemSeeds().setUnlocalizedName("seeds"));
 	}
 
 	public static void Register()
@@ -196,6 +175,15 @@ public class TFCItems
 	private static Item registerItemOnly(Item i)
 	{
 		RegistryItemQueue.getInstance().addItemOnly(i);
+
+		if(i instanceof IRegisterSelf)
+		{
+			for(int c = 0; c < ((IRegisterSelf)i).getSubTypeNames().length; c++)
+			{
+				ModelLoader.setCustomModelResourceLocation(i, c, new ModelResourceLocation(Reference.ModID + ":"+((IRegisterSelf)i).getSubTypeNames()[c], "inventory"));
+			}
+		}
+
 		return i;
 	}
 

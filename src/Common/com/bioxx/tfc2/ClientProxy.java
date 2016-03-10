@@ -93,7 +93,7 @@ public class ClientProxy extends CommonProxy
 
 	private void registerItemMesh(Item i, int meta, ModelResourceLocation mrl)
 	{
-		ModelLoader.setCustomMeshDefinition(i, new MeshDef(mrl));
+		ModelLoader.setCustomModelResourceLocation(i, meta, mrl);
 	}
 
 	@Override
