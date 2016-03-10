@@ -115,7 +115,7 @@ public class ContainerTFC extends Container
 			}
 		}
 
-		ItemStack is = super.slotClick(slotID, clickedButton, mode, player);
+		ItemStack is = super.slotClick(slotID, clickedButton, mode, p);
 		saveContents(is);
 		return is;
 	}
