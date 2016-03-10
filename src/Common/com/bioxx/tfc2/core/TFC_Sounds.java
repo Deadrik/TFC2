@@ -39,5 +39,5 @@ public class TFC_Sounds
 	public static final String LIONDEATH = LOCATION + "mob.lion.death";
 	public static final String KNAPPING = LOCATION + "knapping";
 
-	public static final String TFCMUSIC = LOCATION + "music.tfc";
+	public static final String TFCMUSIC = LOCATION + "music";
 }

@@ -255,7 +255,7 @@
     ]
   },
 
-  "music.tfc": {
+  "music": {
     "category": "music",
     "sounds": [
       {"name": "music/m0", "stream": true},

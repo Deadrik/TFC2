@@ -3,8 +3,11 @@ package com.bioxx.tfc2.handlers.client;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import com.bioxx.tfc2.core.TFC_Sounds;
 
 import com.bioxx.tfc2.Reference;
 
@@ -23,7 +26,7 @@ public class BackgroundMusicHandler
 			}
 			else
 			{
-				iSound = PositionedSoundRecord.create(new ResourceLocation(Reference.ModID + ":music.tfc"));
+				iSound = PositionedSoundRecord.create(new ResourceLocation(TFC_Sounds.TFCMUSIC));
 				event.result = iSound;
 			}
 		}
