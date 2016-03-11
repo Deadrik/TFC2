@@ -40,9 +40,13 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, VegType.Grass0).withProperty(IS_ON_STONE, Boolean.valueOf(false)));
-		float f = 0.4F;
+		float f = 0.35F;
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.8F, 0.5F + f);
 	}
+
+	/*******************************************************************************
+	 * 1. Content
+	 *******************************************************************************/
 
 	@Override
 	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
@@ -80,42 +84,9 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		return Core.isSoil(state);
 	}
 
-	@Override
-	protected BlockState createBlockState()
-	{
-		return new BlockState(this, new IProperty[] { META_PROPERTY, IS_ON_STONE});
-	}
-
-	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune)
-	{
-		return null;
-	}
-
-	@Override
-	public int tickRate(World worldIn)
-	{
-		return 3;
-	}
-
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		Block block = world.getBlockState(pos.up()).getBlock();
-		return state.withProperty(IS_ON_STONE, world.getBlockState(pos.down()).getBlock() == TFCBlocks.Stone);
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return this.getDefaultState().withProperty(META_PROPERTY, VegType.getTypeFromMeta(meta));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return ((VegType)state.getValue(META_PROPERTY)).getMeta();
-	}
+	/*******************************************************************************
+	 * 2. Rendering
+	 *******************************************************************************/
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -163,12 +134,6 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
-	{
-		return null;
-	}
-
-	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
@@ -178,6 +143,53 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	public boolean isFullCube()
 	{
 		return false;
+	}
+
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		Block block = world.getBlockState(pos.up()).getBlock();
+		return state.withProperty(IS_ON_STONE, world.getBlockState(pos.down()).getBlock() == TFCBlocks.Stone);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(META_PROPERTY, VegType.getTypeFromMeta(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return ((VegType)state.getValue(META_PROPERTY)).getMeta();
+	}
+
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+	{
+		return null;
+	}
+
+	@Override
+	protected BlockState createBlockState()
+	{
+		return new BlockState(this, new IProperty[] { META_PROPERTY, IS_ON_STONE});
+	}
+
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+	{
+		return null;
+	}
+
+	@Override
+	public int tickRate(World worldIn)
+	{
+		return 3;
 	}
 
 	public enum VegType implements IStringSerializable

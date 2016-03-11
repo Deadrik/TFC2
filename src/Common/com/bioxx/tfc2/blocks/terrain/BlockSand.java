@@ -7,10 +7,10 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 
-import com.bioxx.tfc2.blocks.BlockTerra;
 import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.blocks.BlockCollapsable;
 
-public class BlockSand extends BlockTerra
+public class BlockSand extends BlockCollapsable
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -19,6 +19,17 @@ public class BlockSand extends BlockTerra
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
+	/*******************************************************************************
+	 * 1. Content 
+	 *******************************************************************************/
+
+	/*******************************************************************************
+	 * 2. Rendering 
+	 *******************************************************************************/
+
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
 
 	@Override
 	protected BlockState createBlockState()
