@@ -26,9 +26,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.world.WorldGen;
 
-public class BlockVegetation extends BlockTerra implements IPlantable
+public class BlockVegetation extends BlockTerra implements IPlantable, IWeightedBlock
 {
 	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("veg", VegType.class);
 	/** Whether this fence connects in the northern direction */
@@ -82,6 +83,12 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	protected boolean canPlaceBlockOn(IBlockState state)
 	{
 		return Core.isSoil(state);
+	}
+
+	@Override
+	public int getWeight(IBlockState myState) 
+	{
+		return 0;
 	}
 
 	/*******************************************************************************

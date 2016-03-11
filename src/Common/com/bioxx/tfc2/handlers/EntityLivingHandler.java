@@ -100,7 +100,7 @@ public class EntityLivingHandler
 				{
 					setThirsty(player, false);
 				}
-				if (foodstats.stomachLevel / foodstats.getMaxStomach(player) <= 0.25f)
+				if (!player.capabilities.isCreativeMode && foodstats.stomachLevel / foodstats.getMaxStomach(player) <= 0.25f)
 				{
 					player.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 20, 1));
 					player.addPotionEffect(new PotionEffect(Potion.weakness.id, 20, 1));

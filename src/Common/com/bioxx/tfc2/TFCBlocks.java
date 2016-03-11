@@ -70,8 +70,8 @@ public class TFCBlocks
 
 		Dirt = new BlockDirt().setHardness(2F).setStepSound(Block.soundTypeGravel).setUnlocalizedName("dirt");
 		Grass = new BlockGrass().setHardness(2F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("grass");
-		Stone = new BlockStone().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stone");
-		Rubble = new BlockRubble().setHardness(10F).setStepSound(Block.soundTypeStone).setUnlocalizedName("rubble");
+		Stone = new BlockStone().setHardness(5F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stone");
+		Rubble = new BlockRubble().setHardness(6F).setStepSound(Block.soundTypeStone).setUnlocalizedName("rubble");
 		Sand = new BlockSand().setHardness(1F).setStepSound(Block.soundTypeSand).setUnlocalizedName("sand");
 		Gravel = new BlockGravel().setHardness(1F).setStepSound(Block.soundTypeGravel).setUnlocalizedName("gravel");
 		Planks = new BlockPlanks().setHardness(4F).setStepSound(Block.soundTypeWood).setUnlocalizedName("planks");
@@ -95,10 +95,10 @@ public class TFCBlocks
 		LogHorizontal3 = new BlockLogHorizontal3().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal3");
 		Leaves = new BlockLeaves().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves");
 		Leaves2 = new BlockLeaves2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("leaves2");
-		Ore = new BlockOre().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("ore");
+		Ore = new BlockOre().setHardness(5F).setStepSound(Block.soundTypeStone).setUnlocalizedName("ore");
 		ClimbingRocks = new BlockClimbingRocks().setHardness(0.2F).setStepSound(Block.soundTypeStone).setUnlocalizedName("climbing_rock");
-		StoneBrick = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonebrick");
-		StoneSmooth = new BlockStoneBrick().setHardness(20F).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonesmooth");
+		StoneBrick = new BlockStoneBrick().setHardness(5F).setResistance(5f).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonebrick");
+		StoneSmooth = new BlockStoneSmooth().setHardness(5F).setResistance(5f).setStepSound(Block.soundTypeStone).setUnlocalizedName("stonesmooth");
 		Portal = new BlockPortal().setHardness(-1F).setResistance(6000000f).setStepSound(Block.soundTypeStone).setUnlocalizedName("portal").setLightOpacity(3).setLightLevel(0.5f);
 		PortalStone = new BlockPortalStone().setHardness(-1F).setResistance(6000000f).setUnlocalizedName("portalstone");
 		TorchOn = new BlockTorchTFC(true).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_on");

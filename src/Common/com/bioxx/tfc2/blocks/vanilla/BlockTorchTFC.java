@@ -184,4 +184,10 @@ public class BlockTorchTFC extends BlockTorch implements ITileEntityProvider
 	{
 		return other == TFCBlocks.TorchOn || other == TFCBlocks.TorchOff;
 	}
+
+	@Override
+	public boolean isReplaceable(World worldIn, BlockPos pos)
+	{
+		return true;
+	}
 }

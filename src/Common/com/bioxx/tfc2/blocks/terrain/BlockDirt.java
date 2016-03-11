@@ -11,10 +11,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
-import com.bioxx.tfc2.blocks.BlockTerra;
+import com.bioxx.tfc2.blocks.BlockGravity;
+import com.bioxx.tfc2.core.TFC_Sounds;
+import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockDirt extends BlockTerra
+public class BlockDirt extends BlockGravity implements IWeightedBlock
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -39,6 +42,30 @@ public class BlockDirt extends BlockTerra
 			return true;
 
 		return false;
+	}
+
+	@Override
+	public void onStartFalling(EntityFallingBlockTFC fallingEntity) 
+	{
+		fallingEntity.worldObj.playSoundAtEntity(fallingEntity, TFC_Sounds.FALLININGDIRTSHORT, 0.2f, 1.0f);
+	}
+
+	@Override
+	public int getSlideHeight()
+	{
+		return 1;
+	}
+
+	@Override
+	public float getSlideChance()
+	{
+		return 0.75f;
+	}
+
+	@Override
+	public int getWeight(IBlockState myState) 
+	{
+		return 20;
 	}
 
 	/*******************************************************************************

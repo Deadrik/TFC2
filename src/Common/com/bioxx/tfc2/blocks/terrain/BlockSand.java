@@ -30,6 +30,18 @@ public class BlockSand extends BlockGravity
 		fallingEntity.worldObj.playSoundAtEntity(fallingEntity, TFC_Sounds.FALLININGDIRTSHORT, 0.2f, 1.0f);
 	}
 
+	@Override
+	public int getSlideHeight()
+	{
+		return 1;
+	}
+
+	@Override
+	public float getSlideChance()
+	{
+		return 1.0f;
+	}
+
 	/*******************************************************************************
 	 * 2. Rendering 
 	 *******************************************************************************/
@@ -56,15 +68,5 @@ public class BlockSand extends BlockGravity
 		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
 	}
 
-	@Override
-	public int getSlideHeight()
-	{
-		return 1;
-	}
 
-	@Override
-	public float getSlideChance()
-	{
-		return 1.0f;
-	}
 }

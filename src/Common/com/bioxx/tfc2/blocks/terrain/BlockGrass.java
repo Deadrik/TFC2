@@ -25,11 +25,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
-import com.bioxx.tfc2.blocks.BlockTerra;
 import com.bioxx.tfc2.world.WorldGen;
 
-public class BlockGrass extends BlockTerra
+public class BlockGrass extends BlockCollapsible implements IWeightedBlock
 {
 	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 	public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -110,6 +110,24 @@ public class BlockGrass extends BlockTerra
 	public int tickRate(World worldIn)
 	{
 		return 3;
+	}
+
+	@Override
+	public int getWeight(IBlockState myState) 
+	{
+		return 20;
+	}
+
+	@Override
+	public IBlockState getFallBlockType(IBlockState myState)
+	{
+		return TFCBlocks.Dirt.getDefaultState().withProperty(BlockRubble.META_PROPERTY, myState.getValue(META_PROPERTY));
+	}
+
+	@Override
+	public int getNaturalSupportRange(IBlockState myState)
+	{
+		return 1;
 	}
 
 	/*******************************************************************************

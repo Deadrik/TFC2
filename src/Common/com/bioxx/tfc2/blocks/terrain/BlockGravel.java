@@ -7,10 +7,13 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 
-import com.bioxx.tfc2.blocks.BlockTerra;
+import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.blocks.BlockGravity;
+import com.bioxx.tfc2.core.TFC_Sounds;
+import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockGravel extends BlockTerra
+public class BlockGravel extends BlockGravity implements IWeightedBlock
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -19,6 +22,40 @@ public class BlockGravel extends BlockTerra
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
+	/*******************************************************************************
+	 * 1. Content 
+	 *******************************************************************************/
+	@Override
+	public void onStartFalling(EntityFallingBlockTFC fallingEntity) 
+	{
+		fallingEntity.worldObj.playSoundAtEntity(fallingEntity, TFC_Sounds.FALLININGDIRTSHORT, 0.7f, 0.80f);
+	}
+
+	@Override
+	public int getSlideHeight()
+	{
+		return 1;
+	}
+
+	@Override
+	public float getSlideChance()
+	{
+		return 1.0f;
+	}
+
+	@Override
+	public int getWeight(IBlockState myState) 
+	{
+		return 20;
+	}
+
+	/*******************************************************************************
+	 * 2. Rendering 
+	 *******************************************************************************/
+
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
 
 	@Override
 	protected BlockState createBlockState()

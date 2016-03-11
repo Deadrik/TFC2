@@ -24,10 +24,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.world.WorldGen;
 
-public class BlockLeaves extends BlockTerra
+public class BlockLeaves extends BlockTerra implements IWeightedBlock
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 16));
 	public static PropertyBool FANCY = PropertyBool.create("fancy");
@@ -41,27 +42,23 @@ public class BlockLeaves extends BlockTerra
 		this.setLightOpacity(1);
 		this.META_PROP = META_PROPERTY;
 	}
-
+	/*******************************************************************************
+	 * 1. Content 
+	 *******************************************************************************/
 	@Override
-	protected BlockState createBlockState()
+	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY, FANCY});
+		return true;
 	}
 
 	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	public int getWeight(IBlockState myState) 
 	{
-		boolean fancy = true;
-
-		if(!isTransparent)
-			fancy = false;
-
-		if(state.getValue(META_PROPERTY) == WoodType.Palm)
-			fancy = false;
-
-		return state.withProperty(FANCY, fancy);
-
+		return 0;
 	}
+	/*******************************************************************************
+	 * 2. Rendering 
+	 *******************************************************************************/
 
 	@Override
 	public boolean isOpaqueCube()
@@ -124,16 +121,42 @@ public class BlockLeaves extends BlockTerra
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
-	{
-
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public EnumWorldBlockLayer getBlockLayer()
 	{
 		return this.isTransparent ? EnumWorldBlockLayer.CUTOUT_MIPPED : EnumWorldBlockLayer.SOLID;
+	}
+
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
+	@Override
+	protected BlockState createBlockState()
+	{
+		return new BlockState(this, new IProperty[]{META_PROPERTY, FANCY});
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		boolean fancy = true;
+
+		if(!isTransparent)
+			fancy = false;
+
+		if(state.getValue(META_PROPERTY) == WoodType.Palm)
+			fancy = false;
+
+		return state.withProperty(FANCY, fancy);
+
+	}
+
+
+
+	@Override
+	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
+	{
+
 	}
 
 	@Override
@@ -152,11 +175,5 @@ public class BlockLeaves extends BlockTerra
 	public int damageDropped(IBlockState state)
 	{
 		return ((WoodType)state.getValue(META_PROPERTY)).getMeta();
-	}
-
-	@Override
-	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
-	{
-		return true;
-	}
+	}	
 }

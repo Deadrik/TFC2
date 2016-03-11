@@ -10,14 +10,16 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.api.interfaces.ISupportBlock;
+import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.blocks.BlockGravity;
 import com.bioxx.tfc2.blocks.BlockTerra;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockCollapsable extends BlockTerra
+public class BlockCollapsible extends BlockTerra
 {
-
-	public BlockCollapsable(Material m, PropertyHelper p)
+	protected int scanDepth = 20;
+	public BlockCollapsible(Material m, PropertyHelper p)
 	{
 		super(m, p);
 	}
@@ -25,6 +27,27 @@ public class BlockCollapsable extends BlockTerra
 	/*******************************************************************************
 	 * 1. Content 
 	 *******************************************************************************/
+	@Override
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
+	{
+		BlockPos scanPos = pos;
+		if(this instanceof IWeightedBlock)
+		{
+			while(true)
+			{
+				scanPos = scanPos.down();
+				if(world.getBlockState(scanPos).getBlock() instanceof IWeightedBlock)
+				{
+					world.scheduleUpdate(scanPos, world.getBlockState(scanPos).getBlock(), world.getBlockState(scanPos).getBlock().tickRate(world));
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+	}
+
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
@@ -36,32 +59,117 @@ public class BlockCollapsable extends BlockTerra
 	{
 		if (!world.isRemote)
 		{
-			//TODO: Check if this block is supported. If its not then collpase this block.
 			if(!hasNaturalSupport(world, pos, state))
 			{
-				IBlockState stateNew = getFallBlockType(state);
-				if(stateNew.getBlock() instanceof BlockGravity)
+				createFallingEntity(world, pos, state);
+				scheduleNeighbors(world, pos);
+			}
+			if(this instanceof ISupportBlock && !((ISupportBlock)state.getBlock()).isStructural(world, pos))
+			{
+				int weight = calculateWeight(world, pos);
+				if(weight > ((ISupportBlock)state.getBlock()).getMaxSupportWeight(state))
 				{
-					world.setBlockToAir(pos);
-					EntityFallingBlockTFC entityfallingblock = new EntityFallingBlockTFC(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, stateNew);
-					((BlockGravity)getFallBlockType(state).getBlock()).onStartFalling(entityfallingblock);
-					world.spawnEntityInWorld(entityfallingblock);
-				}
-				else
-				{
-					world.setBlockState(pos, getFallBlockType(state));
+					createFallingEntity(world, pos, state);
+					scheduleNeighbors(world, pos.down(2));
 				}
 			}
 		}
 	}
 
-	private boolean hasNaturalSupport(World world, BlockPos pos, IBlockState state)
+	protected void createFallingEntity(World world, BlockPos pos, IBlockState state)
+	{
+		IBlockState stateNew = getFallBlockType(state);
+
+		if(stateNew.getBlock() instanceof BlockGravity)
+		{
+			world.setBlockToAir(pos);
+			EntityFallingBlockTFC entityfallingblock = new EntityFallingBlockTFC(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, stateNew);
+			((BlockGravity)getFallBlockType(state).getBlock()).onStartFalling(entityfallingblock);
+			world.spawnEntityInWorld(entityfallingblock);
+			onCreateFallingEntity(entityfallingblock, world, pos);
+		}
+		else
+		{
+			world.setBlockState(pos, getFallBlockType(state));
+		}
+	}
+
+	protected void onCreateFallingEntity(EntityFallingBlockTFC entity, World world, BlockPos pos)
+	{
+
+	}
+
+	protected void scheduleNeighbors(World world, BlockPos pos)
+	{
+		for(int x = -5; x <= 5; x++)
+		{
+			for(int z = -5; z <= 5; z++)
+			{
+				for(int y = 0; y <= 3; y++)
+				{
+					world.scheduleUpdate(pos.add(x, y, z), world.getBlockState(pos.add(x, y, z)).getBlock(), tickRate(world));
+				}
+			}
+		}
+	}
+
+	protected int calculateWeight(World world, BlockPos pos)
+	{
+		int weight = 0;
+
+		IBlockState scanState;
+		Block scanBlock;
+		BlockPos scanPos;
+
+		if(!(world.getBlockState(pos.up()).getBlock() instanceof IWeightedBlock))
+		{
+			return 0;
+		}
+
+		Queue<BlockPos> scanQueue = new LinkedList<BlockPos>();
+		BlockPosList scannedQueue = new BlockPosList();
+		scanQueue.add(pos.up());
+
+		while(scanQueue.peek() != null)
+		{
+			scanPos = scanQueue.poll();
+			scanState = world.getBlockState(scanPos);
+			scanBlock = scanState.getBlock();
+			scannedQueue.add(scanPos);
+
+			if(!(scanBlock instanceof IWeightedBlock) && !scanBlock.isAir(world, scanPos))
+			{
+				weight+=1;
+			}
+			else if(scanBlock instanceof IWeightedBlock)
+			{
+				weight += ((IWeightedBlock)scanBlock).getWeight(scanState);
+				if(!scannedQueue.contains(scanPos.north()))
+					scanQueue.add(scanPos.north());
+				if(!scannedQueue.contains(scanPos.south()))
+					scanQueue.add(scanPos.south());
+				if(!scannedQueue.contains(scanPos.east()))
+					scanQueue.add(scanPos.east());
+				if(!scannedQueue.contains(scanPos.west()))
+					scanQueue.add(scanPos.west());
+				if(!scannedQueue.contains(scanPos.up()))
+					scanQueue.add(scanPos.up());
+			}
+		}
+
+		return weight;
+	}
+
+	protected boolean hasNaturalSupport(World world, BlockPos pos, IBlockState state)
 	{
 		IBlockState scanState;
 		Block scanBlock;
 		BlockPos scanPos;
+		BlockPos pos1 = new BlockPos(pos.getX()+0.5, 0, pos.getZ()+0.5), pos2;
+
 		boolean isSupported = false;
-		int supportRange = getNaturalSupportRange(state);
+		float supportRange = getNaturalSupportRange(state);
+		float supportRangeSq = supportRange*supportRange;
 
 		//If the block beneath this one is solid then we will assume for now that this block is naturally supported
 		if(world.getBlockState(pos.down()).getBlock().isBlockSolid(world, pos.down(), EnumFacing.UP))
@@ -83,12 +191,17 @@ public class BlockCollapsable extends BlockTerra
 			scanState = world.getBlockState(scanPos);
 			scanBlock = scanState.getBlock();
 			scannedQueue.add(scanPos);
-			//If we've scanned down 20 blocks and we're still scanning then just assume that we're supported so we do not waste time
-			if(pos.subtract(scanPos).getY() > 20){isSupported = true; break;}
+			//If we've scanned down X blocks and we're still scanning then just assume that we're supported so we do not waste time
+			if(pos.subtract(scanPos).getY() > scanDepth)
+			{
+				isSupported = true; 
+				break;
+			}
 
 			//If we move horizontally more than X blocks then stop scanning any further away
-			if(scanPos.subtract(pos).getX() > supportRange || scanPos.subtract(pos).getZ() > supportRange || 
-					scanPos.subtract(pos).getX() < -supportRange || scanPos.subtract(pos).getZ() < -supportRange)
+			pos2 = new BlockPos(scanPos.getX()+0.5, 0, scanPos.getZ()+0.5);
+			double dist = pos1.distanceSq(pos2);
+			if(dist > supportRangeSq)
 			{
 				continue;
 			}
@@ -118,7 +231,7 @@ public class BlockCollapsable extends BlockTerra
 
 	public boolean canSupport(IBlockState myState, IBlockState otherState)
 	{
-		if(otherState.getBlock() instanceof BlockCollapsable)
+		if(otherState.getBlock() instanceof BlockCollapsible)
 			return true;
 		return false;
 	}
@@ -141,6 +254,12 @@ public class BlockCollapsable extends BlockTerra
 	 * 3. Blockstate 
 	 *******************************************************************************/
 
+
+	public static enum Depth
+	{
+		Aboveground,
+		Underground;
+	}
 
 	private static class BlockPosList extends AbstractList<BlockPos> {
 
