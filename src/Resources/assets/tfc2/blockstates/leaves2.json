@@ -1,14 +1,19 @@
 {
 	"forge_marker" : 1,
 	"defaults": {
-        "model": "tfc2:Leaves/leaves"
+        "model": "tfc2:Leaves/leaves",
+        "textures": {
+			"all": "tfc2:blocks/wood/trees/Acacia Leaves", 
+			"fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff",
+			"particle": "tfc2:blocks/wood/trees/Acacia Leaves"
+			}
      },
     "variants": 
     {
     	"fancy": 
     	{
-     		"true":{"model": "tfc2:Leaves/leaves_fancy"},
-     		"false":{"model": "tfc2:Leaves/leaves"}
+     		"true":{"submodel": "tfc2:Leaves/leaves_fluff"},
+     		"false":{}
      	},
      	"wood":
      	{

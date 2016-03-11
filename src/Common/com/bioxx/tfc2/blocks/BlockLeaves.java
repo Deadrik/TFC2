@@ -18,6 +18,7 @@ import net.minecraft.world.ChunkCache;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,27 +55,6 @@ public class BlockLeaves extends BlockTerra
 
 		if(!isTransparent)
 			fancy = false;
-
-		//North
-		if(world.getBlockState(pos.north()).getBlock() != state.getBlock())
-			fancy = true;
-
-		//South
-		if(world.getBlockState(pos.south()).getBlock() != state.getBlock())
-			fancy = true;
-
-		//East
-		if(world.getBlockState(pos.east()).getBlock() != state.getBlock())
-			fancy = true;
-
-		//West
-		if(world.getBlockState(pos.west()).getBlock() != state.getBlock())
-			fancy = true;
-
-		if(world.getBlockState(pos.up()).getBlock() != this)
-			fancy = true;
-		if(world.getBlockState(pos.down()).getBlock() != this)
-			fancy = true;
 
 		if(state.getValue(META_PROPERTY) == WoodType.Palm)
 			fancy = false;

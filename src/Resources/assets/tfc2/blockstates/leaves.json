@@ -10,7 +10,7 @@
 	},
     "variants": {
     "fancy": {
-     		"true":{"model": "tfc2:Leaves/leaves_fancy"},
+     		"true":{"submodel": "tfc2:Leaves/leaves_fluff"},
      		"false":{}
      	},    
     "wood":{
