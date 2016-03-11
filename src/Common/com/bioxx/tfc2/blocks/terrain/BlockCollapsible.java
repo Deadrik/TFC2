@@ -63,11 +63,12 @@ public class BlockCollapsible extends BlockTerra
 			{
 				createFallingEntity(world, pos, state);
 				scheduleNeighbors(world, pos);
+				return;
 			}
-			if(this instanceof ISupportBlock && !((ISupportBlock)state.getBlock()).isStructural(world, pos))
+			if(this instanceof ISupportBlock && !((ISupportBlock)state.getBlock()).isSpan(world, pos))
 			{
 				int weight = calculateWeight(world, pos);
-				if(weight > ((ISupportBlock)state.getBlock()).getMaxSupportWeight(state))
+				if(weight > ((ISupportBlock)state.getBlock()).getMaxSupportWeight(world, pos, state))
 				{
 					createFallingEntity(world, pos, state);
 					scheduleNeighbors(world, pos.down(2));

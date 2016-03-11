@@ -6,7 +6,7 @@ import net.minecraft.world.IBlockAccess;
 
 public interface ISupportBlock 
 {
-	public int getMaxSupportWeight(IBlockState myState);
+	public int getMaxSupportWeight(IBlockAccess world, BlockPos pos, IBlockState myState);
 
-	public boolean isStructural(IBlockAccess world, BlockPos pos);
+	public boolean isSpan(IBlockAccess world, BlockPos pos);
 }

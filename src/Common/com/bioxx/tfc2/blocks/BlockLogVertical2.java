@@ -17,7 +17,7 @@ import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.INeedOffset;
 import com.bioxx.tfc2.api.types.WoodType;
 
-public class BlockLogVertical2 extends BlockTerra implements INeedOffset
+public class BlockLogVertical2 extends BlockLogVertical implements INeedOffset
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 19));
 

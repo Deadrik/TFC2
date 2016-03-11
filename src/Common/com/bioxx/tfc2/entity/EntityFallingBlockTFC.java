@@ -79,7 +79,7 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 							{
 								if(!placed && this.worldObj.canBlockBePlaced(block, blockpos1.add(0, i, 0), true, net.minecraft.util.EnumFacing.UP, (Entity)null, (ItemStack)null) && !block.canFallInto(this.worldObj, blockpos1.add(0, i, 0).down()))
 								{
-									placed = this.worldObj.setBlockState(blockpos1.add(0, i, 0), this.fallTile, 3);
+									placed = this.worldObj.setBlockState(blockpos1.add(0, i, 0), this.fallTile, 2);
 								}
 							}
 							//if ((this.worldObj.canBlockBePlaced(block, blockpos1, true, net.minecraft.util.EnumFacing.UP, (Entity)null, (ItemStack)null)) && (!block.canFallInto(this.worldObj, blockpos1.down())) && (this.worldObj.setBlockState(blockpos1, this.fallTile, 3)))
