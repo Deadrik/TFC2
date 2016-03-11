@@ -8,9 +8,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 
 import com.bioxx.tfc2.api.types.StoneType;
-import com.bioxx.tfc2.blocks.BlockCollapsable;
+import com.bioxx.tfc2.blocks.BlockGravity;
+import com.bioxx.tfc2.core.TFC_Sounds;
+import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockSand extends BlockCollapsable
+public class BlockSand extends BlockGravity
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -22,6 +24,11 @@ public class BlockSand extends BlockCollapsable
 	/*******************************************************************************
 	 * 1. Content 
 	 *******************************************************************************/
+	@Override
+	public void onStartFalling(EntityFallingBlockTFC fallingEntity) 
+	{
+		fallingEntity.worldObj.playSoundAtEntity(fallingEntity, TFC_Sounds.FALLININGDIRTSHORT, 0.2f, 1.0f);
+	}
 
 	/*******************************************************************************
 	 * 2. Rendering 
@@ -47,5 +54,17 @@ public class BlockSand extends BlockCollapsable
 	public int getMetaFromState(IBlockState state)
 	{
 		return ((StoneType)state.getValue(META_PROPERTY)).getMeta();
+	}
+
+	@Override
+	public int getSlideHeight()
+	{
+		return 1;
+	}
+
+	@Override
+	public float getSlideChance()
+	{
+		return 1.0f;
 	}
 }

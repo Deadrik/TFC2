@@ -10,10 +10,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.StoneType;
-import com.bioxx.tfc2.blocks.BlockTerra;
 
-public class BlockStone extends BlockTerra
+public class BlockStone extends BlockCollapsable
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -51,11 +51,59 @@ public class BlockStone extends BlockTerra
 		IBlockState stateEast = worldIn.getBlockState(pos.east());
 		IBlockState stateWest = worldIn.getBlockState(pos.west());
 
-		if(!stateUp.getBlock().isFullCube() && !stateDown.getBlock().isFullCube() && !stateNorth.getBlock().isFullCube()
-				&& !stateSouth.getBlock().isFullCube() && !stateEast.getBlock().isFullCube() && !stateWest.getBlock().isFullCube())
+		if(stateUp.getBlock() != this && stateDown.getBlock() != this && stateNorth.getBlock() != this
+				&& stateSouth.getBlock() != this && stateEast.getBlock() != this && stateWest.getBlock() != this)
 		{
 			dropBlockAsItem(worldIn, pos, state, 0);
 			worldIn.setBlockToAir(pos);
 		}
+		else
+		{
+			super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+		}
+	}
+
+	@Override
+	public IBlockState getFallBlockType(IBlockState myState)
+	{
+		return TFCBlocks.Rubble.getDefaultState().withProperty(BlockRubble.META_PROPERTY, myState.getValue(META_PROPERTY));
+	}
+
+	@Override
+	public int getNaturalSupportRange(IBlockState myState)
+	{
+		StoneType stone = myState.getValue(BlockStone.META_PROPERTY);
+		switch(stone)
+		{
+		case Granite:
+		case Gabbro:
+		case Diorite:
+			return 7;
+		case Andesite:
+		case Basalt:
+		case Dacite:
+		case Rhyolite:
+			return 6;
+		case Gneiss:
+		case Blueschist:
+		case Marble:
+		case Schist:
+			return 5;
+		case Chert:
+		case Claystone:
+		case Dolomite:
+		case Limestone:
+		case Shale:
+			return 4;
+		}
+		return 5;
+	}
+
+	@Override
+	public boolean canSupport(IBlockState myState, IBlockState otherState)
+	{
+		if(otherState.getBlock() == this)
+			return true;
+		return false;
 	}
 }

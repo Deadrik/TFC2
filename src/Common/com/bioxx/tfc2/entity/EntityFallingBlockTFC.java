@@ -1,6 +1,5 @@
 package com.bioxx.tfc2.entity;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -13,11 +12,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
-import com.bioxx.tfc2.blocks.BlockCollapsable;
+import com.bioxx.tfc2.blocks.BlockGravity;
 
 public class EntityFallingBlockTFC extends EntityFallingBlock 
 {
-
 	public EntityFallingBlockTFC(World worldIn, double x, double y, double z,
 			IBlockState fallingBlockState) 
 	{
@@ -28,7 +26,7 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 	@Override
 	public void onUpdate()
 	{
-		Block block = this.fallTile.getBlock();
+		BlockGravity block = (BlockGravity)this.fallTile.getBlock();
 
 		if (block.getMaterial() == Material.air)
 		{
@@ -48,11 +46,11 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 				{
 					this.worldObj.setBlockToAir(blockpos);
 				}
-				else if (!this.worldObj.isRemote)
+				/*else if (!this.worldObj.isRemote)
 				{
 					setDead();
 					return;
-				}
+				}*/
 			}
 
 			this.motionY -= 0.03999999910593033D;
@@ -67,22 +65,18 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 
 				if (this.onGround)
 				{
-					this.motionX *= 0.699999988079071D;
-					this.motionZ *= 0.699999988079071D;
-					this.motionY *= -0.5D;
-
 					if (this.worldObj.getBlockState(blockpos1).getBlock() != Blocks.piston_extension)
 					{
+						this.motionX *= 0.699999988079071D;
+						this.motionZ *= 0.699999988079071D;
+						this.motionY *= -0.5D;
 						setDead();
 
 						if (!this.canSetAsBlock)
 						{
-							if ((this.worldObj.canBlockBePlaced(block, blockpos1, true, net.minecraft.util.EnumFacing.UP, (Entity)null, (ItemStack)null)) && (!BlockCollapsable.canFallInto(this.worldObj, blockpos1.down())) && (this.worldObj.setBlockState(blockpos1, this.fallTile, 3)))
+							if ((this.worldObj.canBlockBePlaced(block, blockpos1, true, net.minecraft.util.EnumFacing.UP, (Entity)null, (ItemStack)null)) && (!block.canFallInto(this.worldObj, blockpos1.down())) && (this.worldObj.setBlockState(blockpos1, this.fallTile, 3)))
 							{
-								if ((block instanceof BlockCollapsable))
-								{
-									((BlockCollapsable)block).onEndFalling(this.worldObj, blockpos1);
-								}
+								block.onEndFalling(this.worldObj, blockpos1);
 
 								if ((this.tileEntityData != null) && ((block instanceof net.minecraft.block.ITileEntityProvider)))
 								{
@@ -127,5 +121,4 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 			}
 		}
 	}
-
 }
