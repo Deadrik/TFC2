@@ -30,6 +30,7 @@ public class BlockCollapsible extends BlockTerra
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
 	{
+		world.scheduleUpdate(pos, this, tickRate(world));
 		BlockPos scanPos = pos;
 		if(this instanceof IWeightedBlock)
 		{
