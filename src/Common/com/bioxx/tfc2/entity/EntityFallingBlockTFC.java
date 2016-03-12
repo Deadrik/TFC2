@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.entity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -12,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
-import com.bioxx.tfc2.blocks.BlockGravity;
+import com.bioxx.tfc2.api.interfaces.IGravityBlock;
 
 public class EntityFallingBlockTFC extends EntityFallingBlock 
 {
@@ -26,7 +27,10 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 	@Override
 	public void onUpdate()
 	{
-		BlockGravity block = (BlockGravity)this.fallTile.getBlock();
+		Block block = this.fallTile.getBlock();
+		IGravityBlock grav = null;
+		if(block instanceof IGravityBlock)
+			grav = (IGravityBlock)this.fallTile.getBlock();
 
 		if (block.getMaterial() == Material.air)
 		{
@@ -77,15 +81,16 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 							boolean placed = false;
 							for(int i = 0; i < 6; i++)
 							{
-								if(!placed && this.worldObj.canBlockBePlaced(block, blockpos1.add(0, i, 0), true, net.minecraft.util.EnumFacing.UP, (Entity)null, (ItemStack)null) && !block.canFallInto(this.worldObj, blockpos1.add(0, i, 0).down()))
+								if(!placed && this.worldObj.canBlockBePlaced(block, blockpos1.add(0, i, 0), true, net.minecraft.util.EnumFacing.UP, (Entity)null, (ItemStack)null))
 								{
-									placed = this.worldObj.setBlockState(blockpos1.add(0, i, 0), this.fallTile, 2);
+									if((grav != null && !grav.canFallInto(this.worldObj, blockpos1.add(0, i, 0).down())) || (grav == null && !canFallInto(this.worldObj, blockpos1.add(0, i, 0).down())))
+										placed = this.worldObj.setBlockState(blockpos1.add(0, i, 0), this.fallTile, 2);
 								}
 							}
-							//if ((this.worldObj.canBlockBePlaced(block, blockpos1, true, net.minecraft.util.EnumFacing.UP, (Entity)null, (ItemStack)null)) && (!block.canFallInto(this.worldObj, blockpos1.down())) && (this.worldObj.setBlockState(blockpos1, this.fallTile, 3)))
 							if(placed)
 							{
-								block.onEndFalling(this.worldObj, blockpos1);
+								if(grav != null)
+									grav.onEndFalling(this.worldObj, blockpos1);
 
 								if ((this.tileEntityData != null) && ((block instanceof net.minecraft.block.ITileEntityProvider)))
 								{
@@ -129,5 +134,13 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 				}
 			}
 		}
+	}
+
+	public boolean canFallInto(World worldIn, BlockPos pos)
+	{
+		if (worldIn.isAirBlock(pos)) return true;
+		Block block = worldIn.getBlockState(pos).getBlock();
+		Material material = block.getMaterial();
+		return (block == Blocks.fire) || (material == Material.air) || (material == Material.water) || (material == Material.lava) || block.isReplaceable(worldIn, pos);
 	}
 }

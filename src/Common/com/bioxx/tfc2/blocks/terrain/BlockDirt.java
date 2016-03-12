@@ -9,15 +9,17 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.interfaces.IGravityBlock;
 import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
-import com.bioxx.tfc2.blocks.BlockGravity;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockDirt extends BlockGravity implements IWeightedBlock
+public class BlockDirt extends BlockCollapsible implements IWeightedBlock, IGravityBlock
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -63,9 +65,35 @@ public class BlockDirt extends BlockGravity implements IWeightedBlock
 	}
 
 	@Override
+	public void onEndFalling(World worldIn, BlockPos pos) 
+	{
+
+	}
+
+	@Override
+	public boolean canFallInto(World worldIn, BlockPos pos) 
+	{
+		return false;
+	}
+
+	@Override
 	public int getWeight(IBlockState myState) 
 	{
 		return 20;
+	}
+
+	@Override
+	public int getNaturalSupportRange(IBlockState myState)
+	{
+		return 3;
+	}
+
+	@Override
+	public boolean canSupport(IBlockState myState, IBlockState otherState)
+	{
+		if(Core.isTerrain(otherState) && !Core.isSand(otherState))
+			return true;
+		return false;
 	}
 
 	/*******************************************************************************

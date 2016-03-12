@@ -13,9 +13,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.RandomCollection;
+import com.bioxx.tfc2.api.interfaces.IGravityBlock;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockGravity extends BlockTerra 
+public class BlockGravity extends BlockTerra implements IGravityBlock
 {
 
 	public BlockGravity(Material m, PropertyHelper p)

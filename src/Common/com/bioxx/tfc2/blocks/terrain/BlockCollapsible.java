@@ -10,9 +10,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.api.interfaces.IGravityBlock;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
-import com.bioxx.tfc2.blocks.BlockGravity;
 import com.bioxx.tfc2.blocks.BlockTerra;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
@@ -82,11 +82,11 @@ public class BlockCollapsible extends BlockTerra
 	{
 		IBlockState stateNew = getFallBlockType(state);
 
-		if(stateNew.getBlock() instanceof BlockGravity)
+		if(stateNew.getBlock() instanceof IGravityBlock)
 		{
 			world.setBlockToAir(pos);
 			EntityFallingBlockTFC entityfallingblock = new EntityFallingBlockTFC(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, stateNew);
-			((BlockGravity)getFallBlockType(state).getBlock()).onStartFalling(entityfallingblock);
+			((IGravityBlock)getFallBlockType(state).getBlock()).onStartFalling(entityfallingblock);
 			world.spawnEntityInWorld(entityfallingblock);
 			onCreateFallingEntity(entityfallingblock, world, pos);
 		}

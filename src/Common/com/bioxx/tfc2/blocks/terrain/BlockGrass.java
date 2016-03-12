@@ -73,6 +73,8 @@ public class BlockGrass extends BlockCollapsible implements IWeightedBlock
 		{
 			world.setBlockState(pos.west(), this.getDefaultState().withProperty(META_PROPERTY, world.getBlockState(pos.west()).getValue(BlockDirt.META_PROPERTY)));
 		}
+
+		super.updateTick(world, pos, state, rand);
 	}
 
 	@Override
