@@ -17,11 +17,11 @@ import com.bioxx.tfc2.api.interfaces.IGravityBlock;
 
 public class EntityFallingBlockTFC extends EntityFallingBlock 
 {
-	public EntityFallingBlockTFC(World worldIn, double x, double y, double z,
-			IBlockState fallingBlockState) 
+	BlockPos origPos;
+	public EntityFallingBlockTFC(World worldIn, double x, double y, double z, IBlockState fallingBlockState) 
 	{
 		super(worldIn, x, y, z, fallingBlockState);
-
+		origPos = new BlockPos(x, y, z);
 	}
 
 	@Override
@@ -79,8 +79,12 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 						if (!this.canSetAsBlock)
 						{
 							boolean placed = false;
+							BlockPos movePos;
 							for(int i = 0; i < 6; i++)
 							{
+								movePos = blockpos1.add(0,i,0);
+								if(movePos.getY() > origPos.getY())
+									break;
 								if(!placed && this.worldObj.canBlockBePlaced(block, blockpos1.add(0, i, 0), true, net.minecraft.util.EnumFacing.UP, (Entity)null, (ItemStack)null))
 								{
 									if((grav != null && !grav.canFallInto(this.worldObj, blockpos1.add(0, i, 0).down())) || (grav == null && !canFallInto(this.worldObj, blockpos1.add(0, i, 0).down())))
