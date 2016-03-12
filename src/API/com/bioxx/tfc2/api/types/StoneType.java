@@ -29,6 +29,11 @@ public enum StoneType implements IStringSerializable
 		return name;
 	}
 
+	public SubType getSubType()
+	{
+		return type;
+	}
+
 	public int getMeta()
 	{
 		return meta;

@@ -747,6 +747,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						points.add(n.getNextOffset());
 
 					spline = new Spline3D(points);
+					//Iterate down the spline and carve the cave
 					for(double i = 0; i < 1; i+= 0.05)
 					{
 						pos = spline.getPoint(i);
@@ -813,6 +814,26 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							}
 						}
 					}
+					//After the main iteration, we'll go down the spline one more and add natural columns for cave support
+					/*if(n.getOffset().getY() < 64+islandMap.convertHeightToMC(c.getElevation()))
+					{
+						float width = n.getNodeWidth()/3;
+						pos = spline.getPoint(0.4+this.rand.nextDouble()*0.2);
+						pos = pos.add(-2+rand.nextInt(2), -n.getNodeHeight(), -2+rand.nextInt(2)).subtract(islandOffset);
+						IBlockState fillBlock = TFCBlocks.Stone.getDefaultState().withProperty(BlockStone.META_PROPERTY, islandMap.getParams().getSurfaceRock());
+						for(double i = 0; i < 1; i+= 0.1)
+						{
+							for(float x = -width; x <= width; x++)
+							{
+								for(float z = -width; z <= width; z++)
+								{
+									pos2 = pos.add(x, i * (n.getNodeHeight() * 2), z);
+									if(Helper.dist2dSq(pos, pos2) < width*width)
+										setState(chunkprimer, pos2, fillBlock);
+								}
+							}
+						}
+					}*/
 				}
 			}
 		}

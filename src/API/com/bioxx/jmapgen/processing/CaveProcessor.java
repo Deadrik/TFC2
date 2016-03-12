@@ -10,6 +10,7 @@ import com.bioxx.jmapgen.attributes.CaveAttribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.types.StoneType;
 
 public class CaveProcessor 
 {
@@ -87,6 +88,23 @@ public class CaveProcessor
 
 	private void gen(Center start, int caveId, boolean isSeaCave, int maxLength)
 	{
+		int minCaveSize = 2;
+		int maxCaveSize = 6;//This makes a cave have a 2-8 radius
+
+		StoneType stone = map.getParams().getSurfaceRock();
+		if(stone.getSubType() == StoneType.SubType.Sedimentary)
+		{
+			maxCaveSize = 2;//This makes a cave have a 2-4 radius
+		}
+		else if(stone.getSubType() == StoneType.SubType.Metamorphic)
+		{
+			maxCaveSize = 3;//This makes a cave have a 2-5 radius
+		}
+		else if(stone.getSubType() == StoneType.SubType.IgneousExtrusive)
+		{
+			maxCaveSize = 4;//This makes a cave have a 2-6 radius
+		}
+
 		int curLength = 0;
 		Center prevCenter = null;
 		Center center = start;
@@ -140,8 +158,8 @@ public class CaveProcessor
 			center = nextCenter;
 			//Finished cycling
 
-			curNode.setNodeHeight(1+map.mapRandom.nextInt(4));
-			curNode.setNodeWidth(2+map.mapRandom.nextInt(4));
+			curNode.setNodeHeight(minCaveSize+map.mapRandom.nextInt(maxCaveSize));
+			curNode.setNodeWidth(minCaveSize+map.mapRandom.nextInt(maxCaveSize));
 			if(mcElev(center.getElevation()) - curNode.offset.getY() > 20)
 			{
 				if(map.mapRandom.nextDouble() < 0.1)

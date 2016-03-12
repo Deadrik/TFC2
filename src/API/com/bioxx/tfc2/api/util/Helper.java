@@ -1,5 +1,7 @@
 package com.bioxx.tfc2.api.util;
 
+import net.minecraft.util.BlockPos;
+
 public class Helper 
 {
 	public static int combineCoords(int x, int y)
@@ -29,5 +31,13 @@ public class Helper
 			angle += 360;
 
 		return angle;
+	}
+
+	public static double dist2dSq(BlockPos a, BlockPos b)
+	{
+		double d0 = a.getX() - b.getX();
+		double d2 = a.getZ() - b.getZ();
+
+		return d0 * d0 + d2 * d2;
 	}
 }
