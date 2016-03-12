@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.items;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
@@ -19,10 +20,11 @@ public class ItemSeeds extends ItemTerra implements IRegisterSelf
 	public ItemSeeds()
 	{
 		this.hasSubtypes = true;
-		this.maxSubTypeMeta = 1;
+		this.maxSubTypeMeta = 17;
 		this.subTypeNames = new String[] {"seeds_corn", "seeds_cabbage", "seeds_tomato", "seeds_wheat", "seeds_barley", "seeds_rye", 
 				"seeds_oat", "seeds_rice", "seeds_potato", "seeds_onion", "seeds_garlic", "seeds_carrot", "seeds_sugarcane", "seeds_yellowbellpepper", 
 				"seeds_redbellpepper", "seeds_soybean", "seeds_greenbean", "seeds_squash"};
+		this.setCreativeTab(CreativeTabs.tabFood);
 	}
 
 	@Override
@@ -47,5 +49,11 @@ public class ItemSeeds extends ItemTerra implements IRegisterSelf
 	public String[] getSubTypeNames() 
 	{
 		return subTypeNames;
+	}
+
+	@Override
+	public String getPath()
+	{
+		return "Seeds/";
 	}
 }

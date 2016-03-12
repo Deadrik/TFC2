@@ -11,10 +11,11 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.interfaces.IRegisterSelf;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 
-public class ItemLooseRock extends ItemTerra
+public class ItemLooseRock extends ItemTerra implements IRegisterSelf
 {
 	public ItemLooseRock()
 	{
@@ -50,5 +51,17 @@ public class ItemLooseRock extends ItemTerra
 		if(!worldIn.isRemote)
 			playerIn.openGui(TFC.instance, 0, worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ());
 		return itemStackIn;
+	}
+
+	@Override
+	public String[] getSubTypeNames() 
+	{
+		return subTypeNames;
+	}
+
+	@Override
+	public String getPath()
+	{
+		return "LooseRocks/";
 	}
 }

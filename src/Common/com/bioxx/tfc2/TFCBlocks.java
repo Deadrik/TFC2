@@ -61,6 +61,9 @@ public class TFCBlocks
 	public static Block TorchOff;
 	public static Block Crop;
 	public static Block Farmland;
+	public static Block SupportBeam;
+	public static Block SupportBeam2;
+	public static Block SupportBeam3;
 
 	public static void LoadBlocks()
 	{
@@ -105,6 +108,9 @@ public class TFCBlocks
 		TorchOff = new BlockTorchTFC(false).setHardness(0.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("torch_off");
 		Crop = new BlockCrop().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("crop");
 		Farmland = new BlockFarmland().setHardness(2F).setStepSound(Block.soundTypeGravel).setUnlocalizedName("farmland");
+		SupportBeam = new BlockWoodSupport().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("wood_support");
+		SupportBeam2 = new BlockWoodSupport2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("wood_support2");
+		SupportBeam3 = new BlockWoodSupport3().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("wood_support3");
 	}
 
 	public static void RegisterBlocks()
@@ -151,6 +157,9 @@ public class TFCBlocks
 		GameRegistry.registerBlock(TorchOff, "torch_off");
 		GameRegistry.registerBlock(Crop, "crop");
 		GameRegistry.registerBlock(Farmland, "farmland");
+		GameRegistry.registerBlock(SupportBeam, ItemWood.class, "wood_support");
+		GameRegistry.registerBlock(SupportBeam2, ItemWood.class, "wood_support2");
+		GameRegistry.registerBlock(SupportBeam3, ItemWood.class, "wood_support3");
 
 
 		LogNatural.setHarvestLevel("axe", 1);
@@ -161,6 +170,9 @@ public class TFCBlocks
 		LogHorizontal.setHarvestLevel("axe", 1);
 		LogHorizontal2.setHarvestLevel("axe", 1);
 		LogHorizontal3.setHarvestLevel("axe", 1);
+		SupportBeam.setHarvestLevel("axe", 1);
+		SupportBeam2.setHarvestLevel("axe", 1);
+		SupportBeam3.setHarvestLevel("axe", 1);
 	}
 
 	public static void RegisterTileEntites()

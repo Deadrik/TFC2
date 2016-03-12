@@ -41,6 +41,9 @@
 		"stone=blueschist": [{"y":0},{"y":90},{"y":180},{"y":270}, {"model": "tfc2:LooseRocks/rock1","y":0},{"model": "tfc2:LooseRocks/rock1","y":90},{"model": "tfc2:LooseRocks/rock1","y":180},{"model": "tfc2:LooseRocks/rock1","y":270}],
 		"stone=schist": [{"y":0},{"y":90},{"y":180},{"y":270}, {"model": "tfc2:LooseRocks/rock1","y":0},{"model": "tfc2:LooseRocks/rock1","y":90},{"model": "tfc2:LooseRocks/rock1","y":180},{"model": "tfc2:LooseRocks/rock1","y":270}],
 		"stone=gneiss": [{"y":0},{"y":90},{"y":180},{"y":270}, {"model": "tfc2:LooseRocks/rock1","y":0},{"model": "tfc2:LooseRocks/rock1","y":90},{"model": "tfc2:LooseRocks/rock1","y":180},{"model": "tfc2:LooseRocks/rock1","y":270}],
-		"stone=marble": [{"y":0},{"y":90},{"y":180},{"y":270}, {"model": "tfc2:LooseRocks/rock1","y":0},{"model": "tfc2:LooseRocks/rock1","y":90},{"model": "tfc2:LooseRocks/rock1","y":180},{"model": "tfc2:LooseRocks/rock1","y":270}]
+		"stone=marble": [{"y":0},{"y":90},{"y":180},{"y":270}, {"model": "tfc2:LooseRocks/rock1","y":0},{"model": "tfc2:LooseRocks/rock1","y":90},{"model": "tfc2:LooseRocks/rock1","y":180},{"model": "tfc2:LooseRocks/rock1","y":270}],
+        "inventory": [{
+            "transform": "forge:default-block"
+        }]
 	}
 }

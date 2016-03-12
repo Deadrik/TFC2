@@ -28,6 +28,16 @@ public enum OreType implements IStringSerializable
 		return meta;
 	}
 
+	public static String[] getNamesArray()
+	{
+		String[] s = new String[values().length];
+		for(int i = 0; i < OreType.values().length; i++)
+		{
+			s[i] = OreType.values()[i].getName();
+		}
+		return s;
+	}
+
 	public static OreType fromMeta(int meta)
 	{
 		for(int i = 0; i < OreType.values().length; i++)

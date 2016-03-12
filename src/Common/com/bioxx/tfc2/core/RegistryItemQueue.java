@@ -4,10 +4,12 @@ import java.util.LinkedList;
 
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.Reference;
+import com.bioxx.tfc2.api.interfaces.IRegisterSelf;
 import com.bioxx.tfc2.rendering.MeshDef;
 
 /**
@@ -53,6 +55,16 @@ public class RegistryItemQueue
 		{
 			e = listItem.pop();
 			GameRegistry.registerItem(e.item, e.name);
+
+			if(e.item instanceof IRegisterSelf)
+			{
+				for(int c = 0; c < ((IRegisterSelf)e.item).getSubTypeNames().length; c++)
+				{
+					String path = ((IRegisterSelf)e.item).getPath();
+					String subName = ((IRegisterSelf)e.item).getSubTypeNames()[c];
+					ModelLoader.setCustomModelResourceLocation(e.item, c, new ModelResourceLocation(Reference.ModID + ":"+path+subName, "inventory"));
+				}
+			}
 		}
 
 	}

@@ -29,6 +29,16 @@ public enum WoodType implements IStringSerializable
 		return meta;
 	}
 
+	public static String[] getNamesArray()
+	{
+		String[] s = new String[values().length];
+		for(int i = 0; i < WoodType.values().length; i++)
+		{
+			s[i] = WoodType.values()[i].getName();
+		}
+		return s;
+	}
+
 	public static WoodType getTypeFromMeta(int meta)
 	{
 		for(int i = 0; i < WoodType.values().length; i++)

@@ -4,14 +4,11 @@ import java.io.File;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.model.ModelLoader;
@@ -155,11 +152,11 @@ public class ClientProxy extends CommonProxy
 		Item salt = Item.getItemFromBlock(TFCBlocks.SaltWater);
 		Item saltstatic = Item.getItemFromBlock(TFCBlocks.SaltWaterStatic);
 		Item freshstatic = Item.getItemFromBlock(TFCBlocks.FreshWaterStatic);
-		ModelBakery.addVariantName(fresh);
+		/*ModelBakery.addVariantName(fresh);
 		ModelBakery.addVariantName(salt);
 		ModelBakery.addVariantName(saltstatic);
-		ModelBakery.addVariantName(freshstatic);
-		ModelLoader.setCustomMeshDefinition(fresh, new ItemMeshDefinition()
+		ModelBakery.addVariantName(freshstatic);*/
+		/*ModelLoader.setCustomMeshDefinition(fresh, new ItemMeshDefinition()
 		{
 			@Override
 			public ModelResourceLocation getModelLocation(ItemStack stack)
@@ -190,7 +187,7 @@ public class ClientProxy extends CommonProxy
 			{
 				return freshwaterLocation;
 			}
-		});
+		});*/
 		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWater, new StateMapperBase()
 		{
 			@Override
@@ -225,8 +222,8 @@ public class ClientProxy extends CommonProxy
 		});
 		//End Liquids
 
-		//This creates a new ModelResourceLocation for this item:meta combination
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Leaves2), 18, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.LooseRocks), 0, new ModelResourceLocation(Reference.ModID + ":loose_rock", "inventory"));
+
 		//Change the StateMapper for this block so that it will point to a different file for a specific Property
 		StateMapperBase ignoreState = new StateMapperBase() {
 			@Override
@@ -239,389 +236,44 @@ public class ClientProxy extends CommonProxy
 			}
 		};
 		ModelLoader.setCustomStateMapper(TFCBlocks.Leaves2, ignoreState);
-
-		/**
-		 * Dirt
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Dirt), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
-				for(int l = 0; l < Global.STONE_ALL.length; l++)
-				{
-					String stone = Core.textConvert(Global.STONE_ALL[l]);
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Dirt/" + stone, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Grass
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Grass), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
-				for(int l = 0; l < Global.STONE_ALL.length; l++)
-				{
-					String stone = Core.textConvert(Global.STONE_ALL[l]);
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Grass/" + stone, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Stone
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Stone), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
-				for(int l = 0; l < Global.STONE_ALL.length; l++)
-				{
-					String stone = Core.textConvert(Global.STONE_ALL[l]);
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Stone/" + stone, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Rubble
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Rubble), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
-				for(int l = 0; l < Global.STONE_ALL.length; l++)
-				{
-					String stone = Core.textConvert(Global.STONE_ALL[l]);
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Rubble/" + stone, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Sand
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Sand), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
-				for(int l = 0; l < Global.STONE_ALL.length; l++)
-				{
-					String stone = Core.textConvert(Global.STONE_ALL[l]);
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Sand/" + stone, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Gravel
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Gravel), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
-				for(int l = 0; l < Global.STONE_ALL.length; l++)
-				{
-					String stone = Core.textConvert(Global.STONE_ALL[l]);
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Gravel/" + stone, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * LooseRock
-		 */
-		ModelLoader.setCustomMeshDefinition(TFCItems.LooseRock, new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
-				for(int l = 0; l < Global.STONE_ALL.length; l++)
-				{
-					String stone = Core.textConvert(Global.STONE_ALL[l]);
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":LooseRock/" + stone, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Planks
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Planks), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[WoodType.values().length];
-				for(int l = 0; l < 16; l++)
-				{
-					String wood = Core.textConvert(WoodType.values()[l].getName());
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Saplings
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Sapling), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[WoodType.values().length];
-				for(int l = 0; l < 16; l++)
-				{
-					String wood = Core.textConvert(WoodType.values()[l].getName());
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Logs
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.LogVertical), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[WoodType.values().length];
-				for(int l = 0; l < 16; l++)
-				{
-					String wood = Core.textConvert(WoodType.values()[l].getName());
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Logs/" + wood, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Leaves
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Leaves), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[WoodType.values().length];
-				for(int l = 0; l < 16; l++)
-				{
-					String wood = Core.textConvert(WoodType.values()[l].getName());
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Planks2
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Planks2), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[WoodType.values().length];
-				for(int l = 16; l < WoodType.values().length; l++)
-				{
-					String wood = Core.textConvert(WoodType.values()[l].getName());
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Planks/" + wood, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Saplings2
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Sapling2), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[WoodType.values().length];
-				for(int l = 16; l < WoodType.values().length; l++)
-				{
-					String wood = Core.textConvert(WoodType.values()[l].getName());
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Saplings/" + wood, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Logs2
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.LogVertical2), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[WoodType.values().length];
-				for(int l = 16; l < WoodType.values().length; l++)
-				{
-					String wood = Core.textConvert(WoodType.values()[l].getName());
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Logs/" + wood, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Leaves2
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Leaves2), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[WoodType.values().length];
-				for(int l = 16; l < 18; l++)
-				{
-					String wood = Core.textConvert(WoodType.values()[l].getName());
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Wood/Leaves/" + wood, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Ore
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.Ore), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[WoodType.values().length];
-				for(int l = 0; l < OreType.values().length; l++)
-				{
-					String wood = Core.textConvert(WoodType.values()[l].getName());
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":Ore/" + wood, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * StoneBrick
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.StoneBrick), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
-				for(int l = 0; l < Global.STONE_ALL.length; l++)
-				{
-					String stone = Core.textConvert(Global.STONE_ALL[l]);
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":StoneBrick/" + stone, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * StoneSmooth
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.StoneSmooth), new MeshDef()
-		{
-			@Override
-			public void Setup()
-			{
-				this.rl = new ModelResourceLocation[Global.STONE_ALL.length];
-				for(int l = 0; l < Global.STONE_ALL.length; l++)
-				{
-					String stone = Core.textConvert(Global.STONE_ALL[l]);
-					this.rl[l] = new ModelResourceLocation(Reference.ModID + ":StoneSmooth/" + stone, "inventory");
-				}
-			}
-
-		});
-
-		/**
-		 * Torches
-		 */
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.TorchOn), new MeshDef(new ModelResourceLocation(Reference.ModID + ":torch_on", "inventory")));
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(TFCBlocks.TorchOff), new MeshDef(new ModelResourceLocation(Reference.ModID + ":torch_off", "inventory")));
-
-		for(int l = 0; l < Global.STONE_ALL.length; l++)
-		{
-			String stone = Core.textConvert(Global.STONE_ALL[l]);
-
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Dirt), Reference.ModID + ":Dirt/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Grass), Reference.ModID + ":Grass/" + stone + "/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Stone), Reference.ModID + ":Stone/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Rubble), Reference.ModID + ":Rubble/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sand), Reference.ModID + ":Sand/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Gravel), Reference.ModID + ":Gravel/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.StoneBrick), Reference.ModID + ":StoneBrick/" + stone);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.StoneSmooth), Reference.ModID + ":StoneSmooth/" + stone);
-			ModelBakery.addVariantName(TFCItems.LooseRock, Reference.ModID + ":LooseRock/" + stone);
-		}
-		for(int l = 0; l < 16; l++)
-		{
-			String wood = Core.textConvert(WoodType.values()[l].getName());
-
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks), Reference.ModID + ":Wood/Planks/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling), Reference.ModID + ":Wood/Saplings/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogVertical), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal2), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves), Reference.ModID + ":Wood/Leaves/" + wood);
-
-		}
-
-		for(int l = 16; l < 19; l++)
-		{
-			String wood = Core.textConvert(WoodType.values()[l].getName());
-
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Planks2), Reference.ModID + ":Wood/Planks/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Sapling2), Reference.ModID + ":Wood/Saplings/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogVertical2), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogHorizontal3), Reference.ModID + ":Wood/Logs/" + wood);
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.LogNatural2), Reference.ModID + ":Wood/Logs/" + wood);
-			if(l < 18)
-			{
-				ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Leaves2), Reference.ModID + ":Wood/Leaves/" + wood);
-			}
-		}
-
-		for(int l = 0; l < OreType.values().length; l++)
-		{
-			String ore = Core.textConvert(OreType.values()[l].getName());
-			ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.Ore), Reference.ModID + ":Ore/" + ore);
-		}
-
-		ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.TorchOn), Reference.ModID + ":torch_on");
-		ModelBakery.addVariantName(Item.getItemFromBlock(TFCBlocks.TorchOff), Reference.ModID + ":torch_off");
-
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.FreshWater),0,freshwaterLocation);
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.FreshWaterStatic),0,freshwaterLocation);
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.SaltWater),0,saltwaterLocation);
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.SaltWaterStatic),0,saltwaterLocation);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Dirt), "Dirt/", Global.STONE_ALL, 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Grass), "Grass/", Global.STONE_ALL, 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Stone), "Stone/", Global.STONE_ALL, 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Rubble), "Rubble/", Global.STONE_ALL, 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Sand), "Sand/", Global.STONE_ALL, 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Gravel), "Gravel/", Global.STONE_ALL, 0, 16);
+		//registerVariantModel(Item.getItemFromBlock(TFCBlocks.LooseRocks), "LooseRocks/", Global.STONE_ALL, 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Planks), "Wood/Planks/", WoodType.getNamesArray(), 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Sapling), "Wood/Saplings/", WoodType.getNamesArray(), 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.LogVertical), "Wood/Logs/", WoodType.getNamesArray(), 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Leaves), "Wood/Leaves/", WoodType.getNamesArray(), 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Planks2), "Wood/Planks/", WoodType.getNamesArray(), 16, 18);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Sapling2), "Wood/Saplings/", WoodType.getNamesArray(), 16, 19);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.LogVertical2), "Wood/Logs/", WoodType.getNamesArray(), 16, 19);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Leaves2), "Wood/Leaves/", WoodType.getNamesArray(), 16, 18);
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Leaves2), 18, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Ore), "Ore/", OreType.getNamesArray(), 0, 13);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.StoneBrick), "StoneBrick/", Global.STONE_ALL, 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.StoneSmooth), "StoneSmooth/", Global.STONE_ALL, 0, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam), "Wood/SupportBeams/", WoodType.getNamesArray(), 0, 8);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam2), "Wood/SupportBeams/", WoodType.getNamesArray(), 8, 16);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam3), "Wood/SupportBeams/", WoodType.getNamesArray(), 16, 18);
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.TorchOn),0,new ModelResourceLocation(Reference.ModID + ":torch_on", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.TorchOff),0,new ModelResourceLocation(Reference.ModID + ":torch_off", "inventory"));
 		RegistryItemQueue.getInstance().registerMeshes();
+	}
+
+	private void registerVariantModel(Item item, String path, String[] variantNames, int metaStart, int metaEnd)
+	{
+		for(int meta = metaStart; meta < metaEnd; meta++)
+		{
+			String vName = Core.textConvert(variantNames[meta]);
+			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(Reference.ModID + ":" + path + vName, "inventory");
+			ModelLoader.setCustomModelResourceLocation(item, meta, itemModelResourceLocation);
+		}
 	}
 }

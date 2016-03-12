@@ -1,0 +1,39 @@
+{
+	"forge_marker" : 1,
+	"defaults": {
+		"model": "tfc2:Wood/SupportVertical",
+		"textures": {"all": "tfc2:blocks/wood/sheets/Ash"}
+	},
+    "variants": {
+    	"isspan":{
+    		"true":{"model": "tfc2:Wood/SupportSpan"},
+    		"false":{"model": "tfc2:Wood/SupportVertical"}
+    	},
+   	 	"wood":{
+        	"ash":  { "textures": {"all": "tfc2:blocks/wood/sheets/Ash"} },
+        	"aspen":  { "textures": {"all": "tfc2:blocks/wood/sheets/Aspen"} },
+        	"birch":  { "textures": {"all": "tfc2:blocks/wood/sheets/Birch"} },
+        	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/sheets/Chestnut"} },
+        	"douglas_fir":  { "textures": {"all": "tfc2:blocks/wood/sheets/Douglas Fir"} },
+     	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/sheets/Hickory"} },
+        	"maple":  { "textures": {"all": "tfc2:blocks/wood/sheets/Maple"} },
+        	"oak":  { "textures": {"all": "tfc2:blocks/wood/sheets/Oak"} }
+        },
+        "north":{
+    		"true":{"submodel": "tfc2:Wood/SupportNorth"},
+    		"false":{}
+    	},
+    	"south":{
+    		"true":{"submodel": "tfc2:Wood/SupportSouth"},
+    		"false":{}
+    	},
+    	"east":{
+    		"true":{"submodel": "tfc2:Wood/SupportEast"},
+    		"false":{}
+    	},
+    	"west":{
+    		"true":{"submodel": "tfc2:Wood/SupportWest"},
+    		"false":{}
+    	}
+    }
+}

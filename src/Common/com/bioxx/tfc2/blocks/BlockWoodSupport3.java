@@ -1,0 +1,103 @@
+package com.bioxx.tfc2.blocks;
+
+import java.util.Arrays;
+import java.util.Random;
+
+import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.IBlockAccess;
+
+import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.types.WoodType;
+
+public class BlockWoodSupport3 extends BlockWoodSupport2
+{
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 18));
+	public static PropertyBool SPAN = PropertyBool.create("isSpan");
+	public static PropertyBool NORTH_CONNECTION = PropertyBool.create("north");
+	public static PropertyBool SOUTH_CONNECTION = PropertyBool.create("south");
+	public static PropertyBool EAST_CONNECTION = PropertyBool.create("east");
+	public static PropertyBool WEST_CONNECTION = PropertyBool.create("west");
+
+	public BlockWoodSupport3() 
+	{
+		super(Material.wood, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.tabBlock);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, WoodType.Blackwood).
+				withProperty(SPAN, Boolean.valueOf(false)).
+				withProperty(NORTH_CONNECTION, Boolean.valueOf(false)).
+				withProperty(EAST_CONNECTION, Boolean.valueOf(false)).
+				withProperty(SOUTH_CONNECTION, Boolean.valueOf(false)).
+				withProperty(WEST_CONNECTION, Boolean.valueOf(false)));
+	}
+
+	/*******************************************************************************
+	 * 1. Content 
+	 *******************************************************************************/
+
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+	{
+		return Item.getItemFromBlock(TFCBlocks.SupportBeam3);
+	}
+
+	@Override
+	public int convertMeta(int meta) 
+	{
+		if(meta < 16)
+			return meta + 16;
+		else
+			return meta;
+	}
+
+	/*******************************************************************************
+	 * 2. Rendering 
+	 *******************************************************************************/
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube()
+	{
+		return false;
+	}
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return state.withProperty(NORTH_CONNECTION, world.getBlockState(pos.north()).getBlock() == this).
+				withProperty(SOUTH_CONNECTION, world.getBlockState(pos.south()).getBlock() == this).
+				withProperty(EAST_CONNECTION, world.getBlockState(pos.east()).getBlock() == this).
+				withProperty(WEST_CONNECTION, world.getBlockState(pos.west()).getBlock() == this).
+				withProperty(SPAN, !canSupport(state, world.getBlockState(pos.down())));
+	}
+	@Override
+	protected BlockState createBlockState()
+	{
+		return new BlockState(this, new IProperty[]{META_PROPERTY, SPAN, NORTH_CONNECTION, SOUTH_CONNECTION, EAST_CONNECTION, WEST_CONNECTION});
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta((meta & 7) + 16)).withProperty(SPAN, (meta & 8) == 0 ? false : true);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return (((WoodType)state.getValue(META_PROPERTY)).getMeta() & 7) + ((Boolean)state.getValue(SPAN) ? 8 : 0);
+	}
+}

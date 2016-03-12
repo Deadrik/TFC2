@@ -1,12 +1,8 @@
 package com.bioxx.tfc2;
 
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 
-import net.minecraftforge.client.model.ModelLoader;
-
-import com.bioxx.tfc2.api.interfaces.IRegisterSelf;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.items.*;
@@ -107,6 +103,8 @@ public class TFCItems
 	{
 		TFC.log.info(new StringBuilder().append("[TFC2] Loading Items").toString());
 		LooseRock = registerItemOnly(new ItemLooseRock().setUnlocalizedName("looserock"));
+		Seeds = registerItemOnly(new ItemSeeds().setUnlocalizedName("seeds"));
+
 		StoneAxe = registerItem(new ItemAxe(ToolMaterial.STONE).setUnlocalizedName("stone_axe"));
 		StoneShovel = registerItem(new ItemShovel(ToolMaterial.STONE).setUnlocalizedName("stone_shovel"));
 		StoneKnife = registerItem(new ItemKnife(ToolMaterial.STONE).setUnlocalizedName("stone_knife"));
@@ -147,7 +145,7 @@ public class TFCItems
 		FoodCheese = registerItem(new ItemFoodTFC(EnumFoodGroup.Dairy, 1f, 1).setExpiration(7200).setUnlocalizedName("food_cheese"));
 
 
-		Seeds = registerItemOnly(new ItemSeeds().setUnlocalizedName("seeds"));
+
 	}
 
 	public static void Register()
@@ -176,13 +174,15 @@ public class TFCItems
 	{
 		RegistryItemQueue.getInstance().addItemOnly(i);
 
-		if(i instanceof IRegisterSelf)
+		/*if(i instanceof IRegisterSelf)
 		{
 			for(int c = 0; c < ((IRegisterSelf)i).getSubTypeNames().length; c++)
 			{
-				ModelLoader.setCustomModelResourceLocation(i, c, new ModelResourceLocation(Reference.ModID + ":"+((IRegisterSelf)i).getSubTypeNames()[c], "inventory"));
+				String path = ((IRegisterSelf)i).getPath();
+				String subName = ((IRegisterSelf)i).getSubTypeNames()[c];
+				ModelLoader.setCustomModelResourceLocation(i, c, new ModelResourceLocation(Reference.ModID + ":"+path+subName, "inventory"));
 			}
-		}
+		}*/
 
 		return i;
 	}
