@@ -9,4 +9,5 @@ public interface ISupportBlock
 	public int getMaxSupportWeight(IBlockAccess world, BlockPos pos, IBlockState myState);
 
 	public boolean isSpan(IBlockAccess world, BlockPos pos);
+
 }

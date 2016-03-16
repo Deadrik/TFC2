@@ -222,6 +222,10 @@ public class Core
 		return WorldGen.instance.getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
 	}
 
+	public static void dropItem(World world, BlockPos pos, ItemStack is)
+	{
+		dropItem(world, (double)pos.getX()+0.5, (double)pos.getY(), (double)pos.getZ()+0.5, is);
+	}
 	public static void dropItem(World world, double posX, double posY, double posZ, ItemStack is)
 	{
 		EntityItem ei = new EntityItem(world, posX, posY, posZ, is);

@@ -12,7 +12,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import com.bioxx.tfc2.api.interfaces.INeedOffset;
 import com.bioxx.tfc2.api.types.WoodType;
 
-public class BlockPlanks2 extends BlockTerra implements INeedOffset
+public class BlockPlanks2 extends BlockPlanks implements INeedOffset
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 18));
 
@@ -20,6 +20,7 @@ public class BlockPlanks2 extends BlockTerra implements INeedOffset
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, WoodType.Rosewood));
 	}
 
 	@Override
@@ -31,6 +32,7 @@ public class BlockPlanks2 extends BlockTerra implements INeedOffset
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
+		meta %= 16;
 		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta(meta + 16));
 	}
 
@@ -41,11 +43,14 @@ public class BlockPlanks2 extends BlockTerra implements INeedOffset
 	}
 
 	@Override
-	public int convertMeta(int meta) 
+	public int convertMetaToBlock(int meta) 
 	{
-		if(meta < 16)
-			return meta + 16;
-		else
-			return meta;
+		return meta & 15;
+	}
+
+	@Override
+	public int convertMetaToItem(int meta) 
+	{
+		return meta + 16;
 	}
 }

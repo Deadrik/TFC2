@@ -58,7 +58,7 @@ public abstract class BlockTerra extends Block
 				if(itemIn instanceof ItemBlock && ((ItemBlock)itemIn).block instanceof INeedOffset)
 				{
 					for(int l = 0; l < META_PROP.getAllowedValues().size(); l++)
-						list.add(new ItemStack(itemIn, 1, ((INeedOffset)(((ItemBlock)itemIn).block)).convertMeta(l)));
+						list.add(new ItemStack(itemIn, 1, ((INeedOffset)(((ItemBlock)itemIn).block)).convertMetaToBlock(l)));
 				}
 				else
 				{

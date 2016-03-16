@@ -6,8 +6,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.interfaces.IGravityBlock;
@@ -19,6 +21,10 @@ import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 public class BlockCollapsible extends BlockTerra
 {
 	protected int scanDepth = 20;
+	protected boolean compressionBreak = false;
+
+	protected CollapsibleType collapseType = CollapsibleType.Structure;
+
 	public BlockCollapsible(Material m, PropertyHelper p)
 	{
 		super(m, p);
@@ -43,6 +49,7 @@ public class BlockCollapsible extends BlockTerra
 				}
 				else
 				{
+					world.scheduleUpdate(scanPos, world.getBlockState(scanPos).getBlock(), world.getBlockState(scanPos).getBlock().tickRate(world));
 					break;
 				}
 			}
@@ -58,27 +65,44 @@ public class BlockCollapsible extends BlockTerra
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
+		doCollapse(world, pos, state);
+	}
+
+	protected void doCollapse(World world, BlockPos pos, IBlockState state) {
 		if (!world.isRemote)
 		{
-			if(!hasNaturalSupport(world, pos, state))
+			state = state.getBlock().getActualState(state, world, pos);
+			if(collapseType == CollapsibleType.Nature && !hasNaturalSupport(world, pos, state))
 			{
 				createFallingEntity(world, pos, state);
 				scheduleNeighbors(world, pos);
 				return;
 			}
-			if(this instanceof ISupportBlock && !((ISupportBlock)state.getBlock()).isSpan(world, pos))
+			if(collapseType == CollapsibleType.Structure && 
+					!hasNaturalSupport(world, pos, state))
 			{
-				int weight = calculateWeight(world, pos);
-				if(weight > ((ISupportBlock)state.getBlock()).getMaxSupportWeight(world, pos, state))
+				createFallingEntity(world, pos, state);
+				scheduleNeighbors(world, pos);
+				return;
+			}
+			if(this instanceof ISupportBlock)
+			{
+				boolean isSpan = ((ISupportBlock)state.getBlock()).isSpan(world, pos);
+				if(isSpan || (compressionBreak && !isSpan))
 				{
-					createFallingEntity(world, pos, state);
-					scheduleNeighbors(world, pos.down(2));
+					int weight = calculateWeight(world, pos, state);
+					int maxWeight = ((ISupportBlock)state.getBlock()).getMaxSupportWeight(world, pos, state);
+					if(weight > maxWeight)
+					{
+						createFallingEntity(world, pos, state);
+						scheduleNeighbors(world, pos.down());
+					}
 				}
 			}
 		}
 	}
 
-	protected void createFallingEntity(World world, BlockPos pos, IBlockState state)
+	public void createFallingEntity(World world, BlockPos pos, IBlockState state)
 	{
 		IBlockState stateNew = getFallBlockType(state);
 
@@ -103,11 +127,11 @@ public class BlockCollapsible extends BlockTerra
 
 	protected void scheduleNeighbors(World world, BlockPos pos)
 	{
-		for(int x = -5; x <= 5; x++)
+		for(int x = -1; x <= 1; x++)
 		{
-			for(int z = -5; z <= 5; z++)
+			for(int z = -1; z <= 1; z++)
 			{
-				for(int y = 0; y <= 3; y++)
+				for(int y = 0; y <= 2; y++)
 				{
 					world.scheduleUpdate(pos.add(x, y, z), world.getBlockState(pos.add(x, y, z)).getBlock(), tickRate(world));
 				}
@@ -115,9 +139,10 @@ public class BlockCollapsible extends BlockTerra
 		}
 	}
 
-	protected int calculateWeight(World world, BlockPos pos)
+	protected int calculateWeight(World world, BlockPos pos, IBlockState state)
 	{
 		int weight = 0;
+		int maxWeight = ((ISupportBlock)state.getBlock()).getMaxSupportWeight(world, pos, state);
 
 		IBlockState scanState;
 		Block scanBlock;
@@ -132,7 +157,8 @@ public class BlockCollapsible extends BlockTerra
 		BlockPosList scannedQueue = new BlockPosList();
 		scanQueue.add(pos.up());
 
-		while(scanQueue.peek() != null)
+		//We only scan 2048 blocks. This may be changed in the future.
+		while(scanQueue.peek() != null && weight < maxWeight && scannedQueue.size() < 2048)
 		{
 			scanPos = scanQueue.poll();
 			scanState = world.getBlockState(scanPos);
@@ -146,14 +172,14 @@ public class BlockCollapsible extends BlockTerra
 			else if(scanBlock instanceof IWeightedBlock)
 			{
 				weight += ((IWeightedBlock)scanBlock).getWeight(scanState);
-				if(!scannedQueue.contains(scanPos.north()))
+				/*if(!scannedQueue.contains(scanPos.north()))
 					scanQueue.add(scanPos.north());
 				if(!scannedQueue.contains(scanPos.south()))
 					scanQueue.add(scanPos.south());
 				if(!scannedQueue.contains(scanPos.east()))
 					scanQueue.add(scanPos.east());
 				if(!scannedQueue.contains(scanPos.west()))
-					scanQueue.add(scanPos.west());
+					scanQueue.add(scanPos.west());*/
 				if(!scannedQueue.contains(scanPos.up()))
 					scanQueue.add(scanPos.up());
 			}
@@ -170,7 +196,7 @@ public class BlockCollapsible extends BlockTerra
 		BlockPos pos1 = new BlockPos(pos.getX()+0.5, 0, pos.getZ()+0.5), pos2;
 
 		boolean isSupported = false;
-		float supportRange = getNaturalSupportRange(state);
+		float supportRange = getNaturalSupportRange(world, pos, state);
 		float supportRangeSq = supportRange*supportRange;
 
 		//If the block beneath this one is solid then we will assume for now that this block is naturally supported
@@ -181,10 +207,14 @@ public class BlockCollapsible extends BlockTerra
 		Queue<BlockPos> scanQueue = new LinkedList<BlockPos>();
 		BlockPosList scannedQueue = new BlockPosList();
 		scannedQueue.add(pos);
-		scanQueue.add(pos.north());
-		scanQueue.add(pos.south());
-		scanQueue.add(pos.east());
-		scanQueue.add(pos.west());
+		if(recievesHorizontalSupport(state, world, pos, EnumFacing.NORTH))
+			scanQueue.add(pos.north());
+		if(recievesHorizontalSupport(state, world, pos, EnumFacing.SOUTH))
+			scanQueue.add(pos.south());
+		if(recievesHorizontalSupport(state, world, pos, EnumFacing.EAST))
+			scanQueue.add(pos.east());
+		if(recievesHorizontalSupport(state, world, pos, EnumFacing.WEST))
+			scanQueue.add(pos.west());
 
 
 		while(scanQueue.peek() != null)
@@ -207,22 +237,22 @@ public class BlockCollapsible extends BlockTerra
 			{
 				continue;
 			}
-			else if(canSupport(state, scanState))
+			else if(canBeSupportedBy(state, scanState))
 			{
-				if(canSupport(state,world.getBlockState(scanPos.down())))
+				if(canBeSupportedBy(state,world.getBlockState(scanPos.down())))
 				{
 					if(!scannedQueue.contains(scanPos.down()))
 						scanQueue.add(scanPos.down());
 				}
 				else
 				{
-					if(!scannedQueue.contains(scanPos.north()))
+					if(recievesHorizontalSupport(scanState, world, scanPos, EnumFacing.NORTH) && !scannedQueue.contains(scanPos.north()))
 						scanQueue.add(scanPos.north());
-					if(!scannedQueue.contains(scanPos.south()))
+					if(recievesHorizontalSupport(scanState, world, scanPos, EnumFacing.SOUTH) && !scannedQueue.contains(scanPos.south()))
 						scanQueue.add(scanPos.south());
-					if(!scannedQueue.contains(scanPos.east()))
+					if(recievesHorizontalSupport(scanState, world, scanPos, EnumFacing.EAST) && !scannedQueue.contains(scanPos.east()))
 						scanQueue.add(scanPos.east());
-					if(!scannedQueue.contains(scanPos.west()))
+					if(recievesHorizontalSupport(scanState, world, scanPos,EnumFacing.WEST) && !scannedQueue.contains(scanPos.west()))
 						scanQueue.add(scanPos.west());
 				}
 			}
@@ -231,7 +261,18 @@ public class BlockCollapsible extends BlockTerra
 		return isSupported;
 	}
 
-	public boolean canSupport(IBlockState myState, IBlockState otherState)
+	/**
+	 * @return Can this block recieve support from the block in this direction. Usually false 
+	 * if the neighboring block is not a full block or not a support block.
+	 */
+	public boolean recievesHorizontalSupport(IBlockState myState, IBlockAccess world, BlockPos pos, EnumFacing facing)
+	{
+		if(!world.getBlockState(pos.offset(facing)).getBlock().isSideSolid(world, pos.offset(facing), facing.getOpposite()))
+			return false;
+		return true;
+	}
+
+	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
 		if(otherState.getBlock() instanceof BlockCollapsible)
 			return true;
@@ -243,9 +284,36 @@ public class BlockCollapsible extends BlockTerra
 		return myState;
 	}
 
-	public int getNaturalSupportRange(IBlockState myState)
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos, IBlockState myState)
 	{
 		return 5;
+	}
+
+	@Override
+	public void onFallenUpon(World world, BlockPos pos, Entity entityIn, float fallDistance)
+	{
+		super.onFallenUpon(world, pos, entityIn, fallDistance);
+
+		for(int i = 0; i < pos.getY(); i++)
+		{
+			IBlockState scanState = world.getBlockState(pos.down(i));
+			if(scanState.getBlock() instanceof ISupportBlock && entityIn instanceof EntityFallingBlockTFC)
+			{
+				IBlockState state = scanState.getBlock().getActualState(scanState, world, pos);
+				EntityFallingBlockTFC entity = (EntityFallingBlockTFC)entityIn;
+				if(entity.getBlock().getBlock() instanceof IWeightedBlock)
+				{
+					int weight = ((IWeightedBlock)entity.getBlock().getBlock()).getWeight(entity.getBlock());
+					weight *= Math.max(1, (fallDistance));
+					weight += ((BlockCollapsible)scanState.getBlock()).calculateWeight(world, pos, state);
+					if(weight > ((ISupportBlock)scanState.getBlock()).getMaxSupportWeight(world, pos, state))
+					{
+						createFallingEntity(world, pos, state);
+					}
+					break;
+				}
+			}
+		}
 	}
 
 	/*******************************************************************************
@@ -257,12 +325,23 @@ public class BlockCollapsible extends BlockTerra
 	 *******************************************************************************/
 
 
-	public static enum Depth
+	/**
+	 * 
+	 * @author Bioxx
+	 *
+	 */
+	public static enum CollapsibleType
 	{
-		Aboveground,
-		Underground;
+		Nature,
+		Structure;
 	}
 
+	/***
+	 * Built this Custom List because BlockPos.equals as used in generic list types
+	 * did not seem to be properly comparing BlockPos Objects.
+	 * @author Bioxx
+	 *
+	 */
 	private static class BlockPosList extends AbstractList<BlockPos> {
 
 		private static final int INITIAL_CAPACITY = 16;
@@ -316,4 +395,6 @@ public class BlockCollapsible extends BlockTerra
 			return false;
 		}
 	}
+
+
 }

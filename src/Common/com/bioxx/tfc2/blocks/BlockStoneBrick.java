@@ -39,13 +39,13 @@ public class BlockStoneBrick extends BlockCollapsible implements ISupportBlock, 
 	}
 
 	@Override
-	public int getNaturalSupportRange(IBlockState myState)
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos, IBlockState myState)
 	{
 		return 5;
 	}
 
 	@Override
-	public boolean canSupport(IBlockState myState, IBlockState otherState)
+	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
 		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
 			return true;

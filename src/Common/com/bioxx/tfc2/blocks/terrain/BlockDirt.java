@@ -83,13 +83,13 @@ public class BlockDirt extends BlockCollapsible implements IWeightedBlock, IGrav
 	}
 
 	@Override
-	public int getNaturalSupportRange(IBlockState myState)
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos,IBlockState myState)
 	{
 		return 3;
 	}
 
 	@Override
-	public boolean canSupport(IBlockState myState, IBlockState otherState)
+	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
 		if(Core.isTerrain(otherState) && !Core.isSand(otherState))
 			return true;

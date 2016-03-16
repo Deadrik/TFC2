@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -34,6 +35,11 @@ public class BlockPlanks extends BlockCollapsible implements ISupportBlock, IWei
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
 
+	public BlockPlanks(Material m, PropertyHelper p)
+	{
+		super(m, p);
+	}
+
 	/*******************************************************************************
 	 * 1. Content 
 	 *******************************************************************************/
@@ -44,13 +50,13 @@ public class BlockPlanks extends BlockCollapsible implements ISupportBlock, IWei
 	}
 
 	@Override
-	public int getNaturalSupportRange(IBlockState myState)
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos,IBlockState myState)
 	{
 		return 5;
 	}
 
 	@Override
-	public boolean canSupport(IBlockState myState, IBlockState otherState)
+	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
 		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
 			return true;
@@ -89,7 +95,7 @@ public class BlockPlanks extends BlockCollapsible implements ISupportBlock, IWei
 	}
 
 	@Override
-	protected void createFallingEntity(World world, BlockPos pos, IBlockState state)
+	public void createFallingEntity(World world, BlockPos pos, IBlockState state)
 	{
 		world.setBlockToAir(pos);
 		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.stick, 1+world.rand.nextInt(3)));

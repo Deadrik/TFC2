@@ -73,8 +73,12 @@ public class BlockGrass extends BlockCollapsible implements IWeightedBlock
 		{
 			world.setBlockState(pos.west(), this.getDefaultState().withProperty(META_PROPERTY, world.getBlockState(pos.west()).getValue(BlockDirt.META_PROPERTY)));
 		}
+	}
 
-		super.updateTick(world, pos, state, rand);
+	@Override
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
+	{
+		doCollapse(world, pos, state);
 	}
 
 	@Override
@@ -127,7 +131,7 @@ public class BlockGrass extends BlockCollapsible implements IWeightedBlock
 	}
 
 	@Override
-	public int getNaturalSupportRange(IBlockState myState)
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos, IBlockState myState)
 	{
 		return 1;
 	}

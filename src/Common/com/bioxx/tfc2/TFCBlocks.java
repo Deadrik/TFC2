@@ -14,10 +14,7 @@ import com.bioxx.tfc2.blocks.liquids.BlockSaltWater;
 import com.bioxx.tfc2.blocks.liquids.BlockSaltWaterStatic;
 import com.bioxx.tfc2.blocks.terrain.*;
 import com.bioxx.tfc2.blocks.vanilla.BlockTorchTFC;
-import com.bioxx.tfc2.items.itemblocks.ItemOre;
-import com.bioxx.tfc2.items.itemblocks.ItemSoil;
-import com.bioxx.tfc2.items.itemblocks.ItemStone;
-import com.bioxx.tfc2.items.itemblocks.ItemWood;
+import com.bioxx.tfc2.items.itemblocks.*;
 import com.bioxx.tfc2.tileentities.TileCrop;
 import com.bioxx.tfc2.tileentities.TileFarmland;
 import com.bioxx.tfc2.tileentities.TileTorch;
@@ -157,9 +154,9 @@ public class TFCBlocks
 		GameRegistry.registerBlock(TorchOff, "torch_off");
 		GameRegistry.registerBlock(Crop, "crop");
 		GameRegistry.registerBlock(Farmland, "farmland");
-		GameRegistry.registerBlock(SupportBeam, ItemWood.class, "wood_support");
-		GameRegistry.registerBlock(SupportBeam2, ItemWood.class, "wood_support2");
-		GameRegistry.registerBlock(SupportBeam3, ItemWood.class, "wood_support3");
+		GameRegistry.registerBlock(SupportBeam, ItemWoodSupport.class, "wood_support");
+		GameRegistry.registerBlock(SupportBeam2, ItemWoodSupport.class, "wood_support2");
+		GameRegistry.registerBlock(SupportBeam3, ItemWoodSupport.class, "wood_support3");
 
 
 		LogNatural.setHarvestLevel("axe", 1);

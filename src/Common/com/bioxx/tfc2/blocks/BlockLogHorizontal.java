@@ -49,13 +49,13 @@ public class BlockLogHorizontal extends BlockCollapsible implements ISupportBloc
 	 * 1. Content 
 	 *******************************************************************************/
 	@Override
-	public int getNaturalSupportRange(IBlockState myState)
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos,IBlockState myState)
 	{
 		return 7;
 	}
 
 	@Override
-	public boolean canSupport(IBlockState myState, IBlockState otherState)
+	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
 		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
 			return true;
@@ -94,7 +94,7 @@ public class BlockLogHorizontal extends BlockCollapsible implements ISupportBloc
 	}
 
 	@Override
-	protected void createFallingEntity(World world, BlockPos pos, IBlockState state)
+	public void createFallingEntity(World world, BlockPos pos, IBlockState state)
 	{
 		world.setBlockToAir(pos);
 		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.stick, 1+world.rand.nextInt(3)));

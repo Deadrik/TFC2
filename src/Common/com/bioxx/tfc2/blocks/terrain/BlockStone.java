@@ -7,16 +7,16 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
-import com.bioxx.tfc2.world.WorldGen;
 
 public class BlockStone extends BlockCollapsible implements IWeightedBlock
 {
@@ -27,6 +27,7 @@ public class BlockStone extends BlockCollapsible implements IWeightedBlock
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		scanDepth = 10;
+		collapseType = CollapsibleType.Nature;
 	}
 
 	/*******************************************************************************
@@ -67,39 +68,40 @@ public class BlockStone extends BlockCollapsible implements IWeightedBlock
 	}
 
 	@Override
-	public int getNaturalSupportRange(IBlockState myState)
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos, IBlockState myState)
 	{
+		int range = 5;
 		StoneType stone = myState.getValue(BlockStone.META_PROPERTY);
 		switch(stone)
 		{
 		case Granite:
 		case Gabbro:
 		case Diorite:
-			return 7;
+			range = 7; break;
 		case Andesite:
 		case Basalt:
 		case Dacite:
 		case Rhyolite:
-			return 6;
+			range = 6; break;
 		case Gneiss:
 		case Blueschist:
 		case Marble:
 		case Schist:
-			return 5;
+			range = 5; break;
 		case Chert:
 		case Claystone:
 		case Dolomite:
 		case Limestone:
 		case Shale:
-			return 4;
+			range = 4; break;
 		}
-		return 5;
+		return range;
 	}
 
 	@Override
-	public boolean canSupport(IBlockState myState, IBlockState otherState)
+	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
-		if(otherState.getBlock() == this || otherState.getBlock() instanceof ISupportBlock)
+		if(otherState.getBlock() == this || otherState.getBlock() instanceof ISupportBlock || otherState.getBlock() == Blocks.bedrock)
 			return true;
 		return false;
 	}
@@ -107,15 +109,16 @@ public class BlockStone extends BlockCollapsible implements IWeightedBlock
 	@Override
 	protected boolean hasNaturalSupport(World world, BlockPos pos, IBlockState state)
 	{
-		IslandMap map = WorldGen.instance.getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
-		if(pos.getY() < 64+map.convertHeightToMC(map.getClosestCenter(pos).getElevation()/2))
-		{
-			scanDepth = 5;
-		}
+		scanDepth = getDepthScanRangeScaled(world, pos);
 		boolean natural = super.hasNaturalSupport(world, pos, state);
 		scanDepth = 10;
-
 		return natural;
+	}
+
+	protected int getDepthScanRangeScaled(World world, BlockPos pos)
+	{
+		int worldElev = world.getTopSolidOrLiquidBlock(pos).getY();
+		return Math.max((int)Math.floor(scanDepth * ((float)pos.getY() / (float)worldElev)), 2);
 	}
 
 	@Override

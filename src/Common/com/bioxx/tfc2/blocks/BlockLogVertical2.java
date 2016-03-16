@@ -65,11 +65,14 @@ public class BlockLogVertical2 extends BlockLogVertical implements INeedOffset
 	}
 
 	@Override
-	public int convertMeta(int meta) 
+	public int convertMetaToBlock(int meta) 
 	{
-		if(meta < 16)
-			return meta + 16;
-		else
-			return meta;
+		return meta & 15;
+	}
+
+	@Override
+	public int convertMetaToItem(int meta) 
+	{
+		return meta + 16;
 	}
 }

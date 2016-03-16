@@ -5,7 +5,6 @@ import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -20,11 +19,6 @@ import com.bioxx.tfc2.api.types.WoodType;
 public class BlockWoodSupport3 extends BlockWoodSupport2
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 18));
-	public static PropertyBool SPAN = PropertyBool.create("isSpan");
-	public static PropertyBool NORTH_CONNECTION = PropertyBool.create("north");
-	public static PropertyBool SOUTH_CONNECTION = PropertyBool.create("south");
-	public static PropertyBool EAST_CONNECTION = PropertyBool.create("east");
-	public static PropertyBool WEST_CONNECTION = PropertyBool.create("west");
 
 	public BlockWoodSupport3() 
 	{
@@ -49,12 +43,15 @@ public class BlockWoodSupport3 extends BlockWoodSupport2
 	}
 
 	@Override
-	public int convertMeta(int meta) 
+	public int convertMetaToBlock(int meta) 
 	{
-		if(meta < 16)
-			return meta + 16;
-		else
-			return meta;
+		return meta & 7;
+	}
+
+	@Override
+	public int convertMetaToItem(int meta) 
+	{
+		return (meta & 7) + 16;
 	}
 
 	/*******************************************************************************
@@ -81,7 +78,7 @@ public class BlockWoodSupport3 extends BlockWoodSupport2
 				withProperty(SOUTH_CONNECTION, world.getBlockState(pos.south()).getBlock() == this).
 				withProperty(EAST_CONNECTION, world.getBlockState(pos.east()).getBlock() == this).
 				withProperty(WEST_CONNECTION, world.getBlockState(pos.west()).getBlock() == this).
-				withProperty(SPAN, !canSupport(state, world.getBlockState(pos.down())));
+				withProperty(SPAN, !canBeSupportedBy(state, world.getBlockState(pos.down())));
 	}
 	@Override
 	protected BlockState createBlockState()

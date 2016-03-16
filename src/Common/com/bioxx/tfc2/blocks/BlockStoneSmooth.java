@@ -40,13 +40,13 @@ public class BlockStoneSmooth extends BlockCollapsible implements ISupportBlock,
 	}
 
 	@Override
-	public int getNaturalSupportRange(IBlockState myState)
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos, IBlockState myState)
 	{
 		return 6;
 	}
 
 	@Override
-	public boolean canSupport(IBlockState myState, IBlockState otherState)
+	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
 		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
 			return true;
@@ -76,7 +76,7 @@ public class BlockStoneSmooth extends BlockCollapsible implements ISupportBlock,
 	public boolean isSpan(IBlockAccess world, BlockPos pos) 
 	{
 		//If this block has an air block or partial block beneath it should be considered to be holding all of the weight above it.
-		return world.getBlockState(pos.down()).getBlock().isSideSolid(world, pos.down(), EnumFacing.UP);
+		return !world.getBlockState(pos.down()).getBlock().isSideSolid(world, pos.down(), EnumFacing.UP);
 	}
 
 	@Override
