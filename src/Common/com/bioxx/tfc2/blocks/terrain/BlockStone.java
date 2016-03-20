@@ -14,11 +14,10 @@ import net.minecraft.world.World;
 
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
-import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockStone extends BlockCollapsible implements IWeightedBlock
+public class BlockStone extends BlockCollapsible
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -107,10 +106,10 @@ public class BlockStone extends BlockCollapsible implements IWeightedBlock
 	}
 
 	@Override
-	protected boolean hasNaturalSupport(World world, BlockPos pos, IBlockState state)
+	protected boolean hasSupport(World world, BlockPos pos, IBlockState state)
 	{
 		scanDepth = getDepthScanRangeScaled(world, pos);
-		boolean natural = super.hasNaturalSupport(world, pos, state);
+		boolean natural = super.hasSupport(world, pos, state);
 		scanDepth = 10;
 		return natural;
 	}
@@ -119,12 +118,6 @@ public class BlockStone extends BlockCollapsible implements IWeightedBlock
 	{
 		int worldElev = world.getTopSolidOrLiquidBlock(pos).getY();
 		return Math.max((int)Math.floor(scanDepth * ((float)pos.getY() / (float)worldElev)), 2);
-	}
-
-	@Override
-	public int getWeight(IBlockState myState) 
-	{
-		return 50;
 	}
 
 	/*******************************************************************************

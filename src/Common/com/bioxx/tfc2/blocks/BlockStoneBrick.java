@@ -1,6 +1,5 @@
 package com.bioxx.tfc2.blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -8,18 +7,16 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
-import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
 import com.bioxx.tfc2.blocks.terrain.BlockRubble;
 
-public class BlockStoneBrick extends BlockCollapsible implements ISupportBlock, IWeightedBlock
+public class BlockStoneBrick extends BlockCollapsible implements ISupportBlock
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -52,35 +49,6 @@ public class BlockStoneBrick extends BlockCollapsible implements ISupportBlock, 
 		return false;
 	}
 
-	@Override
-	public int getWeight(IBlockState myState) {
-		return 25;
-	}
-
-	@Override
-	public int getMaxSupportWeight(IBlockAccess world, BlockPos pos, IBlockState myState) {
-		int maxWeight = 200;
-		Block b = world.getBlockState(pos.east()).getBlock();
-		if(b instanceof ISupportBlock && ((ISupportBlock)b).isSpan(world, pos.east()))
-			return maxWeight*2;
-		b = world.getBlockState(pos.west()).getBlock();
-		if(b instanceof ISupportBlock && ((ISupportBlock)b).isSpan(world, pos.west()))
-			return maxWeight*2;
-		b = world.getBlockState(pos.north()).getBlock();
-		if(b instanceof ISupportBlock && ((ISupportBlock)b).isSpan(world, pos.north()))
-			return maxWeight*2;
-		b = world.getBlockState(pos.south()).getBlock();
-		if(b instanceof ISupportBlock && ((ISupportBlock)b).isSpan(world, pos.south()))
-			return maxWeight*2;
-		return maxWeight;
-	}
-
-	@Override
-	public boolean isSpan(IBlockAccess world, BlockPos pos) 
-	{
-		//If this block has an air block or partial block beneath it should be considered to be holding all of the weight above it.
-		return world.getBlockState(pos.down()).getBlock().isSideSolid(world, pos.down(), EnumFacing.UP);
-	}
 	/*******************************************************************************
 	 * 2. Rendering 
 	 *******************************************************************************/

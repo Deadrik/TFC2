@@ -9,14 +9,13 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
-import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.blocks.BlockGravity;
 import com.bioxx.tfc2.blocks.BlockWoodSupport;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockRubble extends BlockGravity implements IWeightedBlock
+public class BlockRubble extends BlockGravity
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -96,10 +95,5 @@ public class BlockRubble extends BlockGravity implements IWeightedBlock
 	public float getSlideChance()
 	{
 		return 0.5f;
-	}
-
-	@Override
-	public int getWeight(IBlockState myState) {
-		return 40;
 	}
 }

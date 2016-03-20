@@ -74,36 +74,6 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 	}
 
 	@Override
-	public int getMaxSupportWeight(IBlockAccess world, BlockPos pos, IBlockState myState) 
-	{
-		WoodType wood = myState.getValue(META_PROPERTY);
-		int maxWeight = 0; 
-		if(isSpan(world, pos))
-			maxWeight = (int)(wood.getRupture());
-		else
-			maxWeight = (int)(wood.getCompression());
-		Block b = world.getBlockState(pos.east()).getBlock();
-		if(b instanceof ISupportBlock && !((ISupportBlock)b).isSpan(world, pos.east()))
-			return maxWeight*2;
-		b = world.getBlockState(pos.west()).getBlock();
-		if(b instanceof ISupportBlock && !((ISupportBlock)b).isSpan(world, pos.west()))
-			return maxWeight*2;
-		b = world.getBlockState(pos.north()).getBlock();
-		if(b instanceof ISupportBlock && !((ISupportBlock)b).isSpan(world, pos.north()))
-			return maxWeight*2;
-		b = world.getBlockState(pos.south()).getBlock();
-		if(b instanceof ISupportBlock && !((ISupportBlock)b).isSpan(world, pos.south()))
-			return maxWeight*2;
-		return maxWeight;
-	}
-
-	@Override
-	public boolean isSpan(IBlockAccess world, BlockPos pos) {
-		//If this block has an air block or partial block beneath it should be considered to be holding all of the weight above it.
-		return getActualState(world.getBlockState(pos), world, pos).getValue(SPAN);
-	}
-
-	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return Item.getItemFromBlock(this);
@@ -148,8 +118,19 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 	@Override
 	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
+		IBlockState state = getActualState(world.getBlockState(pos), world, pos);
 		if(side == EnumFacing.UP)
 			return true;
+
+		if((Boolean)state.getValue(NORTH_CONNECTION))
+			return true;
+		if((Boolean)state.getValue(SOUTH_CONNECTION))
+			return true;
+		if((Boolean)state.getValue(EAST_CONNECTION))
+			return true;
+		if((Boolean)state.getValue(WEST_CONNECTION))
+			return true;
+
 		return false;
 	}
 

@@ -24,11 +24,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.world.WorldGen;
 
-public class BlockLeaves extends BlockTerra implements IWeightedBlock
+public class BlockLeaves extends BlockTerra
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 16));
 	public static PropertyBool FANCY = PropertyBool.create("fancy");
@@ -51,11 +50,6 @@ public class BlockLeaves extends BlockTerra implements IWeightedBlock
 		return true;
 	}
 
-	@Override
-	public int getWeight(IBlockState myState) 
-	{
-		return 0;
-	}
 	/*******************************************************************************
 	 * 2. Rendering 
 	 *******************************************************************************/

@@ -25,11 +25,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.world.WorldGen;
 
-public class BlockGrass extends BlockCollapsible implements IWeightedBlock
+public class BlockGrass extends BlockCollapsible
 {
 	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 	public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -43,6 +42,7 @@ public class BlockGrass extends BlockCollapsible implements IWeightedBlock
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
+		this.collapseType = CollapsibleType.Nature;
 	}
 
 	/*******************************************************************************
@@ -116,12 +116,6 @@ public class BlockGrass extends BlockCollapsible implements IWeightedBlock
 	public int tickRate(World worldIn)
 	{
 		return 3;
-	}
-
-	@Override
-	public int getWeight(IBlockState myState) 
-	{
-		return 20;
 	}
 
 	@Override

@@ -7,13 +7,12 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 
-import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.blocks.BlockGravity;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockGravel extends BlockGravity implements IWeightedBlock
+public class BlockGravel extends BlockGravity
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -41,12 +40,6 @@ public class BlockGravel extends BlockGravity implements IWeightedBlock
 	public float getSlideChance()
 	{
 		return 1.0f;
-	}
-
-	@Override
-	public int getWeight(IBlockState myState) 
-	{
-		return 20;
 	}
 
 	/*******************************************************************************

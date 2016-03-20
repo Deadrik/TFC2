@@ -14,12 +14,11 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.IGravityBlock;
-import com.bioxx.tfc2.api.interfaces.IWeightedBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
-public class BlockDirt extends BlockCollapsible implements IWeightedBlock, IGravityBlock
+public class BlockDirt extends BlockCollapsible implements IGravityBlock
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("stone", StoneType.class);
 
@@ -27,6 +26,7 @@ public class BlockDirt extends BlockCollapsible implements IWeightedBlock, IGrav
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
+		this.collapseType = CollapsibleType.Nature;
 	}
 
 	/*******************************************************************************
@@ -74,12 +74,6 @@ public class BlockDirt extends BlockCollapsible implements IWeightedBlock, IGrav
 	public boolean canFallInto(World worldIn, BlockPos pos) 
 	{
 		return false;
-	}
-
-	@Override
-	public int getWeight(IBlockState myState) 
-	{
-		return 20;
 	}
 
 	@Override
