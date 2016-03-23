@@ -2,6 +2,7 @@ package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -11,9 +12,11 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
@@ -48,6 +51,18 @@ public class BlockLeaves extends BlockTerra
 	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
 	{
 		return true;
+	}
+
+	@Override
+	public Vec3 modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3 motion)
+	{
+		return motion.crossProduct(new Vec3(0.75, 1, 0.75));
+	}
+
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+	{
+		return null;
 	}
 
 	/*******************************************************************************

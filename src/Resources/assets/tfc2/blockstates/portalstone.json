@@ -3,6 +3,7 @@
 	"defaults": {
 		"textures": {
 			"all": "tfc2:blocks/Portal Stone",
+			"side": "tfc2:blocks/Portal Stone",
 			"end": "tfc2:blocks/Portal Stone",
 			"particle": "tfc2:blocks/Portal Stone"
 		},
@@ -15,7 +16,10 @@
 			"disabled": {"textures": {"side": "tfc2:blocks/Portal Stone Disabled"}},
 			"locked": {"textures": {"side": "tfc2:blocks/Portal Stone Locked"}},
 			"gate": {"model": "cube_all", "textures": {"all": "tfc2:blocks/Portal Stone Gate"}}
-		}
+		},
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
 	}
 }
 

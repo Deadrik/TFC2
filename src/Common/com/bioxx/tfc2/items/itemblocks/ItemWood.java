@@ -26,6 +26,8 @@ public class ItemWood extends ItemTerraBlock
 		if (is.getItemDamage() < Global.WOOD_STANDARD.length)
 		{
 			int meta = is.getItemDamage();
+			/*if(block instanceof INeedOffset)
+				meta = ((INeedOffset)block).convertMetaToItem(meta);*/
 			arraylist.add(EnumChatFormatting.DARK_GRAY + Core.translate("global." + Global.WOOD_STANDARD[meta]));
 		}
 		else

@@ -113,7 +113,11 @@
 		"facing=down,stone=marble": [{"model": "tfc2:ClimbingRocks/rock0"},{"model": "tfc2:ClimbingRocks/rock1"},{"model": "tfc2:ClimbingRocks/rock2"},{"model": "tfc2:ClimbingRocks/rock3"}],
 		"facing=south,stone=marble" : [{"model": "tfc2:ClimbingRocks/rock0"},{"model": "tfc2:ClimbingRocks/rock1"},{"model": "tfc2:ClimbingRocks/rock2"},{"model": "tfc2:ClimbingRocks/rock3"}],
 		"facing=east,stone=marble" : [{"model": "tfc2:ClimbingRocks/rock0"},{"model": "tfc2:ClimbingRocks/rock1"},{"model": "tfc2:ClimbingRocks/rock2"},{"model": "tfc2:ClimbingRocks/rock3"}],
-		"facing=west,stone=marble" : [{"model": "tfc2:ClimbingRocks/rock0"},{"model": "tfc2:ClimbingRocks/rock1"},{"model": "tfc2:ClimbingRocks/rock2"},{"model": "tfc2:ClimbingRocks/rock3"}]
+		"facing=west,stone=marble" : [{"model": "tfc2:ClimbingRocks/rock0"},{"model": "tfc2:ClimbingRocks/rock1"},{"model": "tfc2:ClimbingRocks/rock2"},{"model": "tfc2:ClimbingRocks/rock3"}],
+		
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
 		
 	}
 }

@@ -21,9 +21,8 @@
         	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/trees/Blackwood Leaves", "fluff": "tfc2:blocks/wood/trees/Blackwood Leaves Fluff", "particle": "tfc2:blocks/wood/trees/Blackwood Leaves"} },
     	    "palm":  {}
         },
-        "inventory": 
-        [{
-            "transform": "forge:default-block"	
+        "inventory": [{
+            "transform": "forge:default-block"
         }]
     }
 }

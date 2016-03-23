@@ -28,6 +28,9 @@
     	"west":{
     		"true":{"submodel": "tfc2:Wood/SupportWest"},
     		"false":{}
-    	}
+    	},
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
     }
 }

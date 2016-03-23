@@ -1,7 +1,8 @@
 {
 	"forge_marker" : 1,
 	"defaults": {
-		"model": "cube_all"
+		"model": "cube_all",
+		"textures": {"all": "tfc2:blocks/wood/trees/Rosewood Log"}
 	},
     "variants": {
     "wood":{
@@ -21,6 +22,9 @@
     	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/Willow Log"} },
     	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/Kapok Log"} },
     	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/Acacia Log"} }
-        }
+        },
+        "inventory": [{
+            "transform": "forge:default-block"
+        }]
     }
 }

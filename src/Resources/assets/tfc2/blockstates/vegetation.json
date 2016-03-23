@@ -15,6 +15,9 @@
 		},
 		"veg": {
 			"grass": {}
-		}
+		},
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
 	}
 }

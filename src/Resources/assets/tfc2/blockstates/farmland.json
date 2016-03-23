@@ -24,6 +24,9 @@
 			"schist": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Schist", "top": "tfc2:blocks/farmland/Farmland Schist", "particle": "tfc2:blocks/soil/Dirt Schist"}},
 			"gneiss": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Gneiss", "top": "tfc2:blocks/farmland/Farmland Gneiss", "particle": "tfc2:blocks/soil/Dirt Gneiss"}},
 			"marble": {"textures": {"dirt": "tfc2:blocks/soil/Dirt Marble", "top": "tfc2:blocks/farmland/Farmland Marble", "particle": "tfc2:blocks/soil/Dirt Marble"}}
-		}
+		},
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
 	}
 }

@@ -1,11 +1,15 @@
 {
 	"forge_marker" : 1,
 	"defaults": {
-		"model": "cube_all"
+		"model": "cube_all",
+		"textures": {"all": "tfc2:blocks/wood/trees/Palm Log"}
 	},
     "variants": {
     "wood":{
     	    "palm":  { "textures": {"all": "tfc2:blocks/wood/trees/Palm Log"}, "model" : "tfc2:Wood/Logs/Palm" }
-        }
+        },
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
     }
 }

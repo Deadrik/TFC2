@@ -49,7 +49,7 @@ public class BlockPlanks extends BlockCollapsible implements ISupportBlock
 	@Override
 	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos,IBlockState myState)
 	{
-		return 5;
+		return 7;
 	}
 
 	@Override

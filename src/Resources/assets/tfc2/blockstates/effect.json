@@ -1,7 +1,8 @@
 {
 	"forge_marker" : 1,
 	"defaults": {
-		"model": "tfc2:Effects/Acid"
+		"model": "tfc2:Effects/Acid",
+		"textures": {"top": "tfc2:blocks/wood/trees/Acacia Leaves"}
 	},
     "variants": {
         "effect=fire":  { "model": "tfc2:Effects/Fire" },
@@ -10,6 +11,9 @@
         "effect=steam":  { "model": "tfc2:Effects/Steam" },
         "effect=smoke":  { "model": "tfc2:Effects/Smoke" },
         "effect=acid":  { "model": "tfc2:Effects/Acid" },
-        "effect=char":  { "model": "tfc2:Effects/Char" }
+        "effect=char":  { "model": "tfc2:Effects/Char" },
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
     }
 }

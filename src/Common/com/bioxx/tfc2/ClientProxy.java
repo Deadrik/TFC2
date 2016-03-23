@@ -264,6 +264,7 @@ public class ClientProxy extends CommonProxy
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam3), "Wood/SupportBeams/", WoodType.getNamesArray(), 16, 18);
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.TorchOn),0,new ModelResourceLocation(Reference.ModID + ":torch_on", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.TorchOff),0,new ModelResourceLocation(Reference.ModID + ":torch_off", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.StairsAsh),0,new ModelResourceLocation(Reference.ModID + ":stairs_ash", "inventory"));
 		RegistryItemQueue.getInstance().registerMeshes();
 	}
 

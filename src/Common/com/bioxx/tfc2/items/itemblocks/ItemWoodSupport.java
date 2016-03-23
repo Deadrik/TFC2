@@ -12,7 +12,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import com.bioxx.tfc2.api.interfaces.ISupportBlock;
+import com.bioxx.tfc2.api.interfaces.INeedOffset;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.BlockWoodSupport;
 
@@ -27,12 +27,15 @@ public class ItemWoodSupport extends ItemWood
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
 		super.addInformation(is, player, arraylist, flag);
-
-		if(block instanceof ISupportBlock)
+		int meta = is.getItemDamage();
+		meta = ((INeedOffset)block).convertMetaToItem(meta);
+		arraylist.add(EnumChatFormatting.DARK_GRAY + "Span Range: " + WoodType.getTypeFromMeta(meta).getSupportRange());
+		/*if(block instanceof ISupportBlock)
 		{
-			arraylist.add(EnumChatFormatting.DARK_GRAY + "Max Cross Load: " + WoodType.getTypeFromMeta(is.getItemDamage()).getRupture());
-			arraylist.add(EnumChatFormatting.DARK_GRAY + "Max Free Load: " + WoodType.getTypeFromMeta(is.getItemDamage()).getCompression());
-		}
+
+			arraylist.add(EnumChatFormatting.DARK_GRAY + "Max Cross Load: " + WoodType.getTypeFromMeta(meta).getRupture());
+			arraylist.add(EnumChatFormatting.DARK_GRAY + "Max Free Load: " + WoodType.getTypeFromMeta(meta).getCompression());
+		}*/
 
 	}
 

@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.tfc2.api.TFCFluids;
+import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
 import com.bioxx.tfc2.blocks.liquids.BlockFreshWater;
 import com.bioxx.tfc2.blocks.liquids.BlockFreshWaterStatic;
@@ -61,6 +62,7 @@ public class TFCBlocks
 	public static Block SupportBeam;
 	public static Block SupportBeam2;
 	public static Block SupportBeam3;
+	public static Block StairsAsh;
 
 	public static void LoadBlocks()
 	{
@@ -108,6 +110,8 @@ public class TFCBlocks
 		SupportBeam = new BlockWoodSupport().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("wood_support");
 		SupportBeam2 = new BlockWoodSupport2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("wood_support2");
 		SupportBeam3 = new BlockWoodSupport3().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("wood_support3");
+
+		StairsAsh = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Ash)).setUnlocalizedName("stairs_ash");
 	}
 
 	public static void RegisterBlocks()
@@ -157,7 +161,7 @@ public class TFCBlocks
 		GameRegistry.registerBlock(SupportBeam, ItemWoodSupport.class, "wood_support");
 		GameRegistry.registerBlock(SupportBeam2, ItemWoodSupport.class, "wood_support2");
 		GameRegistry.registerBlock(SupportBeam3, ItemWoodSupport.class, "wood_support3");
-
+		GameRegistry.registerBlock(StairsAsh, "stairs_ash");
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);

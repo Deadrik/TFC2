@@ -68,6 +68,9 @@
 		"crop=rice,stage=4" : {"model": "crop","textures": {"crop": "tfc2:blocks/plants/crops/Rice (5)"}},
 		"crop=rice,stage=5" : {"model": "crop","textures": {"crop": "tfc2:blocks/plants/crops/Rice (6)"}},
 		"crop=rice,stage=6" : {"model": "crop","textures": {"crop": "tfc2:blocks/plants/crops/Rice (7)"}},
-		"crop=rice,stage=7" : {"model": "crop","textures": {"crop": "tfc2:blocks/plants/crops/Rice (8)"}}
+		"crop=rice,stage=7" : {"model": "crop","textures": {"crop": "tfc2:blocks/plants/crops/Rice (8)"}},
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
 	}
 }
