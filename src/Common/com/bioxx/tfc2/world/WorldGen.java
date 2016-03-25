@@ -37,7 +37,7 @@ public class WorldGen implements IThreadCompleteListener
 	public static WorldGen instance;
 	final java.util.Map<Integer, CachedIsland> islandCache;
 	java.util.Map<Integer, CachedIsland> clientIslandCache;
-	World world;
+	public World world;
 	public static final int ISLAND_SIZE = 4096;
 
 	private Queue<Integer> mapQueue;
@@ -58,6 +58,17 @@ public class WorldGen implements IThreadCompleteListener
 			instance = new WorldGen(world);
 	}
 
+	public IslandMap getClientIslandMap(int x, int z)
+	{
+		int id = Helper.combineCoords(x, z);
+		if(!clientIslandCache.containsKey(id))
+		{
+			createFakeMap(x, z);
+		}
+		CachedIsland ci = clientIslandCache.get(id);
+		return ci.getIslandMap();
+	}
+
 	/**
 	 * Retrieves an island map from the cache or creates it if needed. This is a pass-through method to an internal method which retrieves
 	 * the island map and hands neighboring island maps off to other threads for generation. Coordinates should already be in MapCoords form.
@@ -66,26 +77,17 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		int id = Helper.combineCoords(x, z);
 
-		if(this.world.isRemote)
+		//First we try to load the map from disk if it exists
+		if(!islandCache.containsKey(id))
 		{
-			if(!clientIslandCache.containsKey(id))
-			{
-				createFakeMap(x, z);
-			}
+			loadMap(x, z);
 		}
-		else
+		//If the map did not exist on disk then create it from scratch
+		if(!islandCache.containsKey(id))
 		{
-			//First we try to load the map from disk if it exists
-			if(!islandCache.containsKey(id))
-			{
-				loadMap(x, z);
-			}
-			//If the map did not exist on disk then create it from scratch
-			if(!islandCache.containsKey(id))
-			{
-				createIsland(x, z);
-			}
+			createIsland(x, z);
 		}
+
 		return getMap(x, z);
 	}
 
@@ -119,25 +121,19 @@ public class WorldGen implements IThreadCompleteListener
 	private IslandMap getMap(int x, int z)
 	{
 		int id = Helper.combineCoords(x, z);
-		CachedIsland ci;
-		if(world.isRemote)
-			ci = clientIslandCache.get(id);
-		else
+		CachedIsland ci = islandCache.get(id);
+		//Should only ever be 0 if this map was created but never accessed by the game.
+		if(ci.lastAccess == 0)
 		{
-			ci = islandCache.get(id);
-			//Should only ever be 0 if this map was created but never accessed by the game.
-			if(ci.lastAccess == 0)
-			{
-				//Add the neighbor maps to the mapQueue for generation in another thread
-				mapQueue.add(Helper.combineCoords(x+1, z));
-				mapQueue.add(Helper.combineCoords(x+1, z-1));
-				mapQueue.add(Helper.combineCoords(x, z-1));
-				mapQueue.add(Helper.combineCoords(x-1, z-1));
-				mapQueue.add(Helper.combineCoords(x-1, z));
-				mapQueue.add(Helper.combineCoords(x-1, z+1));
-				mapQueue.add(Helper.combineCoords(x, z+1));
-				mapQueue.add(Helper.combineCoords(x+1, z+1));
-			}
+			//Add the neighbor maps to the mapQueue for generation in another thread
+			mapQueue.add(Helper.combineCoords(x+1, z));
+			mapQueue.add(Helper.combineCoords(x+1, z-1));
+			mapQueue.add(Helper.combineCoords(x, z-1));
+			mapQueue.add(Helper.combineCoords(x-1, z-1));
+			mapQueue.add(Helper.combineCoords(x-1, z));
+			mapQueue.add(Helper.combineCoords(x-1, z+1));
+			mapQueue.add(Helper.combineCoords(x, z+1));
+			mapQueue.add(Helper.combineCoords(x+1, z+1));
 		}
 
 		return ci.getIslandMap();
@@ -150,10 +146,7 @@ public class WorldGen implements IThreadCompleteListener
 
 	public boolean isMapLoaded(int id)
 	{
-		if(world.isRemote)
-			return clientIslandCache.get(id) != null;
-		else
-			return islandCache.get(id) != null;
+		return islandCache.get(id) != null;
 	}
 
 	private IslandMap createIsland(int x, int z)
@@ -283,6 +276,13 @@ public class WorldGen implements IThreadCompleteListener
 
 		Moisture m = Moisture.fromVal(r.nextDouble());
 		id.setIslandMoisture(m);
+
+		if(m == Moisture.LOW && r.nextDouble() < 0.4)
+		{
+			id.setFeatures(Feature.Desert);
+		}
+
+		//id.setFeatures(Feature.Desert);
 
 		String common = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
 		String uncommon = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);

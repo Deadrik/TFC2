@@ -51,7 +51,7 @@ public class WeatherRenderer extends IRenderHandler
 	{
 		++this.rendererUpdateCount;
 		double rainStrength = world.getRainStrength(partialTicks);
-		rainStrength = WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+		rainStrength = WeatherManager.getInstance().getPreciptitationClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
 		if (rainStrength > 0)
 		{
@@ -205,7 +205,7 @@ public class WeatherRenderer extends IRenderHandler
 		WorldClient worldclient = mc.theWorld;
 		if(worldclient.provider.getDimensionId() != 0)
 			return;
-		double rainStrength = WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+		double rainStrength = WeatherManager.getInstance().getPreciptitationClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
 		if (!mc.gameSettings.fancyGraphics)
 		{
@@ -236,7 +236,7 @@ public class WeatherRenderer extends IRenderHandler
 			for (int k = 0; k < rainParticles; ++k)
 			{
 				BlockPos blockPos1 = worldclient.getPrecipitationHeight(blockpos.add(worldclient.rand.nextInt(b0) - worldclient.rand.nextInt(b0), 0, worldclient.rand.nextInt(b0) - worldclient.rand.nextInt(b0)));
-				double temp = WeatherManager.getInstance().getTemperature(blockPos1);
+				double temp = WeatherManager.getInstance().getTemperatureClient(blockPos1);
 				BlockPos blockpos2 = blockPos1.down();
 				Block block = worldclient.getBlockState(blockpos2).getBlock();
 

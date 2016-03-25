@@ -244,17 +244,27 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		IBlockState sand = TFCBlocks.Sand.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		IBlockState freshwater = TFCBlocks.FreshWaterStatic.getDefaultState();
 		IBlockState saltwater = TFCBlocks.SaltWaterStatic.getDefaultState();
-		/*if(islandMap.islandParams.getIslandMoisture() == Moisture.NONE)
-		{
-			grass = sand;
-			dirt = sand;
-		}*/
+		IBlockState top = grass;
+		IBlockState fill = dirt;
+
 		for(int x = 0; x < 16; x++)
 		{
 			for(int z = 0; z < 16; z++)
 			{
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
+
+				if(islandMap.getParams().hasFeature(Feature.Desert) && !closestCenter.hasAttribute(Attribute.River) && closestCenter.getMoistureRaw() < 0.25)
+				{
+					top = sand;
+					fill = sand;
+				}
+				else
+				{
+					top = grass;
+					fill = dirt;
+				}
+
 				int hexElev = elevationMap[z << 4 | x];
 
 				boolean isCliff = false;
@@ -282,11 +292,11 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						if(!isCliff || hexElev == convertElevation(closestCenter.getElevation()))
 						{
-							chunkprimer.setBlockState(x, y, z, grass);
+							chunkprimer.setBlockState(x, y, z, top);
 							if(!isCliff)
 							{
-								chunkprimer.setBlockState(x, y-1, z, dirt);
-								chunkprimer.setBlockState(x, y-2, z, dirt);
+								chunkprimer.setBlockState(x, y-1, z, fill);
+								chunkprimer.setBlockState(x, y-2, z, fill);
 							}
 						}
 
@@ -328,7 +338,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							chunkprimer.setBlockState(x, y, z, sand);
 						}
 					}
-					else if(closestCenter.biome == BiomeType.MARSH)
+					else if(closestCenter.biome == BiomeType.MARSH && closestCenter.hasAttribute(Attribute.Lake))
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
 						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
@@ -415,11 +425,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				closestCenter = this.getHex(p);
 
 				int hexElev = 0;
-				if(closestCenter.hasMarker(Marker.Ocean) && !closestCenter.hasMarker(Marker.CoastWater))
-				{
-					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p));
-				}
-				else if(!closestCenter.hasAttribute(Attribute.River) && !closestCenter.hasMarker(Marker.Coast))
+				if(!closestCenter.hasAttribute(Attribute.River) && !closestCenter.hasMarker(Marker.Coast) && !closestCenter.hasMarker(Marker.CoastWater) && !closestCenter.hasAttribute(Attribute.Lake))
 				{
 					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p)) + (int)Math.ceil(turbMap.GetValue(worldX+p.x, worldZ+p.y));
 				}

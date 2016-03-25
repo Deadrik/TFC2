@@ -265,7 +265,8 @@ public class IslandParameters
 		LowLand(0.1,"Low Land"),
 		MineralRich(0.05,"Mineral Rich"),
 		Spires(0.05,"Spires"),
-		NutrientRich(0.1,"Nutrient Rich");
+		NutrientRich(0.1,"Nutrient Rich"),
+		Desert(0.0,"Desert", false);
 
 		public final double rarity;
 		private String name;

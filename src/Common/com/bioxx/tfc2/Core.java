@@ -227,6 +227,15 @@ public class Core
 		return WorldGen.instance.getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
 	}
 
+	public static IslandMap getClientMapForWorld(World w, BlockPos pos)
+	{
+		if(w.provider.getDimensionId() == 2)
+		{
+			return WorldGen.instance.getClientIslandMap(pos.getX() >> 9, pos.getZ() >> 9);
+		}
+		return WorldGen.instance.getClientIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
+	}
+
 	public static void dropItem(World world, BlockPos pos, ItemStack is)
 	{
 		dropItem(world, (double)pos.getX()+0.5, (double)pos.getY(), (double)pos.getZ()+0.5, is);

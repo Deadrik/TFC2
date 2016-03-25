@@ -24,6 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.world.WorldGen;
@@ -109,6 +110,8 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 
 		if(worldIn instanceof ChunkCache)
 			d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
+		if(m.getParams().hasFeature(Feature.Desert))
+			d1 *= 0.25;
 		return ColorizerGrass.getGrassColor(d0, d1);
 	}
 

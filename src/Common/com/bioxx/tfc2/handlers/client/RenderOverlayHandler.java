@@ -202,14 +202,14 @@ public class RenderOverlayHandler
 		{
 			int xM = ((int)(mc.thePlayer.posX) >> 12);
 			int zM = ((int)(mc.thePlayer.posZ) >> 12);
-			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+			IslandMap map = WorldGen.instance.getClientIslandMap(xM, zM);
 			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
 			BlockPos pos = new BlockPos((int)(mc.thePlayer.posX), 0, (int)(mc.thePlayer.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
 			event.left.add(""+mc.theWorld.getWorldTime());
-			event.left.add("Rain: "+WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
+			event.left.add("Rain: "+WeatherManager.getInstance().getPreciptitationClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
 					" / "  + " / " + mc.theWorld.isRaining());
-			event.left.add("Temp: " + WeatherManager.getInstance().getTemperature((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
+			event.left.add("Temp: " + WeatherManager.getInstance().getTemperatureClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
 			event.left.add("Date: " + Timekeeper.getInstance().getSeasonalPeriod() + " | Time: " + Timekeeper.getInstance().getClockTime());
 			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
 			event.left.add("Index: "+hex.index);

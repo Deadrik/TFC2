@@ -26,6 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.world.WorldGen;
@@ -103,13 +104,15 @@ public class BlockLeaves extends BlockTerra
 		if(worldIn instanceof ChunkCache)
 			d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
 
+		if(m.getParams().hasFeature(Feature.Desert))
+			d1 *= 0.25;
+
 		if(d1 < 0.25)
 		{
 			IBlockState state = worldIn.getBlockState(pos);
 			if(state.getValue(META_PROPERTY) == WoodType.Acacia)
 				d1 = 0.25;
 		}
-
 		return ColorizerFoliage.getFoliageColor(d0, d1);
 	}
 

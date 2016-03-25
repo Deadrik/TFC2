@@ -170,6 +170,7 @@ public class IslandMap
 
 			// Polygon elevations are the average of their corners
 			assignPolygonElevations();
+			//if(!this.islandParams.hasFeature(Feature.Desert))
 			assignLakeElevations(lakeCenters(centers));
 
 			// Determine downslope paths.
@@ -188,6 +189,7 @@ public class IslandMap
 			// Determine downslope paths.
 			calculateDownslopesCenter();
 			// Create rivers.
+			//if(!this.getParams().hasFeature(Feature.Desert))
 			createRivers(getCentersAbove(0.25));
 			assignSlopedNoise();
 			assignHillyNoise();
@@ -593,148 +595,52 @@ public class IslandMap
 
 	private void createPortals()
 	{
-		Center start = this.getClosestCenter(new Point(2048, 2048));
-		Center temp = start, temp2 = null;
-		boolean found = false;
-
-		//North portal location
-		while(!found && this.getParams().getZCoord() > -4)
+		Vector<Center> low = this.getCentersBelow(0.3, false);
+		Center temp = low.get(this.mapRandom.nextInt(low.size()));
+		while(true)
 		{
-			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.North) : mapRandom.nextBoolean() ? 
-					temp.getNeighbor(HexDirection.NorthEast) : temp.getNeighbor(HexDirection.NorthWest));
-
-			//If this isn't a suitable hex then we displace in a random direction and continue from there
-			if(temp.hasAttribute(Attribute.River))
-			{
-				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
-				if(temp2 == null)
-					temp = temp.getRandomNeighbor(mapRandom);
-				else temp = temp2;
-				continue;
-			}
-			else if(temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
-			{
-				temp2 = temp.downslope;
-				if(temp2 == null)
-					temp = temp.getRandomNeighbor(mapRandom);
-				else temp = temp2;
-				continue;
-			}
-
-			//Once we get low enough then we look for something suitable
-			if(temp.getElevation() < 0.3)
+			if(temp.point.y < 2048 && temp.point.x > 256 && temp.point.x < 2304)
 			{
 				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.NORTH);
 				temp.addAttribute(pa);
-				found = true;
+				break;
 			}
+			temp = low.get(this.mapRandom.nextInt(low.size()));
 		}
-		System.out.println("North: "+temp.point);
-		//South portal location
-		temp = start;
-		found = false;
-		while(!found && this.getParams().getZCoord() < 4)
+
+		while(true)
 		{
-			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.South) : mapRandom.nextBoolean() ? 
-					temp.getNeighbor(HexDirection.SouthEast) : temp.getNeighbor(HexDirection.SouthWest));
-
-			//If this isn't a suitable hex then we displace in a random direction and continue from there
-			if(temp.hasAttribute(Attribute.River))
+			if(temp.point.y > 2048 && temp.point.x > 256 && temp.point.x < 2304)
 			{
-				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
-				if(temp2 == null)
-					temp = temp.getRandomNeighbor(mapRandom);
-				else temp = temp2;
-				continue;
-			}
-			else if(temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
-			{
-				temp2 = temp.downslope;
-				if(temp2 == null)
-					temp = temp.getRandomNeighbor(mapRandom);
-				else temp = temp2;
-				continue;
-			}
-
-			//Once we get low enough then we look for something suitable
-			if(temp.getElevation() < 0.3)
-			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()+1), EnumFacing.SOUTH);
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.SOUTH);
 				temp.addAttribute(pa);
-				found = true;
+				break;
 			}
+			temp = low.get(this.mapRandom.nextInt(low.size()));
 		}
-		System.out.println("South: "+temp.point);
-		//East portal location
-		temp = start;
-		found = false;
-		while(!found)
+
+		while(true)
 		{
-			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.SouthEast) : temp.getNeighbor(HexDirection.NorthEast));
-
-			//If this isn't a suitable hex then we displace in a random direction and continue from there
-			if(temp.hasAttribute(Attribute.River))
+			if(temp.point.x > 2048 && temp.point.y > 256 && temp.point.y < 2304)
 			{
-				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
-				if(temp2 == null)
-					temp = temp.getRandomNeighbor(mapRandom);
-				else temp = temp2;
-				continue;
-			}
-			else if(temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
-			{
-				temp2 = temp.downslope;
-				if(temp2 == null)
-					temp = temp.getRandomNeighbor(mapRandom);
-				else temp = temp2;
-				continue;
-			}
-
-			//Once we get low enough then we look for something suitable
-			if(temp.getElevation() < 0.3)
-			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()+1, this.islandParams.getZCoord()), EnumFacing.EAST);
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.WEST);
 				temp.addAttribute(pa);
-				found = true;
+				break;
 			}
+			temp = low.get(this.mapRandom.nextInt(low.size()));
 		}
-		System.out.println("East: "+temp.point);
-		//West portal location
-		temp = start;
-		found = false;
-		while(!found)
+
+		while(true)
 		{
-			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.SouthWest) : temp.getNeighbor(HexDirection.NorthWest));
-
-			//If this isn't a suitable hex then we displace in a random direction and continue from there
-			if(temp.hasAttribute(Attribute.River))
+			if(temp.point.x < 2048 && temp.point.y > 256 && temp.point.y < 2304)
 			{
-				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
-				if(temp2 == null)
-					temp = temp.getRandomNeighbor(mapRandom);
-				else temp = temp2;
-				continue;
-			}
-			else if(temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
-			{
-				temp2 = temp.downslope;
-				if(temp2 == null)
-					temp = temp.getRandomNeighbor(mapRandom);
-				else temp = temp2;
-				continue;
-			}
-
-			//Once we get low enough then we look for something suitable
-			if(temp.getElevation() < 0.3)
-			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()-1, this.islandParams.getZCoord()), EnumFacing.WEST);
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.WEST);
 				temp.addAttribute(pa);
-				found = true;
+				break;
 			}
+			temp = low.get(this.mapRandom.nextInt(low.size()));
 		}
-		System.out.println("West: "+temp.point);
 	}
-
 
 	public Center getHighestNeighbor(Center c)
 	{
@@ -1343,6 +1249,8 @@ public class IslandMap
 		{
 			c1 = locations.get(i);
 			float m = i/(float)(locations.size());
+			if(this.getParams().hasFeature(Feature.Desert))
+				m = m*0.25f;
 			c1.setMoistureRaw(m);
 		}
 	}
@@ -1358,6 +1266,8 @@ public class IslandMap
 			{
 				double rivermult = attrib != null ? attrib.getRiver() : 0;
 				cr.setMoistureRaw((attrib != null && attrib.getRiver() > 0) ? Math.min(3.0, (0.1 * rivermult)) : 1.0);
+				if(this.getParams().hasFeature(Feature.Desert))
+					cr.setMoistureRaw((Math.log10(cr.getMoistureRaw()*0.5)+2)/2);
 				queue.push(cr);
 			} 
 			else 
@@ -1366,7 +1276,11 @@ public class IslandMap
 			}
 		}
 		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
-		double moistureMult = 1 - (0.6 * this.islandParams.getIslandMoisture().getMoisture());
+		double moistureMult = (0.6 * this.islandParams.getIslandMoisture().getMoisture());
+		/*if(this.getParams().hasFeature(Feature.Desert))
+			moistureMult = (float) ((Math.log10(1)+1)/1);*/
+
+
 		while (queue.size() > 0) 
 		{
 			Center q = queue.pop();
@@ -2122,6 +2036,8 @@ public class IslandMap
 	// needs of the island map generator.*/
 	public BiomeType getBiome(Center p) 
 	{
+		float m = p.getMoistureRaw();
+		m *= this.getParams().getIslandMoisture().getMoisture();
 		if (p.hasMarker(Marker.Ocean)) {
 			return BiomeType.OCEAN;
 		} else if (p.hasMarker(Marker.Water)) {
@@ -2131,23 +2047,23 @@ public class IslandMap
 		} else if (p.hasMarker(Marker.Coast)) {
 			return BiomeType.BEACH;
 		} else if (p.elevation > 0.8) {
-			if (p.getMoistureRaw() > 0.50) return BiomeType.SNOW;
-			else if (p.getMoistureRaw() > 0.33) return BiomeType.TUNDRA;
-			else if (p.getMoistureRaw() > 0.16) return BiomeType.BARE;
+			if (m > 0.50) return BiomeType.SNOW;
+			else if (m > 0.33) return BiomeType.TUNDRA;
+			else if (m > 0.16) return BiomeType.BARE;
 			else return BiomeType.SCORCHED;
 		} else if (p.elevation > 0.6) {
-			if (p.getMoistureRaw() > 0.66) return BiomeType.TAIGA;
-			else if (p.getMoistureRaw() > 0.33) return BiomeType.SHRUBLAND;
+			if (m > 0.66) return BiomeType.TAIGA;
+			else if (m > 0.33) return BiomeType.SHRUBLAND;
 			else return BiomeType.TEMPERATE_DESERT;
 		} else if (p.elevation > 0.3) {
-			if (p.getMoistureRaw() > 0.83) return BiomeType.TEMPERATE_RAIN_FOREST;
-			else if (p.getMoistureRaw() > 0.50) return BiomeType.TEMPERATE_DECIDUOUS_FOREST;
-			else if (p.getMoistureRaw() > 0.16) return BiomeType.GRASSLAND;
+			if (m > 0.83) return BiomeType.TEMPERATE_RAIN_FOREST;
+			else if (m > 0.50) return BiomeType.TEMPERATE_DECIDUOUS_FOREST;
+			else if (m > 0.16) return BiomeType.GRASSLAND;
 			else return BiomeType.TEMPERATE_DESERT;
 		} else {
-			if (p.getMoistureRaw() > 0.66) return BiomeType.TROPICAL_RAIN_FOREST;
-			else if (p.getMoistureRaw() > 0.33) return BiomeType.TROPICAL_SEASONAL_FOREST;
-			else if (p.getMoistureRaw() > 0.16) return BiomeType.GRASSLAND;
+			if (m > 0.66) return BiomeType.TROPICAL_RAIN_FOREST;
+			else if (m > 0.33) return BiomeType.TROPICAL_SEASONAL_FOREST;
+			else if (m > 0.16) return BiomeType.GRASSLAND;
 			else return BiomeType.SUBTROPICAL_DESERT;
 		}
 	}

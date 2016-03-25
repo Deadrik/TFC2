@@ -281,4 +281,5 @@ public class ClientProxy extends CommonProxy
 			ModelLoader.setCustomModelResourceLocation(item, meta, itemModelResourceLocation);
 		}
 	}
+
 }
