@@ -102,6 +102,29 @@ public class BlockStairs extends BlockCollapsible
 	}
 
 	@Override
+	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		IBlockState state = getActualState(world.getBlockState(pos), world, pos);
+		boolean flipped = state.getValue(HALF) == EnumHalf.TOP;
+		EnumShape shape = (EnumShape)state.getValue(SHAPE);
+		EnumFacing facing = (EnumFacing)state.getValue(FACING);
+		if (side == EnumFacing.UP) return flipped;
+		if (side == EnumFacing.DOWN) return !flipped;
+		if (facing == side) return true;
+		if (flipped)
+		{
+			if (shape == EnumShape.INNER_LEFT) return side == facing.rotateYCCW();
+			if (shape == EnumShape.INNER_RIGHT) return side == facing.rotateY();
+		}
+		else
+		{
+			if (shape == EnumShape.INNER_LEFT) return side == facing.rotateY();
+			if (shape == EnumShape.INNER_RIGHT) return side == facing.rotateYCCW();
+		}
+		return false;
+	}
+
+	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;

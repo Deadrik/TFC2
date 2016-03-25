@@ -78,7 +78,7 @@ public class BlockGrass extends BlockCollapsible
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
-		doCollapse(world, pos, state);
+		world.scheduleUpdate(pos, this, tickRate(world));
 	}
 
 	@Override

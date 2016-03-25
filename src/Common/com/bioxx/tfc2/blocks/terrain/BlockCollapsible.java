@@ -185,13 +185,13 @@ public class BlockCollapsible extends BlockTerra
 	 */
 	public boolean recievesHorizontalSupport(IBlockState myState, IBlockAccess world, BlockPos pos, EnumFacing facing)
 	{
-		IBlockState otherState = world.getBlockState(pos.offset(facing));
-		/*if(otherState.getBlock() instanceof BlockCollapsible)
-		{
-			return ((BlockCollapsible)myState.getBlock()).recievesHorizontalSupport(myState, world, pos, facing);
-		}*/
+		BlockPos otherPos = pos.offset(facing);
+		IBlockState otherState = world.getBlockState(otherPos);
+
+		if(otherState.getBlock().isAir(world, otherPos) || !otherState.getBlock().isSideSolid(world, otherPos, facing.getOpposite()))
+			return false;
 		//Both this block and the one in the facing direction need to have solid sides touching
-		if(!myState.getBlock().isSideSolid(world, pos, facing) || !otherState.getBlock().isSideSolid(world, pos.offset(facing), facing.getOpposite()))
+		if(!myState.getBlock().isSideSolid(world, pos, facing))
 			return false;
 		return true;
 	}

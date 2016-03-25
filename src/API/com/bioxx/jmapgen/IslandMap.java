@@ -214,11 +214,10 @@ public class IslandMap
 		caves.generate();
 		ores.generate();
 
-		createPortals();
-
 		//Generate Dungeons
 		if(!this.getParams().hasFeature(Feature.NoLand))
 		{
+			createPortals();
 			Dungeon d = new Dungeon(this);
 			Vector<Center> dungeonCenters = this.getCentersAbove(0.4);
 			d.generate(seed, dungeonCenters.get(this.mapRandom.nextInt(dungeonCenters.size())));
@@ -605,9 +604,17 @@ public class IslandMap
 					temp.getNeighbor(HexDirection.NorthEast) : temp.getNeighbor(HexDirection.NorthWest));
 
 			//If this isn't a suitable hex then we displace in a random direction and continue from there
-			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			if(temp.hasAttribute(Attribute.River))
 			{
 				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				if(temp2 == null)
+					temp = temp.getRandomNeighbor(mapRandom);
+				else temp = temp2;
+				continue;
+			}
+			else if(temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			{
+				temp2 = temp.downslope;
 				if(temp2 == null)
 					temp = temp.getRandomNeighbor(mapRandom);
 				else temp = temp2;
@@ -632,9 +639,17 @@ public class IslandMap
 					temp.getNeighbor(HexDirection.SouthEast) : temp.getNeighbor(HexDirection.SouthWest));
 
 			//If this isn't a suitable hex then we displace in a random direction and continue from there
-			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			if(temp.hasAttribute(Attribute.River))
 			{
 				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				if(temp2 == null)
+					temp = temp.getRandomNeighbor(mapRandom);
+				else temp = temp2;
+				continue;
+			}
+			else if(temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			{
+				temp2 = temp.downslope;
 				if(temp2 == null)
 					temp = temp.getRandomNeighbor(mapRandom);
 				else temp = temp2;
@@ -658,9 +673,17 @@ public class IslandMap
 			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.SouthEast) : temp.getNeighbor(HexDirection.NorthEast));
 
 			//If this isn't a suitable hex then we displace in a random direction and continue from there
-			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			if(temp.hasAttribute(Attribute.River))
 			{
 				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				if(temp2 == null)
+					temp = temp.getRandomNeighbor(mapRandom);
+				else temp = temp2;
+				continue;
+			}
+			else if(temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			{
+				temp2 = temp.downslope;
 				if(temp2 == null)
 					temp = temp.getRandomNeighbor(mapRandom);
 				else temp = temp2;
@@ -684,9 +707,17 @@ public class IslandMap
 			temp = (mapRandom.nextBoolean() ? temp.getNeighbor(HexDirection.SouthWest) : temp.getNeighbor(HexDirection.NorthWest));
 
 			//If this isn't a suitable hex then we displace in a random direction and continue from there
-			if(temp.hasAttribute(Attribute.River) || temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			if(temp.hasAttribute(Attribute.River))
 			{
 				temp2 = temp.getRandomFromGroup(mapRandom, temp.getOnlyHigherCenters());
+				if(temp2 == null)
+					temp = temp.getRandomNeighbor(mapRandom);
+				else temp = temp2;
+				continue;
+			}
+			else if(temp.hasAnyMarkersOf(Marker.Pond, Marker.Coast, Marker.Spire, Marker.Water))
+			{
+				temp2 = temp.downslope;
 				if(temp2 == null)
 					temp = temp.getRandomNeighbor(mapRandom);
 				else temp = temp2;

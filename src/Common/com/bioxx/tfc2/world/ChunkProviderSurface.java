@@ -107,10 +107,8 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		//The scalebias makes our noise fit the range 0-1
 		ScaleBias sb2 = new ScaleBias();
 		sb2.setSourceModule(0, pe);
-		//Noise is normally +-2 so we scale by 0.25 to make it +-0.5
-		sb2.setScale(0.25);
-		//Next we offset by +0.5 which makes the noise 0-1
-		sb2.setBias(0.5);
+		//Noise is normally +-2 so we scale by 0.5 to make it +-1.0
+		//sb2.setScale(0.5);
 
 		turbMap = new Plane(sb2);
 	}
@@ -257,14 +255,14 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 			{
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
-				int hexElev = this.getHexElevation(closestCenter, p);
+				int hexElev = elevationMap[z << 4 | x];
 
 				boolean isCliff = false;
 
-				int h0 = getHexElevation(getHex(p.plus(1,0)), p.plus(1,0));
-				int h1 = getHexElevation(getHex(p.plus(0,-1)), p.plus(0,-1));
-				int h2 = getHexElevation(getHex(p.plus(-1,0)), p.plus(-1,0));
-				int h3 = getHexElevation(getHex(p.plus(0,1)), p.plus(0,1));
+				int h0 = x+1 < 16 ? elevationMap[z << 4 | (x+1)] : getHexElevation(getHex(p.plus(1,0)), p.plus(1,0));
+				int h1 = z-1 > 0 ? elevationMap[(z-1) << 4 | x] : getHexElevation(getHex(p.plus(0,-1)), p.plus(0,-1));
+				int h2 = x-1 > 0 ? elevationMap[z << 4 | (x-1)] : getHexElevation(getHex(p.plus(-1,0)), p.plus(-1,0));
+				int h3 = z + 1 < 16 ? elevationMap[(z+1) << 4 | x] : getHexElevation(getHex(p.plus(0,1)), p.plus(0,1));
 
 				if(hexElev - h0 > 2 || 
 						hexElev - h1 > 2 ||
@@ -418,9 +416,17 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 				int hexElev = 0;
 				if(closestCenter.hasMarker(Marker.Ocean) && !closestCenter.hasMarker(Marker.CoastWater))
+				{
 					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p));
+				}
+				else if(!closestCenter.hasAttribute(Attribute.River) && !closestCenter.hasMarker(Marker.Coast))
+				{
+					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p)) + (int)Math.ceil(turbMap.GetValue(worldX+p.x, worldZ+p.y));
+				}
 				else 
+				{
 					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p));
+				}
 
 
 
