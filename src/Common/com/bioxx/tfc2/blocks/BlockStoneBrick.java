@@ -24,6 +24,7 @@ public class BlockStoneBrick extends BlockCollapsible implements ISupportBlock
 	{
 		super(Material.ground, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
+		scanDepth = 3;
 	}
 
 	/*******************************************************************************
@@ -38,7 +39,7 @@ public class BlockStoneBrick extends BlockCollapsible implements ISupportBlock
 	@Override
 	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos, IBlockState myState)
 	{
-		return 5;
+		return 6;
 	}
 
 	@Override
