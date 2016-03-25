@@ -14,7 +14,7 @@ import com.bioxx.tfc2.api.types.WoodType;
 
 public class BlockPlanks2 extends BlockPlanks implements INeedOffset
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 18));
+	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 19));
 
 	public BlockPlanks2()
 	{

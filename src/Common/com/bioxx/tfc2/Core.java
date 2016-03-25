@@ -75,6 +75,11 @@ public class Core
 		return WordUtils.capitalize(s, '_').replaceAll("_", " ");
 	}
 
+	public static String getUnlocalized(String s)
+	{
+		return s.replaceAll("tile.", "");
+	}
+
 	/**
 	 * Creates a new ResourceLocation from an input string. Shortens the code slightly.
 	 */

@@ -2,6 +2,7 @@ package com.bioxx.tfc2;
 
 import java.io.File;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
@@ -264,7 +265,10 @@ public class ClientProxy extends CommonProxy
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam3), "Wood/SupportBeams/", WoodType.getNamesArray(), 16, 18);
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.TorchOn),0,new ModelResourceLocation(Reference.ModID + ":torch_on", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.TorchOff),0,new ModelResourceLocation(Reference.ModID + ":torch_off", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.StairsAsh),0,new ModelResourceLocation(Reference.ModID + ":stairs_ash", "inventory"));
+		for(Block b : TFCBlocks.stairsList)
+		{
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(b),0,new ModelResourceLocation(Reference.ModID + ":Wood/Stairs/"+Core.getUnlocalized(b.getUnlocalizedName()), "inventory"));
+		}
 		RegistryItemQueue.getInstance().registerMeshes();
 	}
 

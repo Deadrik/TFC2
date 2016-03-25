@@ -1,5 +1,7 @@
 package com.bioxx.tfc2;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +24,7 @@ import com.bioxx.tfc2.tileentities.TileTorch;
 
 public class TFCBlocks
 {
+	public static ArrayList<Block> stairsList;
 	public static Block Dirt;
 	public static Block Grass;
 	public static Block Stone;
@@ -63,6 +66,24 @@ public class TFCBlocks
 	public static Block SupportBeam2;
 	public static Block SupportBeam3;
 	public static Block StairsAsh;
+	public static Block StairsAspen;
+	public static Block StairsBirch;
+	public static Block StairsChestnut;
+	public static Block StairsDouglasFir;
+	public static Block StairsHickory;
+	public static Block StairsMaple;
+	public static Block StairsOak;
+	public static Block StairsPine;
+	public static Block StairsSequoia;
+	public static Block StairsSpruce;
+	public static Block StairsSycamore;
+	public static Block StairsWhiteCedar;
+	public static Block StairsWillow;
+	public static Block StairsKapok;
+	public static Block StairsAcacia;
+	public static Block StairsRosewood;
+	public static Block StairsBlackwood;
+	public static Block StairsPalm;
 
 	public static void LoadBlocks()
 	{
@@ -112,6 +133,24 @@ public class TFCBlocks
 		SupportBeam3 = new BlockWoodSupport3().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("wood_support3");
 
 		StairsAsh = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Ash)).setUnlocalizedName("stairs_ash");
+		StairsAspen = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Aspen)).setUnlocalizedName("stairs_aspen");
+		StairsBirch = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Birch)).setUnlocalizedName("stairs_birch");
+		StairsChestnut = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Chestnut)).setUnlocalizedName("stairs_chestnut");
+		StairsDouglasFir = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.DouglasFir)).setUnlocalizedName("stairs_douglasfir");
+		StairsHickory = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Hickory)).setUnlocalizedName("stairs_hickory");
+		StairsMaple = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Maple)).setUnlocalizedName("stairs_maple");
+		StairsOak = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Oak)).setUnlocalizedName("stairs_oak");
+		StairsPine = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Pine)).setUnlocalizedName("stairs_pine");
+		StairsSequoia = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Sequoia)).setUnlocalizedName("stairs_sequoia");
+		StairsSpruce = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Spruce)).setUnlocalizedName("stairs_spruce");
+		StairsSycamore = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Sycamore)).setUnlocalizedName("stairs_sycamore");
+		StairsWhiteCedar = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.WhiteCedar)).setUnlocalizedName("stairs_whitecedar");
+		StairsWillow = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Willow)).setUnlocalizedName("stairs_willow");
+		StairsKapok = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Kapok)).setUnlocalizedName("stairs_kapok");
+		StairsAcacia = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Acacia)).setUnlocalizedName("stairs_acacia");
+		StairsRosewood = new BlockStairs(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Rosewood)).setUnlocalizedName("stairs_rosewood");
+		StairsBlackwood = new BlockStairs(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Blackwood)).setUnlocalizedName("stairs_blackwood");
+		StairsPalm = new BlockStairs(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Palm)).setUnlocalizedName("stairs_palm");
 	}
 
 	public static void RegisterBlocks()
@@ -161,7 +200,26 @@ public class TFCBlocks
 		GameRegistry.registerBlock(SupportBeam, ItemWoodSupport.class, "wood_support");
 		GameRegistry.registerBlock(SupportBeam2, ItemWoodSupport.class, "wood_support2");
 		GameRegistry.registerBlock(SupportBeam3, ItemWoodSupport.class, "wood_support3");
-		GameRegistry.registerBlock(StairsAsh, "stairs_ash");
+		stairsList = new ArrayList<Block>();
+		stairsList.add(GameRegistry.registerBlock(StairsAsh, "stairs_ash"));
+		stairsList.add(GameRegistry.registerBlock(StairsAspen, "stairs_aspen"));
+		stairsList.add(GameRegistry.registerBlock(StairsBirch, "stairs_birch"));
+		stairsList.add(GameRegistry.registerBlock(StairsChestnut, "stairs_chestnut"));
+		stairsList.add(GameRegistry.registerBlock(StairsDouglasFir, "stairs_douglasfir"));
+		stairsList.add(GameRegistry.registerBlock(StairsHickory, "stairs_hickory"));
+		stairsList.add(GameRegistry.registerBlock(StairsMaple, "stairs_maple"));
+		stairsList.add(GameRegistry.registerBlock(StairsOak, "stairs_oak"));
+		stairsList.add(GameRegistry.registerBlock(StairsPine, "stairs_pine"));
+		stairsList.add(GameRegistry.registerBlock(StairsSequoia, "stairs_sequoia"));
+		stairsList.add(GameRegistry.registerBlock(StairsSpruce, "stairs_spruce"));
+		stairsList.add(GameRegistry.registerBlock(StairsSycamore, "stairs_sycamore"));
+		stairsList.add(GameRegistry.registerBlock(StairsWhiteCedar, "stairs_whitecedar"));
+		stairsList.add(GameRegistry.registerBlock(StairsWillow, "stairs_willow"));
+		stairsList.add(GameRegistry.registerBlock(StairsKapok, "stairs_kapok"));
+		stairsList.add(GameRegistry.registerBlock(StairsAcacia, "stairs_acacia"));
+		stairsList.add(GameRegistry.registerBlock(StairsRosewood, "stairs_rosewood"));
+		stairsList.add(GameRegistry.registerBlock(StairsBlackwood, "stairs_blackwood"));
+		stairsList.add(GameRegistry.registerBlock(StairsPalm, "stairs_palm"));
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);
@@ -174,6 +232,7 @@ public class TFCBlocks
 		SupportBeam.setHarvestLevel("axe", 1);
 		SupportBeam2.setHarvestLevel("axe", 1);
 		SupportBeam3.setHarvestLevel("axe", 1);
+
 	}
 
 	public static void RegisterTileEntites()
