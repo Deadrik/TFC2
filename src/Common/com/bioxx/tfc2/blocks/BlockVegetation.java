@@ -76,13 +76,34 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		BlockPos down = pos.down();
 		IBlockState soil = worldIn.getBlockState(down);
 		if (state.getBlock() != this) 
-			return canPlaceBlockOn(soil);
+			return canPlaceBlockOn(state, soil);
 		return soil.getBlock().canSustainPlant(worldIn, down, EnumFacing.UP, this);
 	}
 
-	protected boolean canPlaceBlockOn(IBlockState state)
+	protected boolean canPlaceBlockOn(IBlockState state, IBlockState soil)
 	{
-		return Core.isSoil(state);
+		VegType veg = state.getValue(META_PROPERTY);
+
+		if(veg == VegType.DeadBush)
+			return Core.isTerrain(soil);
+
+		return Core.isSoil(soil);
+	}
+
+	@Override
+	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
+	{
+		IBlockState state = world.getBlockState(pos);
+		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
+		EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
+
+		VegType veg = state.getValue(META_PROPERTY);
+		if(veg == VegType.DoubleGrassBottom && plant.getValue(META_PROPERTY) == VegType.DoubleGrassTop)
+			return true;
+		if(veg == VegType.DoubleFernBottom && plant.getValue(META_PROPERTY) == VegType.DoubleFernTop)
+			return true;
+
+		return false;
 	}
 
 	/*******************************************************************************
@@ -100,6 +121,9 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	@SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
 	{
+		VegType veg = worldIn.getBlockState(pos).getValue(META_PROPERTY);
+		if(veg == VegType.DeadBush)
+			return 0xD8D8D8;
 		int x = pos.getX() >> 12;
 		int z = pos.getZ() >> 12;
 		if(WorldGen.instance == null)
@@ -197,7 +221,14 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 
 	public enum VegType implements IStringSerializable
 	{
-		Grass0("grass", 0);
+		Grass0("grass0", 0),
+		Grass1("grass1", 1),
+		DeadBush("deadbush", 2),
+		DoubleGrassBottom("doublegrassbottom", 3),
+		DoubleGrassTop("doublegrasstop", 4),
+		Fern("fern", 5),
+		DoubleFernBottom("doublefernbottom", 6),
+		DoubleFernTop("doubleferntop", 7);
 
 		private String name;
 		private int meta;
@@ -230,7 +261,10 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	}
 
 	@Override
-	public EnumPlantType getPlantType(IBlockAccess paramIBlockAccess, BlockPos paramBlockPos) {
+	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) 
+	{
+		if(world.getBlockState(pos).getValue(META_PROPERTY) == VegType.DeadBush)
+			return EnumPlantType.Desert;
 		return EnumPlantType.Plains;
 	}
 

@@ -153,6 +153,14 @@ public class Core
 		return (float)s / 255F;
 	}
 
+	public static float getMoistureFromChunk(Chunk c, BlockPos pos)
+	{
+		byte[] moistureArray = c.getBiomeArray();
+		byte b = moistureArray[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)];
+		int s = (b & 0xFF);
+		return (float)s / 255F;
+	}
+
 	public static void bindTexture(ResourceLocation texture)
 	{
 		net.minecraft.client.Minecraft.getMinecraft().getTextureManager().bindTexture(texture);

@@ -2,9 +2,9 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-		"cross": "blocks/tallgrass",
-		"grassside": "tfc2:blocks/GrassSide",
-		"grasstop": "tfc2:blocks/GrassTop"
+			"cross": "blocks/tallgrass",
+			"grassside": "tfc2:blocks/GrassSide",
+			"grasstop": "tfc2:blocks/GrassTop"
 		},
 		"model": "tallgrass"
 	},
@@ -14,7 +14,14 @@
 			"false": {}
 		},
 		"veg": {
-			"grass": {}
+			"grass0": {"textures": {"cross": "blocks/tallgrass"}},
+			"grass1": {"textures": {"cross": "blocks/tallgrass"}},
+			"deadbush": {"textures": {"cross": "blocks/deadbush"}},
+			"doublegrassbottom": {"textures": {"cross": "blocks/double_plant_grass_bottom"}},
+			"doublegrasstop": {"textures": {"cross": "blocks/double_plant_grass_top"}},
+			"fern": {"textures": {"cross": "blocks/fern"}},
+			"doublefernbottom": {"textures": {"cross": "blocks/double_plant_fern_bottom"}},
+			"doubleferntop": {"textures": {"cross": "blocks/double_plant_fern_top"}}
 		},
 		"inventory": [{
             "transform": "forge:default-block"
