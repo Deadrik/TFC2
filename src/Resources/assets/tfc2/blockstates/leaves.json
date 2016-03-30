@@ -14,7 +14,7 @@
      		"false":{}
      	},    
     "wood":{
-        	"ash":  { "textures": {"all": "tfc2:blocks/wood/trees/Ash Leaves"} },
+        	"ash":  { "textures": {"all": "tfc2:blocks/wood/trees/Ash Leaves", "fluff": "tfc2:blocks/wood/trees/Ash Leaves Fluff"} },
         	"aspen":  { "textures": {"all": "tfc2:blocks/wood/trees/Aspen Leaves"} },
         	"birch":  { "textures": {"all": "tfc2:blocks/wood/trees/Birch Leaves"} },
         	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/trees/Chestnut Leaves", "fluff": "tfc2:blocks/wood/trees/Chestnut Leaves Fluff"} },

@@ -138,6 +138,11 @@ public class Core
 		return isSoil(state) || isSand(state) || isStone(state) || isGravel(state);
 	}
 
+	public static boolean isNaturalLog(IBlockState state)
+	{
+		return state.getBlock() == TFCBlocks.LogNatural || state.getBlock() == TFCBlocks.LogNatural2 || state.getBlock() == TFCBlocks.LogNaturalPalm;
+	}
+
 	/**
 	 * 
 	 * @param w

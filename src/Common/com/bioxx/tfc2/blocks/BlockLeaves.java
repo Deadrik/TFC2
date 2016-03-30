@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -44,6 +45,7 @@ public class BlockLeaves extends BlockTerra
 		this.setHardness(0.2F);
 		this.setLightOpacity(1);
 		this.META_PROP = META_PROPERTY;
+		this.setTickRandomly(true);
 	}
 	/*******************************************************************************
 	 * 1. Content 
@@ -64,6 +66,44 @@ public class BlockLeaves extends BlockTerra
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return null;
+	}
+
+	@Override
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
+	{
+		world.scheduleUpdate(pos, this, tickRate(world));
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
+	{
+		world.scheduleUpdate(pos, this, tickRate(world));
+	}
+
+	@Override
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
+	{
+		if(world.isRemote)
+			return;
+		IBlockState scanState;
+		WoodType wood = state.getValue(META_PROPERTY);
+		for(int y = -5; y <= 5; y++)
+		{
+			for(int x = -5; x <= 5; x++)
+			{
+				for(int z = -5; z <= 5; z++)
+				{
+					scanState = world.getBlockState(pos.add(x, y, z));
+					if(Core.isNaturalLog(scanState) && scanState.getValue(META_PROPERTY) == wood)
+						return;
+				}
+			}
+		}
+		world.scheduleUpdate(pos.north(), this, tickRate(world));
+		world.scheduleUpdate(pos.south(), this, tickRate(world));
+		world.scheduleUpdate(pos.east(), this, tickRate(world));
+		world.scheduleUpdate(pos.west(), this, tickRate(world));
+		world.setBlockToAir(pos);
 	}
 
 	/*******************************************************************************
@@ -94,7 +134,7 @@ public class BlockLeaves extends BlockTerra
 	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
 	{
 		int x = pos.getX() >> 12;
-		int z = pos.getZ() >> 12;
+				int z = pos.getZ() >> 12;
 		if(WorldGen.instance == null)
 			return 0x55ff55;
 		IslandMap m = WorldGen.instance.getIslandMap(x, z);

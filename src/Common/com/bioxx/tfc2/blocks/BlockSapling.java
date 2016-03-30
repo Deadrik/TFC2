@@ -17,11 +17,19 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.Schematic;
+import com.bioxx.tfc2.api.Schematic.SchemBlock;
+import com.bioxx.tfc2.api.trees.TreeConfig;
+import com.bioxx.tfc2.api.trees.TreeRegistry;
+import com.bioxx.tfc2.api.trees.TreeSchemManager;
+import com.bioxx.tfc2.api.trees.TreeSchematic;
 import com.bioxx.tfc2.api.types.WoodType;
 
 public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
@@ -31,12 +39,14 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 	{
 		super(Material.plants, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.tabBlock);
+		this.setTickRandomly(true);
 	}
 
 	protected BlockSapling(PropertyHelper ph)
 	{
 		super(Material.plants, ph);
 		this.setCreativeTab(CreativeTabs.tabBlock);
+		this.setTickRandomly(true);
 	}
 
 	@Override
@@ -98,7 +108,95 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 	@Override
 	public void grow(World world, Random rand, BlockPos pos, IBlockState state) 
 	{
+		WoodType wood = state.getValue(META_PROPERTY);
+		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(wood.getName());
+		TreeConfig tc = TreeRegistry.instance.treeFromString(wood.getName());
 
+		int size = rand.nextInt(100 ) < 20 ? 2 : rand.nextInt(100 ) < 50 ? 1: 0;
+
+		int rot = rand.nextInt(4);
+
+		for(int i = size; i >= 0; i--)
+		{
+			TreeSchematic schem = tsm.getRandomSchematic(rand);
+			int invalidCount = 0;
+			int baseValidCount = 0;
+			BlockPos scanPos;
+			//validate the tree area
+			for(SchemBlock b : schem.getBlockMap())
+			{
+				scanPos = rotatePos(pos, b.pos, rot);
+				if(b.state.getBlock().getMaterial() == Material.wood)
+				{
+					if(!world.getBlockState(scanPos).getBlock().isReplaceable(world, scanPos))
+						invalidCount++;
+
+					if(b.pos.getY() == 0)
+						if(Core.isTerrain(world.getBlockState(scanPos.down())))
+							baseValidCount++;
+
+				}
+			}
+
+			if(invalidCount > schem.getLogCount() / 10 || baseValidCount < schem.getBaseCount()*0.75)
+				continue;
+
+
+			for(SchemBlock b : schem.getBlockMap())
+			{
+				Process(world, rotatePos(pos, b.pos, rot), tc, schem, b.state);
+			}
+			break;
+		}
+	}
+
+	private BlockPos rotatePos(BlockPos treePos, BlockPos localPos, int rot)
+	{
+		int localX = treePos.getX() + (localPos.getX() * -1) - 2;
+		int localZ = treePos.getZ() + (localPos.getZ() * -1) - 2;
+		int localY = treePos.getY() + localPos.getY();
+
+		if(rot == 0)
+		{
+			localX = treePos.getX() + localPos.getX() + 1;
+			localZ = treePos.getZ() + localPos.getZ() + 1;
+		}
+		else if(rot == 1)
+		{
+			localX = treePos.getX() + localPos.getZ();
+			localZ = treePos.getZ() + (localPos.getX() * -1) - 2;
+		}
+		else if(rot == 2)
+		{
+			localX = treePos.getX()  + (localPos.getZ() * -1) -2;
+			localZ = treePos.getZ() + localPos.getX();
+		}
+
+		return new BlockPos(localX, localY, localZ);
+	}
+
+	private void Process(World world, BlockPos blockPos, TreeConfig tc,
+			Schematic schem, IBlockState state)
+	{
+
+		IBlockState block = tc.wood;
+		IBlockState leaves = tc.leaves;
+
+		if(state.getBlock().getMaterial() == Material.wood)
+		{
+			world.setBlockState(blockPos, block, 2);
+		}
+		else if(state.getBlock().getMaterial() == Material.leaves)
+		{
+			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
+			{
+				world.setBlockState(blockPos, leaves, 2);
+			}
+		}
+		else
+		{
+			world.setBlockState(blockPos, state);
+		}
 	}
 
 	@Override

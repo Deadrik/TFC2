@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -35,6 +36,50 @@ public class BlockLeaves2 extends BlockLeaves
 		super();
 		this.META_PROP = META_PROPERTY;
 	}
+
+	/*******************************************************************************
+	 * 1. Content 
+	 *******************************************************************************/
+	@Override
+	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) 
+	{
+		if(worldIn.getBlockState(pos).getValue(META_PROPERTY) == WoodType.Palm && worldIn.getBlockState(pos.down()).getBlock() != TFCBlocks.LogNatural2)
+		{
+			worldIn.setBlockState(pos, Blocks.air.getDefaultState());
+		}
+		else super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+	}
+
+	@Override
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list)
+	{
+		for(int l = 16; l < 19; l++)
+			list.add(new ItemStack(itemIn, 1, l));
+	}
+
+	@Override
+	public int quantityDropped(IBlockState state, int i, Random random)
+	{
+		if(state.getValue(META_PROPERTY) == WoodType.Palm)
+			return 0;
+		return 1;
+	}
+
+	@Override
+	public float getBlockHardness(World worldIn, BlockPos pos)
+	{
+		if(worldIn.getBlockState(pos).getValue(META_PROPERTY) == WoodType.Palm)
+			return -1.0f;
+		return this.blockHardness;
+	}
+
+	/*******************************************************************************
+	 * 2. Rendering 
+	 *******************************************************************************/
+
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
 
 	@Override
 	protected BlockState createBlockState()
@@ -66,48 +111,6 @@ public class BlockLeaves2 extends BlockLeaves
 		return state;
 	}
 
-	private boolean isSameLeaf(IBlockAccess world, BlockPos pos, IBlockState state)
-	{
-		if((world.getBlockState(pos).getBlock() == state.getBlock() && 
-				world.getBlockState(pos).getValue(META_PROPERTY) == state.getValue(META_PROPERTY)))
-		{
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list)
-	{
-		for(int l = 16; l < 19; l++)
-			list.add(new ItemStack(itemIn, 1, l));
-	}
-
-	@Override
-	public int quantityDropped(IBlockState state, int i, Random random)
-	{
-		if(state.getValue(META_PROPERTY) == WoodType.Palm)
-			return 0;
-		return 1;
-	}
-
-	@Override
-	public float getBlockHardness(World worldIn, BlockPos pos)
-	{
-		if(worldIn.getBlockState(pos).getValue(META_PROPERTY) == WoodType.Palm)
-			return -1.0f;
-		return this.blockHardness;
-	}
-
-	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) 
-	{
-		if(worldIn.getBlockState(pos).getValue(META_PROPERTY) == WoodType.Palm && worldIn.getBlockState(pos.down()).getBlock() != TFCBlocks.LogNatural2)
-		{
-			worldIn.setBlockState(pos, Blocks.air.getDefaultState());
-		}
-	}
-
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
@@ -123,6 +126,6 @@ public class BlockLeaves2 extends BlockLeaves
 	@Override
 	public int damageDropped(IBlockState state)
 	{
-		return ((WoodType)state.getValue(META_PROPERTY)).getMeta();
+		return ((WoodType)state.getValue(META_PROPERTY)).getMeta() + 16;
 	}
 }

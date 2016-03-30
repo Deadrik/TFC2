@@ -2,6 +2,7 @@ package com.bioxx.tfc2.api.trees;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 
 import com.bioxx.tfc2.api.Schematic;
@@ -12,6 +13,7 @@ public class TreeSchematic extends Schematic
 	private int size;
 	private WoodType type;
 	private int baseCount = 0;
+	private int logCount = 0;
 
 	public TreeSchematic(String p, String f, WoodType w)
 	{
@@ -32,6 +34,8 @@ public class TreeSchematic extends Schematic
 					if(b.pos.getY() == 0)
 						baseCount++;
 					map.add(b);
+					if(b.state.getBlock().getMaterial() == Material.wood)
+						logCount++;
 				}
 
 			}
@@ -53,6 +57,11 @@ public class TreeSchematic extends Schematic
 	public int getBaseCount()
 	{
 		return this.baseCount;
+	}
+
+	public int getLogCount()
+	{
+		return this.logCount;
 	}
 
 	public int getGrowthStage()
