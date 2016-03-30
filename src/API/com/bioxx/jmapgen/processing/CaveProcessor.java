@@ -114,7 +114,7 @@ public class CaveProcessor
 		CaveAttrNode sCurNode, sNextNode;
 
 		//First we will perform some preliminary validity checks
-		if(start.hasAttribute(Attribute.River))
+		if(start.hasAttribute(Attribute.River) || (!isSeaCave && start.hasMarker(Marker.Water)))
 			return;
 
 		CaveAttrNode curNode = new CaveAttrNode(caveId);//Start slightly above the ground
@@ -228,8 +228,11 @@ public class CaveProcessor
 
 			nextNode.setOffset(new BlockPos(nextCenter.point.x, curNode.getOffset().getY() + elevOffset, nextCenter.point.y));
 
+			int midOffsetX = -5+map.mapRandom.nextInt(11);
+			int midOffsetY = -5+map.mapRandom.nextInt(11);
+			int midOffsetZ = -5+map.mapRandom.nextInt(11);
 			//If this cave is moving into a hex that has a surface river then we need to make sure that it doesnt try to peek the surface
-			if(nextCenter.hasAttribute(Attribute.River))
+			if(nextCenter.hasAttribute(Attribute.River) || (!isSeaCave && nextCenter.hasMarker(Marker.Water)))
 			{
 				int riverDiff = mcElev(nextCenter.getElevation()) - nextNode.getOffset().getY();
 				if(riverDiff <= 10)
@@ -237,11 +240,12 @@ public class CaveProcessor
 					nextNode.getOffset().add(0, -5, 0);
 					nextNode.setNodeHeight(1);
 					nextNode.setNodeWidth(1);
+					midOffsetY -= 10;
 				}
 			}
 
 			//Setup the midpoint offsets for each node
-			nextNode.setPrevOffset(getMidpoint(curNode.getOffset(), nextNode.getOffset()).add(10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6), 10-map.mapRandom.nextInt(6)));
+			nextNode.setPrevOffset(getMidpoint(curNode.getOffset(), nextNode.getOffset()).add(midOffsetX, midOffsetY, midOffsetZ));
 			curNode.setNextOffset(nextNode.getPrevOffset());
 			curLength++;
 		}
