@@ -106,6 +106,12 @@ public class BlockLeaves extends BlockTerra
 		world.setBlockToAir(pos);
 	}
 
+	@Override
+	public int tickRate(World worldIn)
+	{
+		return 5;
+	}
+
 	/*******************************************************************************
 	 * 2. Rendering 
 	 *******************************************************************************/

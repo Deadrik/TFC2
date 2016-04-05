@@ -4,6 +4,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.libnoise.model.Line;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.combiner.Max;
@@ -35,6 +36,7 @@ public class WeatherManager
 	public Line rainModelSummer;
 	public Line rainModelFall;
 	public Line rainModelWinter;
+	public Line rainModelDesert;
 	private Plane temperatureNoise;
 	private World worldObj;
 
@@ -100,6 +102,9 @@ public class WeatherManager
 		ClimateTemp temp = map.getParams().getIslandTemp();
 		Season season = Timekeeper.getInstance().getSeason();
 
+		if(map.getParams().hasFeature(Feature.Desert))
+			return rainModelDesert;
+
 		//TODO: Expand this to allow islands to have more individualized weather
 
 		if(season == Season.Spring)
@@ -160,6 +165,9 @@ public class WeatherManager
 		p0.setLacunarity(1.1);
 
 		this.temperatureNoise = new Plane(p0);
+
+		Const c0 = new Const();
+		rainModelDesert = new Line(c0);
 	}
 
 	private Line getSummerStorm()

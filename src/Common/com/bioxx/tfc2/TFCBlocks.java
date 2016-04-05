@@ -108,9 +108,9 @@ public class TFCBlocks
 		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.water).setUnlocalizedName("saltwater").setLightOpacity(3);
 		Sapling = new BlockSapling().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling");
 		Sapling2 = new BlockSapling2().setHardness(0.1F).setStepSound(Block.soundTypeGrass).setUnlocalizedName("sapling2");
-		LogNatural = new BlockLogNatural().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural");
-		LogNatural2 = new BlockLogNatural2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural2");
-		LogNaturalPalm = new BlockLogNaturalPalm().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("LogNaturalPalm");
+		LogNatural = new BlockLogNatural().setHardness(6F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural");
+		LogNatural2 = new BlockLogNatural2().setHardness(6F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_natural2");
+		LogNaturalPalm = new BlockLogNaturalPalm().setHardness(6F).setStepSound(Block.soundTypeWood).setUnlocalizedName("LogNaturalPalm");
 		LogVertical = new BlockLogVertical().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical");
 		LogVertical2 = new BlockLogVertical2().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_vertical2");
 		LogHorizontal = new BlockLogHorizontal().setHardness(2F).setStepSound(Block.soundTypeWood).setUnlocalizedName("log_horizontal");
