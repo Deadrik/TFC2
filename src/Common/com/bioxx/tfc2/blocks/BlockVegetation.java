@@ -82,7 +82,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 
 	protected boolean canPlaceBlockOn(IBlockState state, IBlockState soil)
 	{
-		VegType veg = state.getValue(META_PROPERTY);
+		VegType veg = (VegType)state.getValue(META_PROPERTY);
 
 		if(veg == VegType.DeadBush)
 			return Core.isTerrain(soil);
@@ -97,7 +97,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
 		EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
 
-		VegType veg = state.getValue(META_PROPERTY);
+		VegType veg = (VegType)state.getValue(META_PROPERTY);
 		if(veg == VegType.DoubleGrassBottom && plant.getValue(META_PROPERTY) == VegType.DoubleGrassTop)
 			return true;
 		if(veg == VegType.DoubleFernBottom && plant.getValue(META_PROPERTY) == VegType.DoubleFernTop)
@@ -121,7 +121,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	@SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
 	{
-		VegType veg = worldIn.getBlockState(pos).getValue(META_PROPERTY);
+		VegType veg = (VegType)worldIn.getBlockState(pos).getValue(META_PROPERTY);
 		if(veg == VegType.DeadBush)
 			return 0xD8D8D8;
 		int x = pos.getX() >> 12;

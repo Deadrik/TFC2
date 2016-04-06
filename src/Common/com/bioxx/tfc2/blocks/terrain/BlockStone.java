@@ -70,7 +70,7 @@ public class BlockStone extends BlockCollapsible
 	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos, IBlockState myState)
 	{
 		int range = 5;
-		StoneType stone = myState.getValue(BlockStone.META_PROPERTY);
+		StoneType stone = (StoneType)myState.getValue(BlockStone.META_PROPERTY);
 		switch(stone)
 		{
 		case Granite:

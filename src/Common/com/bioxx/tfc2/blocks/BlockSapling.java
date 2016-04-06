@@ -108,7 +108,7 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 	@Override
 	public void grow(World world, Random rand, BlockPos pos, IBlockState state) 
 	{
-		WoodType wood = state.getValue(META_PROPERTY);
+		WoodType wood = (WoodType)state.getValue(META_PROPERTY);
 		TreeSchemManager tsm = TreeRegistry.instance.managerFromString(wood.getName());
 		TreeConfig tc = TreeRegistry.instance.treeFromString(wood.getName());
 
