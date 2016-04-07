@@ -4,9 +4,9 @@ import java.util.Random;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 import com.bioxx.jmapgen.IslandMap;
@@ -64,7 +64,7 @@ public class WorldGenLooseRock implements IWorldGenerator
 					Core.setBlock(world, TFCBlocks.LooseRocks.getStateFromMeta(map.getParams().getSurfaceRock().getMeta()), bp);
 				}
 
-				int e = elevN;
+				/*int e = elevN;
 				EnumFacing facing = EnumFacing.NORTH;
 
 				if(elevS > e || (elevS == e && random.nextBoolean()))
@@ -85,7 +85,7 @@ public class WorldGenLooseRock implements IWorldGenerator
 								Core.setBlock(world, TFCBlocks.ClimbingRocks.getStateFromMeta(map.getParams().getSurfaceRock().getMeta()), bp);
 						}
 					}
-				}
+				}*/
 			}
 		}
 	}

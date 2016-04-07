@@ -395,7 +395,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	protected int getElevation(Center c, Point p, double scale)
 	{
 		Point p2 = p.plus(islandChunkX, islandChunkZ);
-		double turb = (turbMap.GetValue(p2.x, p2.y));
+		double turb = Math.max(turbMap.GetValue(p2.x, p2.y), 0);
 		return (int)(turb * scale);
 	}
 
@@ -427,6 +427,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				int hexElev = 0;
 				if(!closestCenter.hasAttribute(Attribute.River) && !closestCenter.hasMarker(Marker.Coast) && !closestCenter.hasMarker(Marker.CoastWater) && !closestCenter.hasAttribute(Attribute.Lake))
 				{
+					//hexElev = convertElevation(getSmoothHeightHex(closestCenter, p));
 					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p)) + (int)Math.ceil(turbMap.GetValue(worldX+p.x, worldZ+p.y));
 				}
 				else 

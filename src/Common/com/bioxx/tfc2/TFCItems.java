@@ -19,6 +19,8 @@ public class TFCItems
 	public static Item StoneKnifeHead;
 	public static Item StoneHoeHead;
 
+	public static Item Plank;
+
 	//Vegetables
 	public static Item FoodCabbage;
 	public static Item FoodTomato;
@@ -104,6 +106,7 @@ public class TFCItems
 		TFC.log.info(new StringBuilder().append("[TFC2] Loading Items").toString());
 		LooseRock = registerItemOnly(new ItemLooseRock().setUnlocalizedName("looserock"));
 		Seeds = registerItemOnly(new ItemSeeds().setUnlocalizedName("seeds"));
+		Plank = registerItemOnly(new ItemPlank().setUnlocalizedName("plank"));
 
 		StoneAxe = registerItem(new ItemAxe(ToolMaterial.STONE).setUnlocalizedName("stone_axe"));
 		StoneShovel = registerItem(new ItemShovel(ToolMaterial.STONE).setUnlocalizedName("stone_shovel"));

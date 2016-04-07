@@ -282,7 +282,7 @@ public class WorldGen implements IThreadCompleteListener
 			id.setFeatures(Feature.Desert);
 		}
 
-		//id.setFeatures(Feature.Desert);
+		id.setFeatures(Feature.Desert);
 
 		String common = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
 		String uncommon = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);

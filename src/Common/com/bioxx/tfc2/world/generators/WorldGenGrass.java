@@ -55,7 +55,7 @@ public class WorldGenGrass implements IWorldGenerator
 					continue;
 				}
 
-				if(Core.isStone(world.getBlockState(bp.down())) && random.nextInt(3) == 0)
+				if(!map.getParams().hasFeature(Feature.Desert) && Core.isStone(world.getBlockState(bp.down())) && random.nextInt(3) == 0)
 				{
 					Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.Grass1), bp);
 				}
