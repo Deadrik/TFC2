@@ -1,6 +1,5 @@
 package com.bioxx.tfc2.handlers;
 
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -20,8 +19,8 @@ public class JoinWorldHandler
 			if(!(((EntityPlayer)event.entity).inventory instanceof InventoryPlayerTFC))
 				((EntityPlayer)event.entity).inventory = Core.getNewInventory((EntityPlayer)event.entity);
 
-			((EntityPlayer)event.entity).getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1000);
-			((EntityPlayer)event.entity).setHealth(1000);
+			//((EntityPlayer)event.entity).getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1000);
+			//((EntityPlayer)event.entity).setHealth(1000);
 			event.entity.getEntityData().setBoolean("hasSpawned", true);
 		}
 

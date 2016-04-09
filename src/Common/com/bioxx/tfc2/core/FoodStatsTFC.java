@@ -326,10 +326,10 @@ public class FoodStatsTFC
 		return Math.max(nMod, 0.05f);
 	}
 
-	public static int getMaxHealth(EntityPlayer player)
+	public static float getMaxHealth(EntityPlayer player)
 	{
-		return (int)(Math.min(1000+(player.experienceLevel * TFCOptions.healthGainRate),
-				TFCOptions.healthGainCap) * Core.getPlayerFoodStats(player).getNutritionHealthModifier() * (1+0.2f * Core.getPlayerFoodStats(player).nutrDairy));
+		return Math.min(20+(player.experienceLevel * TFCOptions.healthGainRate),
+				TFCOptions.healthGainCap) * Core.getPlayerFoodStats(player).getNutritionHealthModifier() * (1+0.2f * Core.getPlayerFoodStats(player).nutrDairy);
 	}
 
 	/**

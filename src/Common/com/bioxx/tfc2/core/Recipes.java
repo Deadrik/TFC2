@@ -9,6 +9,12 @@ import com.bioxx.tfc2.api.crafting.CraftingManagerTFC.RecipeType;
 public class Recipes 
 {
 	public final static int WILDCARD = 32767;
+
+	public static void RegisterNormalRecipes()
+	{
+
+	}
+
 	public static void RegisterKnappingRecipes()
 	{
 		CraftingManagerTFC manager = CraftingManagerTFC.getInstance();

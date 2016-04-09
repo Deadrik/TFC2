@@ -202,7 +202,7 @@ public class RenderOverlayHandler
 		{
 			int xM = ((int)(mc.thePlayer.posX) >> 12);
 			int zM = ((int)(mc.thePlayer.posZ) >> 12);
-			IslandMap map = WorldGen.instance.getClientIslandMap(xM, zM);
+			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
 			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
 			BlockPos pos = new BlockPos((int)(mc.thePlayer.posX), 0, (int)(mc.thePlayer.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
@@ -218,7 +218,8 @@ public class RenderOverlayHandler
 			int b = mc.theWorld.getChunkFromBlockCoords(pos).getBiomeArray()[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)] & 0xFF;
 			event.left.add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()) + " | " + hex.getMoistureRaw() + " | " + b + " | " + (float)b / 255F);
 			event.left.add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
-
+			if(hex.hasAttribute(Attribute.Lake))
+				event.left.add("IsLake");	
 			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.River);
 			if(attrib != null)
 			{

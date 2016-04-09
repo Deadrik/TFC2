@@ -11,8 +11,8 @@ public class TFCOptions
 	public static boolean shouldStripChunks = false;
 
 	// Player
-	public static int healthGainRate = 20;
-	public static int healthGainCap = 3000;
+	public static int healthGainRate = 1;
+	public static int healthGainCap = 30;
 
 	public static int torchBurnTime = 48;
 
