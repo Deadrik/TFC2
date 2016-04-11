@@ -86,7 +86,7 @@ public class BlockLeaves extends BlockTerra
 		if(world.isRemote)
 			return;
 		IBlockState scanState;
-		WoodType wood = state.getValue(META_PROPERTY);
+		WoodType wood = (WoodType)state.getValue(META_PROPERTY);
 		for(int y = -5; y <= 5; y++)
 		{
 			for(int x = -5; x <= 5; x++)
