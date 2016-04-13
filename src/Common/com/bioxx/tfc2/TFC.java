@@ -4,11 +4,9 @@ import java.io.File;
 
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -101,10 +99,10 @@ public class TFC
 	@EventHandler
 	public void serverStarting(FMLServerStoppingEvent evt)
 	{
-		if(WorldGen.instance != null)
+		if(WorldGen.getInstance() != null)
 		{
-			WorldGen.instance.resetCache();
-			WorldGen.instance = null;
+			WorldGen.getInstance().resetCache();
+			WorldGen.ClearInstances();
 		}
 	}
 

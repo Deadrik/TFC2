@@ -41,7 +41,7 @@ public class EntityLivingHandler
 				player.setGameType(GameType.ADVENTURE);
 			else if(player.worldObj.provider.getDimension() == 0 && !player.capabilities.isCreativeMode && !player.isSpectator())
 			{
-				IslandMap map = WorldGen.instance.getIslandMap((int)player.posX >> 12, (int)player.posZ >> 12);
+				IslandMap map = WorldGen.getInstance().getIslandMap((int)player.posX >> 12, (int)player.posZ >> 12);
 				if(map.getIslandData().isIslandUnlocked && !player.isSpectator())
 					player.setGameType(GameType.SURVIVAL);
 				else if(!player.isSpectator())

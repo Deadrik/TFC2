@@ -138,7 +138,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		islandChunkZ = worldZ % MAP_SIZE;
 		mapX = (chunkX >> 8);
 		mapZ = (chunkZ >> 8);
-		islandMap = WorldGen.instance.getIslandMap(mapX, mapZ);
+		islandMap = WorldGen.getInstance().getIslandMap(mapX, mapZ);
 		centersInChunk = new Vector<Center>();
 
 		for(int x = -16; x < 32; x++)

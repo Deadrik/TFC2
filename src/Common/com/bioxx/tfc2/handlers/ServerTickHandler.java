@@ -16,13 +16,13 @@ public class ServerTickHandler
 		World world = event.world;
 		if(event.phase == Phase.START)
 		{
-			if(WorldGen.instance != null)
+			if(WorldGen.getInstance() != null)
 			{
 				if(world.provider.getDimension() == 0)
 				{
-					WorldGen.instance.trimCache();
-					WorldGen.instance.buildFromQueue();
-					WorldGen.instance.runUpdateLoop();
+					WorldGen.getInstance().trimCache();
+					WorldGen.getInstance().buildFromQueue();
+					WorldGen.getInstance().runUpdateLoop();
 				}
 			}			
 		}

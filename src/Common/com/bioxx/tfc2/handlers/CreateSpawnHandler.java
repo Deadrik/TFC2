@@ -56,7 +56,7 @@ public class CreateSpawnHandler
 	public BlockPos findTerrainPositionForSpawn(Random random)
 	{
 		BlockPos blockpos = new BlockPos(0,0,0);
-		IslandMap map = WorldGen.instance.getIslandMap(0, -2);
+		IslandMap map = WorldGen.getInstance().getIslandMap(0, -2);
 		Vector<Center> land = map.getCentersBelow(0.1, false);
 		Center c = land.get(random.nextInt(land.size()));
 		for(int i = 0; i < 10000; i++)

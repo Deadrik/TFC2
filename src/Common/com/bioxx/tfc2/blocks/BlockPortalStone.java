@@ -77,7 +77,7 @@ public class BlockPortalStone extends BlockTerra
 
 		if(worldIn.provider.getDimension() == 0)
 		{
-			map = WorldGen.instance.getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
+			map = WorldGen.getInstance().getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
 			Center c = map.getClosestCenter(pos);
 			pa = (PortalAttribute) c.getAttribute(Attribute.Portal);
 			if(map.getIslandData().getPortalState(pa.direction) != portalstate)
@@ -88,7 +88,7 @@ public class BlockPortalStone extends BlockTerra
 		else if(worldIn.provider.getDimension() == 2)
 		{
 			BlockPos scaledPos = new BlockPos(pos.getX() * 8, pos.getY(), pos.getZ() * 8);
-			map = WorldGen.instance.getIslandMap(scaledPos.getX() >> 12, scaledPos.getZ() >> 12);
+			map = WorldGen.getInstance().getIslandMap(scaledPos.getX() >> 12, scaledPos.getZ() >> 12);
 			Center c = getPortalNeighbor(map.getClosestCenter(scaledPos));
 			pa = (PortalAttribute) c.getAttribute(Attribute.Portal);
 			if(map.getIslandData().getPortalState(pa.direction) != portalstate)

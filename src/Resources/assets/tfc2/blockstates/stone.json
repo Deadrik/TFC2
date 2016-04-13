@@ -4,7 +4,7 @@
 		"textures": {
 			"all": "tfc2:blocks/rocks/Granite Raw"
 		},
-		"uvlock": true,
+		"uvlock": false,
 		"model": "cube_all"
 	},
     "variants": {

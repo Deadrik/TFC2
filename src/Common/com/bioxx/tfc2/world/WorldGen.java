@@ -10,10 +10,11 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters;
@@ -34,39 +35,52 @@ import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 
 public class WorldGen implements IThreadCompleteListener
 {
-	public static WorldGen instance;
+	private static WorldGen instance;
+	private static WorldGen instanceClient;
 	final java.util.Map<Integer, CachedIsland> islandCache;
-	java.util.Map<Integer, CachedIsland> clientIslandCache;
 	public World world;
 	public static final int ISLAND_SIZE = 4096;
 
 	private Queue<Integer> mapQueue;
 	private ThreadBuild[] buildThreads;
 
+	public static WorldGen getInstance()
+	{
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+			return instance;
+		return instanceClient;
+	}
+
+	public static void ClearInstances()
+	{
+
+	}
+
 	public WorldGen(World w) 
 	{
 		world = w;
 		islandCache = Collections.synchronizedMap(new ConcurrentHashMap<Integer, CachedIsland>());
-		clientIslandCache = Collections.synchronizedMap(new ConcurrentHashMap<Integer, CachedIsland>());
 		mapQueue = new PriorityBlockingQueue<Integer>();
 		buildThreads = new ThreadBuild[TFCOptions.maxThreadsForIslandGen];
 	}
 
 	public static void initialize(World world)
 	{
-		if(instance == null)
-			instance = new WorldGen(world);
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		{
+			if(instance == null)
+				instance = new WorldGen(world);
+		}
+		else
+		{
+			if(instanceClient == null)
+				instanceClient = new WorldGen(world);
+		}
 	}
 
-	public IslandMap getClientIslandMap(int x, int z)
+	public IslandMap getIslandMap(BlockPos pos)
 	{
-		int id = Helper.combineCoords(x, z);
-		if(!clientIslandCache.containsKey(id))
-		{
-			createFakeMap(x, z);
-		}
-		CachedIsland ci = clientIslandCache.get(id);
-		return ci.getIslandMap();
+		return getIslandMap(pos.getX(), pos.getZ());
 	}
 
 	/**
@@ -85,13 +99,15 @@ public class WorldGen implements IThreadCompleteListener
 		//If the map did not exist on disk then create it from scratch
 		if(!islandCache.containsKey(id))
 		{
-			createIsland(x, z);
+			if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+				createFakeMap(x, z);
+			else
+				createIsland(x, z);
 		}
 
 		return getMap(x, z);
 	}
 
-	@SideOnly(Side.CLIENT)
 	private IslandMap createFakeMap(int x, int z)
 	{
 		long seed = world.getSeed()+Helper.combineCoords(x, z);
@@ -99,7 +115,6 @@ public class WorldGen implements IThreadCompleteListener
 		return createFakeMap(x, z, seed);
 	}
 
-	@SideOnly(Side.CLIENT)
 	public IslandMap createFakeMap(int x, int z, long seed)
 	{
 		IslandParameters id = createParams(seed, x, z);
@@ -107,15 +122,8 @@ public class WorldGen implements IThreadCompleteListener
 		mapgen.newIsland(id);
 		mapgen.generateFake();
 		CachedIsland ci = new CachedIsland(mapgen);
-		clientIslandCache.put(Helper.combineCoords(x, z), ci);
-		return mapgen;
-	}
-
-	public void addMap(IslandMap map, int x, int z)
-	{
-		CachedIsland ci = new CachedIsland(map);
 		islandCache.put(Helper.combineCoords(x, z), ci);
-		System.out.println("Added Map: " + x + "," + z );
+		return mapgen;
 	}
 
 	private IslandMap getMap(int x, int z)
@@ -301,7 +309,6 @@ public class WorldGen implements IThreadCompleteListener
 				saveMap(c);
 			}
 			islandCache.clear();
-			clientIslandCache.clear();
 		}
 	}
 
@@ -319,18 +326,6 @@ public class WorldGen implements IThreadCompleteListener
 			{
 				saveMap(c);
 				islandCache.remove(key);
-			}
-		}
-
-		keys = clientIslandCache.keySet();
-
-		for(Iterator<Integer> iter = keys.iterator(); iter.hasNext();)
-		{
-			key = iter.next();
-			c = clientIslandCache.get(key);
-			if(c != null && now-c.lastAccess > 360000)//5 minutes of no access will trim the map
-			{
-				clientIslandCache.remove(key);
 			}
 		}
 	}

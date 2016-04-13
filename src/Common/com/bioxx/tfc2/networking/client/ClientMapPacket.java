@@ -53,7 +53,7 @@ public class ClientMapPacket implements IMessage
 				public void run() 
 				{
 					int j;
-					IslandMap map = WorldGen.instance.createFakeMap(message.islandX, message.islandZ, message.seed);
+					IslandMap map = WorldGen.getInstance().createFakeMap(message.islandX, message.islandZ, message.seed);
 				}
 			});
 			return null; // no response in this case

@@ -1,15 +1,15 @@
 package com.bioxx.tfc2.rendering.model;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.entity.EntityBoar;
 import com.bioxx.tfc2.entity.EntityBoar.BoarStage;
 
-public class RenderBoar extends RenderLiving
+public class RenderBoar extends RenderLiving<EntityBoar>
 {
 	ResourceLocation tex_brown = new ResourceLocation(Reference.ModID+":"+"textures/mob/boar_brown.png");
 	ResourceLocation tex_black = new ResourceLocation(Reference.ModID+":"+"textures/mob/boar_black.png");
@@ -23,6 +23,7 @@ public class RenderBoar extends RenderLiving
 		this.shadowSize = 0.8f;
 	}
 
+	@Override
 	protected ResourceLocation getEntityTexture(EntityBoar entity) 
 	{
 		if(entity.getBoarStage() == BoarStage.Black)
@@ -35,11 +36,5 @@ public class RenderBoar extends RenderLiving
 			return tex_pink3;
 		else
 			return tex_brown;
-	}
-
-	@Override
-	protected ResourceLocation getEntityTexture(Entity entity) 
-	{
-		return getEntityTexture((EntityBoar)entity);
 	}
 }

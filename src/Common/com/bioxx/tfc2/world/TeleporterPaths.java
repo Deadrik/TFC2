@@ -56,7 +56,7 @@ public class TeleporterPaths extends Teleporter
 		{
 			int playerX = MathHelper.floor_double(entity.posX);
 			int playerZ = MathHelper.floor_double(entity.posZ);
-			IslandMap islandMap = WorldGen.instance.getIslandMap(playerX >> 12, playerZ >> 12);
+			IslandMap islandMap = WorldGen.getInstance().getIslandMap(playerX >> 12, playerZ >> 12);
 			Center closest = islandMap.getClosestCenter(new Point(playerX % 4096,playerZ % 4096));
 			//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
 			closest = this.getPortalNeighbor(closest);
@@ -171,7 +171,7 @@ public class TeleporterPaths extends Teleporter
 	{
 		int playerX = MathHelper.floor_double(entityIn.posX);
 		int playerZ = MathHelper.floor_double(entityIn.posZ);
-		IslandMap islandMap = WorldGen.instance.getIslandMap(((playerX*8) >> 12), ((playerZ*8) >> 12));
+		IslandMap islandMap = WorldGen.getInstance().getIslandMap(((playerX*8) >> 12), ((playerZ*8) >> 12));
 		Center closest = islandMap.getClosestCenter(new Point((playerX*8) % 4096,(playerZ*8) % 4096));
 		//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
 		closest = this.getPortalNeighbor(closest);
@@ -193,7 +193,7 @@ public class TeleporterPaths extends Teleporter
 		int xP = (playerX*8) % 4096;
 		int zP = (playerZ*8) % 4096;
 
-		IslandMap islandMap = WorldGen.instance.getIslandMap(xM, zM);
+		IslandMap islandMap = WorldGen.getInstance().getIslandMap(xM, zM);
 		Center closest = islandMap.getClosestCenter(new Point(xP,zP));
 
 		//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
@@ -203,7 +203,7 @@ public class TeleporterPaths extends Teleporter
 		PortalAttribute startAttr = (PortalAttribute) closest.getAttribute(Attribute.Portal);
 		int destX = Helper.getXCoord(startAttr.destMapID);
 		int destZ = Helper.getYCoord(startAttr.destMapID);
-		IslandMap destMap = WorldGen.instance.getIslandMap(destX, destZ);
+		IslandMap destMap = WorldGen.getInstance().getIslandMap(destX, destZ);
 		Center dest = destMap.getPortalForFacing(startAttr.direction.getOpposite());
 		PortalAttribute endAttr = (PortalAttribute) dest.getAttribute(Attribute.Portal);
 

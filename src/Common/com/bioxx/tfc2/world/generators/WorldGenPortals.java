@@ -48,7 +48,7 @@ public class WorldGenPortals implements IWorldGenerator
 			int xMLocal = chunkX & 4095;
 			int zMLocal = chunkZ & 4095;
 
-			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+			IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 			Point ip = new Point(xMLocal, zMLocal);
 			Point p = new Point(chunkX, chunkZ);
 

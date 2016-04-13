@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
@@ -22,6 +24,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -70,20 +73,90 @@ public class ClientProxy extends CommonProxy
 		setupBlockColors();
 
 		//Entities
-		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBear.class, new RenderBear(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBearPanda.class, new RenderBearPanda(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityLion.class, new RenderLion(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTiger.class, new RenderTiger(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityRhino.class, new RenderRhino(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityElephant.class, new RenderElephant(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityMammoth.class, new RenderMammoth(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBoar.class, new RenderBoar(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBison.class, new RenderBison(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFoxRed.class, new RenderFoxRed());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFoxArctic.class, new RenderFoxArctic());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFoxDesert.class, new RenderFoxDesert());
-		RenderingRegistry.registerEntityRenderingHandler(EntityHippo.class, new RenderHippo());
+		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new IRenderFactory<EntityCart>() { 
+			@Override
+			public Render<? super EntityCart> createRenderFor(RenderManager manager) {
+				return new RenderCart(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityBear.class, new IRenderFactory<EntityBear>() { 
+			@Override
+			public Render<? super EntityBear> createRenderFor(RenderManager manager) {
+				return new RenderBear(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityBearPanda.class, new IRenderFactory<EntityBearPanda>() { 
+			@Override
+			public Render<? super EntityBearPanda> createRenderFor(RenderManager manager) {
+				return new RenderBearPanda(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityLion.class, new IRenderFactory<EntityLion>() { 
+			@Override
+			public Render<? super EntityLion> createRenderFor(RenderManager manager) {
+				return new RenderLion(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityTiger.class, new IRenderFactory<EntityTiger>() { 
+			@Override
+			public Render<? super EntityTiger> createRenderFor(RenderManager manager) {
+				return new RenderTiger(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityRhino.class, new IRenderFactory<EntityRhino>() { 
+			@Override
+			public Render<? super EntityRhino> createRenderFor(RenderManager manager) {
+				return new RenderRhino(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityElephant.class, new IRenderFactory<EntityElephant>() { 
+			@Override
+			public Render<? super EntityElephant> createRenderFor(RenderManager manager) {
+				return new RenderElephant(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityMammoth.class, new IRenderFactory<EntityMammoth>() { 
+			@Override
+			public Render<? super EntityMammoth> createRenderFor(RenderManager manager) {
+				return new RenderMammoth(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityBoar.class, new IRenderFactory<EntityBoar>() { 
+			@Override
+			public Render<? super EntityBoar> createRenderFor(RenderManager manager) {
+				return new RenderBoar(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityBison.class, new IRenderFactory<EntityBison>() { 
+			@Override
+			public Render<? super EntityBison> createRenderFor(RenderManager manager) {
+				return new RenderBison(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxRed.class, new IRenderFactory<EntityFoxRed>() { 
+			@Override
+			public Render<? super EntityFoxRed> createRenderFor(RenderManager manager) {
+				return new RenderFoxRed(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxArctic.class, new IRenderFactory<EntityFoxArctic>() { 
+			@Override
+			public Render<? super EntityFoxArctic> createRenderFor(RenderManager manager) {
+				return new RenderFoxArctic(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxDesert.class, new IRenderFactory<EntityFoxDesert>() { 
+			@Override
+			public Render<? super EntityFoxDesert> createRenderFor(RenderManager manager) {
+				return new RenderFoxDesert(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityHippo.class, new IRenderFactory<EntityHippo>() { 
+			@Override
+			public Render<? super EntityHippo> createRenderFor(RenderManager manager) {
+				return new RenderHippo(manager);
+			}
+		});
 
 		//Disable vanilla UI elements
 		GuiIngameForge.renderHealth = false;
@@ -118,9 +191,9 @@ public class ClientProxy extends CommonProxy
 			{
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
-				if(WorldGen.instance == null)
+				if(WorldGen.getInstance() == null)
 					return 0x55ff55;
-				IslandMap m = WorldGen.instance.getIslandMap(x, z);
+				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
 				double d1 = 0.5;
 
@@ -149,9 +222,9 @@ public class ClientProxy extends CommonProxy
 					return 0xD8D8D8;
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
-				if(WorldGen.instance == null)
+				if(WorldGen.getInstance() == null)
 					return 0x55ff55;
-				IslandMap m = WorldGen.instance.getIslandMap(x, z);
+				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
 				double d1 = 0.5;
 
@@ -170,9 +243,9 @@ public class ClientProxy extends CommonProxy
 			{
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
-				if(WorldGen.instance == null)
+				if(WorldGen.getInstance() == null)
 					return 0x55ff55;
-				IslandMap m = WorldGen.instance.getIslandMap(x, z);
+				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
 				double d1 = 0.5;
 

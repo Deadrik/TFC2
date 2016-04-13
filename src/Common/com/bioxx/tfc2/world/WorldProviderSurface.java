@@ -58,10 +58,10 @@ public class WorldProviderSurface extends WorldProvider
 		int x = pos.getX() << 12;
 		int z = pos.getZ() << 12;
 
-		if(WorldGen.instance == null)
+		if(WorldGen.getInstance() == null)
 			return false;
 
-		/*Map m = WorldGen.instance.getIslandMap(x, z);
+		/*Map m = WorldGen.getInstance().getIslandMap(x, z);
 
 		if(m.islandParams.getIslandTemp() == ClimateTemp.SUBTROPICAL || m.islandParams.getIslandTemp() == ClimateTemp.TROPICAL)
 			return false;*/
@@ -75,10 +75,10 @@ public class WorldProviderSurface extends WorldProvider
 		int x = pos.getX() << 12;
 		int z = pos.getZ() << 12;
 
-		if(WorldGen.instance == null)
+		if(WorldGen.getInstance() == null)
 			return false;
 
-		/*Map m = WorldGen.instance.getIslandMap(x, z);
+		/*Map m = WorldGen.getInstance().getIslandMap(x, z);
 
 		if(m.islandParams.getIslandTemp() == ClimateTemp.SUBTROPICAL || m.islandParams.getIslandTemp() == ClimateTemp.TROPICAL)
 			return false;*/

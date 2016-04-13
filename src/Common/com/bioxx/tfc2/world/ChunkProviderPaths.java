@@ -39,7 +39,7 @@ public class ChunkProviderPaths extends ChunkProviderOverworld
 		islandChunkZ = worldZ % MAP_SIZE;
 		mapX = (chunkX >> 8);
 		mapZ = (chunkZ >> 8);
-		islandMap = WorldGen.instance.getIslandMap(((chunkX*16/8) >> 12), ((chunkZ*16/8) >> 12));
+		islandMap = WorldGen.getInstance().getIslandMap(((chunkX*16/8) >> 12), ((chunkZ*16/8) >> 12));
 
 
 		this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);

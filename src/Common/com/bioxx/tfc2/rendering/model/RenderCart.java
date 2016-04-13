@@ -3,13 +3,12 @@ package com.bioxx.tfc2.rendering.model;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.entity.EntityCart;
 
-public class RenderCart extends Render
+public class RenderCart extends Render<EntityCart>
 {
 	ResourceLocation tex = new ResourceLocation(Reference.ModID+":"+"textures/mob/cart.png");
 
@@ -23,11 +22,12 @@ public class RenderCart extends Render
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(Entity entity) 
+	protected ResourceLocation getEntityTexture(EntityCart entity) 
 	{
 		return tex;
 	}
 
+	@Override
 	public void doRender(EntityCart cart, double x, double y, double z, float yaw, float partialTicks)
 	{
 		GlStateManager.pushMatrix();
@@ -45,19 +45,4 @@ public class RenderCart extends Render
 		GlStateManager.popMatrix();
 		super.doRender(cart, x, y, z, yaw, partialTicks);
 	}
-
-	/**
-	 * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-	 * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-	 * (Render<T extends Entity>) and this method has signature public void func_76986_a(T entity, double d, double d1,
-	 * double d2, float f, float f1). But JAD is pre 1.5 so doe
-	 *  
-	 * @param entityYaw The yaw rotation of the passed entity
-	 */
-	@Override
-	public void doRender(Entity entity, double x, double y, double z, float entityYaw, float partialTicks)
-	{
-		this.doRender((EntityCart)entity, x, y, z, entityYaw, partialTicks);
-	}
-
 }

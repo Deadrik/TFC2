@@ -95,7 +95,7 @@ public class PrintImageMapCommand extends CommandBase
 					float count = 0;
 					int xM = ((int)Math.floor(player.posX) >> 12);
 					int zM = ((int)Math.floor(player.posZ) >> 12);
-					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+					IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 					Point p;
 					Center c;
 					for(int z = 0; z < size; z++)
@@ -144,7 +144,7 @@ public class PrintImageMapCommand extends CommandBase
 					float count = 0;
 					int xM = ((int)Math.floor(player.posX) >> 12);
 					int zM = ((int)Math.floor(player.posZ) >> 12);
-					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+					IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 					Center closest = map.getClosestCenter(new Point((int)Math.floor(player.posX) & 4095, (int)Math.floor(player.posZ) & 4095));
 					Vector<Center> land = map.landCenters(map.centers);
 					Center end = land.get(world.rand.nextInt(land.size()));
@@ -193,7 +193,7 @@ public class PrintImageMapCommand extends CommandBase
 					float count = 0;
 					int xM = ((int)Math.floor(player.posX) >> 12);
 					int zM = ((int)Math.floor(player.posZ) >> 12);
-					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+					IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 					Polygon poly;
 					for(Center c : map.centers)
 					{
@@ -245,7 +245,7 @@ public class PrintImageMapCommand extends CommandBase
 					float count = 0;
 					int xM = ((int)Math.floor(player.posX) >> 12);
 					int zM = ((int)Math.floor(player.posZ) >> 12);
-					IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+					IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 
 					/*for(int x = 0; x < size; x++)
 					{
@@ -279,7 +279,7 @@ public class PrintImageMapCommand extends CommandBase
 			{
 				int xM = ((int)Math.floor(player.posX) >> 12);
 				int zM = ((int)Math.floor(player.posZ) >> 12);
-				IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+				IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 				drawDungeon(name, map);
 			}
 		}
@@ -344,7 +344,7 @@ public class PrintImageMapCommand extends CommandBase
 			float count = 0;
 			int xM = (xCoord >> 12);
 			int zM = (zCoord >> 12);
-			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+			IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 			Polygon poly;
 			for(Center c : map.centers)
 			{
@@ -406,7 +406,7 @@ public class PrintImageMapCommand extends CommandBase
 			float count = 0;
 			int xM = (xCoord >> 12);
 			int zM = (zCoord >> 12);
-			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+			IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 			Polygon poly;
 			for(Center c : map.centers)
 			{

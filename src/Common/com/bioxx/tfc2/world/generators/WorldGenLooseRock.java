@@ -33,7 +33,7 @@ public class WorldGenLooseRock implements IWorldGenerator
 			return;
 		chunkX *= 16;
 		chunkZ *= 16;
-		map = WorldGen.instance.getIslandMap(chunkX >> 12, chunkZ >> 12);
+		map = WorldGen.getInstance().getIslandMap(chunkX >> 12, chunkZ >> 12);
 		Center c;
 		Point p = new Point(chunkX, chunkZ);
 		int chance;

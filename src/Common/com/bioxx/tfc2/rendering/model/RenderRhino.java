@@ -1,13 +1,14 @@
 package com.bioxx.tfc2.rendering.model;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 import com.bioxx.tfc2.Reference;
+import com.bioxx.tfc2.entity.EntityRhino;
 
-public class RenderRhino extends RenderLiving
+public class RenderRhino extends RenderLiving<EntityRhino>
 {
 	ResourceLocation tex = new ResourceLocation(Reference.ModID+":"+"textures/mob/rhino.png");
 
@@ -18,7 +19,7 @@ public class RenderRhino extends RenderLiving
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(Entity entity) 
+	protected ResourceLocation getEntityTexture(EntityRhino entity) 
 	{
 		return tex;
 	}

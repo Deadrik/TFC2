@@ -49,7 +49,7 @@ public class WorldGenTrees implements IWorldGenerator
 			int zM = (chunkZ >> 12);
 			int xMLocal = chunkX & 4095;
 			int zMLocal = chunkZ & 4095;
-			IslandMap m = WorldGen.instance.getIslandMap(xM, zM);
+			IslandMap m = WorldGen.getInstance().getIslandMap(xM, zM);
 			BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
 			Center c = m.getClosestCenter(new Point(xMLocal+8, zMLocal+8));
 

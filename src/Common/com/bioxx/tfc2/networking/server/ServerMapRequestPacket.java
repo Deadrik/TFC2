@@ -53,7 +53,7 @@ public class ServerMapRequestPacket implements IMessage
 				public void run() 
 				{
 					int j;
-					IslandMap map = WorldGen.instance.getIslandMap(message.islandX, message.islandZ);
+					IslandMap map = WorldGen.getInstance().getIslandMap(message.islandX, message.islandZ);
 					TFC.network.sendTo(new ClientMapPacket(message.islandX, message.islandZ, map.seed), ctx.getServerHandler().playerEntity);
 				}
 			});

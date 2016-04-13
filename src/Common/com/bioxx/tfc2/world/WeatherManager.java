@@ -74,7 +74,7 @@ public class WeatherManager
 	/**
 	 * @return Returns an adjusted precipitation value for the island being queried
 	 */
-	private double getPrecip(IslandMap island, int x, int z)
+	public double getPreciptitation(IslandMap island, int x, int z)
 	{
 		Line model = getModelForClimate(island, worldObj);
 		double raw = getPrecipitationRaw(model, x >> 12, z >> 12);
@@ -86,14 +86,8 @@ public class WeatherManager
 
 	public double getPreciptitation(int x, int z)
 	{
-		IslandMap island = WorldGen.instance.getIslandMap(x >> 12, z >> 12);
-		return getPrecip(island, x, z);
-	}
-
-	public double getPreciptitationClient(int x, int z)
-	{
-		IslandMap island = WorldGen.instance.getClientIslandMap(x >> 12, z >> 12);
-		return getPrecip(island, x, z);
+		IslandMap island = WorldGen.getInstance().getIslandMap(x >> 12, z >> 12);
+		return getPreciptitation(island, x, z);
 	}
 
 	public Line getModelForClimate(IslandMap map, World world)
@@ -119,6 +113,12 @@ public class WeatherManager
 		return rainModelSummer;
 	}
 
+	public double getTemperature(BlockPos pos)
+	{
+		IslandMap island = WorldGen.getInstance().getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
+		return getTemperature(island, pos);
+	}
+
 	public double getTemperature(IslandMap island, BlockPos pos)
 	{
 		Timekeeper inst = Timekeeper.getInstance();
@@ -138,16 +138,6 @@ public class WeatherManager
 	public double getTemperature(int x, int y, int z)
 	{
 		return getTemperature(Core.getMapForWorld(worldObj, new BlockPos(x, y, z)), new BlockPos(x, y, z));
-	}
-
-	public double getTemperatureClient(BlockPos pos)
-	{
-		return getTemperature(Core.getClientMapForWorld(worldObj, pos), pos);
-	}
-
-	public double getTemperatureClient(int x, int y, int z)
-	{
-		return getTemperature(Core.getClientMapForWorld(worldObj, new BlockPos(x, y, z)), new BlockPos(x, y, z));
 	}
 
 	public void setupStorms(World world)

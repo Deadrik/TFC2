@@ -198,18 +198,18 @@ public class RenderOverlayHandler
 	public void renderText(RenderGameOverlayEvent.Text event)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		if(mc.theWorld.provider.getDimension() == 0 && WorldGen.instance != null)
+		if(mc.theWorld.provider.getDimension() == 0 && WorldGen.getInstance() != null)
 		{
 			int xM = ((int)(mc.thePlayer.posX) >> 12);
 			int zM = ((int)(mc.thePlayer.posZ) >> 12);
-			IslandMap map = WorldGen.instance.getIslandMap(xM, zM);
+			IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
 			BlockPos pos = new BlockPos((int)(mc.thePlayer.posX), 0, (int)(mc.thePlayer.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
 			event.getLeft().add(""+mc.theWorld.getWorldTime());
-			event.getLeft().add("Rain: "+WeatherManager.getInstance().getPreciptitationClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
+			event.getLeft().add("Rain: "+WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
 					" / "  + " / " + mc.theWorld.isRaining());
-			event.getLeft().add("Temp: " + WeatherManager.getInstance().getTemperatureClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
+			event.getLeft().add("Temp: " + WeatherManager.getInstance().getTemperature((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
 			event.getLeft().add("Date: " + Timekeeper.getInstance().getSeasonalPeriod() + " | Time: " + Timekeeper.getInstance().getClockTime());
 			event.getLeft().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"--------Hex--------");
 			event.getLeft().add("Index: "+hex.index);
