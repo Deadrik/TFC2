@@ -5,6 +5,8 @@ import java.io.File;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.IBlockColor;
@@ -13,6 +15,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.ColorizerFoliage;
@@ -319,11 +322,11 @@ public class ClientProxy extends CommonProxy
 		Item salt = Item.getItemFromBlock(TFCBlocks.SaltWater);
 		Item saltstatic = Item.getItemFromBlock(TFCBlocks.SaltWaterStatic);
 		Item freshstatic = Item.getItemFromBlock(TFCBlocks.FreshWaterStatic);
-		/*ModelBakery.addVariantName(fresh);
-		ModelBakery.addVariantName(salt);
-		ModelBakery.addVariantName(saltstatic);
-		ModelBakery.addVariantName(freshstatic);*/
-		/*ModelLoader.setCustomMeshDefinition(fresh, new ItemMeshDefinition()
+		ModelBakery.registerItemVariants(fresh);
+		ModelBakery.registerItemVariants(salt);
+		ModelBakery.registerItemVariants(saltstatic);
+		ModelBakery.registerItemVariants(freshstatic);
+		ModelLoader.setCustomMeshDefinition(fresh, new ItemMeshDefinition()
 		{
 			@Override
 			public ModelResourceLocation getModelLocation(ItemStack stack)
@@ -354,7 +357,7 @@ public class ClientProxy extends CommonProxy
 			{
 				return freshwaterLocation;
 			}
-		});*/
+		});
 		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWater, new StateMapperBase()
 		{
 			@Override
@@ -388,6 +391,7 @@ public class ClientProxy extends CommonProxy
 			}
 		});
 		//End Liquids
+
 		Item i = GameData.getBlockItemMap().get(TFCBlocks.LooseRocks);
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.LooseRocks), 0, new ModelResourceLocation(Reference.ModID + ":loose_rock", "inventory"));
 
@@ -403,10 +407,10 @@ public class ClientProxy extends CommonProxy
 			}
 		};
 		ModelLoader.setCustomStateMapper(TFCBlocks.Leaves2, ignoreState);
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.FreshWater),0,freshwaterLocation);
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.FreshWaterStatic),0,freshwaterLocation);
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.SaltWater),0,saltwaterLocation);
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.SaltWaterStatic),0,saltwaterLocation);
+		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.FreshWater),0,freshwaterLocation);
+		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.FreshWaterStatic),0,freshwaterLocation);
+		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.SaltWater),0,saltwaterLocation);
+		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.SaltWaterStatic),0,saltwaterLocation);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Dirt), "Dirt/", Global.STONE_ALL, 0, 16);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Grass), "Grass/", Global.STONE_ALL, 0, 16);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Stone), "Stone/", Global.STONE_ALL, 0, 16);

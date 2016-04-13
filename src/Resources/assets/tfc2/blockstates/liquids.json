@@ -1,13 +1,15 @@
 {
     "forge_marker": 1,
+    "defaults": {
+        "model": "forge:fluid",
+        "transform": "forge:default-item"
+    },
     "variants": {
-        "freshwater": {
-            "model": "forge:fluid",
+        "freshwater": [{
             "custom": { "fluid": "freshwater" }
-        },
-        "saltwater": {
-            "model": "forge:fluid",
+        }],
+        "saltwater": [{
             "custom": { "fluid": "saltwater" }
-        }
+        }]
     }
 }

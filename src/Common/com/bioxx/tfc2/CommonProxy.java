@@ -60,9 +60,12 @@ public class CommonProxy
 		FluidRegistry.registerFluid(TFCFluids.FRESHWATER);
 		registerCrops();
 		TFCBlocks.LoadBlocks();
-
+		TFCBlocks.RegisterBlocks();
+		TFCBlocks.RegisterTileEntites();
 		TFCItems.Load();
-
+		TFCItems.Register();
+		registerCropProduce();//Must run after item setup
+		setupOre();
 
 		TFCFluids.SALTWATER.setBlock(TFCBlocks.SaltWater).setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());//Must run after block setup
 		TFCFluids.FRESHWATER.setBlock(TFCBlocks.FreshWater).setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());//Must run after block setup
@@ -71,12 +74,8 @@ public class CommonProxy
 
 	public void init(FMLInitializationEvent event)
 	{
-		TFCBlocks.RegisterBlocks();
-		TFCBlocks.RegisterTileEntites();
 
-		TFCItems.Register();
-		registerCropProduce();//Must run after item setup
-		setupOre();
+
 
 		registerGuiHandler();
 

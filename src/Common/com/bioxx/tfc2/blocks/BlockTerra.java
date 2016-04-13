@@ -59,7 +59,9 @@ public abstract class BlockTerra extends Block
 	@Override
 	public Block setUnlocalizedName(String name)
 	{
-		this.setRegistryName(name);
+
+		try{this.setRegistryName(name);}
+		catch(Exception e){}
 		return super.setUnlocalizedName(name);
 	}
 

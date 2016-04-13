@@ -96,7 +96,7 @@ public class TFCBlocks
 		Grass = new BlockGrass().setHardness(2F).setUnlocalizedName("grass");
 		Stone = new BlockStone().setHardness(5F).setUnlocalizedName("stone");
 		Rubble = new BlockRubble().setHardness(6F).setUnlocalizedName("rubble");
-		Sand = new BlockSand().setHardness(1F).setUnlocalizedName("sand");
+		Sand = new BlockSand().setRegistryName("sand").setHardness(1F).setUnlocalizedName("sand");
 		Gravel = new BlockGravel().setHardness(1F).setUnlocalizedName("gravel");
 		Planks = new BlockPlanks().setHardness(4F).setUnlocalizedName("planks");
 		Planks2 = new BlockPlanks2().setHardness(4F).setUnlocalizedName("planks2");
@@ -127,7 +127,7 @@ public class TFCBlocks
 		PortalStone = new BlockPortalStone().setHardness(-1F).setResistance(6000000f).setUnlocalizedName("portalstone");
 		TorchOn = new BlockTorchTFC(true).setHardness(0.0F).setUnlocalizedName("torch_on");
 		TorchOff = new BlockTorchTFC(false).setHardness(0.0F).setUnlocalizedName("torch_off");
-		Crop = new BlockCrop().setHardness(0.1F).setUnlocalizedName("crop");
+		Crop = new BlockCrop().setRegistryName("crop").setHardness(0.1F).setUnlocalizedName("crop");
 		Farmland = new BlockFarmland().setHardness(2F).setUnlocalizedName("farmland");
 		SupportBeam = new BlockWoodSupport().setHardness(2F).setUnlocalizedName("wood_support");
 		SupportBeam2 = new BlockWoodSupport2().setHardness(2F).setUnlocalizedName("wood_support2");
