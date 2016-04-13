@@ -3,19 +3,20 @@ package com.bioxx.tfc2.blocks;
 import java.util.Arrays;
 import java.util.Random;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -32,14 +33,15 @@ public class BlockLogHorizontal extends BlockCollapsible implements ISupportBloc
 
 	public BlockLogHorizontal()
 	{
-		super(Material.ground, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
-		this.setShowInCreative(false);
+		this(Material.GROUND, META_PROPERTY);
 	}
 
 	protected BlockLogHorizontal(Material material, PropertyHelper meta)
 	{
 		super(material, meta);
+		setSoundType(SoundType.WOOD);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setShowInCreative(false);
 	}
 
 	/*******************************************************************************
@@ -63,7 +65,7 @@ public class BlockLogHorizontal extends BlockCollapsible implements ISupportBloc
 	public void createFallingEntity(World world, BlockPos pos, IBlockState state)
 	{
 		world.setBlockToAir(pos);
-		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.stick, 1+world.rand.nextInt(3)));
+		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.STICK, 1+world.rand.nextInt(3)));
 		world.spawnEntityInWorld(ei);
 	}
 
@@ -85,9 +87,9 @@ public class BlockLogHorizontal extends BlockCollapsible implements ISupportBloc
 	 * 3. Blockstate 
 	 *******************************************************************************/
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY, ROT_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY, ROT_PROPERTY});
 	}
 
 	@Override

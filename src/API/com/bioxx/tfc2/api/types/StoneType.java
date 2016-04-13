@@ -6,12 +6,12 @@ import net.minecraft.util.IStringSerializable;
 
 public enum StoneType implements IStringSerializable
 {
-	Andesite("Andesite", 10, SubType.IgneousExtrusive), Basalt("Basalt", 9, SubType.IgneousExtrusive), Blueschist("Blueschist", 12, SubType.Metamorphic), 
-	Chert("Chert", 7, SubType.Sedimentary), Claystone("Claystone", 4, SubType.Sedimentary), Dacite("Dacite", 11, SubType.IgneousExtrusive), 
-	Diorite("Diorite", 1, SubType.IgneousIntrusive), Dolomite("Dolomite", 6, SubType.Sedimentary), Gabbro("Gabbro", 2, SubType.IgneousIntrusive), 
-	Gneiss("Gneiss", 14, SubType.Metamorphic), Granite("Granite", 0, SubType.IgneousIntrusive), Limestone("Limestone", 5, SubType.Sedimentary), 
-	Marble("Marble", 15, SubType.Metamorphic), Rhyolite("Rhyolite", 8, SubType.IgneousExtrusive), Schist("Schist", 13, SubType.Metamorphic), 
-	Shale("Shale", 3, SubType.Sedimentary);
+	Andesite("andesite", 10, SubType.IgneousExtrusive), Basalt("basalt", 9, SubType.IgneousExtrusive), Blueschist("blueschist", 12, SubType.Metamorphic), 
+	Chert("chert", 7, SubType.Sedimentary), Claystone("claystone", 4, SubType.Sedimentary), Dacite("dacite", 11, SubType.IgneousExtrusive), 
+	Diorite("diorite", 1, SubType.IgneousIntrusive), Dolomite("dolomite", 6, SubType.Sedimentary), Gabbro("gabbro", 2, SubType.IgneousIntrusive), 
+	Gneiss("gneiss", 14, SubType.Metamorphic), Granite("granite", 0, SubType.IgneousIntrusive), Limestone("limestone", 5, SubType.Sedimentary), 
+	Marble("marble", 15, SubType.Metamorphic), Rhyolite("rhyolite", 8, SubType.IgneousExtrusive), Schist("schist", 13, SubType.Metamorphic), 
+	Shale("shale", 3, SubType.Sedimentary);
 
 	private String name;
 	private int meta;

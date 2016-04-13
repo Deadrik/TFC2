@@ -1,7 +1,7 @@
 package com.bioxx.jmapgen.processing;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 import com.bioxx.jmapgen.graph.Center;
 

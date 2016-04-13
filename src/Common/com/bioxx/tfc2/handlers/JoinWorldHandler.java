@@ -5,32 +5,30 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.containers.ContainerPlayerTFC;
-import com.bioxx.tfc2.core.InventoryPlayerTFC;
 
 public class JoinWorldHandler 
 {
 	@SubscribeEvent
 	public void onJoinWorld(EntityJoinWorldEvent event)
 	{
-		if (event.entity instanceof EntityPlayer && !event.entity.getEntityData().hasKey("hasSpawned"))
+		if (event.getEntity() instanceof EntityPlayer && !event.getEntity().getEntityData().hasKey("hasSpawned"))
 		{
-			if(!(((EntityPlayer)event.entity).inventory instanceof InventoryPlayerTFC))
-				((EntityPlayer)event.entity).inventory = Core.getNewInventory((EntityPlayer)event.entity);
+			/*if(!(((EntityPlayer)event.getEntity()).inventory instanceof InventoryPlayerTFC))
+				((EntityPlayer)event.getEntity()).inventory = Core.getNewInventory((EntityPlayer)event.getEntity());*/
 
-			//((EntityPlayer)event.entity).getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1000);
-			//((EntityPlayer)event.entity).setHealth(1000);
-			event.entity.getEntityData().setBoolean("hasSpawned", true);
+			//((EntityPlayer)event.getEntity()).getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);
+			//((EntityPlayer)event.getEntity()).setHealth(1000);
+			event.getEntity().getEntityData().setBoolean("hasSpawned", true);
 		}
 
-		if (event.entity instanceof EntityPlayer)
+		if (event.getEntity() instanceof EntityPlayer)
 		{
-			if(!(((EntityPlayer)event.entity).inventory instanceof InventoryPlayerTFC))
-				((EntityPlayer)event.entity).inventory = Core.getNewInventory((EntityPlayer)event.entity);
+			/*if(!(((EntityPlayer)event.getEntity()).inventory instanceof InventoryPlayerTFC))
+				((EntityPlayer)event.getEntity()).inventory = Core.getNewInventory((EntityPlayer)event.getEntity());*/
 
-			((EntityPlayer)event.entity).inventoryContainer = new ContainerPlayerTFC(((EntityPlayer)event.entity).inventory, !event.world.isRemote, (EntityPlayer)event.entity);
-			((EntityPlayer)event.entity).openContainer = ((EntityPlayer)event.entity).inventoryContainer;
+			((EntityPlayer)event.getEntity()).inventoryContainer = new ContainerPlayerTFC(((EntityPlayer)event.getEntity()).inventory, !event.getWorld().isRemote, (EntityPlayer)event.getEntity());
+			((EntityPlayer)event.getEntity()).openContainer = ((EntityPlayer)event.getEntity()).inventoryContainer;
 		}
 	}
 }

@@ -6,11 +6,11 @@ import java.util.Random;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.TFCBlocks;
@@ -22,8 +22,8 @@ public class BlockWoodSupport3 extends BlockWoodSupport2
 
 	public BlockWoodSupport3() 
 	{
-		super(Material.wood, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.WOOD, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, WoodType.Blackwood).
 				withProperty(SPAN, Boolean.valueOf(false)).
 				withProperty(NORTH_CONNECTION, Boolean.valueOf(false)).
@@ -58,13 +58,13 @@ public class BlockWoodSupport3 extends BlockWoodSupport2
 	 * 2. Rendering 
 	 *******************************************************************************/
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
@@ -81,9 +81,9 @@ public class BlockWoodSupport3 extends BlockWoodSupport2
 				withProperty(SPAN, !canBeSupportedBy(state, world.getBlockState(pos.down())));
 	}
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY, SPAN, NORTH_CONNECTION, SOUTH_CONNECTION, EAST_CONNECTION, WEST_CONNECTION});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY, SPAN, NORTH_CONNECTION, SOUTH_CONNECTION, EAST_CONNECTION, WEST_CONNECTION});
 	}
 
 	@Override

@@ -29,12 +29,12 @@ public class TreeSchematic extends Schematic
 			ArrayList<SchemBlock> map = new ArrayList<SchemBlock>();
 			for(SchemBlock b : blockMap)
 			{
-				if(b.state.getBlock() != Blocks.air)
+				if(b.state.getBlock() != Blocks.AIR)
 				{
 					if(b.pos.getY() == 0)
 						baseCount++;
 					map.add(b);
-					if(b.state.getBlock().getMaterial() == Material.wood)
+					if(b.state.getBlock().getMaterial(b.state) == Material.WOOD)
 						logCount++;
 				}
 

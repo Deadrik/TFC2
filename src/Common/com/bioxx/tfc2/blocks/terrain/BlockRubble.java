@@ -1,14 +1,16 @@
 package com.bioxx.tfc2.blocks.terrain;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.blocks.BlockGravity;
 import com.bioxx.tfc2.blocks.BlockWoodSupport;
@@ -21,8 +23,9 @@ public class BlockRubble extends BlockGravity
 
 	public BlockRubble()
 	{
-		super(Material.ground, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.GROUND, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		setSoundType(SoundType.STONE);
 	}
 
 	/*******************************************************************************
@@ -31,7 +34,7 @@ public class BlockRubble extends BlockGravity
 	@Override
 	public void onStartFalling(EntityFallingBlockTFC fallingEntity) 
 	{
-		fallingEntity.worldObj.playSoundAtEntity(fallingEntity, TFC_Sounds.FALLININGROCKSHORT, 0.8f, 0.5f+(fallingEntity.worldObj.rand.nextFloat()*0.3f));
+		Core.playSoundAtEntity(fallingEntity, TFC_Sounds.FALLININGROCKSHORT, 0.8f, 0.5f+(fallingEntity.worldObj.rand.nextFloat()*0.3f));
 	}
 
 	@Override
@@ -68,9 +71,9 @@ public class BlockRubble extends BlockGravity
 	 *******************************************************************************/
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY});
 	}
 
 	@Override

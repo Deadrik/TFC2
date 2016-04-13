@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.Global;
@@ -23,8 +23,8 @@ public class ItemSoil extends ItemTerraBlock
 		super.addInformation(is, player, arraylist, flag);
 
 		if (is.getItemDamage() < Global.STONE_ALL.length)
-			arraylist.add(EnumChatFormatting.DARK_GRAY + Core.translate("global." + Global.STONE_ALL[is.getItemDamage()]));
+			arraylist.add(TextFormatting.DARK_GRAY + Core.translate("global." + Global.STONE_ALL[is.getItemDamage()]));
 		else
-			arraylist.add(EnumChatFormatting.DARK_RED + Core.translate("global.unknown"));
+			arraylist.add(TextFormatting.DARK_RED + Core.translate("global.unknown"));
 	}
 }

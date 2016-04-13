@@ -2,7 +2,7 @@ package com.bioxx.tfc2.tileentities;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public abstract class TileTFC extends TileEntity 
@@ -43,7 +43,7 @@ public abstract class TileTFC extends TileEntity
 	public abstract void writeNonSyncableNBT(NBTTagCompound nbt);
 
 	@Override
-	public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.S35PacketUpdateTileEntity pkt)
+	public void onDataPacket(net.minecraft.network.NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
 		this.readSyncableNBT(pkt.getNbtCompound());
 		getWorld().markBlockRangeForRenderUpdate(getPos(), getPos());
@@ -58,6 +58,6 @@ public abstract class TileTFC extends TileEntity
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeSyncableNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.pos, this.getBlockMetadata(), nbt);
+		return new SPacketUpdateTileEntity(this.pos, this.getBlockMetadata(), nbt);
 	}
 }

@@ -27,10 +27,10 @@ import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.core.Recipes;
+import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.*;
 import com.bioxx.tfc2.handlers.*;
-import com.bioxx.tfc2.world.WorldProviderPaths;
-import com.bioxx.tfc2.world.WorldProviderSurface;
+import com.bioxx.tfc2.world.DimensionTFC;
 import com.bioxx.tfc2.world.generators.WorldGenGrass;
 import com.bioxx.tfc2.world.generators.WorldGenLooseRock;
 import com.bioxx.tfc2.world.generators.WorldGenPortals;
@@ -39,19 +39,18 @@ import com.bioxx.tfc2.world.generators.WorldGenTrees;
 public class CommonProxy
 {
 
+
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		TFC_Sounds.register();
 		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 0);
 		GameRegistry.registerWorldGenerator(new WorldGenTrees(), 10);
 		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
 		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 5);
 
 		DimensionManager.unregisterDimension(0);
-		DimensionManager.unregisterProviderType(0);
-		DimensionManager.registerProviderType(0, WorldProviderSurface.class, true);
-		DimensionManager.registerProviderType(2, WorldProviderPaths.class, true);
-		DimensionManager.registerDimension(0, 0);
-		DimensionManager.registerDimension(2, 2);
+		DimensionManager.registerDimension(0, DimensionTFC.SURFACE);
+		DimensionManager.registerDimension(2, DimensionTFC.PATHS);
 
 		ResourceLocation still = Core.CreateRes(Reference.getResID()+"blocks/water_still");
 		ResourceLocation flow = Core.CreateRes(Reference.getResID()+"blocks/water_flow");
@@ -61,18 +60,24 @@ public class CommonProxy
 		FluidRegistry.registerFluid(TFCFluids.FRESHWATER);
 		registerCrops();
 		TFCBlocks.LoadBlocks();
-		TFCBlocks.RegisterBlocks();
-		TFCBlocks.RegisterTileEntites();
+
 		TFCItems.Load();
-		TFCItems.Register();
-		registerCropProduce();//Must run after item setup
+
+
 		TFCFluids.SALTWATER.setBlock(TFCBlocks.SaltWater).setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());//Must run after block setup
 		TFCFluids.FRESHWATER.setBlock(TFCBlocks.FreshWater).setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());//Must run after block setup
-		setupOre();
+
 	}
 
 	public void init(FMLInitializationEvent event)
 	{
+		TFCBlocks.RegisterBlocks();
+		TFCBlocks.RegisterTileEntites();
+
+		TFCItems.Register();
+		registerCropProduce();//Must run after item setup
+		setupOre();
+
 		registerGuiHandler();
 
 		FMLCommonHandler.instance().bus().register(new PlayerTracker());
@@ -80,7 +85,9 @@ public class CommonProxy
 		registerEntities();
 	}
 
-	protected void registerEntities() {
+	protected void registerEntities() 
+	{
+		DataSerializersTFC.register();
 		EntityRegistry.registerModEntity(EntityCart.class, "Cart", 0, TFC.instance, 80, 3, true, 0x000000, 0x00ff00);
 		EntityRegistry.registerModEntity(EntityBear.class, "Bear", 1, TFC.instance, 80, 3, true, 0x000000, 0xff0000);
 		EntityRegistry.registerModEntity(EntityBearPanda.class, "BearPanda", 2, TFC.instance, 80, 3, true, 0x000000, 0xffffff);

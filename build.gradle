@@ -12,6 +12,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+repositories { mavenLocal() }
 /*
 plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"

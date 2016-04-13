@@ -3,10 +3,10 @@ package com.bioxx.tfc2.blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.api.types.EffectType;
@@ -17,25 +17,25 @@ public class BlockEffect extends BlockTerra
 
 	public BlockEffect()
 	{
-		super(Material.fire, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.FIRE, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.setBlockBounds(0, 0, 0, 1, 0.001f, 1);
 		this.fullBlock = false;
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, BlockPos pos)
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		IBlockState block = world.getBlockState(pos);
 		if(block.getValue(META_PROPERTY) == EffectType.Acid)
 			return 4;
-		else return getLightValue();
+		else return getLightValue(state, world, pos);
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY});
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class BlockEffect extends BlockTerra
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}

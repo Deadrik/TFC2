@@ -9,13 +9,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3i;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.ChunkProviderGenerate;
+import net.minecraft.world.gen.ChunkProviderOverworld;
 
 import com.bioxx.jmapgen.*;
 import com.bioxx.jmapgen.IslandParameters.Feature;
@@ -49,7 +48,7 @@ import com.bioxx.tfc2.blocks.terrain.BlockGrass;
 import com.bioxx.tfc2.blocks.terrain.BlockGravel;
 import com.bioxx.tfc2.blocks.terrain.BlockStone;
 
-public class ChunkProviderSurface extends ChunkProviderGenerate 
+public class ChunkProviderSurface extends ChunkProviderOverworld 
 {
 	private World worldObj;
 	private Random rand;
@@ -77,7 +76,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 
 	public ChunkProviderSurface(World worldIn, long seed, boolean enableMapFeatures, String rules) 
 	{
-		super(worldIn, seed, enableMapFeatures, rules);
+		super(worldIn, seed, false, rules);
 		worldObj = worldIn;
 		rand = worldObj.rand;
 		hexSamplePoints = new Point[11][6];
@@ -111,6 +110,12 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		//sb2.setScale(0.5);
 
 		turbMap = new Plane(sb2);
+	}
+
+	@Override
+	public void recreateStructures(Chunk chunkIn, int x, int z)
+	{
+
 	}
 
 	private Point hex_corner(double size, int i)
@@ -176,7 +181,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	}
 
 	/**
-	 * This is for stripping a chunk of all but ore and bedrock for easier testing.
+	 * This is for stripping a chunk of all but ore and BEDROCK for easier testing.
 	 */
 	protected void stripChunk(ChunkPrimer primer)
 	{
@@ -197,9 +202,9 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				for(int y = hexElev; y >= 0; y--)
 				{
 					state = primer.getBlockState(x, y, z);
-					if(state.getBlock() != TFCBlocks.Ore && state.getBlock() != Blocks.bedrock && state.getBlock() != Blocks.wool)
+					if(state.getBlock() != TFCBlocks.Ore && state.getBlock() != Blocks.BEDROCK && state.getBlock() != Blocks.WOOL)
 					{
-						primer.setBlockState(x, y, z, Blocks.air.getDefaultState());
+						primer.setBlockState(x, y, z, Blocks.AIR.getDefaultState());
 					}
 				}
 			}
@@ -288,7 +293,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					IBlockState blockUp = chunkprimer.getBlockState(x, y+1, z);
 
 
-					if(block == Blocks.stone.getDefaultState() && blockUp == Blocks.air.getDefaultState())
+					if(block == Blocks.STONE.getDefaultState() && blockUp == Blocks.AIR.getDefaultState())
 					{
 						if(!isCliff || hexElev == convertElevation(closestCenter.getElevation()))
 						{
@@ -308,7 +313,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						}
 					}
 
-					if(chunkprimer.getBlockState(x, y, z) == Blocks.stone.getDefaultState())
+					if(chunkprimer.getBlockState(x, y, z) == Blocks.STONE.getDefaultState())
 					{
 						chunkprimer.setBlockState(x, y, z, stone);
 					}
@@ -333,7 +338,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water
 						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 4)-1)
 							chunkprimer.setBlockState(x, y, z, freshwater);
-						if(getBlock(chunkprimer, x, y, z).isFullCube() && blockUp == freshwater)
+						if(getBlock(chunkprimer, x, y, z).isFullCube(getBlock(chunkprimer, x, y, z).getDefaultState()) && blockUp == freshwater)
 						{
 							chunkprimer.setBlockState(x, y, z, sand);
 						}
@@ -345,7 +350,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 							chunkprimer.setBlockState(x, y, z, freshwater);
 					}
 
-					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial() == Material.rock && blockUp == saltwater)
+					if(closestCenter.hasMarker(Marker.Ocean) && block.getBlock().getMaterial(block) == Material.ROCK && blockUp == saltwater)
 					{
 						chunkprimer.setBlockState(x, y, z, sand);
 					}
@@ -440,10 +445,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 				elevationMap[z << 4 | x] = hexElev;
 				for(int y = Math.min(Math.max(hexElev, Global.SEALEVEL), 255); y >= 0; y--)
 				{
-					Block b = Blocks.air;
+					Block b = Blocks.AIR;
 					if(y < hexElev)
 					{
-						b = Blocks.stone;
+						b = Blocks.STONE;
 					}
 					else if(y < Global.SEALEVEL)
 					{
@@ -451,7 +456,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					}
 
 					if(y <= hexElev * 0.2)
-						b = Blocks.bedrock;
+						b = Blocks.BEDROCK;
 
 					chunkprimer.setBlockState(x, y, z, b.getDefaultState());
 				}
@@ -464,7 +469,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		ArrayList riverPoints = new ArrayList<Point>();
 
 		/*if(this.islandMap.islandParams.shouldGenVolcano())
-			riverStates = new IBlockState[] {Blocks.air.getDefaultState(), Blocks.flowing_lava.getDefaultState(), Blocks.gravel.getDefaultState()};*/
+			riverStates = new IBlockState[] {Blocks.AIR.getDefaultState(), Blocks.flowing_lava.getDefaultState(), Blocks.gravel.getDefaultState()};*/
 
 		for(Center c : centersInChunk)
 		{
@@ -584,7 +589,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								if(s.getBlock() != TFCBlocks.SaltWater && s.getBlock() != TFCBlocks.SaltWaterStatic && 
 										s.getBlock() != TFCBlocks.FreshWater && s.getBlock() != TFCBlocks.FreshWaterStatic)
 								{
-									setState(chunkprimer, pos3, Blocks.air.getDefaultState());
+									setState(chunkprimer, pos3, Blocks.AIR.getDefaultState());
 								}
 								//continue;
 							}
@@ -595,7 +600,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								//If we're moving up or down a slope then don't place water
 								if(terrainElev != hexElev /* pos3.getY() >= waterLevel*/)
 								{
-									fillState = Blocks.air.getDefaultState();
+									fillState = Blocks.AIR.getDefaultState();
 								}
 
 
@@ -663,7 +668,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						convertRiverBank(chunkprimer, pos.up(1).east(), true);
 						convertRiverBank(chunkprimer, pos.up(1).west(), true);
 					}
-					setState(chunkprimer, pos.up(1), Blocks.air.getDefaultState());
+					setState(chunkprimer, pos.up(1), Blocks.AIR.getDefaultState());
 				}
 			}
 		}
@@ -748,12 +753,6 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		return outList;
 	}
 
-	@Override
-	public void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_)
-	{
-
-	}
-
 	private Block getBlock(ChunkPrimer chunkprimer, int x, int y, int z)
 	{
 		return chunkprimer.getBlockState(x, y, z).getBlock();
@@ -805,7 +804,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 						Iterator it = list.iterator();
 						while(it.hasNext())
 						{
-							fillBlock = Blocks.air.getDefaultState();
+							fillBlock = Blocks.AIR.getDefaultState();
 							pos2 = (BlockPos) it.next();
 							if(pos.distanceSqToCenter(pos2.getX(), pos2.getY(), pos2.getZ()) <= wSq)
 							{
@@ -814,7 +813,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 								{
 									state = getState(chunkprimer, pos3);
 									Block b = state.getBlock();
-									if(b != Blocks.bedrock && b.getMaterial() != Material.water)
+									if(b != Blocks.BEDROCK && b.getMaterial(state) != Material.WATER)
 									{
 										down = getState(chunkprimer, pos3.down());
 										up = getState(chunkprimer, pos3.up());
@@ -823,10 +822,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 											setState(chunkprimer, pos3.down(), TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, down.getValue(BlockDirt.META_PROPERTY)));
 										}
 
-										if(down.getBlock().getMaterial() == Material.water)
+										if(down.getBlock().getMaterial(down) == Material.WATER)
 											continue;
 
-										if(up.getBlock().getMaterial() == Material.water)
+										if(up.getBlock().getMaterial(up) == Material.WATER)
 											continue;
 
 										if(n.isSeaCave() && pos3.getY() < Global.SEALEVEL)
@@ -838,7 +837,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 										}
 
 										if(TFCOptions.shouldStripChunks)
-											fillBlock = Blocks.wool.getDefaultState();
+											fillBlock = Blocks.WOOL.getDefaultState();
 
 										setState(chunkprimer, pos3, fillBlock);
 
@@ -992,7 +991,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	{
 		if(pos.getX() >= 0 && pos.getY() >= 0 && pos.getZ() >= 0 && pos.getX() < 16 && pos.getY() < 256 && pos.getZ() < 16)
 			return primer.getBlockState(pos.getX(), pos.getY(), pos.getZ());
-		return Blocks.air.getDefaultState();
+		return Blocks.AIR.getDefaultState();
 	}
 
 	public void setState(ChunkPrimer primer, BlockPos pos, IBlockState state)
@@ -1068,10 +1067,10 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 	public void createDungeons(ChunkPrimer primer)
 	{
 		Point iPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
-		IBlockState state = Blocks.air.getDefaultState();
+		IBlockState state = Blocks.AIR.getDefaultState();
 
 		if(TFCOptions.shouldStripChunks)
-			state = Blocks.wool.getDefaultState();
+			state = Blocks.WOOL.getDefaultState();
 
 		for(Dungeon dungeon : islandMap.dungeons)
 		{
@@ -1104,13 +1103,13 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 											if(y == 2)
 												setState(primer, new BlockPos(rx+x, level.yLevel+y+1, rz+z), dungeon.ceilingType);
 
-											if(x == 0 && getState(primer, new BlockPos(rx+x-1, level.yLevel+y, rz+z)).getBlock() != Blocks.air)
+											if(x == 0 && getState(primer, new BlockPos(rx+x-1, level.yLevel+y, rz+z)).getBlock() != Blocks.AIR)
 												setState(primer, new BlockPos(rx+x-1, level.yLevel+y, rz+z), dungeon.wallType);
-											if(x == rect.width-1 && getState(primer, new BlockPos(rx+x+1, level.yLevel+y, rz+z)).getBlock() != Blocks.air)
+											if(x == rect.width-1 && getState(primer, new BlockPos(rx+x+1, level.yLevel+y, rz+z)).getBlock() != Blocks.AIR)
 												setState(primer, new BlockPos(rx+x+1, level.yLevel+y, rz+z), dungeon.wallType);
-											if(z == 0 && getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z-1)).getBlock() != Blocks.air)
+											if(z == 0 && getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z-1)).getBlock() != Blocks.AIR)
 												setState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z-1), dungeon.wallType);
-											if(z == rect.height-1 && getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z+1)).getBlock() != Blocks.air)
+											if(z == rect.height-1 && getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z+1)).getBlock() != Blocks.AIR)
 												setState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z+1), dungeon.wallType);
 										}
 									}
@@ -1123,7 +1122,7 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 					{
 						int rx = door.location.getX() - (int)chunkRect.getMinX();
 						int rz = door.location.getZ() - (int)chunkRect.getMinZ();
-						state = Blocks.air.getDefaultState();
+						state = Blocks.AIR.getDefaultState();
 
 
 						if(rx >= 0 && rz >= 0 && rx < 16 && rz < 16)
@@ -1187,28 +1186,28 @@ public class ChunkProviderSurface extends ChunkProviderGenerate
 		}
 
 		state = getState(primer, pos.west());
-		if(state.getBlock() != Blocks.air)
+		if(state.getBlock() != Blocks.AIR)
 		{
 			setState(primer, pos.west(), side);
 			setState(primer, pos.west().up(), side);
 		}
 
 		state = getState(primer, pos.east());
-		if(state.getBlock() != Blocks.air)
+		if(state.getBlock() != Blocks.AIR)
 		{
 			setState(primer, pos.east(), side);
 			setState(primer, pos.east().up(), side);
 		}
 
 		state = getState(primer, pos.north());
-		if(state.getBlock() != Blocks.air)
+		if(state.getBlock() != Blocks.AIR)
 		{
 			setState(primer, pos.north(), side);
 			setState(primer, pos.north().up(), side);
 		}
 
 		state = getState(primer, pos.south());
-		if(state.getBlock() != Blocks.air)
+		if(state.getBlock() != Blocks.AIR)
 		{
 			setState(primer, pos.south(), side);
 			setState(primer, pos.south().up(), side);

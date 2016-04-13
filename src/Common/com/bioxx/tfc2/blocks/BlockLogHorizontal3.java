@@ -7,9 +7,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 import com.bioxx.tfc2.TFCBlocks;
@@ -22,15 +21,13 @@ public class BlockLogHorizontal3 extends BlockLogHorizontal
 
 	public BlockLogHorizontal3()
 	{
-		super(Material.ground, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
-		this.setShowInCreative(false);
+		super(Material.GROUND, META_PROPERTY);
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY, ROT_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY, ROT_PROPERTY});
 	}
 
 	@Override

@@ -5,9 +5,10 @@ import java.util.Random;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 
 import net.minecraftforge.fml.common.IWorldGenerator;
@@ -34,13 +35,13 @@ public class WorldGenPortals implements IWorldGenerator
 	}
 
 	@Override
-	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGen, IChunkProvider chunkProvider)
 	{
 		Center c;
 		chunkX = chunkX * 16;
 		chunkZ = chunkZ * 16;
 
-		if(world.provider.getDimensionId() == 0)
+		if(world.provider.getDimension() == 0)
 		{
 			int xM = (chunkX >> 12);
 			int zM = (chunkZ >> 12);
@@ -108,31 +109,31 @@ public class WorldGenPortals implements IWorldGenerator
 			}
 			localPos = new BlockPos(localX, localY, localZ);
 
-			if(state.getBlock() == Blocks.stone && state.getValue(BlockStone.VARIANT) == BlockStone.EnumType.STONE)
+			if(state.getBlock() == Blocks.STONE && state.getValue(BlockStone.VARIANT) == BlockStone.EnumType.STONE)
 			{
 				state = TFCBlocks.PortalStone.getDefaultState().withProperty(BlockPortalStone.META_PROPERTY, PortalEnumType.None);
 			}
-			else if(state.getBlock() == Blocks.stone && state.getValue(BlockStone.VARIANT) == BlockStone.EnumType.GRANITE)
+			else if(state.getBlock() == Blocks.STONE && state.getValue(BlockStone.VARIANT) == BlockStone.EnumType.GRANITE)
 			{
 				if(map.getIslandData().getPortalState(dir) != PortalEnumType.Enabled)
 					state = TFCBlocks.PortalStone.getDefaultState().withProperty(BlockPortalStone.META_PROPERTY, PortalEnumType.Gate);
 				else
-					state = Blocks.air.getDefaultState();
+					state = Blocks.AIR.getDefaultState();
 			}
-			else if(state.getBlock() == Blocks.planks)
+			else if(state.getBlock() == Blocks.PLANKS)
 			{
 				state = TFCBlocks.PortalStone.getDefaultState().withProperty(BlockPortalStone.META_PROPERTY, map.getIslandData().getPortalState(dir));
 			}
-			else if(state.getBlock() == Blocks.stained_glass)
+			else if(state.getBlock() == Blocks.STAINED_GLASS)
 			{
 				state = TFCBlocks.Portal.getDefaultState().withProperty(BlockPortal.AXIS, axis).withProperty(BlockPortal.CENTER, false);
 			}
-			else if(state.getBlock() == Blocks.glass)
+			else if(state.getBlock() == Blocks.GLASS)
 			{
 				state = TFCBlocks.Portal.getDefaultState().withProperty(BlockPortal.AXIS, axis).withProperty(BlockPortal.CENTER, true);
 			}
 
-			if(state.getBlock() != Blocks.air)
+			if(state.getBlock() != Blocks.AIR)
 			{
 				world.setBlockState(localPos, state);
 			}

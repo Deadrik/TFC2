@@ -4,13 +4,13 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EffectType implements IStringSerializable
 {
-	Fire("Fire", 0),
-	Water("Water", 1),
-	Electric("Electric", 2),
-	Steam("Steam", 3),
-	Smoke("Smoke", 4),
-	Acid("Acid", 5),
-	Char("Char", 6);
+	Fire("fire", 0),
+	Water("water", 1),
+	Electric("electric", 2),
+	Steam("steam", 3),
+	Smoke("smoke", 4),
+	Acid("acid", 5),
+	Char("char", 6);
 
 	private String name;
 	private int meta;

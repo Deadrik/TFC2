@@ -8,15 +8,15 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.chunk.Chunk;
 
 import net.minecraftforge.client.GuiIngameForge;
@@ -62,13 +62,13 @@ public class RenderOverlayHandler
 		GuiIngameForge.renderFood = false;
 
 		// We check for crosshairs just because it's always drawn and is before air bar
-		if(event.type != ElementType.CROSSHAIRS)
+		if(event.getType() != ElementType.CROSSHAIRS)
 			return;
 
 		// This is for air to be drawn above our bars
 		GuiIngameForge.right_height += 10;
 
-		ScaledResolution sr = event.resolution;
+		ScaledResolution sr = event.getResolution();
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayer player = mc.thePlayer;
 		fontrenderer = mc.fontRendererObj;
@@ -126,7 +126,7 @@ public class RenderOverlayHandler
 			Core.bindTexture(new ResourceLocation("minecraft:textures/gui/icons.png"));
 
 			//Draw experience bar when not riding anything, riding a non-living entity such as a boat/minecart, or riding a pig.
-			if (!(player.ridingEntity instanceof EntityLiving))
+			if (!(player.getRidingEntity() instanceof EntityLiving))
 			{
 				int cap = 0;
 				cap = player.xpBarCap();
@@ -174,13 +174,13 @@ public class RenderOverlayHandler
 			}*/
 
 			// Draw mount's health bar
-			if (player.ridingEntity instanceof EntityLivingBase)
+			if (player.getRidingEntity() instanceof EntityLivingBase)
 			{
 				GuiIngameForge.renderHealthMount = false;
 				Core.bindTexture(tfcicons);
-				EntityLivingBase mount = ((EntityLivingBase) player.ridingEntity);
+				EntityLivingBase mount = ((EntityLivingBase) player.getRidingEntity());
 				this.drawTexturedModalRect(mid+1, armorRowHeight, 90, 0, 90, 10);
-				double mountMaxHealth = mount.getEntityAttribute(SharedMonsterAttributes.maxHealth).getBaseValue();
+				double mountMaxHealth = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue();
 				double mountCurrentHealth = mount.getHealth();
 				float mountPercentHealth = (float)Math.min(mountCurrentHealth/mountMaxHealth, 1.0f);
 				this.drawTexturedModalRect(mid+1, armorRowHeight, 90, 10, (int) (90*mountPercentHealth), 10);
@@ -198,7 +198,7 @@ public class RenderOverlayHandler
 	public void renderText(RenderGameOverlayEvent.Text event)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		if(mc.theWorld.provider.getDimensionId() == 0 && WorldGen.instance != null)
+		if(mc.theWorld.provider.getDimension() == 0 && WorldGen.instance != null)
 		{
 			int xM = ((int)(mc.thePlayer.posX) >> 12);
 			int zM = ((int)(mc.thePlayer.posZ) >> 12);
@@ -206,27 +206,27 @@ public class RenderOverlayHandler
 			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
 			BlockPos pos = new BlockPos((int)(mc.thePlayer.posX), 0, (int)(mc.thePlayer.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
-			event.left.add(""+mc.theWorld.getWorldTime());
-			event.left.add("Rain: "+WeatherManager.getInstance().getPreciptitationClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
+			event.getLeft().add(""+mc.theWorld.getWorldTime());
+			event.getLeft().add("Rain: "+WeatherManager.getInstance().getPreciptitationClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
 					" / "  + " / " + mc.theWorld.isRaining());
-			event.left.add("Temp: " + WeatherManager.getInstance().getTemperatureClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
-			event.left.add("Date: " + Timekeeper.getInstance().getSeasonalPeriod() + " | Time: " + Timekeeper.getInstance().getClockTime());
-			event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--------Hex--------");
-			event.left.add("Index: "+hex.index);
-			event.left.add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
+			event.getLeft().add("Temp: " + WeatherManager.getInstance().getTemperatureClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
+			event.getLeft().add("Date: " + Timekeeper.getInstance().getSeasonalPeriod() + " | Time: " + Timekeeper.getInstance().getClockTime());
+			event.getLeft().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"--------Hex--------");
+			event.getLeft().add("Index: "+hex.index);
+			event.getLeft().add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
 			Chunk c = mc.theWorld.getChunkFromBlockCoords(pos);
 			int b = mc.theWorld.getChunkFromBlockCoords(pos).getBiomeArray()[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)] & 0xFF;
-			event.left.add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()) + " | " + hex.getMoistureRaw() + " | " + b + " | " + (float)b / 255F);
-			event.left.add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
+			event.getLeft().add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()) + " | " + hex.getMoistureRaw() + " | " + b + " | " + (float)b / 255F);
+			event.getLeft().add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
 			if(hex.hasAttribute(Attribute.Lake))
-				event.left.add("IsLake");	
+				event.getLeft().add("IsLake");	
 			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.River);
 			if(attrib != null)
 			{
-				event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------River-------");
-				event.left.add("River: " + attrib.getRiver() + " | " + (attrib.upriver != null ?  attrib.upriver.size() : 0));	
+				event.getLeft().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"-------River-------");
+				event.getLeft().add("River: " + attrib.getRiver() + " | " + (attrib.upriver != null ?  attrib.upriver.size() : 0));	
 				if(attrib.upriver != null && attrib.getDownRiver() != null)
-					event.left.add("Up :" + hex.getDirection(attrib.upriver.get(0)).toString() + " | Dn :" + hex.getDirection(attrib.getDownRiver()).toString());
+					event.getLeft().add("Up :" + hex.getDirection(attrib.upriver.get(0)).toString() + " | Dn :" + hex.getDirection(attrib.getDownRiver()).toString());
 			}
 
 			CaveAttribute cattrib = (CaveAttribute)hex.getAttribute(Attribute.Cave);
@@ -234,11 +234,11 @@ public class RenderOverlayHandler
 			{
 				if(cattrib.nodes.size() > 0)
 				{
-					event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------Cave-------");
-					event.left.add("Cave: "+cattrib.nodes.size());	
+					event.getLeft().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"-------Cave-------");
+					event.getLeft().add("Cave: "+cattrib.nodes.size());	
 					for(CaveAttrNode n : cattrib.nodes)
 					{
-						//event.left.add("  *"+n.getOffset());	
+						//event.getLeft().add("  *"+n.getOffset());	
 					}
 				}
 			}
@@ -248,24 +248,24 @@ public class RenderOverlayHandler
 			{
 				if(oattrib.nodes.size() > 0)
 				{
-					event.left.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"-------Ore-------");
+					event.getLeft().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"-------Ore-------");
 					for(OreAttrNode n : oattrib.nodes)
 					{
-						event.left.add(n.getOreType());	
+						event.getLeft().add(n.getOreType());	
 					}
 				}
 			}
 
-			event.right.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"--Island Parmaters--");
-			event.right.add("*Moisture: "+map.getParams().getIslandMoisture());
-			event.right.add("*Temperature: "+map.getParams().getIslandTemp());
+			event.getRight().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"--Island Parmaters--");
+			event.getRight().add("*Moisture: "+map.getParams().getIslandMoisture());
+			event.getRight().add("*Temperature: "+map.getParams().getIslandTemp());
 
-			event.right.add(EnumChatFormatting.BOLD+""+EnumChatFormatting.YELLOW+"---Island Features--");
+			event.getRight().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"---Island Features--");
 			for(Feature f : Feature.values())
 			{
 				if(map.getParams().hasFeature(f))
 				{
-					event.right.add("*"+f.toString());
+					event.getRight().add("*"+f.toString());
 				}
 			}
 		}
@@ -276,12 +276,12 @@ public class RenderOverlayHandler
 		float f = 0.00390625F;
 		float f1 = 0.00390625F;
 		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		worldrenderer.pos(xCoord + 0.0F, yCoord + maxV, 0).tex((minU + 0) * f, (minV + maxV) * f1).endVertex();
-		worldrenderer.pos(xCoord + maxU, yCoord + maxV, 0).tex((minU + maxU) * f, (minV + maxV) * f1).endVertex();
-		worldrenderer.pos(xCoord + maxU, yCoord + 0.0F, 0).tex((minU + maxU) * f, (minV + 0) * f1).endVertex();
-		worldrenderer.pos(xCoord + 0.0F, yCoord + 0.0F, 0).tex((minU + 0) * f, (minV + 0) * f1).endVertex();
+		VertexBuffer vb = tessellator.getBuffer();
+		vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(xCoord + 0.0F, yCoord + maxV, 0).tex((minU + 0) * f, (minV + maxV) * f1).endVertex();
+		vb.pos(xCoord + maxU, yCoord + maxV, 0).tex((minU + maxU) * f, (minV + maxV) * f1).endVertex();
+		vb.pos(xCoord + maxU, yCoord + 0.0F, 0).tex((minU + maxU) * f, (minV + 0) * f1).endVertex();
+		vb.pos(xCoord + 0.0F, yCoord + 0.0F, 0).tex((minU + 0) * f, (minV + 0) * f1).endVertex();
 		tessellator.draw();
 	}
 }

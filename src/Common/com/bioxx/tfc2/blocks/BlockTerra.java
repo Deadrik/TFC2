@@ -3,7 +3,6 @@ package com.bioxx.tfc2.blocks;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyHelper;
@@ -13,8 +12,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.TFCBlocks;
@@ -29,9 +29,12 @@ public abstract class BlockTerra extends Block
 
 	private boolean showInCreative = true;
 
+	protected AxisAlignedBB blockAABB;
+
 	protected BlockTerra()
 	{
-		this(Material.rock, null);
+		this(Material.ROCK, null);
+		blockAABB = FULL_BLOCK_AABB;
 	}
 
 	protected BlockTerra(Material material, PropertyHelper meta)
@@ -40,11 +43,17 @@ public abstract class BlockTerra extends Block
 		this.META_PROP = meta;
 		/*if (META_PROP != null)
 			this.setDefaultState(this.getBlockState().getBaseState().withProperty(META_PROP, (Comparable)META_PROP.getAllowedValues().toArray()[0]));*/
+		blockAABB = FULL_BLOCK_AABB;
 	}
 
 	public void setShowInCreative(boolean b)
 	{
 		showInCreative = b;
+	}
+
+	public void setBlockBounds(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax)
+	{
+		blockAABB = new AxisAlignedBB(xMin, yMin, zMin, xMax, yMax, zMax);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -69,6 +78,12 @@ public abstract class BlockTerra extends Block
 			else
 				super.getSubBlocks(itemIn, tab, list);
 		}
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		return blockAABB;
 	}
 
 	@Override
@@ -114,31 +129,30 @@ public abstract class BlockTerra extends Block
 	 * @return True to allow the plant to be planted/stay.
 	 */
 	@Override
-	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
 	{
-		IBlockState state = world.getBlockState(pos);
 		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
 		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
 
-		if (plantable instanceof BlockBush)
+		/*if (plantable instanceof BlockBush)
 		{
 			return true;
-		}
+		}*/
 
 		switch (plantType)
 		{
-		case Desert: return this == TFCBlocks.Sand || this == net.minecraft.init.Blocks.hardened_clay || this == net.minecraft.init.Blocks.stained_hardened_clay || this == TFCBlocks.Dirt;
-		case Nether: return this == Blocks.soul_sand;
+		case Desert: return this == TFCBlocks.Sand || this == net.minecraft.init.Blocks.HARDENED_CLAY || this == net.minecraft.init.Blocks.STAINED_HARDENED_CLAY || this == TFCBlocks.Dirt;
+		case Nether: return this == Blocks.SOUL_SAND;
 		case Crop:   return this == TFCBlocks.Farmland;
-		case Cave:   return isSideSolid(world, pos, EnumFacing.UP);
+		case Cave:   return isSideSolid(state, world, pos, EnumFacing.UP);
 		case Plains: return this == TFCBlocks.Grass || this == TFCBlocks.Dirt || this == TFCBlocks.Farmland;
-		case Water:  return getMaterial() == Material.water && ((Integer)state.getValue(BlockLiquid.LEVEL)) == 0;
+		case Water:  return getMaterial(state) == Material.WATER && ((Integer)state.getValue(BlockLiquid.LEVEL)) == 0;
 		case Beach:
 			boolean isBeach = this == TFCBlocks.Grass || this == TFCBlocks.Dirt || this == TFCBlocks.Sand;
-			boolean hasWater = (world.getBlockState(pos.east()).getBlock().getMaterial() == Material.water ||
-					world.getBlockState(pos.west()).getBlock().getMaterial() == Material.water ||
-					world.getBlockState(pos.north()).getBlock().getMaterial() == Material.water ||
-					world.getBlockState(pos.south()).getBlock().getMaterial() == Material.water);
+			boolean hasWater = (world.getBlockState(pos.east()).getBlock().getMaterial(world.getBlockState(pos.east())) == Material.WATER ||
+					world.getBlockState(pos.west()).getBlock().getMaterial(world.getBlockState(pos.west())) == Material.WATER ||
+					world.getBlockState(pos.north()).getBlock().getMaterial(world.getBlockState(pos.north())) == Material.WATER ||
+					world.getBlockState(pos.south()).getBlock().getMaterial(world.getBlockState(pos.south())) == Material.WATER);
 			return isBeach && hasWater;
 		}
 

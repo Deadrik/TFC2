@@ -5,11 +5,17 @@ import java.io.File;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ChunkCache;
+import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.ColorizerGrass;
+import net.minecraft.world.IBlockAccess;
 
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.model.ModelLoader;
@@ -23,16 +29,22 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.api.util.KeyBindings;
+import com.bioxx.tfc2.blocks.BlockLeaves;
 import com.bioxx.tfc2.blocks.BlockLeaves2;
+import com.bioxx.tfc2.blocks.BlockVegetation;
+import com.bioxx.tfc2.blocks.BlockVegetation.VegType;
 import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.entity.*;
 import com.bioxx.tfc2.handlers.client.*;
 import com.bioxx.tfc2.rendering.MeshDef;
 import com.bioxx.tfc2.rendering.model.*;
+import com.bioxx.tfc2.world.WorldGen;
 
 public class ClientProxy extends CommonProxy
 {
@@ -43,7 +55,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		super.preInit(event);
-		setupBlockMeshes();
+
 	}
 
 	@Override
@@ -54,6 +66,8 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
 		MinecraftForge.EVENT_BUS.register(new BackgroundMusicHandler());
 
+		setupBlockMeshes();
+		setupBlockColors();
 
 		//Entities
 		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new RenderCart(Minecraft.getMinecraft().getRenderManager()));
@@ -92,6 +106,84 @@ public class ClientProxy extends CommonProxy
 	private void registerItemMesh(Item i, int meta, ModelResourceLocation mrl)
 	{
 		ModelLoader.setCustomModelResourceLocation(i, meta, mrl);
+	}
+
+	private void setupBlockColors()
+	{
+
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor()
+		{
+			@Override
+			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
+			{
+				int x = pos.getX() >> 12;
+				int z = pos.getZ() >> 12;
+				if(WorldGen.instance == null)
+					return 0x55ff55;
+				IslandMap m = WorldGen.instance.getIslandMap(x, z);
+				double d0 = m.getParams().getIslandTemp().getMapTemp();
+				double d1 = 0.5;
+
+				if(worldIn instanceof ChunkCache)
+					d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
+
+				if(m.getParams().hasFeature(Feature.Desert))
+					d1 *= 0.25;
+
+				if(d1 < 0.25)
+				{
+					if(state.getValue(BlockLeaves.META_PROPERTY) == WoodType.Acacia)
+						d1 = 0.25;
+				}
+				return ColorizerFoliage.getFoliageColor(d0, d1);
+			}
+		}, new Block[] { TFCBlocks.Leaves, TFCBlocks.Leaves2});
+
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor()
+		{
+			@Override
+			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
+			{
+				VegType veg = (VegType)worldIn.getBlockState(pos).getValue(BlockVegetation.META_PROPERTY);
+				if(veg == VegType.DeadBush)
+					return 0xD8D8D8;
+				int x = pos.getX() >> 12;
+				int z = pos.getZ() >> 12;
+				if(WorldGen.instance == null)
+					return 0x55ff55;
+				IslandMap m = WorldGen.instance.getIslandMap(x, z);
+				double d0 = m.getParams().getIslandTemp().getMapTemp();
+				double d1 = 0.5;
+
+				if(worldIn instanceof ChunkCache)
+					d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
+				if(m.getParams().hasFeature(Feature.Desert))
+					d1 *= 0.25;
+				return ColorizerGrass.getGrassColor(d0, d1);
+			}
+		}, new Block[] { TFCBlocks.Vegetation});
+
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor()
+		{
+			@Override
+			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
+			{
+				int x = pos.getX() >> 12;
+				int z = pos.getZ() >> 12;
+				if(WorldGen.instance == null)
+					return 0x55ff55;
+				IslandMap m = WorldGen.instance.getIslandMap(x, z);
+				double d0 = m.getParams().getIslandTemp().getMapTemp();
+				double d1 = 0.5;
+
+				if(worldIn instanceof ChunkCache)
+					d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
+				if(m.getParams().hasFeature(Feature.Desert))
+					d1 *= 0.25;
+
+				return ColorizerGrass.getGrassColor(d0, d1);
+			}
+		}, new Block[] { TFCBlocks.Grass});
 	}
 
 	@Override
@@ -146,7 +238,7 @@ public class ClientProxy extends CommonProxy
 	//Keep at the bottom of the file so its not a nuisence
 	private void setupBlockMeshes() 
 	{
-		OBJLoader.instance.addDomain(Reference.ModID);
+		OBJLoader.INSTANCE.addDomain(Reference.ModID);
 
 		//Setup Liquid Blocks
 		Item fresh = Item.getItemFromBlock(TFCBlocks.FreshWater);

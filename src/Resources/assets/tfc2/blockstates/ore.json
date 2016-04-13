@@ -12,7 +12,7 @@
         	"limonite": { "textures": { "all": "tfc2:blocks/ores/Limonite Ore" } },
         	"magnetite": { "textures": { "all": "tfc2:blocks/ores/Magnetite Ore" } },
         	"malachite": { "textures": { "all": "tfc2:blocks/ores/Malachite Ore" } },
-        	"native gold": { "textures": { "all": "tfc2:blocks/ores/Native Gold Ore" } },
+        	"nativegold": { "textures": { "all": "tfc2:blocks/ores/Native Gold Ore" } },
         	"sphalerite": { "textures": { "all": "tfc2:blocks/ores/Sphalerite Ore" } },
         	"tetrahedrite": { "textures": { "all": "tfc2:blocks/ores/Tetrahedrite Ore" } },
         	"galena": { "textures": { "all": "tfc2:blocks/ores/Galena Ore" } },

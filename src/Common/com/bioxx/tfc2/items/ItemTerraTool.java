@@ -9,12 +9,12 @@ public class ItemTerraTool extends ItemTool
 
 	public ItemTerraTool(ToolMaterial mat, Set effective)
 	{
-		this(mat.getDamageVsEntity(), mat, effective);
+		this(mat.getDamageVsEntity(), 1.0f, mat, effective);
 	}
 
-	protected ItemTerraTool(float attackDamage, ToolMaterial material, Set effectiveBlocks) 
+	protected ItemTerraTool(float attackDamage, float attackSpeed, ToolMaterial material, Set effectiveBlocks) 
 	{
-		super(attackDamage, material, effectiveBlocks);
+		super(attackDamage, attackSpeed, material, effectiveBlocks);
 	}
 
 }

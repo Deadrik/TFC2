@@ -3,18 +3,21 @@ package com.bioxx.tfc2.blocks;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.util.*;
-import net.minecraft.world.ChunkCache;
-import net.minecraft.world.ColorizerGrass;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -23,11 +26,8 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.world.WorldGen;
 
 public class BlockVegetation extends BlockTerra implements IPlantable
 {
@@ -37,8 +37,9 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 
 	public BlockVegetation()
 	{
-		super(Material.vine, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.VINE, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, VegType.Grass0).withProperty(IS_ON_STONE, Boolean.valueOf(false)));
 		float f = 0.35F;
@@ -67,7 +68,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		if (!canBlockStay(worldIn, pos, state))
 		{
 			dropBlockAsItem(worldIn, pos, state, 0);
-			worldIn.setBlockState(pos, Blocks.air.getDefaultState(), 3);
+			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 		}
 	}
 
@@ -77,7 +78,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		IBlockState soil = worldIn.getBlockState(down);
 		if (state.getBlock() != this) 
 			return canPlaceBlockOn(state, soil);
-		return soil.getBlock().canSustainPlant(worldIn, down, EnumFacing.UP, this);
+		return soil.getBlock().canSustainPlant(soil, worldIn, down, EnumFacing.UP, this);
 	}
 
 	protected boolean canPlaceBlockOn(IBlockState state, IBlockState soil)
@@ -91,9 +92,8 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	}
 
 	@Override
-	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
-		IBlockState state = world.getBlockState(pos);
 		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
 		EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
 
@@ -112,45 +112,9 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getBlockColor()
+	public BlockRenderLayer getBlockLayer()
 	{
-		return ColorizerGrass.getGrassColor(0.5D, 1.0D);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
-	{
-		VegType veg = (VegType)worldIn.getBlockState(pos).getValue(META_PROPERTY);
-		if(veg == VegType.DeadBush)
-			return 0xD8D8D8;
-		int x = pos.getX() >> 12;
-		int z = pos.getZ() >> 12;
-		if(WorldGen.instance == null)
-			return 0x55ff55;
-		IslandMap m = WorldGen.instance.getIslandMap(x, z);
-		double d0 = m.getParams().getIslandTemp().getMapTemp();
-		double d1 = 0.5;
-
-		if(worldIn instanceof ChunkCache)
-			d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
-		if(m.getParams().hasFeature(Feature.Desert))
-			d1 *= 0.25;
-		return ColorizerGrass.getGrassColor(d0, d1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderColor(IBlockState state)
-	{
-		return this.getBlockColor();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
-	{
-		return EnumWorldBlockLayer.CUTOUT;
+		return BlockRenderLayer.CUTOUT;
 	}
 
 	@Override
@@ -161,13 +125,13 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
@@ -196,15 +160,21 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
-		return null;
+		return new AxisAlignedBB(0.2, 0, 0.2, 0.8, 0.75, 0.8);
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		return new BlockState(this, new IProperty[] { META_PROPERTY, IS_ON_STONE});
+		return NULL_AABB;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[] { META_PROPERTY, IS_ON_STONE});
 	}
 
 	@Override

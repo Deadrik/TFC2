@@ -5,16 +5,17 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyHelper;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -37,22 +38,24 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("type", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 16));
 	public BlockSapling()
 	{
-		super(Material.plants, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.PLANTS, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.DECORATIONS);
+		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
 	}
 
 	protected BlockSapling(PropertyHelper ph)
 	{
-		super(Material.plants, ph);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.PLANTS, ph);
+		this.setCreativeTab(CreativeTabs.DECORATIONS);
+		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY});
 	}
 
 	@Override
@@ -88,7 +91,7 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
@@ -126,7 +129,7 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 			for(SchemBlock b : schem.getBlockMap())
 			{
 				scanPos = rotatePos(pos, b.pos, rot);
-				if(b.state.getBlock().getMaterial() == Material.wood)
+				if(b.state.getBlock().getMaterial(b.state) == Material.WOOD)
 				{
 					if(!world.getBlockState(scanPos).getBlock().isReplaceable(world, scanPos))
 						invalidCount++;
@@ -182,11 +185,11 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 		IBlockState block = tc.wood;
 		IBlockState leaves = tc.leaves;
 
-		if(state.getBlock().getMaterial() == Material.wood)
+		if(state.getBlock().getMaterial(state) == Material.WOOD)
 		{
 			world.setBlockState(blockPos, block, 2);
 		}
-		else if(state.getBlock().getMaterial() == Material.leaves)
+		else if(state.getBlock().getMaterial(state) == Material.LEAVES)
 		{
 			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
 			{
@@ -201,9 +204,9 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
+	public BlockRenderLayer getBlockLayer()
 	{
-		return EnumWorldBlockLayer.CUTOUT;
+		return BlockRenderLayer.CUTOUT;
 	}
 
 	@Override
@@ -214,13 +217,13 @@ public class BlockSapling extends BlockTerra implements IGrowable, IPlantable
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
-		return null;
+		return new AxisAlignedBB(0.3, 0, 0.3, 0.7, 0.9, 0.7);
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}

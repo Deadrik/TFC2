@@ -8,8 +8,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.RandomCollection;
@@ -86,6 +86,7 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 		}
 	}
 
+	@Override
 	public void onStartFalling(EntityFallingBlockTFC fallingEntity) {}
 
 
@@ -95,19 +96,22 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 		return 5;
 	}
 
+	@Override
 	public boolean canFallInto(World worldIn, BlockPos pos)
 	{
 		if (worldIn.isAirBlock(pos)) return true;
 		Block block = worldIn.getBlockState(pos).getBlock();
-		Material material = block.getMaterial();
-		return (block == Blocks.fire) || (material == Material.air) || (material == Material.water) || (material == Material.lava) || block.isReplaceable(worldIn, pos);
+		Material material = block.getMaterial(worldIn.getBlockState(pos));
+		return (block == Blocks.FIRE) || (material == Material.AIR) || (material == Material.WATER) || (material == Material.LAVA) || block.isReplaceable(worldIn, pos);
 	}
 
+	@Override
 	public void onEndFalling(World worldIn, BlockPos pos) {}
 
 	/**
 	 * @return Minimum cliffheight required for this block to slide down to lower elevation. -1 disables sliding
 	 */
+	@Override
 	public int getSlideHeight()
 	{
 		return -1;
@@ -116,6 +120,7 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 	/**
 	 * @return Chance that a block will slide [0.0 - 1.0]
 	 */
+	@Override
 	public float getSlideChance()
 	{
 		return 0f;

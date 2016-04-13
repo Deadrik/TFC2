@@ -5,11 +5,11 @@ import java.util.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.ChunkProviderGenerate;
+import net.minecraft.world.gen.ChunkProviderOverworld;
 
 import com.bioxx.jmapgen.IslandMap;
 
-public class ChunkProviderPaths extends ChunkProviderGenerate 
+public class ChunkProviderPaths extends ChunkProviderOverworld 
 {
 	private World worldObj;
 	private Random rand;

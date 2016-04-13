@@ -2,25 +2,29 @@ package com.bioxx.tfc2.blocks;
 
 import java.util.Random;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -34,8 +38,9 @@ public class BlockPortal extends BlockTerra
 
 	public BlockPortal()
 	{
-		super(Material.ground, null);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.GROUND, null);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		setSoundType(SoundType.STONE);
 	}
 
 	@Override
@@ -45,12 +50,12 @@ public class BlockPortal extends BlockTerra
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		return null;
+		return NULL_AABB;
 	}
 
-	@Override
+	/*@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
 	{
 		EnumFacing.Axis axis = (EnumFacing.Axis)worldIn.getBlockState(pos).getValue(AXIS);
@@ -68,7 +73,7 @@ public class BlockPortal extends BlockTerra
 		}
 
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f1, 0.5F + f, 1.0F, 0.5F + f1);
-	}
+	}*/
 
 	public static int getMetaForAxis(EnumFacing.Axis axis)
 	{
@@ -76,13 +81,13 @@ public class BlockPortal extends BlockTerra
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
@@ -99,22 +104,22 @@ public class BlockPortal extends BlockTerra
 	@Override
 	public void onEntityCollidedWithBlock(World worldObj, BlockPos pos, IBlockState state, Entity entityIn)
 	{
-		if (entityIn.ridingEntity == null && entityIn.riddenByEntity == null && !worldObj.isRemote)
+		if (!entityIn.isRiding() && !entityIn.isBeingRidden() && !worldObj.isRemote)
 		{
-			MinecraftServer minecraftserver = MinecraftServer.getServer();
-			if(worldObj.provider.getDimensionId() == 0)
+			MinecraftServer minecraftserver = worldObj.getMinecraftServer();
+			if(worldObj.provider.getDimension() == 0)
 			{
 				if(entityIn instanceof EntityPlayerMP)
-					((EntityPlayerMP)entityIn).mcServer.getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)entityIn, 2, new TeleporterPaths(minecraftserver.worldServerForDimension(2)));
+					((EntityPlayerMP)entityIn).mcServer.getPlayerList().transferPlayerToDimension((EntityPlayerMP)entityIn, 2, new TeleporterPaths(minecraftserver.worldServerForDimension(2)));
 				else
-					travelToDimension(entityIn, 2);
+					entityIn.changeDimension(2);
 			}
-			else if(worldObj.provider.getDimensionId() == 2)
+			else if(worldObj.provider.getDimension() == 2)
 			{
 				if(entityIn instanceof EntityPlayerMP)
-					((EntityPlayerMP)entityIn).mcServer.getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)entityIn, 0, new TeleporterPaths(minecraftserver.worldServerForDimension(0)));
+					((EntityPlayerMP)entityIn).mcServer.getPlayerList().transferPlayerToDimension((EntityPlayerMP)entityIn, 0, new TeleporterPaths(minecraftserver.worldServerForDimension(0)));
 				else
-					travelToDimension(entityIn, 0);
+					entityIn.changeDimension(0);
 			}
 		}
 	}
@@ -124,7 +129,7 @@ public class BlockPortal extends BlockTerra
 		if (!entityIn.worldObj.isRemote && !entityIn.isDead)
 		{
 
-			MinecraftServer minecraftserver = MinecraftServer.getServer();
+			MinecraftServer minecraftserver = entityIn.worldObj.getMinecraftServer();
 			int j = entityIn.dimension;
 			WorldServer worldserver = minecraftserver.worldServerForDimension(j);
 			WorldServer worldserver1 = minecraftserver.worldServerForDimension(dimensionId);
@@ -139,13 +144,13 @@ public class BlockPortal extends BlockTerra
 			entityIn.worldObj.removeEntity(entityIn);
 			entityIn.isDead = false;
 
-			minecraftserver.getConfigurationManager().transferEntityToWorld(entityIn, j, worldserver, worldserver1, new TeleporterPaths(worldserver1));
+			minecraftserver.getPlayerList().transferEntityToWorld(entityIn, j, worldserver, worldserver1, new TeleporterPaths(worldserver1));
 
 			Entity entity = EntityList.createEntityByName(EntityList.getEntityString(entityIn), worldserver1);
 
 			if (entity != null)
 			{
-				entity.copyDataFromOld(entityIn);
+				//entity.copyDataFromOld(entityIn);
 				worldserver1.spawnEntityInWorld(entity);
 			}
 
@@ -167,9 +172,9 @@ public class BlockPortal extends BlockTerra
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
+	public BlockRenderLayer getBlockLayer()
 	{
-		return EnumWorldBlockLayer.TRANSLUCENT;
+		return BlockRenderLayer.TRANSLUCENT;
 	}
 
 	/**
@@ -182,15 +187,14 @@ public class BlockPortal extends BlockTerra
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public Item getItem(World worldIn, BlockPos pos)
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
 	{
 		return null;
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[] {AXIS, CENTER});
+		return new BlockStateContainer(this, new IProperty[] {AXIS, CENTER});
 	}
 }

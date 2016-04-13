@@ -1,7 +1,7 @@
 package com.bioxx.tfc2.rendering;
 
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 
 public class MeshDef implements ItemMeshDefinition 

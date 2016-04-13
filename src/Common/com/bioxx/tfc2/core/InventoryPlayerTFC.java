@@ -67,7 +67,7 @@ public class InventoryPlayerTFC extends InventoryPlayer {
 		{
 			itemstack = this.extraEquipInventory[l];
 
-			if (itemstack != null && (itemIn == null || itemstack.getItem() == itemIn) && (metadataIn <= -1 || itemstack.getMetadata() == metadataIn) && (itemNBT == null || (NBTUtil.func_181123_a(itemNBT, itemstack.getTagCompound(), true))))
+			if (itemstack != null && (itemIn == null || itemstack.getItem() == itemIn) && (metadataIn <= -1 || itemstack.getMetadata() == metadataIn) && (itemNBT == null || (NBTUtil.areNBTEquals(itemNBT, itemstack.getTagCompound(), true))))
 			{
 				i1 = removeCount <= 0 ? itemstack.stackSize : Math.min(removeCount - k, itemstack.stackSize);
 				k += i1;

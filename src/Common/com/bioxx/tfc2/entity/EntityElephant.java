@@ -8,8 +8,11 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.types.Gender;
@@ -19,15 +22,16 @@ public class EntityElephant extends EntityAnimal
 {
 	Gender gender;
 	ElephantType elephantType;
-
+	protected static final DataParameter<Gender> GENDER = EntityDataManager.createKey(EntityElephant.class, DataSerializersTFC.GENDER);
+	protected static final DataParameter<ElephantType> ELEPHANTTYPE = EntityDataManager.createKey(EntityElephant.class, DataSerializersTFC.ELEPHANTTYPE);
 	public EntityElephant(World worldIn) 
 	{
 		super(worldIn);
 		this.setSize(1.8F, 2.5F);
-		((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
+		((PathNavigateGround)this.getNavigator()).setCanSwim(true);
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIMate(this, 0.8D));
-		this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 0.8D, true));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 0.8D, true));
 		this.tasks.addTask(5, new EntityAIFollowParent(this, 0.8D));		
 		this.tasks.addTask(6, new EntityAIWander(this, 0.5D));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
@@ -46,7 +50,7 @@ public class EntityElephant extends EntityAnimal
 	@Override
 	protected void updateAITick ()
 	{
-		//dataWatcher.updateObject (18, getHealth());
+		//getDataManager().set (18, getHealth());
 		this.motionY += 0.03999999910593033D;
 	}
 
@@ -54,8 +58,8 @@ public class EntityElephant extends EntityAnimal
 	protected void entityInit ()
 	{
 		super.entityInit ();
-		dataWatcher.addObject (13, Gender.Male.ordinal());
-		dataWatcher.addObject (14, ElephantType.Elephant.ordinal());
+		getDataManager().register(GENDER, gender);
+		getDataManager().register(ELEPHANTTYPE, elephantType);
 	}
 
 
@@ -63,7 +67,7 @@ public class EntityElephant extends EntityAnimal
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1000);//MaxHealth
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);//MaxHealth
 	}
 
 	/**
@@ -113,7 +117,7 @@ public class EntityElephant extends EntityAnimal
 	 * Returns the sound this mob makes while it's alive.
 	 */
 	@Override
-	protected String getLivingSound ()
+	protected SoundEvent getAmbientSound ()
 	{
 		if(isChild() && worldObj.rand.nextInt(100) < 5)
 			return TFC_Sounds.BEARCUBCRY;
@@ -127,7 +131,7 @@ public class EntityElephant extends EntityAnimal
 	 * Returns the sound this mob makes when it is hurt.
 	 */
 	@Override
-	protected String getHurtSound ()
+	protected SoundEvent getHurtSound()
 	{
 		if(!isChild())
 			return TFC_Sounds.BEARHURT;
@@ -139,7 +143,7 @@ public class EntityElephant extends EntityAnimal
 	 * Returns the sound this mob makes on death.
 	 */
 	@Override
-	protected String getDeathSound ()
+	protected SoundEvent getDeathSound()
 	{
 		if(!isChild())
 			return TFC_Sounds.BEARDEATH;
@@ -219,18 +223,18 @@ public class EntityElephant extends EntityAnimal
 	protected void setGender(Gender t)
 	{
 		this.gender = t;
-		this.dataWatcher.updateObject(13, t.ordinal());	
+		getDataManager().set(GENDER, t);	
 	}
 
 	protected void setElephantType(ElephantType t)
 	{
 		this.elephantType = t;
-		this.dataWatcher.updateObject(14, t.ordinal());	
+		getDataManager().set(ELEPHANTTYPE, t);
 	}
 
 	public ElephantType getElephantType()
 	{
-		return ElephantType.values()[this.dataWatcher.getWatchableObjectInt(14)];
+		return getDataManager().get(ELEPHANTTYPE);
 	}
 
 	public enum ElephantType

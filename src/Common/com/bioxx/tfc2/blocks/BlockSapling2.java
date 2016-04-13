@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 
 import com.bioxx.tfc2.api.interfaces.INeedOffset;
@@ -19,9 +19,9 @@ public class BlockSapling2 extends BlockSapling implements INeedOffset
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY});
 	}
 
 	@Override

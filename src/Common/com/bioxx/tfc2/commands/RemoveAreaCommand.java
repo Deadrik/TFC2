@@ -7,7 +7,7 @@ import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 
 public class RemoveAreaCommand extends CommandBase
@@ -19,9 +19,8 @@ public class RemoveAreaCommand extends CommandBase
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] params)
+	public void execute(MinecraftServer server, ICommandSender sender, String[] params)
 	{
-		MinecraftServer server = MinecraftServer.getServer();
 		EntityPlayerMP player = null;
 		try {
 			player = getCommandSenderAsPlayer(sender);
@@ -30,7 +29,7 @@ public class RemoveAreaCommand extends CommandBase
 		if(player == null)
 			return;
 
-		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimensionId());
+		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
 		/*if(!TFCOptions.enableDebugMode)
 		{
@@ -50,8 +49,8 @@ public class RemoveAreaCommand extends CommandBase
 					{
 						pos2 = pos.add(x, y, z);
 						Block id = world.getBlockState(pos2).getBlock();
-						if(id != Blocks.bedrock)
-							world.setBlockState(pos2, Blocks.air.getDefaultState(), 2);
+						if(id != Blocks.BEDROCK)
+							world.setBlockState(pos2, Blocks.AIR.getDefaultState(), 2);
 					}
 				}
 			}
@@ -67,8 +66,8 @@ public class RemoveAreaCommand extends CommandBase
 					{
 						pos2 = pos.add(x, y, z);
 						Block id = world.getBlockState(pos2).getBlock();
-						if(id != Blocks.bedrock)
-							world.setBlockState(pos2, Blocks.air.getDefaultState(), 2);
+						if(id != Blocks.BEDROCK)
+							world.setBlockState(pos2, Blocks.AIR.getDefaultState(), 2);
 					}
 				}
 			}

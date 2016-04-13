@@ -18,7 +18,7 @@ public class ServerTickHandler
 		{
 			if(WorldGen.instance != null)
 			{
-				if(world.provider.getDimensionId() == 0)
+				if(world.provider.getDimension() == 0)
 				{
 					WorldGen.instance.trimCache();
 					WorldGen.instance.buildFromQueue();

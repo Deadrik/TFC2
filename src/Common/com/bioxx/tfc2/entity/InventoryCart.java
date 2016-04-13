@@ -3,9 +3,7 @@ package com.bioxx.tfc2.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 public class InventoryCart implements IInventory 
 {
@@ -112,15 +110,6 @@ public class InventoryCart implements IInventory
 	}
 
 	/**
-	 * Get the formatted ChatComponent that will be used for the sender's username in chat
-	 */
-	@Override
-	public IChatComponent getDisplayName()
-	{
-		return (IChatComponent)(this.hasCustomName() ? new ChatComponentText(this.getName()) : new ChatComponentTranslation(this.getName(), new Object[0]));
-	}
-
-	/**
 	 * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended. *Isn't
 	 * this more of a set than a get?*
 	 */
@@ -198,6 +187,11 @@ public class InventoryCart implements IInventory
 		ItemStack is = inventoryContents[i];
 		inventoryContents[i] = null;
 		return is;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return null;
 	}
 
 }

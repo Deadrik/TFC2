@@ -1,12 +1,11 @@
 package com.bioxx.tfc2.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
@@ -92,19 +91,19 @@ public class GuiKnappingButton extends GuiButton
 		float f = 0.00390625F;
 		float f1 = 0.00390625F;
 		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		worldrenderer.pos(xPosition + 0, yPosition + 16, this.zLevel).tex(0, 1).endVertex();
-		worldrenderer.pos(xPosition + 16, yPosition + 16, this.zLevel).tex(1, 1).endVertex();
-		worldrenderer.pos(xPosition + 16, yPosition + 0, this.zLevel).tex(1, 0).endVertex();
-		worldrenderer.pos(xPosition + 0, yPosition + 0, this.zLevel).tex(0, 0).endVertex();
+		VertexBuffer vertexBuffer = tessellator.getBuffer();
+		vertexBuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vertexBuffer.pos(xPosition + 0, yPosition + 16, this.zLevel).tex(0, 1).endVertex();
+		vertexBuffer.pos(xPosition + 16, yPosition + 16, this.zLevel).tex(1, 1).endVertex();
+		vertexBuffer.pos(xPosition + 16, yPosition + 0, this.zLevel).tex(1, 0).endVertex();
+		vertexBuffer.pos(xPosition + 0, yPosition + 0, this.zLevel).tex(0, 0).endVertex();
 		tessellator.draw();
 	}
 
 	@Override
 	public void playPressSound(SoundHandler paramSoundHandler)
 	{
-		paramSoundHandler.playSound(PositionedSoundRecord.create(new ResourceLocation(TFC_Sounds.KNAPPING), 1.0F));
+		paramSoundHandler.playSound(net.minecraft.client.audio.PositionedSoundRecord.getMasterRecord(TFC_Sounds.KNAPPING, 1.0F));
 	}
 
 	public void highlight(boolean b)

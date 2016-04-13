@@ -12,8 +12,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -82,17 +84,16 @@ public class BlockTorchTFC extends BlockTorch implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (!worldIn.isRemote)
 		{
-			ItemStack is = playerIn.inventory.getCurrentItem();
-			Item item = is != null ? is.getItem() : null;
+			Item item = heldItem != null ? heldItem.getItem() : null;
 
 			// Making new torches. Keep meta check just in case there are some burned out torches that haven't converted yet.
-			if (item == Items.stick)
+			if (item == Items.STICK)
 			{
-				playerIn.inventory.consumeInventoryItem(Items.stick);
+				heldItem.stackSize--;
 				EntityItem ei = playerIn.entityDropItem(new ItemStack(TFCBlocks.TorchOn), 1);
 				ei.setNoPickupDelay();
 			}
@@ -143,12 +144,11 @@ public class BlockTorchTFC extends BlockTorch implements ITileEntityProvider
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public Item getItem(World worldIn, BlockPos pos)
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
 	{
 		if (this.isOn)
 		{
-			return Item.getItemFromBlock(TFCBlocks.TorchOn);
+			return new ItemStack(Item.getItemFromBlock(TFCBlocks.TorchOn), 1);
 		}
 		else
 		{
@@ -171,11 +171,11 @@ public class BlockTorchTFC extends BlockTorch implements ITileEntityProvider
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	public void randomDisplayTick(IBlockState state, World worldIn, BlockPos pos, Random rand)
 	{
 		if (this.isOn)
 		{
-			super.randomDisplayTick(worldIn, pos, state, rand);
+			super.randomDisplayTick(state, worldIn, pos, rand);
 		}
 	}
 
@@ -186,7 +186,7 @@ public class BlockTorchTFC extends BlockTorch implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean isReplaceable(World worldIn, BlockPos pos)
+	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos)
 	{
 		return true;
 	}

@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.Fluid;
@@ -40,7 +40,7 @@ public class BlockFreshWaterStatic extends BlockFreshWater
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
 		//super.updateTick(world, pos, state, rand);
-		if(isGroundWater(world, pos) && world.provider.getDimensionId() == 0)
+		if(isGroundWater(world, pos) && world.provider.getDimension() == 0)
 		{
 			IslandMap map = Core.getMapForWorld(world, pos);
 			NBTTagCompound nbt = map.getClosestCenter(pos).getCustomNBT();

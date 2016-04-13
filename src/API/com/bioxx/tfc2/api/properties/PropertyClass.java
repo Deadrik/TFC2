@@ -7,6 +7,7 @@ import java.util.Map;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.util.IStringSerializable;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
@@ -49,5 +50,11 @@ public class PropertyClass extends PropertyHelper
 	@Override
 	public String getName(Comparable value) {
 		return ((IStringSerializable)value).getName();
+	}
+
+	@Override
+	public Optional parseValue(String paramString) 
+	{
+		return null;
 	}
 }

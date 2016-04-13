@@ -2,7 +2,7 @@ package com.bioxx.jmapgen;
 
 import java.util.ArrayList;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public class Spline3D {
 

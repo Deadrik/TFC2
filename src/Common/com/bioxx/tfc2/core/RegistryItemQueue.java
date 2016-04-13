@@ -2,7 +2,7 @@ package com.bioxx.tfc2.core;
 
 import java.util.LinkedList;
 
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 
 import net.minecraftforge.client.model.ModelLoader;

@@ -17,13 +17,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import com.bioxx.tfc2.world.WeatherManager;
-
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
-import com.bioxx.jmapgen.dungeon.Dungeon;
+import com.bioxx.jmapgen.dungeon.*;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonLevel;
 import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRect;
@@ -41,6 +39,7 @@ import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.modifier.ScalePoint;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.core.Timekeeper;
+import com.bioxx.tfc2.world.WeatherManager;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class PrintImageMapCommand extends CommandBase
@@ -60,9 +59,8 @@ public class PrintImageMapCommand extends CommandBase
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] params)
+	public void execute(MinecraftServer server, ICommandSender sender, String[] params)
 	{
-		MinecraftServer server = MinecraftServer.getServer();
 		EntityPlayerMP player = null;
 		try {
 			player = getCommandSenderAsPlayer(sender);
@@ -70,7 +68,7 @@ public class PrintImageMapCommand extends CommandBase
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimensionId());
+		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
 		if(params.length >= 2)
 		{

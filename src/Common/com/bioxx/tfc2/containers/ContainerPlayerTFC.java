@@ -38,6 +38,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 		{
 			int index = playerInv.getSizeInventory() - 1 - x;
 			final int k = x;
+			final EntityEquipmentSlot ees = EntityEquipmentSlot.values()[EntityEquipmentSlot.FEET.ordinal()+k];
 			this.addSlotToContainer(new Slot(playerInv, index, 8, 8 + x * 18)
 			{
 				private static final String __OBFID = "CL_00001755";
@@ -57,7 +58,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				public boolean isItemValid(ItemStack stack)
 				{
 					if (stack == null) return false;
-					return stack.getItem().isValidArmor(stack, k, thePlayer);
+					return stack.getItem().isValidArmor(stack, ees, thePlayer);
 				}
 				@Override
 				@SideOnly(Side.CLIENT)
@@ -125,7 +126,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			{
 				ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
 				if (itemstack != null)
-					player.dropPlayerItemWithRandomChoice(itemstack, false);
+					player.dropItem(itemstack, false);
 			}
 
 			this.craftResult.setInventorySlotContents(0, (ItemStack)null);
@@ -355,7 +356,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	 *  
 	 * @param mode 0 = basic click, 1 = shift click, 2 = hotbar, 3 = pick block, 4 = drop, 5 = ?, 6 = double click
 	 */
-	public ItemStack slotClick(int slotID, int clickedButton, int mode, EntityPlayer p)
+	public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer p)
 	{
 		if (slotID >= 0 && slotID < this.inventorySlots.size())
 		{
@@ -363,7 +364,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			ItemStack slotStack = sourceSlot.getStack();
 
 			//This section is for merging foods with differing expirations.
-			if(mode == 0 && clickedButton == 0 && slotStack != null && p.inventory.getItemStack() != null)
+			if(clickTypeIn == ClickType.SWAP && slotStack != null && p.inventory.getItemStack() != null)
 			{
 				ItemStack itemstack4 = p.inventory.getItemStack();
 				if (slotStack.getItem() == itemstack4.getItem() && slotStack.getMetadata() == itemstack4.getMetadata() && ContainerTFC.areCompoundsEqual(slotStack, itemstack4))
@@ -376,7 +377,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 							Food.setDecayTimer(slotStack, ex2);
 					}
 
-					int l1 = clickedButton == 0 ? itemstack4.stackSize : 1;
+					int l1 = itemstack4.stackSize;
 
 					if (l1 > sourceSlot.getItemStackLimit(itemstack4) - slotStack.stackSize)
 					{
@@ -406,27 +407,18 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			}
 
 			// Hotbar press to remove from crafting output
-			if (mode == 2 && slotID == 0 && slotStack != null)
+			if (clickTypeIn == ClickType.QUICK_CRAFT && slotID == 0 && slotStack != null)
 			{
 				//Removed During Port
 				//CraftingHandler.preCraft(p, slotStack, craftMatrix);
 			}
 			// S and D hotkeys for trimming/combining food
-			else if (mode == 7 && slotID >= 9 && slotID < 45)
-			{
-				if (sourceSlot.canTakeStack(p))
-				{
-					Slot destSlot = (Slot) this.inventorySlots.get(clickedButton);
-					destSlot.putStack(slotStack);
-					sourceSlot.putStack(null);
-					return null;
-				}
-			}
+
 			// Couldn't figure out what was causing the food dupe with a full inventory, so we're just going to block shift clicking for that case.
-			else if (mode == 1 && slotID == 0 && isInventoryFull() && slotStack != null && slotStack.getItem() instanceof IFood)
-				return null;
+			/*else if (mode == 1 && slotID == 0 && isInventoryFull() && slotStack != null && slotStack.getItem() instanceof IFood)
+				return null;*/
 		}
-		return super.slotClick(slotID, clickedButton, mode, p);
+		return super.slotClick(slotID, dragType, clickTypeIn, p);
 	}
 
 	protected boolean isCraftingGridFull()

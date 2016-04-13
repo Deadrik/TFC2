@@ -6,8 +6,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.Core;
@@ -26,18 +28,18 @@ public class ItemHoe extends ItemTerraTool
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		if(worldIn.isRemote)
-			return false;
+			return EnumActionResult.PASS;
 
 		IBlockState soil = worldIn.getBlockState(pos);
-		if(side == EnumFacing.UP && Core.isSoil(soil))
+		if(facing == EnumFacing.UP && Core.isSoil(soil))
 		{
 			worldIn.setBlockState(pos, TFCBlocks.Farmland.getDefaultState().withProperty(BlockFarmland.META_PROPERTY, soil.getValue(BlockDirt.META_PROPERTY)));
 		}
 
-		return true;
+		return EnumActionResult.PASS;
 	}
 
 }

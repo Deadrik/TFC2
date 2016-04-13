@@ -2,7 +2,7 @@ package com.bioxx.jmapgen.processing;
 
 import java.util.Vector;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;

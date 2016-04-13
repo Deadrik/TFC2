@@ -2,14 +2,7 @@ package com.bioxx.tfc2.commands;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.PlayerNotFoundException;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S21PacketChunkData;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ChunkProviderServer;
 
 public class RegenChunkCommand extends CommandBase
 {
@@ -20,16 +13,15 @@ public class RegenChunkCommand extends CommandBase
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] params)
+	public void execute(MinecraftServer server, ICommandSender sender, String[] params)
 	{
-		MinecraftServer server = MinecraftServer.getServer();
-		EntityPlayerMP player;
+		/*EntityPlayerMP player;
 		try {
 			player = getCommandSenderAsPlayer(sender);
 		} catch (PlayerNotFoundException e) {
 			return;
 		}
-		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimensionId());
+		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
 		if(params.length == 1)
 		{
@@ -63,10 +55,10 @@ public class RegenChunkCommand extends CommandBase
 					ChunkProviderServer cps = ((ChunkProviderServer)world.getChunkProvider());
 					net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(x, z, world, cps.serverChunkGenerator, cps);
 
-					player.playerNetServerHandler.sendPacket(new S21PacketChunkData(cps.provideChunk(pos), true, 0xffffffff));
+					player.playerNetServerHandler.sendPacket(new SPacketChunkData(cps.provideChunk(pos), true, 0xffffffff));
 				}
 			}
-		}
+		}*/
 	}
 
 	@Override

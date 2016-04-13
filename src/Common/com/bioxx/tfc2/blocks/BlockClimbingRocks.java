@@ -2,17 +2,18 @@ package com.bioxx.tfc2.blocks;
 
 import java.util.List;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -26,22 +27,23 @@ public class BlockClimbingRocks extends BlockTerra
 
 	public BlockClimbingRocks()
 	{
-		super(Material.ground, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.GROUND, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.DECORATIONS);
 		this.setBlockBounds(0f, 0, 0f, 1f, 0.01f, 1f);
+		setSoundType(SoundType.STONE);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(FACING, EnumFacing.DOWN));
 		this.setShowInCreative(false);
 	}
 
 	@Override
-	public boolean isLadder(IBlockAccess access, BlockPos blockPos, EntityLivingBase entity)
+	public boolean isLadder(IBlockState state, IBlockAccess access, BlockPos blockPos, EntityLivingBase entity)
 	{
-		if(access.getBlockState(blockPos.down()).getBlock().isBlockNormalCube())
+		if(access.getBlockState(blockPos.down()).getBlock().isBlockNormalCube(access.getBlockState(blockPos.down())))
 			return false;
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) 
 	{
 		IBlockState state = world.getBlockState(pos);
@@ -63,12 +65,12 @@ public class BlockClimbingRocks extends BlockTerra
 		{
 			this.setBlockBounds(0f, 0f, 0f, 0.01f, 1f, 1f);
 		}
-	}
+	}*/
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY, FACING});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY, FACING});
 	}
 
 	@Override
@@ -99,13 +101,13 @@ public class BlockClimbingRocks extends BlockTerra
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
@@ -117,7 +119,7 @@ public class BlockClimbingRocks extends BlockTerra
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn)
 	{
 
 	}

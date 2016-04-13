@@ -2,6 +2,7 @@ package com.bioxx.tfc2.handlers.client;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
+
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -20,7 +21,6 @@ public class KeyBindingHandler
 		EntityPlayerSP player = FMLClientHandler.instance().getClient().thePlayer;
 
 		if(FMLClientHandler.instance().getClient().inGameHasFocus &&
-				FMLClientHandler.instance().getClient().thePlayer.getCurrentEquippedItem() != null &&
 				FMLClientHandler.instance().getClient().currentScreen == null)
 		{
 			if(Key_CombatMode.isPressed())

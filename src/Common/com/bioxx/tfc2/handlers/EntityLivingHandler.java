@@ -32,14 +32,14 @@ public class EntityLivingHandler
 	@SubscribeEvent
 	public void onEntityLivingUpdate(LivingUpdateEvent event)
 	{
-		if (event.entityLiving instanceof EntityPlayerMP)
+		if (event.getEntityLiving() instanceof EntityPlayerMP)
 		{
-			EntityPlayerMP player = (EntityPlayerMP)event.entityLiving;
+			EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
 
 			//If the player enters the portal realm then set them to adventure mode to prevent altering the world
-			if(player.worldObj.provider.getDimensionId() == 2 && !player.capabilities.isCreativeMode && !player.isSpectator())
+			if(player.worldObj.provider.getDimension() == 2 && !player.capabilities.isCreativeMode && !player.isSpectator())
 				player.setGameType(GameType.ADVENTURE);
-			else if(player.worldObj.provider.getDimensionId() == 0 && !player.capabilities.isCreativeMode && !player.isSpectator())
+			else if(player.worldObj.provider.getDimension() == 0 && !player.capabilities.isCreativeMode && !player.isSpectator())
 			{
 				IslandMap map = WorldGen.instance.getIslandMap((int)player.posX >> 12, (int)player.posZ >> 12);
 				if(map.getIslandData().isIslandUnlocked && !player.isSpectator())
@@ -51,10 +51,10 @@ public class EntityLivingHandler
 
 			//Set Max Health
 			float newMaxHealth = FoodStatsTFC.getMaxHealth(player);
-			float oldMaxHealth = (float)player.getEntityAttribute(SharedMonsterAttributes.maxHealth).getAttributeValue();
+			float oldMaxHealth = (float)player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
 			if(oldMaxHealth != newMaxHealth)
 			{
-				player.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(newMaxHealth);
+				player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newMaxHealth);
 			}
 
 			if(!player.worldObj.isRemote)
@@ -102,8 +102,8 @@ public class EntityLivingHandler
 				}
 				if (!player.capabilities.isCreativeMode && foodstats.stomachLevel / foodstats.getMaxStomach(player) <= 0.25f)
 				{
-					player.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 20, 1));
-					player.addPotionEffect(new PotionEffect(Potion.weakness.id, 20, 1));
+					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("mining_fatigue"), 20, 1));
+					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("weakness"), 20, 1));
 				}
 
 				//Handle Spawn Protection
@@ -154,7 +154,7 @@ public class EntityLivingHandler
 	@SideOnly(Side.CLIENT)
 	public void handleFOV(FOVUpdateEvent event)
 	{
-		EntityPlayer player = event.entity;
+		EntityPlayer player = event.getEntity();
 
 		// Calculate FOV based on the variable draw speed of the bow depending on player armor.
 		//Removed on port
@@ -182,7 +182,7 @@ public class EntityLivingHandler
 	@SubscribeEvent
 	public void onEntityDeath(LivingDeathEvent event)
 	{
-		EntityLivingBase entity = event.entityLiving;
+		EntityLivingBase entity = event.getEntityLiving();
 
 		if (entity instanceof EntityPlayer)
 		{
@@ -199,24 +199,24 @@ public class EntityLivingHandler
 			}*/
 		}
 
-		if (event.entity.dimension == 1)
-			event.entity.travelToDimension(0);
+		if (event.getEntity().dimension == 1)
+			event.getEntity().changeDimension(0);
 	}
 
 	@SubscribeEvent
 	public void onLivingDrop(LivingDropsEvent event)
 	{
 		boolean processed = false;
-		if (!event.entity.worldObj.isRemote && event.recentlyHit && !(event.entity instanceof EntityPlayer) && !(event.entity instanceof EntityZombie))
+		if (!event.getEntity().worldObj.isRemote && event.isRecentlyHit() && !(event.getEntity() instanceof EntityPlayer) && !(event.getEntity() instanceof EntityZombie))
 		{
-			if(event.source.getSourceOfDamage() instanceof EntityPlayer || event.source.isProjectile())
+			if(event.getSource().getSourceOfDamage() instanceof EntityPlayer || event.getSource().isProjectile())
 			{
 				boolean foundFood = false;
 				processed = true;
 				ArrayList<EntityItem> drop = new ArrayList<EntityItem>();
 				EntityPlayer p = null;
-				if(event.source.getSourceOfDamage() instanceof EntityPlayer)
-					p = (EntityPlayer)event.source.getSourceOfDamage();
+				if(event.getSource().getSourceOfDamage() instanceof EntityPlayer)
+					p = (EntityPlayer)event.getSource().getSourceOfDamage();
 				//Removed on port
 				/*else if(event.source.getSourceOfDamage() instanceof EntityProjectileTFC)
 				{
@@ -258,7 +258,7 @@ public class EntityLivingHandler
 							if(bitterMod != 0) result.getTagCompound().setInteger("tasteBitterMod", bitterMod);
 							if(umamiMod != 0) result.getTagCompound().setInteger("tasteUmamiMod", umamiMod);	
 
-							drop.add(new EntityItem(event.entity.worldObj, event.entity.posX, event.entity.posY, event.entity.posZ, result));
+							drop.add(new EntityItem(event.getEntity().worldObj, event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ, result));
 						}
 					}
 					else
@@ -267,7 +267,7 @@ public class EntityLivingHandler
 					}
 				}
 				event.drops.clear();*/
-				event.drops.addAll(drop);
+				event.getDrops().addAll(drop);
 				if(foundFood && p != null)
 				{
 					//Removed on port
@@ -276,7 +276,7 @@ public class EntityLivingHandler
 			}
 		}
 		//Removed on port
-		/*if (!processed && !(event.entity instanceof EntityPlayer) && !(event.entity instanceof EntityZombie))
+		/*if (!processed && !(event.getEntity() instanceof EntityPlayer) && !(event.getEntity() instanceof EntityZombie))
 		{
 			ArrayList<EntityItem> drop = new ArrayList<EntityItem>();
 			for(EntityItem ei : event.drops)

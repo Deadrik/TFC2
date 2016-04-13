@@ -1,36 +1,31 @@
 package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.ChunkCache;
-import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.types.WoodType;
-import com.bioxx.tfc2.world.WorldGen;
 
 public class BlockLeaves extends BlockTerra
 {
@@ -40,11 +35,12 @@ public class BlockLeaves extends BlockTerra
 
 	public BlockLeaves()
 	{
-		super(Material.leaves, null);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.LEAVES, null);
+		this.setCreativeTab(CreativeTabs.DECORATIONS);
 		this.setHardness(0.2F);
 		this.setLightOpacity(1);
 		this.META_PROP = META_PROPERTY;
+		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
 	}
 	/*******************************************************************************
@@ -57,9 +53,9 @@ public class BlockLeaves extends BlockTerra
 	}
 
 	@Override
-	public Vec3 modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3 motion)
+	public Vec3d modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3d motion)
 	{
-		return motion.crossProduct(new Vec3(0.75, 1, 0.75));
+		return motion.crossProduct(new Vec3d(0.75, 1, 0.75));
 	}
 
 	@Override
@@ -117,7 +113,7 @@ public class BlockLeaves extends BlockTerra
 	 *******************************************************************************/
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;//!this.isTransparent;
 	}
@@ -126,47 +122,6 @@ public class BlockLeaves extends BlockTerra
 	public boolean isVisuallyOpaque()
 	{
 		return false;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getBlockColor()
-	{
-		return ColorizerFoliage.getFoliageColor(0.5D, 1.0D);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
-	{
-		int x = pos.getX() >> 12;
-				int z = pos.getZ() >> 12;
-		if(WorldGen.instance == null)
-			return 0x55ff55;
-		IslandMap m = WorldGen.instance.getIslandMap(x, z);
-		double d0 = m.getParams().getIslandTemp().getMapTemp();
-		double d1 = 0.5;
-
-		if(worldIn instanceof ChunkCache)
-			d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
-
-		if(m.getParams().hasFeature(Feature.Desert))
-			d1 *= 0.25;
-
-		if(d1 < 0.25)
-		{
-			IBlockState state = worldIn.getBlockState(pos);
-			if(state.getValue(META_PROPERTY) == WoodType.Acacia)
-				d1 = 0.25;
-		}
-		return ColorizerFoliage.getFoliageColor(d0, d1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderColor(IBlockState state)
-	{
-		return this.getBlockColor();
 	}
 
 	/**
@@ -180,18 +135,18 @@ public class BlockLeaves extends BlockTerra
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
+	public BlockRenderLayer getBlockLayer()
 	{
-		return this.isTransparent ? EnumWorldBlockLayer.CUTOUT_MIPPED : EnumWorldBlockLayer.SOLID;
+		return this.isTransparent ? BlockRenderLayer.CUTOUT_MIPPED : BlockRenderLayer.SOLID;
 	}
 
 	/*******************************************************************************
 	 * 3. Blockstate 
 	 *******************************************************************************/
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY, FANCY});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY, FANCY});
 	}
 
 	@Override
@@ -209,12 +164,10 @@ public class BlockLeaves extends BlockTerra
 
 	}
 
-
-
 	@Override
-	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-
+		return NULL_AABB;
 	}
 
 	@Override

@@ -4,11 +4,12 @@ import java.util.Iterator;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S2BPacketChangeGameState;
-import net.minecraft.util.BlockPos;
+import net.minecraft.network.play.server.SPacketChangeGameState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.IChunkGenerator;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,34 +31,18 @@ public class WorldProviderSurface extends WorldProvider
 		return weatherRenderer;
 	}
 
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public net.minecraftforge.client.IRenderHandler getSkyRenderer()
+	@Override
+	protected void createBiomeProvider()
 	{
-		return skyRenderer;
-	}*/
-
-	@Override
-	public String getDimensionName() {
-		return "Surface";
-	}
-
-	@Override
-	public String getInternalNameSuffix() {
-		return "Surface";
-	}
-
-	@Override
-	protected void registerWorldChunkManager()
-	{
-		this.worldChunkMgr = new ChunkManager(worldObj);
+		super.createBiomeProvider();
+		WorldGen.initialize(worldObj);
 		WeatherManager.setupWeather(worldObj);
 	}
 
 	@Override
-	public IChunkProvider createChunkGenerator()
+	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderSurface(worldObj, worldObj.getSeed(), false, "");
+		return new ChunkProviderSurface(this.worldObj, worldObj.getSeed(), false, "");
 	}
 
 	@Override
@@ -117,7 +102,8 @@ public class WorldProviderSurface extends WorldProvider
 	@Override
 	public BiomeGenBase getBiomeGenForCoords(BlockPos pos)
 	{
-		return BiomeGenBase.plains;
+		//TODO make this read the islandmap and output relevant biome types
+		return BiomeGenBase.getBiome(1);
 	}
 
 	@Override
@@ -125,7 +111,7 @@ public class WorldProviderSurface extends WorldProvider
 	{
 		if (!getHasNoSky())
 		{
-			if (!worldObj.isRemote && worldObj.provider.getDimensionId() == 0)
+			if (!worldObj.isRemote && worldObj.provider.getDimension() == 0)
 			{
 				worldObj.getWorldInfo().setRainTime(48000);
 				worldObj.getWorldInfo().setRaining(false);
@@ -191,12 +177,17 @@ public class WorldProviderSurface extends WorldProvider
 						float precip = (float)WeatherManager.getInstance().getPreciptitation((int)player.posX, (int)player.posZ);
 						if(precip != old)
 						{
-							player.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(7, precip));
+							player.playerNetServerHandler.sendPacket(new SPacketChangeGameState(7, precip));
 						}
 					}
 				}
 
 			}
 		}
+	}
+
+	@Override
+	public DimensionType getDimensionType() {
+		return DimensionTFC.SURFACE;
 	}
 }

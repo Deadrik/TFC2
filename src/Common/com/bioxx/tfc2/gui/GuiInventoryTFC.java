@@ -2,15 +2,10 @@ package com.bioxx.tfc2.gui;
 
 import java.util.Collection;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.stats.AchievementList;
@@ -38,7 +33,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 	{
 		super(player.inventoryContainer);
 		this.allowUserInput = true;
-		player.addStat(AchievementList.openInventory, 1);
+		player.addStat(AchievementList.OPEN_INVENTORY, 1);
 		xSize = 176;
 		ySize = 85 + PlayerInventory.invYSize;
 		this.player = player;
@@ -56,7 +51,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		int l = this.guiTop;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, 86);
 		//Draw the player avatar
-		GuiInventoryTFC.drawPlayerModel(k + 51, l + 75, 30, k + 51 - this.xSizeLow, l + 75 - 50 - this.ySizeLow, this.mc.thePlayer);
+		GuiInventory.drawEntityOnScreen(k + 51, l + 75, 30, k + 51 - this.xSizeLow, l + 75 - 50 - this.ySizeLow, this.mc.thePlayer);
 
 		PlayerInventory.drawInventory(this, width, height, ySize - PlayerInventory.invYSize);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -80,7 +75,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		GL11.glDisable(GL11.GL_BLEND);
 	}*/
 
-	public static void drawPlayerModel(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent)
+	/*public static void drawPlayerModel(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent)
 	{
 		GlStateManager.enableColorMaterial();
 		GlStateManager.pushMatrix();
@@ -118,7 +113,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
 		GlStateManager.disableTexture2D();
 		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-	}
+	}*/
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)

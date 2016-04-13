@@ -3,31 +3,27 @@ package com.bioxx.tfc2.blocks.terrain;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.world.ChunkCache;
-import net.minecraft.world.ColorizerGrass;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.IslandParameters.Feature;
-import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.StoneType;
-import com.bioxx.tfc2.world.WorldGen;
 
 public class BlockGrass extends BlockCollapsible
 {
@@ -39,8 +35,9 @@ public class BlockGrass extends BlockCollapsible
 
 	public BlockGrass()
 	{
-		super(Material.ground, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.GROUND, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
 		this.collapseType = CollapsibleType.Nature;
@@ -83,17 +80,15 @@ public class BlockGrass extends BlockCollapsible
 	}
 
 	@Override
-	public void onPlantGrow(World world, BlockPos pos, BlockPos source)
+	public void onPlantGrow(IBlockState state, World world, BlockPos pos, BlockPos source)
 	{
-		IBlockState myState = world.getBlockState(pos);
-		int meta = ((Integer)myState.getValue(BlockGrass.META_PROPERTY)).intValue();
+		int meta = ((Integer)state.getValue(BlockGrass.META_PROPERTY)).intValue();
 		world.setBlockState(pos, TFCBlocks.Dirt.getDefaultState().withProperty(META_PROPERTY, meta), 2);
 	}
 
 	@Override
-	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, net.minecraftforge.common.IPlantable plantable)
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
-		IBlockState state = world.getBlockState(pos);
 		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
 		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
 
@@ -135,54 +130,21 @@ public class BlockGrass extends BlockCollapsible
 	 * 2. Rendering
 	 *******************************************************************************/
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getBlockColor()
-	{
-		return ColorizerGrass.getGrassColor(0.5D, 1.0D);
-	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
+	public BlockRenderLayer getBlockLayer()
 	{
-		int x = pos.getX() >> 12;
-		int z = pos.getZ() >> 12;
-		if(WorldGen.instance == null)
-			return 0x55ff55;
-		IslandMap m = WorldGen.instance.getIslandMap(x, z);
-		double d0 = m.getParams().getIslandTemp().getMapTemp();
-		double d1 = 0.5;
-
-		if(worldIn instanceof ChunkCache)
-			d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
-		if(m.getParams().hasFeature(Feature.Desert))
-			d1 *= 0.25;
-		return ColorizerGrass.getGrassColor(d0, d1);
-		//return ColorizerGrass.getGrassColor(0.5, 1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderColor(IBlockState state)
-	{
-		return this.getBlockColor();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
-	{
-		return EnumWorldBlockLayer.CUTOUT_MIPPED;
+		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
 	/*******************************************************************************
 	 * 3. Blockstate 
 	 *******************************************************************************/
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[] { META_PROPERTY, NORTH, SOUTH, EAST, WEST });
+		return new BlockStateContainer(this, new IProperty[] { META_PROPERTY, NORTH, SOUTH, EAST, WEST });
 	}
 
 	@Override

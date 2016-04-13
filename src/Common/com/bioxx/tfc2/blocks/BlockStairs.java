@@ -7,17 +7,24 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs.EnumHalf;
 import net.minecraft.block.BlockStairs.EnumShape;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -28,12 +35,31 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
+import com.google.common.collect.Lists;
 
 public class BlockStairs extends BlockCollapsible
 {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyEnum<EnumHalf> HALF = PropertyEnum.create("half", EnumHalf.class);
 	public static final PropertyEnum<EnumShape> SHAPE = PropertyEnum.create("shape", EnumShape.class);
+	protected static final AxisAlignedBB AABB_SLAB_TOP = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB AABB_QTR_TOP_WEST = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 0.5D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB AABB_QTR_TOP_EAST = new AxisAlignedBB(0.5D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB AABB_QTR_TOP_NORTH = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 0.5D);
+	protected static final AxisAlignedBB AABB_QTR_TOP_SOUTH = new AxisAlignedBB(0.0D, 0.5D, 0.5D, 1.0D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB AABB_OCT_TOP_NW = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 0.5D, 1.0D, 0.5D);
+	protected static final AxisAlignedBB AABB_OCT_TOP_NE = new AxisAlignedBB(0.5D, 0.5D, 0.0D, 1.0D, 1.0D, 0.5D);
+	protected static final AxisAlignedBB AABB_OCT_TOP_SW = new AxisAlignedBB(0.0D, 0.5D, 0.5D, 0.5D, 1.0D, 1.0D); 
+	protected static final AxisAlignedBB AABB_OCT_TOP_SE = new AxisAlignedBB(0.5D, 0.5D, 0.5D, 1.0D, 1.0D, 1.0D); 
+	protected static final AxisAlignedBB AABB_SLAB_BOTTOM = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB AABB_QTR_BOT_WEST = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.5D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB AABB_QTR_BOT_EAST = new AxisAlignedBB(0.5D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB AABB_QTR_BOT_NORTH = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 0.5D);
+	protected static final AxisAlignedBB AABB_QTR_BOT_SOUTH = new AxisAlignedBB(0.0D, 0.0D, 0.5D, 1.0D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB AABB_OCT_BOT_NW = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.5D, 0.5D, 0.5D);
+	protected static final AxisAlignedBB AABB_OCT_BOT_NE = new AxisAlignedBB(0.5D, 0.0D, 0.0D, 1.0D, 0.5D, 0.5D);
+	protected static final AxisAlignedBB AABB_OCT_BOT_SW = new AxisAlignedBB(0.0D, 0.0D, 0.5D, 0.5D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB AABB_OCT_BOT_SE = new AxisAlignedBB(0.5D, 0.0D, 0.5D, 1.0D, 0.5D, 1.0D);
 	private static final int[][] field_150150_a = { { 4, 5 }, { 5, 7 }, { 6, 7 }, { 4, 6 }, { 0, 1 }, { 1, 3 }, { 2, 3 }, { 0, 2 } };
 	private final Block modelBlock;
 	private final IBlockState modelState;
@@ -42,22 +68,22 @@ public class BlockStairs extends BlockCollapsible
 
 	public BlockStairs(IBlockState modelState)
 	{
-		super(modelState.getBlock().getMaterial(), null);
+		super(modelState.getBlock().getMaterial(modelState), null);
 		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(HALF, EnumHalf.BOTTOM).withProperty(SHAPE, EnumShape.STRAIGHT));
 		this.modelBlock = modelState.getBlock();
 		this.modelState = modelState;
 		//setHardness(this.modelBlock.blockHardness);
 		//setResistance(this.modelBlock.blockResistance / 3.0F);
-		setStepSound(this.modelBlock.stepSound);
+		this.setSoundType(SoundType.WOOD);
 		setLightOpacity(255);
-		setCreativeTab(CreativeTabs.tabBlock);
+		setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 	}
 
 	@Override
 	public void createFallingEntity(World world, BlockPos pos, IBlockState state)
 	{
 		/*world.setBlockToAir(pos);
-		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.stick, 1+world.rand.nextInt(3)));
+		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.STICK, 1+world.rand.nextInt(3)));
 		world.spawnEntityInWorld(ei);*/
 		if(modelBlock instanceof BlockCollapsible)
 		{
@@ -89,22 +115,8 @@ public class BlockStairs extends BlockCollapsible
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
+	public boolean isSideSolid(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		if (this.hasRaytraced)
-		{
-			setBlockBounds(0.5F * (this.rayTracePass % 2), 0.5F * (this.rayTracePass / 4 % 2), 0.5F * (this.rayTracePass / 2 % 2), 0.5F + 0.5F * (this.rayTracePass % 2), 0.5F + 0.5F * (this.rayTracePass / 4 % 2), 0.5F + 0.5F * (this.rayTracePass / 2 % 2));
-		}
-		else
-		{
-			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-		}
-	}
-
-	@Override
-	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		IBlockState state = getActualState(world.getBlockState(pos), world, pos);
 		boolean flipped = state.getValue(HALF) == EnumHalf.TOP;
 		EnumShape shape = (EnumShape)state.getValue(SHAPE);
 		EnumFacing facing = (EnumFacing)state.getValue(FACING);
@@ -125,16 +137,16 @@ public class BlockStairs extends BlockCollapsible
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 
 	@Override
-	public boolean doesSideBlockRendering(IBlockAccess world, BlockPos pos, EnumFacing face)
+	public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		if (isOpaqueCube()) {
+		if (isOpaqueCube(state)) {
 			return true;
 		}
 
@@ -145,7 +157,7 @@ public class BlockStairs extends BlockCollapsible
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
@@ -601,19 +613,94 @@ public class BlockStairs extends BlockCollapsible
 
 
 	@Override
-	public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn)
 	{
-		setBaseCollisionBounds(worldIn, pos);
-		super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
-		boolean flag = func_176306_h(worldIn, pos);
-		super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
+		state = getActualState(state, worldIn, pos);
 
-		if ((flag) && (func_176304_i(worldIn, pos)))
+		for (AxisAlignedBB axisalignedbb : getCollisionBoxList(state))
 		{
-			super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
+			addCollisionBoxToList(pos, entityBox, collidingBoxes, axisalignedbb);
+		}
+	}
+
+	private static List<AxisAlignedBB> getCollisionBoxList(IBlockState bstate)
+	{
+		List<AxisAlignedBB> list = Lists.newArrayList();
+		boolean flag = bstate.getValue(HALF) == EnumHalf.TOP;
+		list.add(flag ? AABB_SLAB_TOP : AABB_SLAB_BOTTOM);
+		EnumShape blockstairs$enumshape = (EnumShape)bstate.getValue(SHAPE);
+
+		if ((blockstairs$enumshape == EnumShape.STRAIGHT) || (blockstairs$enumshape == EnumShape.INNER_LEFT) || (blockstairs$enumshape == EnumShape.INNER_RIGHT))
+		{
+			list.add(getCollQuarterBlock(bstate));
 		}
 
-		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+		if (blockstairs$enumshape != EnumShape.STRAIGHT)
+		{
+			list.add(getCollEighthBlock(bstate));
+		}
+
+		return list;
+	}
+
+
+
+
+
+	private static AxisAlignedBB getCollQuarterBlock(IBlockState bstate)
+	{
+		boolean flag = bstate.getValue(HALF) == EnumHalf.TOP;
+
+		switch (((EnumFacing)bstate.getValue(FACING)).ordinal())
+		{
+		case 1: 
+		default: 
+			return flag ? AABB_QTR_BOT_NORTH : AABB_QTR_TOP_NORTH;
+		case 2: 
+			return flag ? AABB_QTR_BOT_SOUTH : AABB_QTR_TOP_SOUTH;
+		case 3: 
+			return flag ? AABB_QTR_BOT_WEST : AABB_QTR_TOP_WEST;
+		}
+	}
+
+
+
+
+
+
+
+	private static AxisAlignedBB getCollEighthBlock(IBlockState bstate)
+	{
+		EnumFacing enumfacing = (EnumFacing)bstate.getValue(FACING);
+		EnumFacing enumfacing1;
+		switch (((EnumShape)bstate.getValue(SHAPE)).ordinal())
+		{
+		case 1: 
+		default: 
+			enumfacing1 = enumfacing;
+			break;
+		case 2: 
+			enumfacing1 = enumfacing.rotateY();
+			break;
+		case 3: 
+			enumfacing1 = enumfacing.getOpposite();
+			break;
+		case 4: 
+			enumfacing1 = enumfacing.rotateYCCW();
+		}
+
+		boolean flag = bstate.getValue(HALF) == EnumHalf.TOP;
+
+		switch (enumfacing1.ordinal())
+		{
+		case 1: 
+		default: 
+			return flag ? AABB_OCT_BOT_NW : AABB_OCT_TOP_NW;
+		case 2: 
+			return flag ? AABB_OCT_BOT_SE : AABB_OCT_TOP_SE;
+		case 3: 
+			return flag ? AABB_OCT_BOT_SW : AABB_OCT_TOP_SW;
+		}
 	}
 
 	@Override
@@ -624,9 +711,9 @@ public class BlockStairs extends BlockCollapsible
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	public void randomDisplayTick(IBlockState state, World worldIn, BlockPos pos, Random rand)
 	{
-		this.modelBlock.randomDisplayTick(worldIn, pos, state, rand);
+		this.modelBlock.randomDisplayTick(state, worldIn, pos, rand);
 	}
 
 
@@ -638,12 +725,12 @@ public class BlockStairs extends BlockCollapsible
 		this.modelBlock.onBlockDestroyedByPlayer(worldIn, pos, state);
 	}
 
-	@Override
+	/*@Override
 	@SideOnly(Side.CLIENT)
 	public int getMixedBrightnessForBlock(IBlockAccess worldIn, BlockPos pos)
 	{
 		return this.modelBlock.getMixedBrightnessForBlock(worldIn, pos);
-	}
+	}*/
 
 
 
@@ -664,23 +751,23 @@ public class BlockStairs extends BlockCollapsible
 	}
 
 	@Override
-	public Vec3 modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3 motion)
+	public Vec3d modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3d motion)
 	{
 		return this.modelBlock.modifyAcceleration(worldIn, pos, entityIn, motion);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
+	public BlockRenderLayer getBlockLayer()
 	{
 		return this.modelBlock.getBlockLayer();
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
 	{
-		return this.modelBlock.getSelectedBoundingBox(worldIn, pos);
+		return this.modelBlock.getSelectedBoundingBox(state, worldIn, pos);
 	}
 
 
@@ -707,7 +794,7 @@ public class BlockStairs extends BlockCollapsible
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
-		onNeighborBlockChange(worldIn, pos, this.modelState, net.minecraft.init.Blocks.air);
+		onNeighborBlockChange(worldIn, pos, this.modelState, net.minecraft.init.Blocks.AIR);
 		this.modelBlock.onBlockAdded(worldIn, pos, this.modelState);
 	}
 
@@ -721,9 +808,9 @@ public class BlockStairs extends BlockCollapsible
 
 
 	@Override
-	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn)
+	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
 	{
-		this.modelBlock.onEntityCollidedWithBlock(worldIn, pos, entityIn);
+		this.modelBlock.onEntityCollidedWithBlock(worldIn, pos, state, entityIn);
 	}
 
 	@Override
@@ -733,9 +820,9 @@ public class BlockStairs extends BlockCollapsible
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		return this.modelBlock.onBlockActivated(worldIn, pos, this.modelState, playerIn, EnumFacing.DOWN, 0.0F, 0.0F, 0.0F);
+		return this.modelBlock.onBlockActivated(worldIn, pos, this.modelState, playerIn, hand, heldItem, EnumFacing.DOWN, 0.0F, 0.0F, 0.0F);
 	}
 
 
@@ -769,9 +856,9 @@ public class BlockStairs extends BlockCollapsible
 	}
 
 	@Override
-	public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
+	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end)
 	{
-		MovingObjectPosition[] amovingobjectposition = new MovingObjectPosition[8];
+		RayTraceResult[] amovingobjectposition = new RayTraceResult[8];
 		IBlockState iblockstate = worldIn.getBlockState(pos);
 		int i = ((EnumFacing)iblockstate.getValue(FACING)).getHorizontalIndex();
 		boolean flag = iblockstate.getValue(HALF) == EnumHalf.TOP;
@@ -784,7 +871,7 @@ public class BlockStairs extends BlockCollapsible
 
 			if (Arrays.binarySearch(aint, j) < 0)
 			{
-				amovingobjectposition[j] = super.collisionRayTrace(worldIn, pos, start, end);
+				amovingobjectposition[j] = super.collisionRayTrace(state, worldIn, pos, start, end);
 			}
 		}
 
@@ -793,10 +880,10 @@ public class BlockStairs extends BlockCollapsible
 			amovingobjectposition[k] = null;
 		}
 
-		MovingObjectPosition movingobjectposition1 = null;
+		RayTraceResult movingobjectposition1 = null;
 		double d1 = 0.0D;
 
-		for (MovingObjectPosition movingobjectposition : amovingobjectposition)
+		for (RayTraceResult movingobjectposition : amovingobjectposition)
 		{
 			if (movingobjectposition != null)
 			{
@@ -881,8 +968,8 @@ public class BlockStairs extends BlockCollapsible
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[] { FACING, HALF, SHAPE });
+		return new BlockStateContainer(this, new IProperty[] { FACING, HALF, SHAPE });
 	}
 }

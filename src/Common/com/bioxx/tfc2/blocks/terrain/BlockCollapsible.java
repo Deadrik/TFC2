@@ -6,8 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -107,7 +107,7 @@ public class BlockCollapsible extends BlockTerra
 
 	protected boolean hasSupport(World world, BlockPos pos, IBlockState state)
 	{
-		IBlockState scanState;
+		IBlockState scanState, scanState2;
 		Block scanBlock;
 		BlockPos scanPos;
 		BlockPos pos1 = new BlockPos(pos.getX()+0.5, 0, pos.getZ()+0.5), pos2;
@@ -157,7 +157,8 @@ public class BlockCollapsible extends BlockTerra
 			}
 			else if(canBeSupportedBy(state, scanState))
 			{
-				if(world.getBlockState(scanPos.down()).getBlock().isSideSolid(world, scanPos.down(), EnumFacing.UP))
+				scanState2 = world.getBlockState(scanPos.down());
+				if(scanState2.getBlock().isSideSolid(scanState2, world, scanPos.down(), EnumFacing.UP))
 				{
 					if(!scannedQueue.contains(scanPos.down()))
 						scanQueue.add(scanPos.down());
@@ -188,10 +189,10 @@ public class BlockCollapsible extends BlockTerra
 		BlockPos otherPos = pos.offset(facing);
 		IBlockState otherState = world.getBlockState(otherPos);
 
-		if(otherState.getBlock().isAir(world, otherPos) || !otherState.getBlock().isSideSolid(world, otherPos, facing.getOpposite()))
+		if(otherState.getBlock().isAir(otherState, world, otherPos) || !otherState.getBlock().isSideSolid(otherState, world, otherPos, facing.getOpposite()))
 			return false;
 		//Both this block and the one in the facing direction need to have solid sides touching
-		if(!myState.getBlock().isSideSolid(world, pos, facing))
+		if(!myState.getBlock().isSideSolid(myState, world, pos, facing))
 			return false;
 		return true;
 	}

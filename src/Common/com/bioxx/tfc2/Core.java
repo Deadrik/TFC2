@@ -2,14 +2,18 @@ package com.bioxx.tfc2;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -67,7 +71,7 @@ public class Core
 
 	public static String translate(String s)
 	{
-		return StatCollector.translateToLocal(s);
+		return I18n.format(s);
 	}
 
 	public static String textConvert(String s)
@@ -196,9 +200,9 @@ public class Core
 	 * to players nbt or the changes will be lost.
 	 * @return Returns the FoodStatsTFC object that is associated with this player. 
 	 */
-	public static FoodStatsTFC getPlayerFoodStats(EntityPlayer player)
+	public static FoodStatsTFC getPlayerFoodStats(EntityLivingBase player)
 	{
-		FoodStatsTFC foodstats = new FoodStatsTFC(player);
+		FoodStatsTFC foodstats = new FoodStatsTFC((EntityPlayer)player);
 		foodstats.readNBT(player.getEntityData());
 		return foodstats;
 	}
@@ -233,7 +237,7 @@ public class Core
 
 	public static IslandMap getMapForWorld(World w, BlockPos pos)
 	{
-		if(w.provider.getDimensionId() == 2)
+		if(w.provider.getDimension() == 2)
 		{
 			return WorldGen.instance.getIslandMap(pos.getX() >> 9, pos.getZ() >> 9);
 		}
@@ -242,7 +246,7 @@ public class Core
 
 	public static IslandMap getClientMapForWorld(World w, BlockPos pos)
 	{
-		if(w.provider.getDimensionId() == 2)
+		if(w.provider.getDimension() == 2)
 		{
 			return WorldGen.instance.getClientIslandMap(pos.getX() >> 9, pos.getZ() >> 9);
 		}
@@ -260,5 +264,10 @@ public class Core
 		ei.motionY = 0.15;
 		ei.motionZ = -0.07+world.rand.nextFloat() * 0.14;
 		world.spawnEntityInWorld(ei);
+	}
+
+	public static void playSoundAtEntity(Entity e, SoundEvent name, float volume, float pitch)
+	{
+		e.worldObj.playSound(e.posX, e.posY, e.posZ, name, SoundCategory.BLOCKS, volume, pitch, false);
 	}
 }

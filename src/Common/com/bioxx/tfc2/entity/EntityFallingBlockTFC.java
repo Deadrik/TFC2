@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.interfaces.IGravityBlock;
@@ -32,7 +32,7 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 		if(block instanceof IGravityBlock)
 			grav = (IGravityBlock)this.fallTile.getBlock();
 
-		if (block.getMaterial() == Material.air)
+		if (block.getMaterial(fallTile) == Material.AIR)
 		{
 			setDead();
 		}
@@ -69,7 +69,7 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 
 				if (this.onGround)
 				{
-					if (this.worldObj.getBlockState(blockpos1).getBlock() != Blocks.piston_extension)
+					if (this.worldObj.getBlockState(blockpos1).getBlock() != Blocks.PISTON_EXTENSION)
 					{
 						this.motionX *= 0.699999988079071D;
 						this.motionZ *= 0.699999988079071D;
@@ -143,8 +143,8 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 	public boolean canFallInto(World worldIn, BlockPos pos)
 	{
 		if (worldIn.isAirBlock(pos)) return true;
-		Block block = worldIn.getBlockState(pos).getBlock();
-		Material material = block.getMaterial();
-		return (block == Blocks.fire) || (material == Material.air) || (material == Material.water) || (material == Material.lava) || block.isReplaceable(worldIn, pos);
+		IBlockState state = worldIn.getBlockState(pos);
+		Material material = state.getBlock().getMaterial(state);
+		return (state.getBlock() == Blocks.FIRE) || (material == Material.AIR) || (material == Material.WATER) || (material == Material.LAVA) || state.getBlock().isReplaceable(worldIn, pos);
 	}
 }

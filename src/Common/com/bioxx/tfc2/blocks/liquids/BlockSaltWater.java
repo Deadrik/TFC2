@@ -5,10 +5,13 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
@@ -33,7 +36,7 @@ public class BlockSaltWater extends BlockFluidClassic {
 		IBlockState up = world.getBlockState(pos.down(densityDir));
 		if (here.getBlock() instanceof BlockFluidBase)
 		{
-			if (up.getBlock().getMaterial().isLiquid() || up.getBlock() instanceof IFluidBlock)
+			if (up.getBlock().getMaterial(up).isLiquid() || up.getBlock() instanceof IFluidBlock)
 			{
 				return 1;
 			}
@@ -43,7 +46,7 @@ public class BlockSaltWater extends BlockFluidClassic {
 				return 0.875F;
 			}
 		}
-		return !here.getBlock().getMaterial().isSolid() && up.getBlock() == this ? 1 : this.getQuantaPercentage(world, pos) * 0.875F;
+		return !here.getBlock().getMaterial(here).isSolid() && up.getBlock() == this ? 1 : this.getQuantaPercentage(world, pos) * 0.875F;
 	}
 
 	@Override
@@ -51,7 +54,8 @@ public class BlockSaltWater extends BlockFluidClassic {
 	{
 		if (world.isAirBlock(pos)) return true;
 
-		Block block = world.getBlockState(pos).getBlock();
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
 		if (block == this || block == TFCBlocks.SaltWater || block == TFCBlocks.SaltWaterStatic || block == TFCBlocks.FreshWaterStatic)
 		{
 			return true;
@@ -62,11 +66,11 @@ public class BlockSaltWater extends BlockFluidClassic {
 			return displacements.get(block);
 		}
 
-		Material material = block.getMaterial();
+		Material material = block.getMaterial(state);
 		if (material.blocksMovement()  ||
-				material == Material.water ||
-				material == Material.lava  ||
-				material == Material.portal)
+				material == Material.WATER ||
+				material == Material.LAVA  ||
+				material == Material.PORTAL)
 		{
 			return false;
 		}
@@ -119,7 +123,7 @@ public class BlockSaltWater extends BlockFluidClassic {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	public void randomDisplayTick(IBlockState state,World worldIn, BlockPos pos, Random rand)
 	{
 		double d0 = (double)pos.getX();
 		double d1 = (double)pos.getY();
@@ -132,7 +136,7 @@ public class BlockSaltWater extends BlockFluidClassic {
 		{
 			if (rand.nextInt(64) == 0)
 			{
-				worldIn.playSound(d0 + 0.5D, d1 + 0.5D, d2 + 0.5D, "liquid.water", rand.nextFloat() * 0.25F + 0.75F, rand.nextFloat() * 1.0F + 0.5F, false);
+				worldIn.playSound(d0 + 0.5D, d1 + 0.5D, d2 + 0.5D, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.AMBIENT, rand.nextFloat() * 0.25F + 0.75F, rand.nextFloat() * 1.0F + 0.5F, false);
 			}
 		}
 		else if (rand.nextInt(10) == 0)
@@ -140,9 +144,9 @@ public class BlockSaltWater extends BlockFluidClassic {
 			worldIn.spawnParticle(EnumParticleTypes.SUSPENDED, d0 + (double)rand.nextFloat(), d1 + (double)rand.nextFloat(), d2 + (double)rand.nextFloat(), 0.0D, 0.0D, 0.0D, new int[0]);
 		}
 
-		if (rand.nextInt(10) == 0 && World.doesBlockHaveSolidTopSurface(worldIn, pos.down()))
+		if (rand.nextInt(10) == 0 && worldIn.getBlockState(pos.down()).isFullCube())
 		{
-			Material material = worldIn.getBlockState(pos.down(2)).getBlock().getMaterial();
+			Material material = worldIn.getBlockState(pos.down(2)).getBlock().getMaterial(worldIn.getBlockState(pos.down(2)));
 
 			if (!material.blocksMovement() && !material.isLiquid())
 			{

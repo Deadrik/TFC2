@@ -2,16 +2,18 @@ package com.bioxx.tfc2.blocks;
 
 import java.util.Random;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.IslandMap;
@@ -28,15 +30,16 @@ public class BlockPortalStone extends BlockTerra
 
 	public BlockPortalStone()
 	{
-		super(Material.ground, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.GROUND, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.setTickRandomly(true);
+		setSoundType(SoundType.STONE);
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY});
 	}
 
 	@Override
@@ -52,7 +55,7 @@ public class BlockPortalStone extends BlockTerra
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if(!worldIn.isRemote)
 		{
@@ -72,7 +75,7 @@ public class BlockPortalStone extends BlockTerra
 		PortalAttribute pa = null;
 		IslandMap map = null;
 
-		if(worldIn.provider.getDimensionId() == 0)
+		if(worldIn.provider.getDimension() == 0)
 		{
 			map = WorldGen.instance.getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
 			Center c = map.getClosestCenter(pos);
@@ -82,7 +85,7 @@ public class BlockPortalStone extends BlockTerra
 				worldIn.setBlockState(pos, state.withProperty(META_PROPERTY, map.getIslandData().getPortalState(pa.direction)));
 			}
 		}
-		else if(worldIn.provider.getDimensionId() == 2)
+		else if(worldIn.provider.getDimension() == 2)
 		{
 			BlockPos scaledPos = new BlockPos(pos.getX() * 8, pos.getY(), pos.getZ() * 8);
 			map = WorldGen.instance.getIslandMap(scaledPos.getX() >> 12, scaledPos.getZ() >> 12);
@@ -141,7 +144,7 @@ public class BlockPortalStone extends BlockTerra
 		IBlockState gateState = worldIn.getBlockState(pos);
 		if(pState == PortalEnumType.Enabled && gateState.getBlock() == TFCBlocks.PortalStone && gateState.getValue(META_PROPERTY) == PortalEnumType.Gate)
 		{
-			worldIn.setBlockState(pos, Blocks.air.getDefaultState());
+			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 			return true;
 		}
 		else if(pState != PortalEnumType.Enabled && gateState.getBlock() != TFCBlocks.PortalStone)

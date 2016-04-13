@@ -7,7 +7,7 @@ import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 
@@ -22,16 +22,15 @@ public class StripChunkCommand extends CommandBase
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] params)
+	public void execute(MinecraftServer server, ICommandSender sender, String[] params)
 	{
-		MinecraftServer server = MinecraftServer.getServer();
 		EntityPlayerMP player;
 		try {
 			player = getCommandSenderAsPlayer(sender);
 		} catch (PlayerNotFoundException e) {
 			return;
 		}
-		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimensionId());
+		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
 		/*if(!TFCOptions.enableDebugMode)
 		{
@@ -51,10 +50,10 @@ public class StripChunkCommand extends CommandBase
 				{
 					for(int y = 0; y < 256; y++)
 					{
-						Block id = chunk.getBlock(x, y, z);
-						if(id != TFCBlocks.Ore && id != Blocks.bedrock)
+						Block id = chunk.getBlockState(x, y, z).getBlock();
+						if(id != TFCBlocks.Ore && id != Blocks.BEDROCK)
 						{
-							world.setBlockState(pos.add(x, y, z), Blocks.air.getDefaultState());
+							world.setBlockState(pos.add(x, y, z), Blocks.AIR.getDefaultState());
 						}
 					}
 				}
@@ -76,9 +75,9 @@ public class StripChunkCommand extends CommandBase
 						{
 							for(int y = 0; y < 256; y++)
 							{
-								Block id = chunk.getBlock(x, y, z);
-								if(id != TFCBlocks.Ore && id != Blocks.bedrock)
-									world.setBlockState(pos.add(x, y, z), Blocks.air.getDefaultState());
+								Block id = chunk.getBlockState(x, y, z).getBlock();
+								if(id != TFCBlocks.Ore && id != Blocks.BEDROCK)
+									world.setBlockState(pos.add(x, y, z), Blocks.AIR.getDefaultState());
 							}
 						}
 					}

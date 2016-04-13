@@ -10,6 +10,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -198,18 +199,18 @@ public class GuiKnapping extends GuiContainerTFC
 					if (MinecraftForge.EVENT_BUS.post(event))
 						break;
 
-					if(selectedButton == event.button)
+					if(selectedButton == event.getButton())
 						continue;
 					else
 					{
 						this.mouseReleased(mouseX, mouseY, 0);
 					}
 
-					this.selectedButton = event.button;
-					event.button.playPressSound(this.mc.getSoundHandler());
-					this.actionPerformed(event.button);
+					this.selectedButton = event.getButton();
+					event.getButton().playPressSound(this.mc.getSoundHandler());
+					this.actionPerformed(event.getButton());
 					if (this.equals(this.mc.currentScreen))
-						MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, event.button, this.buttonList));
+						MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, event.getButton(), this.buttonList));
 				}
 			}
 		}

@@ -3,13 +3,19 @@ package com.bioxx.tfc2.items;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -40,7 +46,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 		nourishment = n;
 		filling = f;
 		foodID = FoodRegistry.getInstance().registerFood(fg, this);
-		this.setCreativeTab(CreativeTabs.tabFood);
+		this.setCreativeTab(CreativeTabs.FOOD);
 	}
 
 	/**
@@ -80,7 +86,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 
 		if(time <= 0)
 		{
-			arraylist.add(EnumChatFormatting.RED+"Expired x"+Math.min(1+(time / expiration)* (-1), is.stackSize));
+			arraylist.add(TextFormatting.RED+"Expired x"+Math.min(1+(time / expiration)* (-1), is.stackSize));
 		}
 		else
 		{
@@ -105,14 +111,14 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	 * the Item before the action is complete.
 	 */
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer player)
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase player)
 	{
 		FoodStatsTFC fs = Core.getPlayerFoodStats(player);
 		fs.addNutrition(foodGroup, nourishment);
-		Core.setPlayerFoodStats(player, fs);
-		worldIn.playSoundAtEntity(player, "random.burp", 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-		this.onFoodEaten(stack, worldIn, player);
-		player.triggerAchievement(StatList.objectUseStats[Item.getIdFromItem(this)]);
+		Core.setPlayerFoodStats((EntityPlayer)player, fs);
+		worldIn.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+		this.onFoodEaten(stack, worldIn, (EntityPlayer)player);
+		((EntityPlayer) player).addStat(StatList.getObjectUseStats(this));
 		return stack;
 	}
 
@@ -149,14 +155,15 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	 * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
 	 */
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
 		if (playerIn.canEat(false))
 		{
-			playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));
+			playerIn.setActiveHand(hand);
+			return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
 		}
 
-		return itemStackIn;
+		return new ActionResult(EnumActionResult.FAIL, itemStackIn);
 	}
 
 	@Override

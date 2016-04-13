@@ -22,9 +22,8 @@ public class TeleportInIslandCommand extends CommandBase
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] params)
+	public void execute(MinecraftServer server, ICommandSender sender, String[] params)
 	{
-		MinecraftServer server = MinecraftServer.getServer();
 		EntityPlayerMP player = null;
 		try {
 			player = getCommandSenderAsPlayer(sender);
@@ -32,7 +31,7 @@ public class TeleportInIslandCommand extends CommandBase
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimensionId());
+		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
 		if(params.length == 3)
 		{

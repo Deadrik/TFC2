@@ -7,9 +7,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.interfaces.INeedOffset;
@@ -29,12 +32,12 @@ public class ItemWoodSupport extends ItemWood
 		super.addInformation(is, player, arraylist, flag);
 		int meta = is.getItemDamage();
 		meta = ((INeedOffset)block).convertMetaToItem(meta);
-		arraylist.add(EnumChatFormatting.DARK_GRAY + "Span Range: " + WoodType.getTypeFromMeta(meta).getSupportRange());
+		arraylist.add(TextFormatting.DARK_GRAY + "Span Range: " + WoodType.getTypeFromMeta(meta).getSupportRange());
 		/*if(block instanceof ISupportBlock)
 		{
 
-			arraylist.add(EnumChatFormatting.DARK_GRAY + "Max Cross Load: " + WoodType.getTypeFromMeta(meta).getRupture());
-			arraylist.add(EnumChatFormatting.DARK_GRAY + "Max Free Load: " + WoodType.getTypeFromMeta(meta).getCompression());
+			arraylist.add(TextFormatting.DARK_GRAY + "Max Cross Load: " + WoodType.getTypeFromMeta(meta).getRupture());
+			arraylist.add(TextFormatting.DARK_GRAY + "Max Free Load: " + WoodType.getTypeFromMeta(meta).getCompression());
 		}*/
 
 	}
@@ -68,7 +71,7 @@ public class ItemWoodSupport extends ItemWood
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos origPos, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos origPos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		IBlockState iblockstate = worldIn.getBlockState(origPos);
 		Block block = iblockstate.getBlock();
@@ -76,11 +79,11 @@ public class ItemWoodSupport extends ItemWood
 
 		if (stack.stackSize == 0)
 		{
-			return false;
+			return EnumActionResult.FAIL;
 		}
 		if (!playerIn.canPlayerEdit(pos, side, stack))
 		{
-			return false;
+			return EnumActionResult.FAIL;
 		}
 		if (worldIn.canBlockBePlaced(this.block, pos, false, side, (Entity)null, stack))
 		{
@@ -125,16 +128,16 @@ public class ItemWoodSupport extends ItemWood
 					IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, scanPos.offset(side.getOpposite()), side, hitX, hitY, hitZ, meta, playerIn);
 					if (placeBlockAt(stack, playerIn, worldIn, scanPos, side, hitX, hitY, hitZ, iblockstate1))
 					{
-						worldIn.playSoundEffect(scanPos.getX() + 0.5F, scanPos.getY() + 0.5F, scanPos.getZ() + 0.5F, this.block.stepSound.getPlaceSound(), (this.block.stepSound.getVolume() + 1.0F) / 2.0F, this.block.stepSound.getFrequency() * 0.8F);
+						worldIn.playSound(scanPos.getX() + 0.5F, scanPos.getY() + 0.5F, scanPos.getZ() + 0.5F, this.block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, (this.block.getSoundType().getVolume() + 1.0F) / 2.0F, this.block.getSoundType().getPitch() * 0.8F, true);
 						stack.stackSize -= 1;
 					}
 				}
 			}
 
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
 
 
-		return false;
+		return EnumActionResult.PASS;
 	}
 }

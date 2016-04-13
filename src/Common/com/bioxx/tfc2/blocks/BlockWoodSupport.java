@@ -4,20 +4,21 @@ import java.util.Arrays;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyHelper;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -30,7 +31,7 @@ import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
 public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock, INeedOffset
 {
 	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 0, 8));
-	public static PropertyBool SPAN = PropertyBool.create("isSpan");
+	public static PropertyBool SPAN = PropertyBool.create("isspan");
 	public static PropertyBool NORTH_CONNECTION = PropertyBool.create("north");
 	public static PropertyBool SOUTH_CONNECTION = PropertyBool.create("south");
 	public static PropertyBool EAST_CONNECTION = PropertyBool.create("east");
@@ -38,8 +39,8 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 
 	public BlockWoodSupport() 
 	{
-		this(Material.wood, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		this(Material.WOOD, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, WoodType.Oak).
 				withProperty(SPAN, Boolean.valueOf(false)).
 				withProperty(NORTH_CONNECTION, Boolean.valueOf(false)).
@@ -53,6 +54,7 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 		super(material, meta);
 		compressionBreak = true;
 		this.collapseType = CollapsibleType.Structure;
+		setSoundType(SoundType.WOOD);
 	}
 
 	/*******************************************************************************
@@ -89,7 +91,7 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 	public void createFallingEntity(World world, BlockPos pos, IBlockState state)
 	{
 		world.setBlockToAir(pos);
-		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.stick, 1+world.rand.nextInt(3)));
+		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.STICK, 1+world.rand.nextInt(3)));
 		world.spawnEntityInWorld(ei);
 	}
 
@@ -116,9 +118,8 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		IBlockState state = getActualState(world.getBlockState(pos), world, pos);
 		if(side == EnumFacing.UP)
 			return true;
 
@@ -253,13 +254,13 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 	 * 2. Rendering 
 	 *******************************************************************************/
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
@@ -276,9 +277,9 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 				withProperty(SPAN, !canBeSupportedBy(state, world.getBlockState(pos.down())));
 	}
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY, SPAN, NORTH_CONNECTION, SOUTH_CONNECTION, EAST_CONNECTION, WEST_CONNECTION});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY, SPAN, NORTH_CONNECTION, SOUTH_CONNECTION, EAST_CONNECTION, WEST_CONNECTION});
 	}
 
 	@Override

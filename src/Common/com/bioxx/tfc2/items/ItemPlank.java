@@ -15,7 +15,7 @@ public class ItemPlank extends ItemTerra implements IRegisterSelf
 				"pine","sequoia","spruce","sycamore",
 				"white cedar","willow","kapok","acacia",
 				"rosewood","blackwood","palm"};
-		this.setCreativeTab(CreativeTabs.tabFood);
+		this.setCreativeTab(CreativeTabs.FOOD);
 	}
 
 	@Override

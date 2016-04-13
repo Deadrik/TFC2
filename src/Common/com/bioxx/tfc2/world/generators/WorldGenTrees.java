@@ -4,8 +4,9 @@ import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 
 import net.minecraftforge.fml.common.IWorldGenerator;
@@ -25,7 +26,6 @@ import com.bioxx.tfc2.api.trees.TreeSchematic;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
-import com.bioxx.tfc2.world.ChunkManager;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class WorldGenTrees implements IWorldGenerator
@@ -35,15 +35,15 @@ public class WorldGenTrees implements IWorldGenerator
 	TreeSchematic schem;
 
 	@Override
-	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGen, IChunkProvider chunkProvider)
 	{
-		if(world.provider.getDimensionId() != 0)
+		if(world.provider.getDimension() != 0)
 			return;
 
 		chunkX *= 16;
 		chunkZ *= 16;
 
-		if(world.getWorldChunkManager() instanceof ChunkManager)
+		//if(world.getWorldChunkManager() instanceof ChunkManager)
 		{
 			int xM = (chunkX >> 12);
 			int zM = (chunkZ >> 12);
@@ -227,11 +227,11 @@ public class WorldGenTrees implements IWorldGenerator
 		BlockPos blockPos = new BlockPos(localX, localY, localZ);
 		IBlockState leaves = tc.leaves;
 
-		if(state.getBlock().getMaterial() == Material.wood)
+		if(state.getBlock().getMaterial(state) == Material.WOOD)
 		{
 			world.setBlockState(blockPos, block, 2);
 		}
-		else if(state.getBlock().getMaterial() == Material.leaves)
+		else if(state.getBlock().getMaterial(state) == Material.LEAVES)
 		{
 			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
 			{
@@ -280,7 +280,7 @@ public class WorldGenTrees implements IWorldGenerator
 			{
 				return false;
 			}
-			if(above.getBlock().isLeaves(world, aPos))
+			if(above.getBlock().isLeaves(above, world, aPos))
 			{
 				count++;
 			}

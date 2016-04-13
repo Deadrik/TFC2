@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.Global;
@@ -28,10 +28,10 @@ public class ItemWood extends ItemTerraBlock
 			int meta = is.getItemDamage();
 			/*if(block instanceof INeedOffset)
 				meta = ((INeedOffset)block).convertMetaToItem(meta);*/
-			arraylist.add(EnumChatFormatting.DARK_GRAY + Core.translate("global." + Global.WOOD_STANDARD[meta]));
+			arraylist.add(TextFormatting.DARK_GRAY + Core.translate("global." + Global.WOOD_STANDARD[meta]));
 		}
 		else
-			arraylist.add(EnumChatFormatting.DARK_RED + Core.translate("global.unknown"));
+			arraylist.add(TextFormatting.DARK_RED + Core.translate("global.unknown"));
 	}
 
 	@Override

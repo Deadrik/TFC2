@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 
 import com.bioxx.jmapgen.IslandMap;
@@ -87,7 +86,7 @@ public class TileCrop extends TileTFC implements ITickable
 				toGrow -= 0.25f;
 			nutrients -= 1;
 			growth += toGrow;
-			MinecraftServer.getServer().getConfigurationManager().sendToAllNear(pos.getX(), pos.getY(), pos.getZ(), 200, getWorld().provider.getDimensionId(), this.getDescriptionPacket());
+			worldObj.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), 200, getWorld().provider.getDimension(), this.getDescriptionPacket());
 		}
 	}
 

@@ -22,7 +22,7 @@ public class PortalSchematic extends Schematic
 			ArrayList<SchemBlock> map = new ArrayList<SchemBlock>();
 			for(SchemBlock b : blockMap)
 			{
-				if(b.state.getBlock() != Blocks.air)
+				if(b.state.getBlock() != Blocks.AIR)
 					map.add(b);
 			}
 			blockMap = map;

@@ -98,7 +98,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 			{
 				setDecreasedStack(true); // Mark container so it won't decrease again.
 				if (!this.worldObj.isRemote) // Server only to prevent it removing multiple times.
-					invPlayer.consumeInventoryItem(invPlayer.getCurrentItem().getItem());
+					invPlayer.getCurrentItem().stackSize--;
 			}
 		}
 

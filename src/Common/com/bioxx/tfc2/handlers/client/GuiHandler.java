@@ -4,8 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -47,7 +48,7 @@ public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
 	@SubscribeEvent
 	public void openGuiHandler(GuiOpenEvent event)
 	{
-		if(event.gui instanceof GuiInventory && !(event.gui instanceof GuiInventoryTFC))
-			event.gui = new GuiInventoryTFC(Minecraft.getMinecraft().thePlayer);
+		if(event.getGui() instanceof GuiInventory && !(event.getGui() instanceof GuiInventoryTFC))
+			event.setGui(new GuiInventoryTFC(Minecraft.getMinecraft().thePlayer));
 	}
 }

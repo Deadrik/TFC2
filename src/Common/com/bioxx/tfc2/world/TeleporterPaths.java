@@ -6,9 +6,9 @@ import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
@@ -43,7 +43,7 @@ public class TeleporterPaths extends Teleporter
 	public void placeInPortal(Entity entity, float yaw)
 	{
 		//First check if we're teleporting back into the overworld
-		if (this.worldServerInstance.provider.getDimensionId() != 0)
+		if (this.worldServerInstance.provider.getDimension() != 0)
 		{
 			if (!this.placeInExistingPortal(entity, yaw))
 			{

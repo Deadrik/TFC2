@@ -1,6 +1,6 @@
 package com.bioxx.tfc2.api.interfaces;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;

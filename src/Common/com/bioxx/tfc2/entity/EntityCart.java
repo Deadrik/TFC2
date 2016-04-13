@@ -8,7 +8,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,6 +29,9 @@ public class EntityCart extends Entity
 	double pullPrevPosX, pullPrevPosY, pullPrevPosZ;
 	public boolean isMoving = false;
 
+	protected static final DataParameter<Boolean> IS_BEING_PULLED = EntityDataManager.createKey(EntityCart.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<Float> ROTATION = EntityDataManager.createKey(EntityCart.class, DataSerializers.FLOAT);
+
 	public EntityCart(World worldIn) 
 	{
 		super(worldIn);
@@ -33,8 +40,8 @@ public class EntityCart extends Entity
 	}
 	@Override
 	protected void entityInit() {
-		this.dataWatcher.addObject(20, new Integer(0));
-		this.dataWatcher.addObject(21, new Float(this.rotationYaw));
+		getDataManager().set(IS_BEING_PULLED, false);
+		getDataManager().set(ROTATION, this.rotationYaw);
 	}
 
 	@Override
@@ -94,9 +101,9 @@ public class EntityCart extends Entity
 	{
 		AxisAlignedBB aabb = super.getEntityBoundingBox();
 		if(isBeingPulled())
-			aabb = aabb.contract(0.15, 0.55, 0.15);
-		if(riddenByEntity != null)
-			aabb = aabb.contract(0.15, 0.55, 0.15);
+			aabb = aabb.expand(-0.15, -0.55, -0.15);
+		if(this.isBeingRidden())
+			aabb = aabb.expand(-0.15, -0.55, -0.15);
 
 		return aabb;
 	}
@@ -115,9 +122,9 @@ public class EntityCart extends Entity
 	}
 
 	@Override
-	public boolean interactFirst(EntityPlayer player)
+	public boolean processInitialInteract(EntityPlayer player, ItemStack stack, EnumHand hand)
 	{
-		if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && this.riddenByEntity != player)
+		if (this.isBeingRidden() && getPassengers().get(0) instanceof EntityPlayer && getPassengers().get(0) != player)
 		{
 			return true;
 		}
@@ -131,9 +138,9 @@ public class EntityCart extends Entity
 			{
 				setPullEntity(player);
 			}
-			else if(this.riddenByEntity == null && (angle > revAngle - 25 && angle < revAngle + 25))
+			else if(this.getPassengers().size() < 1 && (angle > revAngle - 25 && angle < revAngle + 25))
 			{
-				player.mountEntity(this);
+				player.startRiding(this);
 				this.noClip = true;
 			}
 			else
@@ -155,17 +162,17 @@ public class EntityCart extends Entity
 		return (double)this.height * 0.5D - 0.1D;
 	}
 
-	@Override
+	/*@Override
 	public void updateRiderPosition()
 	{
-		if (this.riddenByEntity != null)
+		if (isBeingRidden())
 		{
 			double posX = this.posX+Math.cos(Math.toRadians(getFacingAngle()))*0;
 			double posZ = this.posZ+Math.sin(Math.toRadians(getFacingAngle()))*0;
 
 			this.riddenByEntity.setPosition(posX, this.posY + this.getMountedYOffset() + this.riddenByEntity.getYOffset(),  posZ);
 		}
-	}
+	}*/
 
 	private double getAngleToEntity(Entity e)
 	{
@@ -181,31 +188,29 @@ public class EntityCart extends Entity
 			pullPrevPosX = entity.posX;
 			pullPrevPosY = entity.posY;
 			pullPrevPosZ = entity.posZ;
-			dataWatcher.updateObject(20, 1);
+			getDataManager().set(IS_BEING_PULLED, true);
 		}
 		else
 		{
 			this.rotationPitch = 0;
-			dataWatcher.updateObject(20, 0);
+			getDataManager().set(IS_BEING_PULLED, false);
 		}
 		pullEntity = entity;
 	}
 
 	public boolean isBeingPulled()
 	{
-		if((dataWatcher.getWatchableObjectInt(20) & 1) == 1)
-			return true;
-		return false;
+		return getDataManager().get(IS_BEING_PULLED);
 	}
 
 	public float getFacingAngle()
 	{
-		return dataWatcher.getWatchableObjectFloat(21);
+		return getDataManager().get(ROTATION);
 	}
 
 	public float setFacingAngle(float f)
 	{
-		dataWatcher.updateObject(21, f);
+		getDataManager().set(ROTATION, f);
 		return f;
 	}
 
@@ -213,7 +218,7 @@ public class EntityCart extends Entity
 	public void onUpdate()
 	{
 		super.onUpdate();
-		if (this.riddenByEntity == null)
+		if (this.isBeingRidden())
 		{
 			noClip = false;
 		}
@@ -280,16 +285,16 @@ public class EntityCart extends Entity
 				{
 					Entity entity = (Entity)list.get(k1);
 
-					if (entity != this.riddenByEntity && entity.canBePushed() && entity instanceof EntityCart)
+					if (!getPassengers().contains(entity) && entity.canBePushed() && entity instanceof EntityCart)
 					{
 						entity.applyEntityCollision(this);
 					}
 				}
 			}
 
-			if (this.riddenByEntity != null && this.riddenByEntity.isDead)
+			if (this.isBeingRidden() && this.getPassengers().get(0).isDead)
 			{
-				this.riddenByEntity = null;
+				getPassengers().remove(0);
 			}
 		}
 	}

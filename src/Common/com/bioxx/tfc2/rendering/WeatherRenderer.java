@@ -4,17 +4,20 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 import net.minecraftforge.client.IRenderHandler;
 
@@ -59,7 +62,7 @@ public class WeatherRenderer extends IRenderHandler
 			int entityY = MathHelper.floor_double(entity.posY);
 			int entityZ = MathHelper.floor_double(entity.posZ);
 			Tessellator tessellator = Tessellator.getInstance();
-			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+			VertexBuffer worldrenderer = tessellator.getBuffer();
 			GlStateManager.disableCull();
 			GL11.glNormal3f(0.0F, 1.0F, 0.0F);
 			GlStateManager.enableBlend();
@@ -197,7 +200,7 @@ public class WeatherRenderer extends IRenderHandler
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		WorldClient worldclient = mc.theWorld;
-		if(worldclient.provider.getDimensionId() != 0)
+		if(worldclient.provider.getDimension() != 0)
 			return;
 		float rainStrength = (float)WeatherManager.getInstance().getPreciptitationClient((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
@@ -232,6 +235,7 @@ public class WeatherRenderer extends IRenderHandler
 				BlockPos blockPos1 = worldclient.getPrecipitationHeight(blockpos.add(worldclient.rand.nextInt(b0) - worldclient.rand.nextInt(b0), 0, worldclient.rand.nextInt(b0) - worldclient.rand.nextInt(b0)));
 				double temp = WeatherManager.getInstance().getTemperatureClient(blockPos1);
 				BlockPos blockpos2 = blockPos1.down();
+				IBlockState state = worldclient.getBlockState(blockpos2);
 				Block block = worldclient.getBlockState(blockpos2).getBlock();
 
 				if (blockPos1.getY() <= blockpos.getY() + b0 && blockPos1.getY() >= blockpos.getY() - b0 && temp > 0.15)
@@ -239,23 +243,23 @@ public class WeatherRenderer extends IRenderHandler
 					float f1 = worldclient.rand.nextFloat();
 					float f2 = worldclient.rand.nextFloat();
 
-					if (block.getMaterial() == Material.lava)
+					if (block.getMaterial(state) == Material.LAVA)
 					{
-						mc.theWorld.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double)((float)blockPos1.getX() + f1), (double)((float)blockPos1.getY() + 0.1F) - block.getBlockBoundsMinY(), (double)((float)blockPos1.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
+						mc.theWorld.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double)((float)blockPos1.getX() + f1), (double)((float)blockPos1.getY() + 0.1F) - block.getCollisionBoundingBox(state, worldclient, blockpos2).minY, (double)((float)blockPos1.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
 					}
-					else if (block.getMaterial() != Material.air)
+					else if (block.getMaterial(state) != Material.AIR)
 					{
-						block.setBlockBoundsBasedOnState(worldclient, blockpos2);
+						//block.setBlockBoundsBasedOnState(worldclient, blockpos2);
 						++i;
 
 						if (worldclient.rand.nextInt(i) == 0)
 						{
 							d0 = (double)((float)blockpos2.getX() + f1);
-							d1 = (double)((float)blockpos2.getY() + 0.1F) + block.getBlockBoundsMaxY() - 1.0D;
+							d1 = (double)((float)blockpos2.getY() + 0.1F) + block.getCollisionBoundingBox(state, worldclient, blockpos2).maxY - 1.0D;
 							d2 = (double)((float)blockpos2.getZ() + f2);
 						}
 
-						mc.theWorld.spawnParticle(EnumParticleTypes.WATER_DROP, (double)((float)blockpos2.getX() + f1), (double)((float)blockpos2.getY() + 0.1F) + block.getBlockBoundsMaxY(), (double)((float)blockpos2.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
+						mc.theWorld.spawnParticle(EnumParticleTypes.WATER_DROP, (double)((float)blockpos2.getX() + f1), (double)((float)blockpos2.getY() + 0.1F) + block.getCollisionBoundingBox(state, worldclient, blockpos2).maxY, (double)((float)blockpos2.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
 					}
 				}
 			}
@@ -266,11 +270,11 @@ public class WeatherRenderer extends IRenderHandler
 
 				if (d1 > (double)(blockpos.getY() + 1) && worldclient.getPrecipitationHeight(blockpos).getY() > MathHelper.floor_float((float)blockpos.getY()))
 				{
-					mc.theWorld.playSound(d0, d1, d2, "ambient.weather.rain", 0.1F*rainStrength, 0.5F, false);
+					mc.theWorld.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN_ABOVE, SoundCategory.WEATHER, 0.1F, 0.5F, false);
 				}
 				else
 				{
-					mc.theWorld.playSound(d0, d1, d2, "ambient.weather.rain", 0.2F*rainStrength, 1.0F, false);
+					mc.theWorld.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN, SoundCategory.WEATHER, 0.2F, 1.0F, false);
 				}
 			}
 		}

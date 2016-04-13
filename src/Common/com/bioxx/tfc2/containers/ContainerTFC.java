@@ -2,6 +2,7 @@ package com.bioxx.tfc2.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
@@ -46,7 +47,7 @@ public class ContainerTFC extends Container
 	 *  
 	 * @param mode 0 = basic click, 1 = shift click, 2 = hotbar, 3 = pick block, 4 = drop, 5 = ?, 6 = double click
 	 */
-	public ItemStack slotClick(int slotID, int clickedButton, int mode, EntityPlayer p)
+	public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer p)
 	{
 		if (slotID >= 0 && slotID < this.inventorySlots.size())
 		{
@@ -54,7 +55,7 @@ public class ContainerTFC extends Container
 			ItemStack slotStack = sourceSlot.getStack();
 
 			//This section is for merging foods with differing expirations.
-			if(mode == 0 && clickedButton == 0 && slotStack != null && p.inventory.getItemStack() != null)
+			if(clickTypeIn == ClickType.SWAP && slotStack != null && p.inventory.getItemStack() != null)
 			{
 				ItemStack itemstack4 = p.inventory.getItemStack();
 				if (slotStack.getItem() == itemstack4.getItem() && slotStack.getMetadata() == itemstack4.getMetadata() && ContainerTFC.areCompoundsEqual(slotStack, itemstack4))
@@ -67,7 +68,8 @@ public class ContainerTFC extends Container
 							Food.setDecayTimer(slotStack, ex2);
 					}
 
-					int l1 = clickedButton == 0 ? itemstack4.stackSize : 1;
+					//int l1 = clickedButton == 0 ? itemstack4.stackSize : 1;
+					int l1 = itemstack4.stackSize;
 
 					if (l1 > sourceSlot.getItemStackLimit(itemstack4) - slotStack.stackSize)
 					{
@@ -97,13 +99,13 @@ public class ContainerTFC extends Container
 			}
 
 			// Hotbar press to remove from crafting output
-			if (mode == 2 && slotID == 0 && slotStack != null)
+			if (clickTypeIn == ClickType.QUICK_MOVE && slotID == 0 && slotStack != null)
 			{
 				//Removed During Port
 				//CraftingHandler.preCraft(p, slotStack, craftMatrix);
 			}
 			// S and D hotkeys for trimming/combining food
-			else if (mode == 7 && slotID >= 9 && slotID < 45)
+			/*else if (mode == 7 && slotID >= 9 && slotID < 45)
 			{
 				if (sourceSlot.canTakeStack(p))
 				{
@@ -112,10 +114,10 @@ public class ContainerTFC extends Container
 					sourceSlot.putStack(null);
 					return null;
 				}
-			}
+			}*/
 		}
 
-		ItemStack is = super.slotClick(slotID, clickedButton, mode, p);
+		ItemStack is = super.slotClick(slotID, dragType, clickTypeIn, p);
 		saveContents(is);
 		return is;
 	}
@@ -258,12 +260,12 @@ public class ContainerTFC extends Container
 					int slotNum = bagsSlotNum + (inventoryItemStacks.size()-36);
 					this.saveContents((ItemStack)inventoryItemStacks.get(slotNum));
 					player.inventory.setInventorySlotContents(bagsSlotNum, (ItemStack)inventoryItemStacks.get(slotNum));
-					for (int j = 0; j < this.crafters.size(); ++j)
-						((ICrafting)this.crafters.get(j)).sendSlotContents(this, slotNum, (ItemStack)inventoryItemStacks.get(slotNum));
+					for (int j = 0; j < this.listeners.size(); ++j)
+						((ICrafting)this.listeners.get(j)).sendSlotContents(this, slotNum, (ItemStack)inventoryItemStacks.get(slotNum));
 				}
 
-				for (int j = 0; j < this.crafters.size(); ++j)
-					((ICrafting)this.crafters.get(j)).sendSlotContents(this, i, itemstack1);
+				for (int j = 0; j < this.listeners.size(); ++j)
+					((ICrafting)this.listeners.get(j)).sendSlotContents(this, i, itemstack1);
 			}
 		}
 

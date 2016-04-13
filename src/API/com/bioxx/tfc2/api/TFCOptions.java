@@ -39,7 +39,7 @@ public class TFCOptions
 		try
 		{
 			Property prop = config.get(heading, item, value);
-			prop.comment = comment;
+			prop.setComment(comment);
 			return prop.getBoolean(value);
 		}
 		catch (Exception e)
@@ -72,7 +72,7 @@ public class TFCOptions
 		try
 		{
 			Property prop = config.get(heading, item, value);
-			prop.comment = comment;
+			prop.setComment(comment);
 			return prop.getInt(value);
 		}
 		catch (Exception e)
@@ -89,7 +89,7 @@ public class TFCOptions
 		try
 		{
 			Property prop = config.get(heading, item, value);
-			prop.comment = comment;
+			prop.setComment(comment);
 			return prop.getDouble(value);
 		}
 		catch (Exception e)
@@ -121,7 +121,7 @@ public class TFCOptions
 		try
 		{
 			Property prop = config.get(heading, item, value);
-			prop.comment = comment;
+			prop.setComment(comment);
 			return prop.getString();
 		} catch (Exception e)
 		{

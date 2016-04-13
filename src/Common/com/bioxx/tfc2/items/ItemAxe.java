@@ -9,8 +9,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.Core;
@@ -20,7 +22,7 @@ import com.google.common.collect.Sets;
 
 public class ItemAxe extends ItemTerraTool 
 {
-	private static final Set EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin, Blocks.melon_block, Blocks.ladder});
+	private static final Set EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER});
 
 	public ItemAxe(ToolMaterial mat)
 	{
@@ -28,22 +30,22 @@ public class ItemAxe extends ItemTerraTool
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		if(worldIn.isRemote)
-			return false;
+			return EnumActionResult.FAIL;
 		IBlockState state = worldIn.getBlockState(pos);
 		if(state.getBlock() == TFCBlocks.Sapling)
 			((BlockSapling)state.getBlock()).grow(worldIn, worldIn.rand, pos, state);
 
-		return true;
+		return EnumActionResult.SUCCESS;
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn)
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
 	{
-		if(worldIn.isRemote || !Core.isNaturalLog(blockIn.getDefaultState()))
-			return super.onBlockDestroyed(stack, worldIn, blockIn, pos, playerIn);
+		if(worldIn.isRemote || !Core.isNaturalLog(state))
+			return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
 
 		LinkedList<BlockPos> queue = new LinkedList<BlockPos>();
 		queue.add(pos);
@@ -56,7 +58,7 @@ public class ItemAxe extends ItemTerraTool
 			scanState = worldIn.getBlockState(scanPos);
 			if(Core.isNaturalLog(scanState))
 			{
-				blockIn.dropBlockAsItem(worldIn, scanPos, scanState, 0);
+				state.getBlock().dropBlockAsItem(worldIn, scanPos, scanState, 0);
 				worldIn.setBlockToAir(scanPos);
 				queue.add(scanPos.north());
 				queue.add(scanPos.north().east());

@@ -1,14 +1,15 @@
 package com.bioxx.tfc2.blocks.terrain;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -23,8 +24,9 @@ public class BlockStone extends BlockCollapsible
 
 	public BlockStone()
 	{
-		super(Material.ground, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.GROUND, META_PROPERTY);
+		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setSoundType(SoundType.STONE);
 		scanDepth = 10;
 		collapseType = CollapsibleType.Nature;
 	}
@@ -100,7 +102,7 @@ public class BlockStone extends BlockCollapsible
 	@Override
 	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
-		if(otherState.getBlock() == this || otherState.getBlock() instanceof ISupportBlock || otherState.getBlock() == Blocks.bedrock)
+		if(otherState.getBlock() == this || otherState.getBlock() instanceof ISupportBlock || otherState.getBlock() == Blocks.BEDROCK)
 			return true;
 		return false;
 	}
@@ -127,9 +129,9 @@ public class BlockStone extends BlockCollapsible
 	 * 1. Blockstate 
 	 *******************************************************************************/
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[]{META_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY});
 	}
 
 	@Override
