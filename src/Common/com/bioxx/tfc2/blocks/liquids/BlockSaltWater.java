@@ -30,6 +30,13 @@ public class BlockSaltWater extends BlockFluidClassic {
 	}
 
 	@Override
+	public Block setUnlocalizedName(String name)
+	{
+		this.setRegistryName(name);
+		return super.setUnlocalizedName(name);
+	}
+
+	@Override
 	public float getFluidHeightForRender(IBlockAccess world, BlockPos pos)
 	{
 		IBlockState here = world.getBlockState(pos);

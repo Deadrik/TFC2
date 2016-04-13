@@ -11,10 +11,16 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.ChunkProviderOverworld;
+
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+import net.minecraftforge.event.terraingen.TerrainGen;
 
 import com.bioxx.jmapgen.*;
 import com.bioxx.jmapgen.IslandParameters.Feature;
@@ -178,6 +184,84 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 		chunk.generateSkylightMap();
 		return chunk;  
+	}
+
+	@Override
+	public void populate(int x, int z)
+	{
+		net.minecraft.block.BlockFalling.fallInstantly = true;
+		int i = x * 16;
+		int j = z * 16;
+		BlockPos blockpos = new BlockPos(i, 0, j);
+		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(blockpos.add(16, 0, 16));
+		this.rand.setSeed(this.worldObj.getSeed());
+		long k = this.rand.nextLong() / 2L * 2L + 1L;
+		long l = this.rand.nextLong() / 2L * 2L + 1L;
+		this.rand.setSeed(x * k + z * l ^ this.worldObj.getSeed());
+		boolean flag = false;
+		ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(x, z);
+
+		ForgeEventFactory.onChunkPopulate(true, this, this.worldObj, x, z, flag);
+
+		/*if ((biomegenbase != net.minecraft.init.Biomes.DESERT) && (biomegenbase != net.minecraft.init.Biomes.DESERT_HILLS) && (this.settings.useWaterLakes) && (!flag) && (this.rand.nextInt(this.settings.waterLakeChance) == 0) && 
+       (TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAKE)))
+     {
+       int i1 = this.rand.nextInt(16) + 8;
+       int j1 = this.rand.nextInt(256);
+       int k1 = this.rand.nextInt(16) + 8;
+       new WorldGenLakes(Blocks.WATER).generate(this.worldObj, this.rand, blockpos.add(i1, j1, k1));
+     }
+
+     if ((!flag) && (this.rand.nextInt(this.settings.lavaLakeChance / 10) == 0) && (this.settings.useLavaLakes) && 
+       (TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAVA)))
+     {
+       int i2 = this.rand.nextInt(16) + 8;
+       int l2 = this.rand.nextInt(this.rand.nextInt(248) + 8);
+       int k3 = this.rand.nextInt(16) + 8;
+
+       if ((l2 < this.worldObj.getSeaLevel()) || (this.rand.nextInt(this.settings.lavaLakeChance / 8) == 0))
+       {
+         new WorldGenLakes(Blocks.LAVA).generate(this.worldObj, this.rand, blockpos.add(i2, l2, k3));
+       }
+     }*/
+
+
+		TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAKE);
+		TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAVA);
+
+		biomegenbase.decorate(this.worldObj, this.rand, new BlockPos(i, 0, j));
+
+		TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.ANIMALS);
+
+		/*if (TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.ANIMALS))
+			net.minecraft.world.WorldEntitySpawner.performWorldGenSpawning(this.worldObj, biomegenbase, i + 8, j + 8, 16, 16, this.rand);*/
+		blockpos = blockpos.add(8, 0, 8);
+
+		if (TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.ICE))
+		{
+			for (int k2 = 0; k2 < 16; k2++)
+			{
+				for (int j3 = 0; j3 < 16; j3++)
+				{
+					BlockPos blockpos1 = this.worldObj.getPrecipitationHeight(blockpos.add(k2, 0, j3));
+					BlockPos blockpos2 = blockpos1.down();
+
+					if (this.worldObj.canBlockFreezeWater(blockpos2))
+					{
+						this.worldObj.setBlockState(blockpos2, Blocks.ICE.getDefaultState(), 2);
+					}
+
+					if (this.worldObj.canSnowAt(blockpos1, true))
+					{
+						this.worldObj.setBlockState(blockpos1, Blocks.SNOW_LAYER.getDefaultState(), 2);
+					}
+				}
+			}
+		}
+
+		ForgeEventFactory.onChunkPopulate(false, this, this.worldObj, x, z, flag);
+
+		net.minecraft.block.BlockFalling.fallInstantly = false;
 	}
 
 	/**

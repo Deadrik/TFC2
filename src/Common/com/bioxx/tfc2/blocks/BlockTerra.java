@@ -56,6 +56,13 @@ public abstract class BlockTerra extends Block
 		blockAABB = new AxisAlignedBB(xMin, yMin, zMin, xMax, yMax, zMax);
 	}
 
+	@Override
+	public Block setUnlocalizedName(String name)
+	{
+		this.setRegistryName(name);
+		return super.setUnlocalizedName(name);
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list)

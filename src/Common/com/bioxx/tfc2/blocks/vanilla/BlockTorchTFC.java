@@ -47,6 +47,13 @@ public class BlockTorchTFC extends BlockTorch implements ITileEntityProvider
 	}
 
 	@Override
+	public Block setUnlocalizedName(String name)
+	{
+		this.setRegistryName(name);
+		return super.setUnlocalizedName(name);
+	}
+
+	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
 		super.onBlockAdded(worldIn, pos, state);

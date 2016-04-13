@@ -18,6 +18,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.rendering.SkyRenderer;
 import com.bioxx.tfc2.rendering.WeatherRenderer;
+import com.bioxx.tfc2.world.biome.BiomeProviderTFC;
 
 public class WorldProviderSurface extends WorldProvider 
 {
@@ -34,7 +35,7 @@ public class WorldProviderSurface extends WorldProvider
 	@Override
 	protected void createBiomeProvider()
 	{
-		super.createBiomeProvider();
+		biomeProvider = new BiomeProviderTFC();
 		WorldGen.initialize(worldObj);
 		WeatherManager.setupWeather(worldObj);
 	}

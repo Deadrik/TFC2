@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -102,9 +103,9 @@ public class TFCBlocks
 		Effect = new BlockEffect().setHardness(0.1F).setUnlocalizedName("effect");
 		Vegetation = new BlockVegetation().setHardness(0.1F).setUnlocalizedName("vegetation");
 		LooseRocks = new BlockLooseRocks().setHardness(0.2F).setUnlocalizedName("loose_rock");
-		FreshWaterStatic = new BlockFreshWaterStatic(TFCFluids.FRESHWATER, Material.WATER).setUnlocalizedName("freshwater").setLightOpacity(3);
+		FreshWaterStatic = new BlockFreshWaterStatic(TFCFluids.FRESHWATER, Material.WATER).setUnlocalizedName("freshwater_static").setLightOpacity(3);
 		FreshWater = new BlockFreshWater(TFCFluids.FRESHWATER, Material.WATER).setUnlocalizedName("freshwater").setLightOpacity(3);
-		SaltWaterStatic = new BlockSaltWaterStatic(TFCFluids.SALTWATER, Material.WATER).setUnlocalizedName("saltwater").setLightOpacity(3);
+		SaltWaterStatic = new BlockSaltWaterStatic(TFCFluids.SALTWATER, Material.WATER).setUnlocalizedName("saltwater_static").setLightOpacity(3);
 		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.WATER).setUnlocalizedName("saltwater").setLightOpacity(3);
 		Sapling = new BlockSapling().setHardness(0.1F).setUnlocalizedName("sapling");
 		Sapling2 = new BlockSapling2().setHardness(0.1F).setUnlocalizedName("sapling2");
@@ -160,66 +161,66 @@ public class TFCBlocks
 		// Block registration strings should be lowercase, and separated by underscores. "this_is_an_example"
 		// Preferably these strings should be identical to the corresponding unlocalized name.
 
-		GameRegistry.registerBlock(Dirt, ItemSoil.class, "dirt");
-		GameRegistry.registerBlock(Grass, ItemSoil.class, "grass");
-		GameRegistry.registerBlock(Stone, ItemStone.class, "stone");
-		GameRegistry.registerBlock(Rubble, ItemStone.class, "rubble");
-		GameRegistry.registerBlock(Sand, ItemStone.class, "sand");
-		GameRegistry.registerBlock(Gravel, ItemStone.class, "gravel");
-		GameRegistry.registerBlock(Planks, ItemWood.class, "planks");
-		GameRegistry.registerBlock(Planks2, ItemWood.class, "planks2");
-		GameRegistry.registerBlock(Effect, ItemOre.class, "effect");
-		GameRegistry.registerBlock(Vegetation, "vegetation");
-		GameRegistry.registerBlock(LooseRocks, "loose_rock");
-		GameRegistry.registerBlock(FreshWater, "freshwater");
-		GameRegistry.registerBlock(FreshWaterStatic, "freshwater_static");
-		GameRegistry.registerBlock(SaltWater, "saltwater");
-		GameRegistry.registerBlock(SaltWaterStatic, "saltwater_static");
-		GameRegistry.registerBlock(Sapling, ItemWood.class, "sapling");
-		GameRegistry.registerBlock(Sapling2, ItemWood.class, "sapling2");
-		GameRegistry.registerBlock(LogNatural, ItemWood.class, "log_natural");
-		GameRegistry.registerBlock(LogNatural2, ItemWood.class, "log_natural2");
-		GameRegistry.registerBlock(LogNaturalPalm, ItemWood.class, "log_naturalpalm");
-		GameRegistry.registerBlock(LogVertical, ItemWood.class, "log_vertical");
-		GameRegistry.registerBlock(LogVertical2, ItemWood.class, "log_vertical2");
-		GameRegistry.registerBlock(LogHorizontal, ItemWood.class, "log_horizontal");
-		GameRegistry.registerBlock(LogHorizontal2, ItemWood.class, "log_horizontal2");
-		GameRegistry.registerBlock(LogHorizontal3, ItemWood.class, "log_horizontal3");
-		GameRegistry.registerBlock(Leaves, ItemWood.class, "leaves");
-		GameRegistry.registerBlock(Leaves2, ItemWood.class, "leaves2");
-		GameRegistry.registerBlock(Ore, ItemOre.class, "ore");
-		GameRegistry.registerBlock(ClimbingRocks, "climbing_rock");
-		GameRegistry.registerBlock(StoneBrick, ItemStone.class, "stonebrick");
-		GameRegistry.registerBlock(StoneSmooth, ItemStone.class, "stonesmooth");
-		GameRegistry.registerBlock(Portal, "portal");
-		GameRegistry.registerBlock(PortalStone, "portalstone");
-		GameRegistry.registerBlock(TorchOn, "torch_on");
-		GameRegistry.registerBlock(TorchOff, "torch_off");
-		GameRegistry.registerBlock(Crop, "crop");
-		GameRegistry.registerBlock(Farmland, "farmland");
-		GameRegistry.registerBlock(SupportBeam, ItemWoodSupport.class, "wood_support");
-		GameRegistry.registerBlock(SupportBeam2, ItemWoodSupport.class, "wood_support2");
-		GameRegistry.registerBlock(SupportBeam3, ItemWoodSupport.class, "wood_support3");
+		register(Dirt, ItemSoil.class);
+		register(Grass, ItemSoil.class);
+		register(Stone, ItemStone.class);
+		register(Rubble, ItemStone.class);
+		register(Sand, ItemStone.class);
+		register(Gravel, ItemStone.class);
+		register(Planks, ItemWood.class);
+		register(Planks2, ItemWood.class);
+		register(Effect, ItemOre.class);
+		register(Vegetation);
+		register(LooseRocks, ItemStone.class);
+		register(FreshWater, ItemBlock.class);
+		register(FreshWaterStatic, ItemBlock.class);
+		register(SaltWater, ItemBlock.class);
+		register(SaltWaterStatic, ItemBlock.class);
+		register(Sapling, ItemWood.class);
+		register(Sapling2, ItemWood.class);
+		register(LogNatural, ItemWood.class);
+		register(LogNatural2, ItemWood.class);
+		register(LogNaturalPalm, ItemWood.class);
+		register(LogVertical, ItemWood.class);
+		register(LogVertical2, ItemWood.class);
+		register(LogHorizontal, ItemWood.class);
+		register(LogHorizontal2, ItemWood.class);
+		register(LogHorizontal3, ItemWood.class);
+		register(Leaves, ItemWood.class);
+		register(Leaves2, ItemWood.class);
+		register(Ore, ItemOre.class);
+		register(ClimbingRocks);
+		register(StoneBrick, ItemStone.class);
+		register(StoneSmooth, ItemStone.class);
+		register(Portal);
+		register(PortalStone);
+		register(TorchOn, ItemBlock.class);
+		register(TorchOff, ItemBlock.class);
+		register(Crop);
+		register(Farmland);
+		register(SupportBeam, ItemWoodSupport.class);
+		register(SupportBeam2, ItemWoodSupport.class);
+		register(SupportBeam3, ItemWoodSupport.class);
 		stairsList = new ArrayList<Block>();
-		stairsList.add(GameRegistry.registerBlock(StairsAsh, "stairs_ash"));
-		stairsList.add(GameRegistry.registerBlock(StairsAspen, "stairs_aspen"));
-		stairsList.add(GameRegistry.registerBlock(StairsBirch, "stairs_birch"));
-		stairsList.add(GameRegistry.registerBlock(StairsChestnut, "stairs_chestnut"));
-		stairsList.add(GameRegistry.registerBlock(StairsDouglasFir, "stairs_douglasfir"));
-		stairsList.add(GameRegistry.registerBlock(StairsHickory, "stairs_hickory"));
-		stairsList.add(GameRegistry.registerBlock(StairsMaple, "stairs_maple"));
-		stairsList.add(GameRegistry.registerBlock(StairsOak, "stairs_oak"));
-		stairsList.add(GameRegistry.registerBlock(StairsPine, "stairs_pine"));
-		stairsList.add(GameRegistry.registerBlock(StairsSequoia, "stairs_sequoia"));
-		stairsList.add(GameRegistry.registerBlock(StairsSpruce, "stairs_spruce"));
-		stairsList.add(GameRegistry.registerBlock(StairsSycamore, "stairs_sycamore"));
-		stairsList.add(GameRegistry.registerBlock(StairsWhiteCedar, "stairs_whitecedar"));
-		stairsList.add(GameRegistry.registerBlock(StairsWillow, "stairs_willow"));
-		stairsList.add(GameRegistry.registerBlock(StairsKapok, "stairs_kapok"));
-		stairsList.add(GameRegistry.registerBlock(StairsAcacia, "stairs_acacia"));
-		stairsList.add(GameRegistry.registerBlock(StairsRosewood, "stairs_rosewood"));
-		stairsList.add(GameRegistry.registerBlock(StairsBlackwood, "stairs_blackwood"));
-		stairsList.add(GameRegistry.registerBlock(StairsPalm, "stairs_palm"));
+		stairsList.add(register(StairsAsh, ItemBlock.class));
+		stairsList.add(register(StairsAspen, ItemBlock.class));
+		stairsList.add(register(StairsBirch, ItemBlock.class));
+		stairsList.add(register(StairsChestnut, ItemBlock.class));
+		stairsList.add(register(StairsDouglasFir, ItemBlock.class));
+		stairsList.add(register(StairsHickory, ItemBlock.class));
+		stairsList.add(register(StairsMaple, ItemBlock.class));
+		stairsList.add(register(StairsOak, ItemBlock.class));
+		stairsList.add(register(StairsPine, ItemBlock.class));
+		stairsList.add(register(StairsSequoia, ItemBlock.class));
+		stairsList.add(register(StairsSpruce, ItemBlock.class));
+		stairsList.add(register(StairsSycamore, ItemBlock.class));
+		stairsList.add(register(StairsWhiteCedar, ItemBlock.class));
+		stairsList.add(register(StairsWillow, ItemBlock.class));
+		stairsList.add(register(StairsKapok, ItemBlock.class));
+		stairsList.add(register(StairsAcacia, ItemBlock.class));
+		stairsList.add(register(StairsRosewood, ItemBlock.class));
+		stairsList.add(register(StairsBlackwood, ItemBlock.class));
+		stairsList.add(register(StairsPalm, ItemBlock.class));
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);
@@ -233,6 +234,25 @@ public class TFCBlocks
 		SupportBeam2.setHarvestLevel("axe", 1);
 		SupportBeam3.setHarvestLevel("axe", 1);
 
+	}
+
+	private static Block register(Block b, Class<? extends ItemBlock> i)
+	{
+		try 
+		{
+			GameRegistry.register(b);
+			GameRegistry.register(i.getDeclaredConstructor(Block.class).newInstance(b), b.getRegistryName());
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		return b;
+	}
+
+	private static Block register(Block b)
+	{
+		return (Block) GameRegistry.register(b);
 	}
 
 	public static void RegisterTileEntites()

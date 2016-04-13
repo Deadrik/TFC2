@@ -31,6 +31,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameData;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
@@ -387,7 +388,7 @@ public class ClientProxy extends CommonProxy
 			}
 		});
 		//End Liquids
-
+		Item i = GameData.getBlockItemMap().get(TFCBlocks.LooseRocks);
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.LooseRocks), 0, new ModelResourceLocation(Reference.ModID + ":loose_rock", "inventory"));
 
 		//Change the StateMapper for this block so that it will point to a different file for a specific Property

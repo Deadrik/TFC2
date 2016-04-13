@@ -10,9 +10,9 @@ import com.bioxx.tfc2.world.WorldGen;
 public class BiomeProviderTFC extends BiomeProviderSingle 
 {
 
-	public BiomeProviderTFC(BiomeGenBase biomeIn) 
+	public BiomeProviderTFC() 
 	{
-		super(biomeIn);
+		super(BiomeGenBase.getBiome(1));
 	}
 
 	@Override
