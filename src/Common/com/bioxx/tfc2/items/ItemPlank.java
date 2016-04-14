@@ -27,6 +27,6 @@ public class ItemPlank extends ItemTerra implements IRegisterSelf
 	@Override
 	public String getPath()
 	{
-		return "Wood/Planks/";
+		return "Wood/Plank/";
 	}
 }

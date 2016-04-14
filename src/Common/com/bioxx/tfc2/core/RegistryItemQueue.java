@@ -35,8 +35,8 @@ public class RegistryItemQueue
 	 */
 	public void addFull(Item i)
 	{
-		listMesh.add(new Entry(i, i.getUnlocalizedName().replace("item.", "")));
-		listItem.add(new Entry(i, i.getUnlocalizedName().replace("item.", "")));
+		listMesh.add(new Entry(i, i.getRegistryName().getResourcePath()));
+		listItem.add(new Entry(i, i.getRegistryName().getResourcePath()));
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class RegistryItemQueue
 		while (!listItem.isEmpty())
 		{
 			e = listItem.pop();
-			GameRegistry.registerItem(e.item, e.name);
+			GameRegistry.register(e.item);
 
 			if(e.item instanceof IRegisterSelf)
 			{
@@ -64,6 +64,10 @@ public class RegistryItemQueue
 					String subName = ((IRegisterSelf)e.item).getSubTypeNames()[c];
 					ModelLoader.setCustomModelResourceLocation(e.item, c, new ModelResourceLocation(Reference.ModID + ":"+path+subName, "inventory"));
 				}
+			}
+			else
+			{
+				ModelLoader.setCustomModelResourceLocation(e.item, 0, new ModelResourceLocation(Reference.ModID + ":"+e.item.getRegistryName().getResourcePath(), "inventory"));
 			}
 		}
 
@@ -75,7 +79,7 @@ public class RegistryItemQueue
 		while (!listMesh.isEmpty())
 		{
 			e = listMesh.pop();
-			ModelLoader.setCustomMeshDefinition(e.item, new MeshDef(new ModelResourceLocation(Reference.ModID + ":"+e.name, "inventory")));
+			ModelLoader.setCustomMeshDefinition(e.item, new MeshDef(new ModelResourceLocation(Reference.ModID + ":"+e.item.getRegistryName(), "inventory")));
 		}
 
 	}

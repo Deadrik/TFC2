@@ -2,267 +2,267 @@
   "item.ceramicbreak": {
     "category": "ambient",
     "sounds": [
-      "ceramicbreak1"
+      "tfc2:ceramicbreak1"
     ]
   },
 
   "item.firestarter": {
     "category": "ambient",
     "sounds": [
-      "firestarter1",
-      "firestarter2",
-      "firestarter3",
-      "firestarter4",
-      "firestarter5",
-      "firestarter6",
-      "firestarter7",
-      "firestarter8",
-      "firestarter9",
-      "firestarter10"
+      "tfc2:firestarter1",
+      "tfc2:firestarter2",
+      "tfc2:firestarter3",
+      "tfc2:firestarter4",
+      "tfc2:firestarter5",
+      "tfc2:firestarter6",
+      "tfc2:firestarter7",
+      "tfc2:firestarter8",
+      "tfc2:firestarter9",
+      "tfc2:firestarter10"
     ]
   },
 
   "mob.rooster.cry": {
     "category": "ambient",
     "sounds": [
-      "rooster1"
+      "tfc2:rooster1"
     ]
   },
 
   "quern.stonedrag": {
     "category": "block",
     "sounds": [
-      "stonedrag1",
-      "stonedrag2"
+      "tfc2:stonedrag1",
+      "tfc2:stonedrag2"
     ]
   },
 
   "bellows.blow.air": {
     "category": "block",
     "sounds": [
-      "bellows1"
+      "tfc2:bellows1"
     ]
   },
 
   "dirt.slide.short": {
     "category": "block",
     "sounds": [
-      "fDirtS1",
-      "fDirtS2"
+      "tfc2:fDirtS1",
+      "tfc2:fDirtS2"
     ]
   },
 
   "rock.slide.long": {
     "category": "block",
     "sounds": [
-      "fRockL1",
-      "fRockL2"
+      "tfc2:fRockL1",
+      "tfc2:fRockL2"
     ]
   },
 
   "rock.slide.short": {
     "category": "block",
     "sounds": [
-      "fRockS1",
-      "fRockS2"
+      "tfc2:fRockS1",
+      "tfc2:fRockS2"
     ]
   },
 
   "anvil.metalimpact": {
     "category": "block",
     "sounds": [
-      "metalimpact1",
-      "metalimpact2",
-      "metalimpact3",
-      "metalimpact4"
+      "tfc2:metalimpact1",
+      "tfc2:metalimpact2",
+      "tfc2:metalimpact3",
+      "tfc2:metalimpact4"
     ]
   },
 
   "mob.deer.say": {
     "category": "ambient",
     "sounds": [
-      "deer1",
-      "deer2",
-      "deer3",
-      "deer4",
-      "deer5",
-      "deer6",
-	  "deer7"
+      "tfc2:deer1",
+      "tfc2:deer2",
+      "tfc2:deer3",
+      "tfc2:deer4",
+      "tfc2:deer5",
+      "tfc2:deer6",
+	  "tfc2:deer7"
     ]
   },
 
   "mob.deer.cry": {
     "category": "ambient",
     "sounds": [
-      "deercry1",
-      "deercry2",
-      "deercry3",
-      "deercry4"
+      "tfc2:deercry1",
+      "tfc2:deercry2",
+      "tfc2:deercry3",
+      "tfc2:deercry4"
     ]
   },
 
   "mob.deer.hurt": {
     "category": "ambient",
     "sounds": [
-      "deerhurt1"
+      "tfc2:deerhurt1"
     ]
   },
 
   "mob.deer.death": {
     "category": "ambient",
     "sounds": [
-      "deerdeath1"
+      "tfc2:deerdeath1"
     ]
   },
 
   "mob.bear.say": {
     "category": "ambient",
     "sounds": [
-      "bear1",
-      "bear2",
-      "bear3",
-      "bear4",
-      "bear5",
-      "bear6"
+      "tfc2:bear1",
+      "tfc2:bear2",
+      "tfc2:bear3",
+      "tfc2:bear4",
+      "tfc2:bear5",
+      "tfc2:bear6"
     ]
   },
 
   "mob.bear.cry": {
     "category": "ambient",
     "sounds": [
-      "bearcry1",
-      "bearcry2",
-      "bearcry3",
-      "bearcry4"
+      "tfc2:bearcry1",
+      "tfc2:bearcry2",
+      "tfc2:bearcry3",
+      "tfc2:bearcry4"
     ]
   },
 
   "mob.bear.cub.cry": {
     "category": "ambient",
     "sounds": [
-      "bearcubcry1"
+      "tfc2:bearcubcry1"
     ]
   },
 
   "mob.bear.hurt": {
     "category": "ambient",
     "sounds": [
-      "bearhurt1"
+      "tfc2:bearhurt1"
     ]
   },
 
     "mob.bear.death": {
     "category": "ambient",
     "sounds": [
-      "beardeath1"
+      "tfc2:beardeath1"
     ]
   },
 
   "mob.pheasant.say": {
     "category": "ambient",
     "sounds": [
-      "pheasant1",
-      "pheasant2"
+      "tfc2:pheasant1",
+      "tfc2:pheasant2"
     ]
   },
 
   "mob.pheasant.chick.say": {
     "category": "ambient",
     "sounds": [
-      "pheasantchick1"
+      "tfc2:pheasantchick1"
     ]
   },
 
   "mob.pheasant.hurt": {
     "category": "ambient",
     "sounds": [
-      "pheasanthurt1"
+      "tfc2:pheasanthurt1"
     ]
   },
 
   "mob.pheasant.death": {
     "category": "ambient",
     "sounds": [
-      "pheasantdeath1"
+      "tfc2:pheasantdeath1"
     ]
   },
 
   "mob.cricket": {
     "category": "ambient",
     "sounds": [
-      "cricket1",
-      "cricket2",
-      "cricket3",
-      "cricket4"
+      "tfc2:cricket1",
+      "tfc2:cricket2",
+      "tfc2:cricket3",
+      "tfc2:cricket4"
     ]
   },
 
   "mob.frog": {
     "category": "ambient",
     "sounds": [
-      "frog1"
+      "tfc2:frog1"
     ]
   },
   
   "mob.fox.say": {
     "category": "ambient",
     "sounds": [
-      "foxIdle1"
+      "tfc2:foxIdle1"
     ]
   },
   
   "mob.fox.hurt": {
     "category": "ambient",
     "sounds": [
-      "foxHurt1"
+      "tfc2:foxHurt1"
     ]
   },
   
   "mob.fox.death": {
     "category": "ambient",
     "sounds": [
-      "foxDeath1"
+      "tfc2:foxDeath1"
     ]
   },
   
   "mob.lion.say": {
     "category": "ambient",
     "sounds": [
-      "lionIdle1"
+      "tfc2:lionIdle1"
     ]
   },
   
   "mob.lion.hurt": {
     "category": "ambient",
     "sounds": [
-      "lionHurt1"
+      "tfc2:lionHurt1"
     ]
   },
   
   "mob.lion.death": {
     "category": "ambient",
     "sounds": [
-      "lionDeath1"
+      "tfc2:lionDeath1"
     ]
   },
   
   "knapping": {
     "category": "master",
     "sounds": [
-      {name="stone_knapping", pitch = 1.0},
-      {name="stone_knapping", pitch = 0.8},
-      {name="stone_knapping", pitch = 1.2}
+      {name="tfc2:stone_knapping", pitch = 1.0},
+      {name="tfc2:stone_knapping", pitch = 0.8},
+      {name="tfc2:stone_knapping", pitch = 1.2}
     ]
   },
 
   "music": {
     "category": "music",
     "sounds": [
-      {"name": "music/m0", "stream": true},
-      {"name": "music/m1", "stream": true},
-      {"name": "music/m2", "stream": true},
-      {"name": "music/m3", "stream": true},
-      {"name": "music/m4", "stream": true}
+      {"name": "tfc2:music/m0", "stream": true},
+      {"name": "tfc2:music/m1", "stream": true},
+      {"name": "tfc2:music/m2", "stream": true},
+      {"name": "tfc2:music/m3", "stream": true},
+      {"name": "tfc2:music/m4", "stream": true}
     ]
   }
 }

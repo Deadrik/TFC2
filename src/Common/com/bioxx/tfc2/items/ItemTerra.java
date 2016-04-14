@@ -31,6 +31,13 @@ public class ItemTerra extends Item
 	}
 
 	@Override
+	public Item setUnlocalizedName(String unlocalizedName)
+	{
+		this.setRegistryName(unlocalizedName);
+		return super.setUnlocalizedName(unlocalizedName);
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems)
 	{
