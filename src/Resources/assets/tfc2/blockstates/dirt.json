@@ -1,4 +1,8 @@
 {
+	"forge_marker": 1,
+	"defaults": {
+		"model": "tfc2:Dirt/Granite"
+	},
     "variants": {
         "stone=granite": [ 
         	{ "model": "tfc2:Dirt/Granite" },
@@ -287,6 +291,9 @@
          	{ "model": "tfc2:Dirt/Marble", "x": 270, "y": 90 },
          	{ "model": "tfc2:Dirt/Marble", "x": 270, "y": 180 },
          	{ "model": "tfc2:Dirt/Marble", "x": 270, "y": 270 }
-         ]
+         ],
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
     }
 }

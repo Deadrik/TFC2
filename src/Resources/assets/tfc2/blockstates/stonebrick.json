@@ -25,6 +25,9 @@
 			"schist": {"textures": {"all": "tfc2:blocks/rocks/Schist Brick"}},
 			"gneiss": {"textures": {"all": "tfc2:blocks/rocks/Gneiss Brick"}},
 			"marble": {"textures": {"all": "tfc2:blocks/rocks/Marble Brick"}}
-		}
+		},
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
 	}
 }

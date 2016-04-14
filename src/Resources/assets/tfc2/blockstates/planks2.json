@@ -9,6 +9,9 @@
         	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/Rosewood Plank"} },
         	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/Blackwood Plank"} },
         	"palm":  { "textures": {"all": "tfc2:blocks/wood/Palm Plank"} }
-        }
+        },
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
     }
 }

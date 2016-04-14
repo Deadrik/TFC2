@@ -1,5 +1,6 @@
 {
-    "variants": {
+    "variants": 
+    {
         "wood=ash":  { "model": "tfc2:wood/planks/Ash" },
         "wood=aspen":  { "model": "tfc2:wood/planks/Aspen" },
         "wood=birch":  { "model": "tfc2:wood/planks/Birch" },

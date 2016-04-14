@@ -111,7 +111,7 @@ public class TFCBlocks
 		Sapling2 = new BlockSapling2().setHardness(0.1F).setUnlocalizedName("sapling2");
 		LogNatural = new BlockLogNatural().setHardness(6F).setUnlocalizedName("log_natural");
 		LogNatural2 = new BlockLogNatural2().setHardness(6F).setUnlocalizedName("log_natural2");
-		LogNaturalPalm = new BlockLogNaturalPalm().setHardness(6F).setUnlocalizedName("LogNaturalPalm");
+		LogNaturalPalm = new BlockLogNaturalPalm().setHardness(6F).setUnlocalizedName("log_naturalpalm");
 		LogVertical = new BlockLogVertical().setHardness(2F).setUnlocalizedName("log_vertical");
 		LogVertical2 = new BlockLogVertical2().setHardness(2F).setUnlocalizedName("log_vertical2");
 		LogHorizontal = new BlockLogHorizontal().setHardness(2F).setUnlocalizedName("log_horizontal");
@@ -241,7 +241,8 @@ public class TFCBlocks
 		try 
 		{
 			GameRegistry.register(b);
-			GameRegistry.register(i.getDeclaredConstructor(Block.class).newInstance(b), b.getRegistryName());
+			ItemBlock ib = i.getDeclaredConstructor(Block.class).newInstance(b);
+			GameRegistry.register(ib, b.getRegistryName());
 		} 
 		catch (Exception e) 
 		{

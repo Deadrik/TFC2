@@ -42,6 +42,7 @@ public class BlockLeaves extends BlockTerra
 		this.META_PROP = META_PROPERTY;
 		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
+		this.setShowInCreative(false);
 	}
 	/*******************************************************************************
 	 * 1. Content 

@@ -416,5 +416,8 @@
        "east=false,north=true,south=true,stone=marble,west=true": { "model": "tfc2:Grass/Marble/MarbleNSW" }, 
        "east=true,north=true,south=false,stone=marble,west=true": { "model": "tfc2:Grass/Marble/MarbleNEW" }, 
        "east=true,north=false,south=true,stone=marble,west=true": { "model": "tfc2:Grass/Marble/MarbleSEW" } 
-    }
+    },
+		"inventory": [{
+            "transform": "forge:default-block"
+        }]
 }

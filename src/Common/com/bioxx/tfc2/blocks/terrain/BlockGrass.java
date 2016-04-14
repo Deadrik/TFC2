@@ -41,6 +41,7 @@ public class BlockGrass extends BlockCollapsible
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
 		this.collapseType = CollapsibleType.Nature;
+		this.setShowInCreative(false);
 	}
 
 	/*******************************************************************************

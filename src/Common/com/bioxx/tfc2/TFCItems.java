@@ -177,16 +177,6 @@ public class TFCItems
 	{
 		RegistryItemQueue.getInstance().addItemOnly(i);
 
-		/*if(i instanceof IRegisterSelf)
-		{
-			for(int c = 0; c < ((IRegisterSelf)i).getSubTypeNames().length; c++)
-			{
-				String path = ((IRegisterSelf)i).getPath();
-				String subName = ((IRegisterSelf)i).getSubTypeNames()[c];
-				ModelLoader.setCustomModelResourceLocation(i, c, new ModelResourceLocation(Reference.ModID + ":"+path+subName, "inventory"));
-			}
-		}*/
-
 		return i;
 	}
 

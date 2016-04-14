@@ -34,7 +34,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.GameData;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
@@ -136,6 +135,8 @@ public class ClientProxy extends CommonProxy
 			}
 		});
 		//End Liquids
+
+		setupBlockMeshes();
 	}
 
 	@Override
@@ -146,7 +147,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
 		MinecraftForge.EVENT_BUS.register(new BackgroundMusicHandler());
 
-		setupBlockMeshes();
+
 		setupBlockColors();
 
 		//Entities
@@ -390,7 +391,6 @@ public class ClientProxy extends CommonProxy
 	{
 		OBJLoader.INSTANCE.addDomain(Reference.ModID);
 
-		Item i = GameData.getBlockItemMap().get(TFCBlocks.LooseRocks);
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.LooseRocks), 0, new ModelResourceLocation(Reference.ModID + ":loose_rock", "inventory"));
 
 		//Change the StateMapper for this block so that it will point to a different file for a specific Property
@@ -405,10 +405,6 @@ public class ClientProxy extends CommonProxy
 			}
 		};
 		ModelLoader.setCustomStateMapper(TFCBlocks.Leaves2, ignoreState);
-		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.FreshWater),0,freshwaterLocation);
-		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.FreshWaterStatic),0,freshwaterLocation);
-		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.SaltWater),0,saltwaterLocation);
-		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.SaltWaterStatic),0,saltwaterLocation);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Dirt), "Dirt/", Global.STONE_ALL, 0, 16);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Grass), "Grass/", Global.STONE_ALL, 0, 16);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Stone), "Stone/", Global.STONE_ALL, 0, 16);
@@ -447,6 +443,7 @@ public class ClientProxy extends CommonProxy
 			String vName = Core.textConvert(variantNames[meta]);
 			ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(Reference.ModID + ":" + path + vName, "inventory");
 			ModelLoader.setCustomModelResourceLocation(item, meta, itemModelResourceLocation);
+			//ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(new ResourceLocation(Reference.ModID, item.getRegistryName().getResourcePath()), vName));
 		}
 	}
 

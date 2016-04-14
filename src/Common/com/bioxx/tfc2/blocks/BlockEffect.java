@@ -21,6 +21,7 @@ public class BlockEffect extends BlockTerra
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.setBlockBounds(0, 0, 0, 1, 0.001f, 1);
 		this.fullBlock = false;
+		this.setShowInCreative(false);
 	}
 
 	@Override
