@@ -62,7 +62,80 @@ public class ClientProxy extends CommonProxy
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		super.preInit(event);
-
+		//Setup Liquid Blocks - MUST be in preInit
+		Item fresh = Item.getItemFromBlock(TFCBlocks.FreshWater);
+		Item salt = Item.getItemFromBlock(TFCBlocks.SaltWater);
+		Item saltstatic = Item.getItemFromBlock(TFCBlocks.SaltWaterStatic);
+		Item freshstatic = Item.getItemFromBlock(TFCBlocks.FreshWaterStatic);
+		ModelBakery.registerItemVariants(fresh);
+		ModelBakery.registerItemVariants(salt);
+		ModelBakery.registerItemVariants(saltstatic);
+		ModelBakery.registerItemVariants(freshstatic);
+		ModelLoader.setCustomMeshDefinition(fresh, new ItemMeshDefinition()
+		{
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return freshwaterLocation;
+			}
+		});
+		ModelLoader.setCustomMeshDefinition(salt, new ItemMeshDefinition()
+		{
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return saltwaterLocation;
+			}
+		});
+		ModelLoader.setCustomMeshDefinition(saltstatic, new ItemMeshDefinition()
+		{
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return saltwaterLocation;
+			}
+		});
+		ModelLoader.setCustomMeshDefinition(freshstatic, new ItemMeshDefinition()
+		{
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return freshwaterLocation;
+			}
+		});
+		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWater, new StateMapperBase()
+		{
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
+			{
+				return freshwaterLocation;
+			}
+		});
+		ModelLoader.setCustomStateMapper(TFCBlocks.SaltWater, new StateMapperBase()
+		{
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
+			{
+				return saltwaterLocation;
+			}
+		});
+		ModelLoader.setCustomStateMapper(TFCBlocks.SaltWaterStatic, new StateMapperBase()
+		{
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
+			{
+				return saltwaterLocation;
+			}
+		});
+		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWaterStatic, new StateMapperBase()
+		{
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
+			{
+				return freshwaterLocation;
+			}
+		});
+		//End Liquids
 	}
 
 	@Override
@@ -316,81 +389,6 @@ public class ClientProxy extends CommonProxy
 	private void setupBlockMeshes() 
 	{
 		OBJLoader.INSTANCE.addDomain(Reference.ModID);
-
-		//Setup Liquid Blocks
-		Item fresh = Item.getItemFromBlock(TFCBlocks.FreshWater);
-		Item salt = Item.getItemFromBlock(TFCBlocks.SaltWater);
-		Item saltstatic = Item.getItemFromBlock(TFCBlocks.SaltWaterStatic);
-		Item freshstatic = Item.getItemFromBlock(TFCBlocks.FreshWaterStatic);
-		ModelBakery.registerItemVariants(fresh);
-		ModelBakery.registerItemVariants(salt);
-		ModelBakery.registerItemVariants(saltstatic);
-		ModelBakery.registerItemVariants(freshstatic);
-		ModelLoader.setCustomMeshDefinition(fresh, new ItemMeshDefinition()
-		{
-			@Override
-			public ModelResourceLocation getModelLocation(ItemStack stack)
-			{
-				return freshwaterLocation;
-			}
-		});
-		ModelLoader.setCustomMeshDefinition(salt, new ItemMeshDefinition()
-		{
-			@Override
-			public ModelResourceLocation getModelLocation(ItemStack stack)
-			{
-				return saltwaterLocation;
-			}
-		});
-		ModelLoader.setCustomMeshDefinition(saltstatic, new ItemMeshDefinition()
-		{
-			@Override
-			public ModelResourceLocation getModelLocation(ItemStack stack)
-			{
-				return saltwaterLocation;
-			}
-		});
-		ModelLoader.setCustomMeshDefinition(freshstatic, new ItemMeshDefinition()
-		{
-			@Override
-			public ModelResourceLocation getModelLocation(ItemStack stack)
-			{
-				return freshwaterLocation;
-			}
-		});
-		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWater, new StateMapperBase()
-		{
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
-			{
-				return freshwaterLocation;
-			}
-		});
-		ModelLoader.setCustomStateMapper(TFCBlocks.SaltWater, new StateMapperBase()
-		{
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
-			{
-				return saltwaterLocation;
-			}
-		});
-		ModelLoader.setCustomStateMapper(TFCBlocks.SaltWaterStatic, new StateMapperBase()
-		{
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
-			{
-				return saltwaterLocation;
-			}
-		});
-		ModelLoader.setCustomStateMapper(TFCBlocks.FreshWaterStatic, new StateMapperBase()
-		{
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
-			{
-				return freshwaterLocation;
-			}
-		});
-		//End Liquids
 
 		Item i = GameData.getBlockItemMap().get(TFCBlocks.LooseRocks);
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.LooseRocks), 0, new ModelResourceLocation(Reference.ModID + ":loose_rock", "inventory"));
