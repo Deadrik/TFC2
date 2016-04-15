@@ -84,23 +84,28 @@ public class BlockLeaves extends BlockTerra
 			return;
 		IBlockState scanState;
 		WoodType wood = (WoodType)state.getValue(META_PROPERTY);
-		for(int y = -5; y <= 5; y++)
+		BlockPos scanPos;
+		if (world.isAreaLoaded(pos.add(-5, -5, -5), pos.add(5, 5, 5)))
 		{
-			for(int x = -5; x <= 5; x++)
+			for(int y = -4; y <= 4; y++)
 			{
-				for(int z = -5; z <= 5; z++)
+				for(int x = -4; x <= 4; x++)
 				{
-					scanState = world.getBlockState(pos.add(x, y, z));
-					if(Core.isNaturalLog(scanState) && scanState.getValue(META_PROPERTY) == wood)
-						return;
+					for(int z = -4; z <= 4; z++)
+					{
+						scanPos = pos.add(x, y, z);
+						scanState = world.getBlockState(pos.add(x, y, z));
+						if(Core.isNaturalLog(scanState) && scanState.getValue(META_PROPERTY) == wood)
+							return;
+					}
 				}
 			}
+			world.scheduleUpdate(pos.north(), this, tickRate(world));
+			world.scheduleUpdate(pos.south(), this, tickRate(world));
+			world.scheduleUpdate(pos.east(), this, tickRate(world));
+			world.scheduleUpdate(pos.west(), this, tickRate(world));
+			world.setBlockToAir(pos);
 		}
-		world.scheduleUpdate(pos.north(), this, tickRate(world));
-		world.scheduleUpdate(pos.south(), this, tickRate(world));
-		world.scheduleUpdate(pos.east(), this, tickRate(world));
-		world.scheduleUpdate(pos.west(), this, tickRate(world));
-		world.setBlockToAir(pos);
 	}
 
 	@Override

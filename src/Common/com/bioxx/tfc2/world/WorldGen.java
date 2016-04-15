@@ -30,13 +30,15 @@ import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.api.util.IThreadCompleteListener;
-import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 
 
 public class WorldGen implements IThreadCompleteListener
 {
 	private static WorldGen instance;
 	private static WorldGen instanceClient;
+	private static boolean SHOULD_RESET_SERVER = false;
+	private static boolean SHOULD_RESET_CLIENT = false;
+
 	final java.util.Map<Integer, CachedIsland> islandCache;
 	public World world;
 	public static final int ISLAND_SIZE = 4096;
@@ -53,7 +55,8 @@ public class WorldGen implements IThreadCompleteListener
 
 	public static void ClearInstances()
 	{
-
+		SHOULD_RESET_CLIENT = true;
+		SHOULD_RESET_SERVER = true;
 	}
 
 	public WorldGen(World w) 
@@ -68,13 +71,19 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
-			if(instance == null)
+			if(instance == null || SHOULD_RESET_SERVER)
+			{
 				instance = new WorldGen(world);
+				SHOULD_RESET_SERVER = false;
+			}
 		}
 		else
 		{
-			if(instanceClient == null)
+			if(instanceClient == null || SHOULD_RESET_CLIENT)
+			{
 				instanceClient = new WorldGen(world);
+				SHOULD_RESET_CLIENT = false;
+			}
 		}
 	}
 
@@ -111,7 +120,7 @@ public class WorldGen implements IThreadCompleteListener
 	private IslandMap createFakeMap(int x, int z)
 	{
 		long seed = world.getSeed()+Helper.combineCoords(x, z);
-		TFC.network.sendToServer(new ServerMapRequestPacket(x, z));
+		//TFC.network.sendToServer(new ServerMapRequestPacket(x, z));
 		return createFakeMap(x, z, seed);
 	}
 
@@ -289,8 +298,6 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			id.setFeatures(Feature.Desert);
 		}
-
-		id.setFeatures(Feature.Desert);
 
 		String common = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
 		String uncommon = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);

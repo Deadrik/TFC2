@@ -98,11 +98,13 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
 
 		VegType veg = (VegType)state.getValue(META_PROPERTY);
-		if(veg == VegType.DoubleGrassBottom && plant.getValue(META_PROPERTY) == VegType.DoubleGrassTop)
-			return true;
-		if(veg == VegType.DoubleFernBottom && plant.getValue(META_PROPERTY) == VegType.DoubleFernTop)
-			return true;
-
+		if(plant.getBlock() == this)
+		{
+			if(veg == VegType.DoubleGrassBottom && plant.getValue(META_PROPERTY) == VegType.DoubleGrassTop)
+				return true;
+			if(veg == VegType.DoubleFernBottom && plant.getValue(META_PROPERTY) == VegType.DoubleFernTop)
+				return true;
+		}
 		return false;
 	}
 

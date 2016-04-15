@@ -20,10 +20,7 @@ import net.minecraft.world.chunk.Chunk;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.api.types.WoodType;
-import com.bioxx.tfc2.blocks.BlockLeaves;
-import com.bioxx.tfc2.blocks.BlockLeaves2;
-import com.bioxx.tfc2.blocks.BlockLogNatural;
-import com.bioxx.tfc2.blocks.BlockLogNatural2;
+import com.bioxx.tfc2.blocks.*;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.InventoryPlayerTFC;
 import com.bioxx.tfc2.core.PortalSchematic;
@@ -215,8 +212,8 @@ public class Core
 	public static IBlockState getPlanks(WoodType w)
 	{
 		if(w.getMeta() >= 16)
-			return TFCBlocks.Planks2.getDefaultState().withProperty(BlockLogNatural2.META_PROPERTY, w);
-		return TFCBlocks.Planks.getDefaultState().withProperty(BlockLogNatural.META_PROPERTY, w);
+			return TFCBlocks.Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, w);
+		return TFCBlocks.Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, w);
 	}
 
 	public static IBlockState getNaturalLog(WoodType w)

@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerDisconnectionFromClientEvent;
 
 import com.bioxx.jmapgen.IslandMap;
@@ -30,7 +31,7 @@ public class PlayerTracker
 		int islandZ = (int)(event.player.posZ) >> 12;
 
 		IslandMap map = WorldGen.getInstance().getIslandMap(islandX, islandZ);
-		TFC.network.sendTo(new ClientMapPacket(islandX, islandZ, map.seed), (EntityPlayerMP)event.player);
+		TFC.network.sendTo(new ClientMapPacket(islandX, islandZ, event.player.worldObj.getSeed()+map.seed), (EntityPlayerMP)event.player);
 	}
 
 	@SubscribeEvent
@@ -40,7 +41,23 @@ public class PlayerTracker
 	}
 
 	@SubscribeEvent
-	public void onClientDisconnect(ServerDisconnectionFromClientEvent event)
+	/**
+	 * Runs on the client
+	 */
+	public void onClientDisconnectServer(ClientDisconnectionFromServerEvent event)
+	{
+		if(WorldGen.getInstance() != null)
+		{
+			WorldGen.getInstance().resetCache();
+			WorldGen.ClearInstances();
+		}
+	}
+
+	@SubscribeEvent
+	/**
+	 * Runs on the server
+	 */
+	public void onServerDisconnectClient(ServerDisconnectionFromClientEvent event)
 	{
 	}
 
