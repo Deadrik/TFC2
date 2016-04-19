@@ -16,6 +16,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
@@ -242,6 +243,7 @@ public class WeatherRenderer extends IRenderHandler
 				{
 					float f1 = worldclient.rand.nextFloat();
 					float f2 = worldclient.rand.nextFloat();
+					AxisAlignedBB axisalignedbb = state.getBoundingBox(worldclient, blockpos2);
 
 					if (block.getMaterial(state) == Material.LAVA)
 					{
@@ -255,7 +257,7 @@ public class WeatherRenderer extends IRenderHandler
 						if (worldclient.rand.nextInt(i) == 0)
 						{
 							d0 = (double)((float)blockpos2.getX() + f1);
-							d1 = (double)((float)blockpos2.getY() + 0.1F) + block.getCollisionBoundingBox(state, worldclient, blockpos2).maxY - 1.0D;
+							d1 = (double)((float)blockpos2.getY() + 0.1F) + axisalignedbb.maxY - 1.0D;
 							d2 = (double)((float)blockpos2.getZ() + f2);
 						}
 

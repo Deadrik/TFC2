@@ -7,6 +7,8 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.types.StoneType;
@@ -42,7 +44,18 @@ public class BlockGravel extends BlockGravity
 	@Override
 	public float getSlideChance()
 	{
-		return 1.0f;
+		return 0.9f;
+	}
+
+	@Override
+	protected void checkFallable(World worldIn, BlockPos pos, IBlockState state)
+	{
+		BlockPos slidePos = slideScan(worldIn, pos);
+		if(slidePos != null && (slidePos.getY() >= 0))
+		{
+			worldIn.setBlockToAir(pos);
+			fall(worldIn, slidePos, state);
+		}
 	}
 
 	/*******************************************************************************

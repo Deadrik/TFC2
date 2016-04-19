@@ -267,10 +267,10 @@ public class ClientProxy extends CommonProxy
 			@Override
 			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 			{
+				if(pos == null || WorldGen.getInstance() == null)
+					return 0x55ff55;
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
-				if(WorldGen.getInstance() == null)
-					return 0x55ff55;
 				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
 				double d1 = 0.5;
@@ -295,13 +295,14 @@ public class ClientProxy extends CommonProxy
 			@Override
 			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 			{
+				if(pos == null || WorldGen.getInstance() == null)
+					return 0x55ff55;
 				VegType veg = (VegType)worldIn.getBlockState(pos).getValue(BlockVegetation.META_PROPERTY);
 				if(veg == VegType.DeadBush)
 					return 0xD8D8D8;
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
-				if(WorldGen.getInstance() == null)
-					return 0x55ff55;
+
 				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
 				double d1 = 0.5;
@@ -319,10 +320,10 @@ public class ClientProxy extends CommonProxy
 			@Override
 			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 			{
+				if(pos == null || WorldGen.getInstance() == null)
+					return 0x55ff55;
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
-				if(WorldGen.getInstance() == null)
-					return 0x55ff55;
 				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
 				double d1 = 0.5;

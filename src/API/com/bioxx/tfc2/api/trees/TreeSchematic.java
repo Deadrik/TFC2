@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 import com.bioxx.tfc2.api.Schematic;
 import com.bioxx.tfc2.api.types.WoodType;
@@ -49,9 +51,18 @@ public class TreeSchematic extends Schematic
 				size = 1;
 			else
 				size = 0;
+
+			aabb = new AxisAlignedBB(0, 0, 0, width, height, length);
+
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(BlockPos pos)
+	{
+		return aabb.addCoord(pos.getX()-getCenterX()+1, pos.getY(), pos.getZ()-getCenterZ()+1);
 	}
 
 	public int getBaseCount()

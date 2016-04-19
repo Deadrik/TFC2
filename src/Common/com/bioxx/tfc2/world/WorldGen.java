@@ -30,6 +30,7 @@ import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.api.util.IThreadCompleteListener;
+import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 
 
 public class WorldGen implements IThreadCompleteListener
@@ -120,18 +121,24 @@ public class WorldGen implements IThreadCompleteListener
 	private IslandMap createFakeMap(int x, int z)
 	{
 		long seed = world.getSeed()+Helper.combineCoords(x, z);
-		//TFC.network.sendToServer(new ServerMapRequestPacket(x, z));
-		return createFakeMap(x, z, seed);
+		TFC.network.sendToServer(new ServerMapRequestPacket(x, z));
+		return createFakeMap(x, z, seed, false);
 	}
 
-	public IslandMap createFakeMap(int x, int z, long seed)
+	public IslandMap createFakeMap(int x, int z, long seed, boolean overwrite)
 	{
 		IslandParameters id = createParams(seed, x, z);
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
 		mapgen.newIsland(id);
 		mapgen.generateFake();
 		CachedIsland ci = new CachedIsland(mapgen);
-		islandCache.put(Helper.combineCoords(x, z), ci);
+		if(!islandCache.containsKey(Helper.combineCoords(x, z)))
+			islandCache.put(Helper.combineCoords(x, z), ci);
+		else if(overwrite && islandCache.containsKey(Helper.combineCoords(x, z)))
+		{
+			islandCache.remove(Helper.combineCoords(x, z));
+			islandCache.put(Helper.combineCoords(x, z), ci);
+		}
 		return mapgen;
 	}
 
@@ -289,6 +296,8 @@ public class WorldGen implements IThreadCompleteListener
 		}
 
 		id.setIslandTemp(t);
+
+		id.setFeatures(Feature.Valleys);
 
 
 		Moisture m = Moisture.fromVal(r.nextDouble());

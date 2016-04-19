@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
 import com.bioxx.tfc2.api.interfaces.ISchematic;
@@ -27,6 +28,7 @@ public class Schematic implements ISchematic
 	protected String path;
 	protected String filename;
 	protected ArrayList<SchemBlock> blockMap;
+	protected AxisAlignedBB aabb;
 
 	public Schematic(String p, String f)
 	{
@@ -83,6 +85,8 @@ public class Schematic implements ISchematic
 					}
 				}
 			}
+
+			aabb = new AxisAlignedBB(0, 0, 0, width, height, length);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -184,6 +188,11 @@ public class Schematic implements ISchematic
 	@Override
 	public ArrayList<SchemBlock> getBlockMap() {
 		return blockMap;
+	}
+
+	public AxisAlignedBB getBoundingBox(BlockPos pos)
+	{
+		return aabb.addCoord(pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	//*****************

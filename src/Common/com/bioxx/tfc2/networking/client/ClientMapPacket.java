@@ -1,7 +1,9 @@
 package com.bioxx.tfc2.networking.client;
 
 import io.netty.buffer.ByteBuf;
+
 import net.minecraft.util.IThreadListener;
+
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -24,6 +26,7 @@ public class ClientMapPacket implements IMessage
 	{
 		islandX = iX;
 		islandZ = iZ; 
+		this.seed = seed;
 	}
 
 	@Override
@@ -52,8 +55,7 @@ public class ClientMapPacket implements IMessage
 				@Override
 				public void run() 
 				{
-					int j;
-					IslandMap map = WorldGen.getInstance().createFakeMap(message.islandX, message.islandZ, message.seed);
+					IslandMap map = WorldGen.getInstance().createFakeMap(message.islandX, message.islandZ, message.seed, true);
 				}
 			});
 			return null; // no response in this case

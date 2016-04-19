@@ -259,6 +259,7 @@ public class RenderOverlayHandler
 			event.getRight().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"--Island Parmaters--");
 			event.getRight().add("*Moisture: "+map.getParams().getIslandMoisture());
 			event.getRight().add("*Temperature: "+map.getParams().getIslandTemp());
+			event.getRight().add("*Seed: "+map.seed);
 
 			event.getRight().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"---Island Features--");
 			for(Feature f : Feature.values())

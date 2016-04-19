@@ -19,7 +19,7 @@
         	"birch":  { "textures": {"all": "tfc2:blocks/wood/trees/Birch Leaves"} },
         	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/trees/Chestnut Leaves", "fluff": "tfc2:blocks/wood/trees/Chestnut Leaves Fluff"} },
         	"douglas_fir":  { "textures": {"all": "tfc2:blocks/wood/trees/Douglas Fir Leaves", "fluff": "tfc2:blocks/wood/trees/Douglas Fir Leaves Fluff"} },
-     	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/trees/Hickory Leaves"} },
+     	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/trees/Hickory Leaves", "fluff": "tfc2:blocks/wood/trees/Hickory Leaves Fluff"} },
         	"maple":  { "textures": {"all": "tfc2:blocks/wood/trees/Maple Leaves"} },
         	"oak":  { "textures": {"all": "tfc2:blocks/wood/trees/Oak Leaves"} },
         	"pine":  { "textures": {"all": "tfc2:blocks/wood/trees/Pine Leaves", "fluff": "tfc2:blocks/wood/trees/Pine Leaves Fluff"} },

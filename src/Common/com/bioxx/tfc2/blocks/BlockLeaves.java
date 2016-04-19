@@ -15,6 +15,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -40,7 +41,7 @@ public class BlockLeaves extends BlockTerra
 		this.setHardness(0.2F);
 		this.setLightOpacity(1);
 		this.META_PROP = META_PROPERTY;
-		setSoundType(SoundType.GROUND);
+		setSoundType(SoundType.PLANT);
 		this.setTickRandomly(true);
 		this.setShowInCreative(false);
 	}
@@ -146,6 +147,19 @@ public class BlockLeaves extends BlockTerra
 		return this.isTransparent ? BlockRenderLayer.CUTOUT_MIPPED : BlockRenderLayer.SOLID;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+	{
+		if ((worldIn.isRainingAt(pos.up())) && (!worldIn.getBlockState(pos.down()).isFullyOpaque()) && (rand.nextInt(15) == 1))
+		{
+			double d0 = pos.getX() + rand.nextFloat();
+			double d1 = pos.getY() - 0.05D;
+			double d2 = pos.getZ() + rand.nextFloat();
+			worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+		}
+	}
+
 	/*******************************************************************************
 	 * 3. Blockstate 
 	 *******************************************************************************/
@@ -158,15 +172,10 @@ public class BlockLeaves extends BlockTerra
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		boolean fancy = true;
-
-		if(!isTransparent)
-			fancy = false;
-
 		if(state.getValue(META_PROPERTY) == WoodType.Palm)
-			fancy = false;
+			return state.withProperty(FANCY, false);
 
-		return state.withProperty(FANCY, fancy);
+		return state.withProperty(FANCY, isTransparent);
 
 	}
 

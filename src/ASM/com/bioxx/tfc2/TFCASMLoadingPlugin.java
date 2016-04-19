@@ -6,6 +6,8 @@ import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
+import com.bioxx.tfc2.asm.transform.TF_EntityRenderer;
+
 @TransformerExclusions({ "com.bioxx.tfc2.asm" })
 public class TFCASMLoadingPlugin implements IFMLLoadingPlugin
 {
@@ -20,7 +22,7 @@ public class TFCASMLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public String[] getASMTransformerClass() {
 		return new String[]{
-				//TF_EntityRenderer.class.getName()
+				TF_EntityRenderer.class.getName()
 		};
 	}
 

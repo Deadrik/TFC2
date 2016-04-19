@@ -45,7 +45,7 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 		}
 	}
 
-	private void checkFallable(World worldIn, BlockPos pos, IBlockState state)
+	protected void checkFallable(World worldIn, BlockPos pos, IBlockState state)
 	{
 		BlockPos slidePos = slideScan(worldIn, pos);
 		if ((canFallInto(worldIn, pos.down())) && (pos.getY() >= 0))
@@ -59,7 +59,7 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 		}
 	}
 
-	private void fall(World worldIn, BlockPos pos, IBlockState state)
+	protected void fall(World worldIn, BlockPos pos, IBlockState state)
 	{
 		int i = 32;
 

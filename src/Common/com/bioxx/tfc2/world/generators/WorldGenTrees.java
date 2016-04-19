@@ -44,59 +44,54 @@ public class WorldGenTrees implements IWorldGenerator
 		chunkX *= 16;
 		chunkZ *= 16;
 
-		//if(world.getWorldChunkManager() instanceof ChunkManager)
+		int xM = (chunkX >> 12);
+		int zM = (chunkZ >> 12);
+		int xMLocal = chunkX & 4095;
+		int zMLocal = chunkZ & 4095;
+		IslandMap m = WorldGen.getInstance().getIslandMap(xM, zM);
+		BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
+		Center c = m.getClosestCenter(new Point(xMLocal+8, zMLocal+8));
+
+		if(c.hasMarker(Marker.Ocean) || !TFCOptions.shouldGenTrees)
 		{
-			int xM = (chunkX >> 12);
-			int zM = (chunkZ >> 12);
-			int xMLocal = chunkX & 4095;
-			int zMLocal = chunkZ & 4095;
-			IslandMap m = WorldGen.getInstance().getIslandMap(xM, zM);
-			BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
-			Center c = m.getClosestCenter(new Point(xMLocal+8, zMLocal+8));
+			return;
+		}
 
-			if(c.hasMarker(Marker.Ocean) || !TFCOptions.shouldGenTrees)
+		//The theoretical max number of trees per chunk is 8.
+		//We mult this by whichever is lower, the hex moisture or the island moisture.
+		//This way base dry islands still feature less trees overall.
+		int baseTrees = 12;
+		baseTrees = (int)(baseTrees * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
+		int numTrees = random.nextInt(baseTrees+1)+1;
+		//numTrees = (int)(numTrees * c.getMoisture().getMoisture());
+
+		if(c.getMoisture() == Moisture.LOW)
+			numTrees = random.nextDouble() < 0.25 ? 1 : 0;
+
+		// Do palm tree gen on valid islands
+		if(c.getElevation() < 0.2 && c.getMoisture().getMoisture() >= Moisture.HIGH.getMoisture() && 
+				m.getParams().getIslandTemp().getMapTemp() >= ClimateTemp.SUBTROPICAL.getMapTemp())
+		{
+			for(int l = 0; l < 3; l++)
 			{
-				return;
+				genPalm(random, chunkX, chunkZ, world, chunkPos, m);
 			}
+		}
 
-			//The theoretical max number of trees per chunk is 8.
-			//We mult this by whichever is lower, the hex moisture or the island moisture.
-			//This way base dry islands still feature less trees overall.
-			int baseTrees = 12;
-			baseTrees = (int)(baseTrees * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
-			int numTrees = random.nextInt(baseTrees+1)+1;
-			//numTrees = (int)(numTrees * c.getMoisture().getMoisture());
+		for(int l = 0; l < numTrees; l++)
+		{
+			double rarity = random.nextDouble();
+			TreeReturn out;
+			if(rarity > 0.9)
+				out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getRareTree());
+			else if(rarity > 0.6)
+				out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getUncommonTree());
+			else
+				out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getCommonTree());
 
-			if(c.getMoisture() == Moisture.LOW)
-				numTrees = random.nextDouble() < 0.25 ? 1 : 0;
-
-			/**
-			 * Do palm tree gen on valid islands
-			 */
-			if(c.getElevation() < 0.2 && c.getMoisture().getMoisture() >= Moisture.HIGH.getMoisture() && 
-					m.getParams().getIslandTemp().getMapTemp() >= ClimateTemp.SUBTROPICAL.getMapTemp())
+			if(out.baseCount > 4)
 			{
-				for(int l = 0; l < 3; l++)
-				{
-					genPalm(random, chunkX, chunkZ, world, chunkPos, m);
-				}
-			}
-
-			for(int l = 0; l < numTrees; l++)
-			{
-				double rarity = random.nextDouble();
-				TreeReturn out;
-				if(rarity > 0.9)
-					out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getRareTree());
-				else if(rarity > 0.6)
-					out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getUncommonTree());
-				else
-					out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getCommonTree());
-
-				if(out.baseCount > 4)
-				{
-					numTrees -= 1;
-				}
+				numTrees -= 1;
 			}
 		}
 	}
@@ -110,10 +105,11 @@ public class WorldGenTrees implements IWorldGenerator
 			return new TreeReturn(TreeReturnEnum.None, 0);
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
-		treePos = world.getHeight(treePos);
+		treePos = world.getTopSolidOrLiquidBlock(treePos);
 		Point p = new Point(treePos.getX(), treePos.getZ()).toIslandCoord();
 		Center c = m.getClosestCenter(p);
 
+		//Obviously we arent going to gen in an ocean hex so we can speed up some generation by skipping this location
 		if(c.hasMarker(Marker.Ocean))
 		{
 			return new TreeReturn(TreeReturnEnum.None, 0);
@@ -151,9 +147,10 @@ public class WorldGenTrees implements IWorldGenerator
 		tsm = TreeRegistry.instance.managerFromString(WoodType.Palm.getName());
 		tc = TreeRegistry.instance.treeFromString(WoodType.Palm.getName());
 
-		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
-		treePos = treePos.add(0, world.getHorizon(), 0);
-		Center c = m.getClosestCenter(new Point(treePos.getX() % 4096, treePos.getZ() % 4096));
+		BlockPos genPos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
+		BlockPos treePos;
+		genPos = genPos.add(0, world.getHorizon(), 0);
+		Center c = m.getClosestCenter(new Point(genPos.getX() % 4096, genPos.getZ() % 4096));
 
 		if(c.hasMarker(Marker.Ocean))
 		{
@@ -165,7 +162,7 @@ public class WorldGenTrees implements IWorldGenerator
 		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
-
+			treePos = genPos.add(-(schem.getCenterX()-1), 0, -(schem.getCenterZ()-1));
 			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
 				if(genTree(schem, tc, world, random, treePos))
@@ -189,65 +186,67 @@ public class WorldGenTrees implements IWorldGenerator
 		int id;
 		int meta;
 
-		int baseX = pos.getX()+1;
-		int baseY = pos.getY();
-		int baseZ = pos.getZ()+1;
-
+		BlockPos treePos = pos.add(1, 0, 1);
+		boolean capture = world.captureBlockSnapshots;
+		world.captureBlockSnapshots = false;
 		for(SchemBlock b : schem.getBlockMap())
 		{
-			Process(world, baseX, baseY, baseZ, tc, schem, b.pos, rot, b.state);
+			Process(world, tc, schem, this.rotateTree(treePos, b.pos, rot), b.state);
 		}
-
+		world.captureBlockSnapshots = capture;
 		return true;
 	}
 
-	private void Process(World world, int treeX, int treeY, int treeZ, TreeConfig tc,
-			Schematic schem, BlockPos localPos, int rot, IBlockState state)
+	private void Process(World world, TreeConfig tc, Schematic schem, BlockPos blockPos, IBlockState state)
 	{
-		int localX = treeX + (localPos.getX() * -1) - 2;
-		int localZ = treeZ + (localPos.getZ() * -1) - 2;
-		int localY = treeY + localPos.getY();
-
-		if(rot == 0)
-		{
-			localX = treeX + localPos.getX() + 1;
-			localZ = treeZ + localPos.getZ() + 1;
-		}
-		else if(rot == 1)
-		{
-			localX = treeX + localPos.getZ();
-			localZ = treeZ + (localPos.getX() * -1) - 2;
-		}
-		else if(rot == 2)
-		{
-			localX = treeX  + (localPos.getZ() * -1) -2;
-			localZ = treeZ + localPos.getX();
-		}
-
 		IBlockState block = tc.wood;
-		BlockPos blockPos = new BlockPos(localX, localY, localZ);
 		Chunk chunk = world.getChunkFromBlockCoords(blockPos);
 		IBlockState leaves = tc.leaves;
 
 		if(state.getBlock().getMaterial(state) == Material.WOOD)
 		{
 			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
-				chunk.setBlockState(blockPos, block);
-			//world.setBlockState(blockPos, block, 2);
+				//chunk.setBlockState(blockPos, block);
+				world.setBlockState(blockPos, block, 2);
 		}
 		else if(state.getBlock().getMaterial(state) == Material.LEAVES)
 		{
 			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
 			{
-				chunk.setBlockState(blockPos, leaves);
-				//world.setBlockState(blockPos, leaves, 2);
+				//chunk.setBlockState(blockPos, leaves);
+				world.setBlockState(blockPos, leaves, 2);
 			}
 		}
 		else
 		{
-			chunk.setBlockState(blockPos, state);
-			//world.setBlockState(blockPos, state, 2);
+			//chunk.setBlockState(blockPos, state);
+			world.setBlockState(blockPos, state, 2);
 		}
+	}
+
+	private BlockPos rotateTree(BlockPos treePos, BlockPos localPos, int rot)
+	{
+		int localX = treePos.getX() + (localPos.getX() * -1) - 2;
+		int localZ = treePos.getZ() + (localPos.getZ() * -1) - 2;
+		int localY = treePos.getY() + localPos.getY();
+
+		if(rot == 0)
+		{
+			localX = treePos.getX() + localPos.getX() + 1;
+			localZ = treePos.getZ() + localPos.getZ() + 1;
+		}
+		else if(rot == 1)
+		{
+			localX = treePos.getX() + localPos.getZ();
+			localZ = treePos.getZ() + (localPos.getX() * -1) - 2;
+		}
+		else if(rot == 2)
+		{
+			localX = treePos.getX()  + (localPos.getZ() * -1) -2;
+			localZ = treePos.getZ() + localPos.getX();
+		}
+
+		return new BlockPos(localX, localY, localZ);
 	}
 
 	private boolean canGrowHere(World world, BlockPos pos, TreeSchematic schem, int growthStage)
@@ -266,6 +265,9 @@ public class WorldGenTrees implements IWorldGenerator
 			{
 				ground = world.getBlockState(gPos.add(i, 0, k));
 
+				if(!world.canBlockSeeSky(gPos.add(i, 1, k)))
+					return false;
+
 				if(schem.getWoodType() != WoodType.Palm && !Core.isSoil(ground))
 				{
 					return false;
@@ -278,7 +280,7 @@ public class WorldGenTrees implements IWorldGenerator
 		}
 
 		//Scan to the tree height to make sure there is enough room for the tree
-		for(int i = 0; i <= schem.getSizeY(); i++)
+		/*for(int i = 0; i <= schem.getSizeY(); i++)
 		{
 			aPos = aPos.add(0, i, 0);
 			above = world.getBlockState(aPos);
@@ -294,7 +296,7 @@ public class WorldGenTrees implements IWorldGenerator
 			//can not account for wide trees, but at least trees with a small radius will not stack.
 			if(count > 2)
 				return false;
-		}
+		}*/
 
 		return true;
 	}
