@@ -247,7 +247,7 @@ public class WeatherRenderer extends IRenderHandler
 
 					if (block.getMaterial(state) == Material.LAVA)
 					{
-						mc.theWorld.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double)((float)blockPos1.getX() + f1), (double)((float)blockPos1.getY() + 0.1F) - block.getCollisionBoundingBox(state, worldclient, blockpos2).minY, (double)((float)blockPos1.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
+						mc.theWorld.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double)((float)blockPos1.getX() + f1), (double)((float)blockPos1.getY() + 0.1F) - axisalignedbb.minY, (double)((float)blockPos1.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
 					}
 					else if (block.getMaterial(state) != Material.AIR)
 					{
@@ -261,7 +261,7 @@ public class WeatherRenderer extends IRenderHandler
 							d2 = (double)((float)blockpos2.getZ() + f2);
 						}
 
-						mc.theWorld.spawnParticle(EnumParticleTypes.WATER_DROP, (double)((float)blockpos2.getX() + f1), (double)((float)blockpos2.getY() + 0.1F) + block.getCollisionBoundingBox(state, worldclient, blockpos2).maxY, (double)((float)blockpos2.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
+						mc.theWorld.spawnParticle(EnumParticleTypes.WATER_DROP, (double)((float)blockpos2.getX() + f1), (double)((float)blockpos2.getY() + 0.1F) + axisalignedbb.maxY, (double)((float)blockpos2.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
 					}
 				}
 			}
@@ -272,11 +272,11 @@ public class WeatherRenderer extends IRenderHandler
 
 				if (d1 > (double)(blockpos.getY() + 1) && worldclient.getPrecipitationHeight(blockpos).getY() > MathHelper.floor_float((float)blockpos.getY()))
 				{
-					mc.theWorld.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN_ABOVE, SoundCategory.WEATHER, 0.1F, 0.5F, false);
+					mc.theWorld.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN_ABOVE, SoundCategory.WEATHER, 0.1F*rainStrength, 0.5F, false);
 				}
 				else
 				{
-					mc.theWorld.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN, SoundCategory.WEATHER, 0.2F, 1.0F, false);
+					mc.theWorld.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN, SoundCategory.WEATHER, 0.2F*rainStrength, 1.0F, false);
 				}
 			}
 		}

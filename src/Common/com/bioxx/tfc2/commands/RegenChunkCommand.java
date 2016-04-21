@@ -2,7 +2,14 @@ package com.bioxx.tfc2.commands;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.ChunkProviderServer;
 
 public class RegenChunkCommand extends CommandBase
 {
@@ -15,7 +22,7 @@ public class RegenChunkCommand extends CommandBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] params)
 	{
-		/*EntityPlayerMP player;
+		EntityPlayerMP player;
 		try {
 			player = getCommandSenderAsPlayer(sender);
 		} catch (PlayerNotFoundException e) {
@@ -34,12 +41,12 @@ public class RegenChunkCommand extends CommandBase
 					int z = (((int)player.posZ+k*16) >> 4);
 					BlockPos pos = new BlockPos((int)player.posX+i*16, 0, (int)player.posZ+k*16);
 
-					ChunkProviderServer cps = ((ChunkProviderServer)world.getChunkProvider());
+					ChunkProviderServer cps = world.getChunkProvider();
 
-					Chunk c = cps.serverChunkGenerator.provideChunk(x, z);
+					Chunk c = cps.chunkGenerator.provideChunk(x, z);
 					c.onChunkLoad();
-					c.populateChunk(cps.serverChunkGenerator, cps, x, z);
-					Chunk old = world.getChunkProvider().provideChunk(pos);
+					c.populateChunk(cps, cps.chunkGenerator);
+					Chunk old = world.getChunkProvider().provideChunk(x, z);
 					old.setStorageArrays(c.getBlockStorageArray());
 					old.setChunkModified();
 				}
@@ -53,12 +60,12 @@ public class RegenChunkCommand extends CommandBase
 					int z = (((int)player.posZ+k*16) >> 4);
 					BlockPos pos = new BlockPos((int)player.posX+i*16, 0, (int)player.posZ+k*16);
 					ChunkProviderServer cps = ((ChunkProviderServer)world.getChunkProvider());
-					net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(x, z, world, cps.serverChunkGenerator, cps);
+					net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(x, z, world, cps.chunkGenerator, cps);
 
-					player.playerNetServerHandler.sendPacket(new SPacketChunkData(cps.provideChunk(pos), true, 0xffffffff));
+					player.playerNetServerHandler.sendPacket(new SPacketChunkData(cps.provideChunk(x, z), true, 0xffffffff));
 				}
 			}
-		}*/
+		}
 	}
 
 	@Override

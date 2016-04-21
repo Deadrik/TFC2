@@ -67,6 +67,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 	int mapZ;//This is the z coordinate of the chunk using world coords.
 
 	Plane turbMap;
+	Plane turbMap1_4;
 	IslandMap islandMap;
 
 	Vector<Center> centersInChunk;
@@ -116,6 +117,26 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		//sb2.setScale(0.5);
 
 		turbMap = new Plane(sb2);
+
+		turbMap1_4 = createPondTurbMap(seed);
+	}
+
+	private Plane createPondTurbMap(long seed)
+	{
+		Perlin pe = new Perlin();
+		pe.setSeed(seed);
+		pe.setFrequency (1f/4f);
+		pe.setLacunarity(5);
+		pe.setOctaveCount(4);
+		pe.setPersistence(1f/4f);
+		pe.setNoiseQuality (com.bioxx.libnoise.NoiseQuality.BEST);
+
+		ScaleBias sb2 = new ScaleBias();
+		sb2.setSourceModule(0, pe);
+		//Noise is normally +-2 so we scale by 0.5 to make it +-1.0
+		sb2.setBias(0.5);
+		sb2.setScale(0.25);
+		return new Plane(sb2);
 	}
 
 	@Override
@@ -335,6 +356,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		IBlockState saltwater = TFCBlocks.SaltWaterStatic.getDefaultState();
 		IBlockState top = grass;
 		IBlockState fill = dirt;
+		int closestElev;
 
 		for(int x = 0; x < 16; x++)
 		{
@@ -342,7 +364,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			{
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
-
+				closestElev = convertElevation(closestCenter.getElevation());
 				if(islandMap.getParams().hasFeature(Feature.Desert) && !closestCenter.hasAttribute(Attribute.River) && closestCenter.getMoistureRaw() < 0.25)
 				{
 					top = sand;
@@ -379,7 +401,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 					if(block == Blocks.STONE.getDefaultState() && blockUp == Blocks.AIR.getDefaultState())
 					{
-						if(!isCliff || hexElev == convertElevation(closestCenter.getElevation()))
+						if(!isCliff || hexElev == closestElev)
 						{
 							chunkprimer.setBlockState(x, y, z, top);
 							if(!isCliff)
@@ -408,8 +430,10 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						if(attrib.upriver == null || attrib.upriver.size() == 0)
 						{
 							boolean border = isLakeBorder(p, closestCenter, 7);
-							if(!border && y < this.convertElevation(closestCenter.getElevation()) && y >= this.convertElevation(closestCenter.getElevation())-1)
+							h0 = this.getPondTurbulence(closestCenter, p, 2);
+							if(!border && y < closestElev && y >= closestElev-1-h0)
 							{
+
 								chunkprimer.setBlockState(x, y, z, freshwater);
 								chunkprimer.setBlockState(x, y-1, z, dirt);
 							}
@@ -420,7 +444,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
 						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water
-						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 4)-1)
+						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= closestElev-this.getTurbulence(closestCenter, p, 4)-1)
 							chunkprimer.setBlockState(x, y, z, freshwater);
 						if(getBlock(chunkprimer, x, y, z).isFullCube(getBlock(chunkprimer, x, y, z).getDefaultState()) && blockUp == freshwater)
 						{
@@ -430,7 +454,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 					else if(closestCenter.biome == BiomeType.MARSH && closestCenter.hasAttribute(Attribute.Lake))
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
-						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= this.convertElevation(closestCenter.getElevation())-this.getElevation(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
+						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= closestElev-this.getTurbulence(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
 							chunkprimer.setBlockState(x, y, z, freshwater);
 					}
 
@@ -481,10 +505,17 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		return isLakeBorder(p, c, 3);
 	}
 
-	protected int getElevation(Center c, Point p, double scale)
+	protected int getTurbulence(Center c, Point p, double scale)
 	{
 		Point p2 = p.plus(islandChunkX, islandChunkZ);
 		double turb = Math.max(turbMap.GetValue(p2.x, p2.y), 0);
+		return (int)(turb * scale);
+	}
+
+	protected int getPondTurbulence(Center c, Point p, double scale)
+	{
+		Point p2 = p.plus(islandChunkX, islandChunkZ);
+		double turb = Math.max(createPondTurbMap(0).GetValue(p2.x, p2.y), 0);
 		return (int)(turb * scale);
 	}
 

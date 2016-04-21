@@ -38,8 +38,6 @@ import com.bioxx.libnoise.module.modifier.Curve;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.modifier.ScalePoint;
 import com.bioxx.libnoise.module.source.Perlin;
-import com.bioxx.tfc2.core.Timekeeper;
-import com.bioxx.tfc2.world.WeatherManager;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class PrintImageMapCommand extends CommandBase
@@ -233,7 +231,7 @@ public class PrintImageMapCommand extends CommandBase
 			}
 			else if(params[0].equals("test"))
 			{
-				int size = 512;
+				int size = 16;
 				try 
 				{
 					File outFile = new File(name+".png");
@@ -247,24 +245,39 @@ public class PrintImageMapCommand extends CommandBase
 					int zM = ((int)Math.floor(player.posZ) >> 12);
 					IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 
-					/*for(int x = 0; x < size; x++)
+					Perlin pe = new Perlin();
+					pe.setSeed(0);
+					pe.setFrequency (1f/2f);
+					pe.setLacunarity(5);
+					pe.setNoiseQuality (com.bioxx.libnoise.NoiseQuality.BEST);
+
+					ScaleBias sb2 = new ScaleBias();
+					sb2.setSourceModule(0, pe);
+					//Noise is normally +-2 so we scale by 0.5 to make it +-1.0
+					sb2.setBias(0.5);
+					sb2.setScale(0.25);
+					Plane p = new Plane(sb2);
+
+					for(int y = 0; y < size; y++)
 					{
-						for(int z = 0; z < size; z++)
+						for(int x = 0; x < size; x++)
 						{
-							double val = line.getValue((double)(world.getWorldTime() >> 9));
-							int rain = (int)(val * 255);
+							double val = p.GetValue(x, y);
+							int rain = Math.min((int)(val * 255), 255);
 							graphics.setColor(colorMap[rain]);	
-							graphics.drawRect(x, z, x+1, 1+z);
+							graphics.drawRect(x, y, x+1, y+1);
 						}
-					}*/
-					for(int x = 0; x < size; x++)
+					}
+
+					//rainmap
+					/*for(int x = 0; x < size; x++)
 					{
 						//double val = line.getValue((double)(world.getWorldTime() >> 9)+x, (xM >> 12) * 1000000, (zM >> 12) * 1000000);
 						double val = WeatherManager.getInstance().rainModelSummer.getValue(Timekeeper.getInstance().getTotalHalfHours()+x, xM * 1000000, zM * 1000000);
 						int rain = (int)(val * 255);
 						graphics.setColor(colorMap[rain]);	
 						graphics.drawRect(x, 0, x+1, 512);
-					}
+					}*/
 
 
 					System.out.println(name+".png Done!");
