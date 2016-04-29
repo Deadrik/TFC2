@@ -144,7 +144,7 @@ public class PrintImageMapCommand extends CommandBase
 					int zM = ((int)Math.floor(player.posZ) >> 12);
 					IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 					Center closest = map.getClosestCenter(new Point((int)Math.floor(player.posX) & 4095, (int)Math.floor(player.posZ) & 4095));
-					Vector<Center> land = map.landCenters(map.centers);
+					Vector<Center> land = map.getLandCenters();
 					Center end = land.get(world.rand.nextInt(land.size()));
 					Path path = map.pathfinder.findPath(closest, end);
 					if(path == null)

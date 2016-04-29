@@ -137,18 +137,6 @@ public class ClientProxy extends CommonProxy
 		//End Liquids
 
 		setupBlockMeshes();
-	}
-
-	@Override
-	public void init(FMLInitializationEvent event)
-	{
-		super.init(event);
-		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
-		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
-		MinecraftForge.EVENT_BUS.register(new BackgroundMusicHandler());
-
-
-		setupBlockColors();
 
 		//Entities
 		RenderingRegistry.registerEntityRenderingHandler(EntityCart.class, new IRenderFactory<EntityCart>() { 
@@ -235,6 +223,31 @@ public class ClientProxy extends CommonProxy
 				return new RenderHippo(manager);
 			}
 		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityBigCat.class, new IRenderFactory<EntityBigCat>() { 
+			@Override
+			public Render<? super EntityBigCat> createRenderFor(RenderManager manager) {
+				return new RenderBigCat(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntitySabertooth.class, new IRenderFactory<EntitySabertooth>() { 
+			@Override
+			public Render<? super EntitySabertooth> createRenderFor(RenderManager manager) {
+				return new RenderSabertooth(manager);
+			}
+		});
+
+	}
+
+	@Override
+	public void init(FMLInitializationEvent event)
+	{
+		super.init(event);
+		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
+		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
+		MinecraftForge.EVENT_BUS.register(new BackgroundMusicHandler());
+
+
+		setupBlockColors();
 
 		//Disable vanilla UI elements
 		GuiIngameForge.renderHealth = false;

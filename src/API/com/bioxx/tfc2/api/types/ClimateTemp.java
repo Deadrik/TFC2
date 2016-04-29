@@ -41,4 +41,24 @@ public enum ClimateTemp
 	{
 		return weatherVariance;
 	}
+
+	public boolean isLessThan(ClimateTemp m)
+	{
+		return mapTemp < m.getMapTemp();
+	}
+
+	public boolean isLessThanOrEqual(ClimateTemp m)
+	{
+		return mapTemp <= m.getMapTemp();
+	}
+
+	public boolean isGreaterThan(ClimateTemp m)
+	{
+		return mapTemp > m.getMapTemp();
+	}
+
+	public boolean isGreaterThanOrEqual(ClimateTemp m)
+	{
+		return mapTemp >= m.getMapTemp();
+	}
 }

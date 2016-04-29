@@ -8,8 +8,8 @@ import java.util.*;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.attributes.*;
@@ -21,6 +21,7 @@ import com.bioxx.jmapgen.graph.*;
 import com.bioxx.jmapgen.graph.Center.HexDirection;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.pathfinding.PathFinder;
+import com.bioxx.jmapgen.processing.AnimalProcessor;
 import com.bioxx.jmapgen.processing.CaveProcessor;
 import com.bioxx.jmapgen.processing.OreProcessor;
 import com.bioxx.tfc2.TFC;
@@ -57,6 +58,7 @@ public class IslandMap
 
 	private CaveProcessor caves;
 	private OreProcessor ores;
+	private AnimalProcessor animalProc;
 
 	public IslandMap(int size, long s) 
 	{
@@ -71,6 +73,7 @@ public class IslandMap
 		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
+		animalProc = new AnimalProcessor(this);
 		dungeons = new Vector<Dungeon>();
 	}
 
@@ -81,7 +84,7 @@ public class IslandMap
 		NUM_POINTS = is.SIZE*4;
 		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 		is.createShape(seed);
-		islandData = new IslandData();
+		islandData = new IslandData(is);
 	}
 
 	public IslandParameters getParams()
@@ -105,6 +108,7 @@ public class IslandMap
 		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
+		animalProc = new AnimalProcessor(this);
 		dungeons.clear();
 
 		points = this.generateHexagon(SIZE);
@@ -127,6 +131,7 @@ public class IslandMap
 		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
+		animalProc = new AnimalProcessor(this);
 		dungeons.clear();
 
 		points = this.generateHexagon(SIZE);
@@ -176,7 +181,7 @@ public class IslandMap
 			// Determine downslope paths.
 			calculateDownslopesCenter();
 
-			createVolcano(getCentersAbove(landCenters(centers), 0.4));
+			createVolcano(getCentersAbove(getLandCenters(), 0.4));
 
 			createValleys(getCentersAbove(0.4));
 
@@ -208,7 +213,7 @@ public class IslandMap
 		}
 
 		assignMoisture();
-		redistributeMoisture(landCenters(centers));
+		redistributeMoisture(getLandCenters());
 		assignMoisturePostRedist();
 
 		setupBiomeInfo();
@@ -225,6 +230,8 @@ public class IslandMap
 			d.generate(seed, dungeonCenters.get(this.mapRandom.nextInt(dungeonCenters.size())));
 			dungeons.add(d);
 		}
+
+		animalProc.generate();
 
 	}
 
@@ -244,7 +251,7 @@ public class IslandMap
 		if(!this.getParams().hasFeature(Feature.Spires))
 			return;
 
-		Vector<Center> land = this.landCenters(centers);
+		Vector<Center> land = this.getLandCenters();
 		Vector<Center> starts = new Vector<Center>();
 
 		for(int i = 0; i < 100; i++)
@@ -1571,6 +1578,72 @@ public class IslandMap
 		return out;
 	}
 
+	public Vector<Center> getLandCenters()
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if(!c.hasMarker(Marker.Water))
+				out.add(c);
+		}
+		return out;
+	}
+
+	public Vector<Center> getWaterCenters()
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if(c.hasMarker(Marker.Water))
+				out.add(c);
+		}
+		return out;
+	}
+
+	public Vector<Center> getRiverCenters()
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if(c.hasAttribute(Attribute.River))
+				out.add(c);
+		}
+		return out;
+	}
+
+	public Vector<Center> getOceanCenters()
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if(c.hasMarker(Marker.Ocean))
+				out.add(c);
+		}
+		return out;
+	}
+
+	public Vector<Center> getLakeCenters()
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if(c.biome == BiomeType.LAKE)
+				out.add(c);
+		}
+		return out;
+	}
+
+	public Vector<Center> getMarshCenters()
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if(c.biome == BiomeType.MARSH)
+				out.add(c);
+		}
+		return out;
+	}
+
 	private void createGorges()
 	{
 		if(!this.islandParams.hasFeature(Feature.Gorges))
@@ -2113,9 +2186,10 @@ public class IslandMap
 	/**
 	 * @return nearest Center point for the containing hex
 	 */
-	public Center getClosestCenter(Point p)
+	public Center getClosestCenter(Point param)
 	{
-		//First we place the point in a local grid between 0 and the map width
+		Point p = param.toIslandCoord();
+		/*//First we place the point in a local grid between 0 and the map width
 		p.x = p.x % SIZE;
 		p.y = p.y % SIZE;
 
@@ -2123,7 +2197,9 @@ public class IslandMap
 		if(p.x < 0)
 			p.x += SIZE;
 		if(p.y < 0)
-			p.y += SIZE;
+			p.y += SIZE;*/
+
+
 
 		//Form the best guess coordinates
 		int x = (int)Math.floor((p.x /(SIZE/NUM_POINTS_SQ)));
@@ -2297,7 +2373,7 @@ public class IslandMap
 			dungeons.add(d);
 		}
 
-		this.islandData = new IslandData();
+		this.islandData = new IslandData(this.getParams());
 		islandData.readFromNBT(nbt.getCompoundTag("data"));
 	}
 

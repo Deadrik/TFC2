@@ -21,6 +21,8 @@ import com.bioxx.jmapgen.IslandParameters;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.RandomCollection;
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.events.IslandGenEvent;
@@ -193,7 +195,7 @@ public class WorldGen implements IThreadCompleteListener
 		CachedIsland ci = new CachedIsland(postEvent.islandMap);
 		saveMap(ci);
 		islandCache.put(Helper.combineCoords(x, z), ci);
-		return ci.islandData;
+		return ci.island;
 	}
 
 	private IslandParameters createParams(long seed, int x, int z)
@@ -313,6 +315,19 @@ public class WorldGen implements IThreadCompleteListener
 		String rare = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
 		id.setTrees(common, uncommon, rare);
 
+		/***
+		 * Animals
+		 */
+		ArrayList<SpawnGroup> spawnGroups = AnimalSpawnRegistry.getInstance().getValidSpawnGroups(id);
+
+		int max = Math.min(4, spawnGroups.size());
+		for(int i = 0; i < max; i++)
+		{
+			SpawnGroup group = spawnGroups.get(r.nextInt(spawnGroups.size()));
+			id.animalSpawnGroups.add(group);
+			spawnGroups.remove(group);
+		}
+
 		return id;
 	}
 
@@ -350,16 +365,16 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		try
 		{
-			File file1 = world.getSaveHandler().getMapFileFromName("Map " + island.islandData.getParams().getXCoord() + "," + 
-					island.islandData.getParams().getZCoord());
+			File file1 = world.getSaveHandler().getMapFileFromName("Map " + island.island.getParams().getXCoord() + "," + 
+					island.island.getParams().getZCoord());
 			if (file1 != null)
 			{
 				NBTTagCompound islandNBT = new NBTTagCompound();
-				island.islandData.writeToNBT(islandNBT);
+				island.island.writeToNBT(islandNBT);
 
 				NBTTagCompound finalNBT = new NBTTagCompound();
 				finalNBT.setTag("mapdata", islandNBT);
-				island.islandData.getParams().writeToNBT(finalNBT);
+				island.island.getParams().writeToNBT(finalNBT);
 
 				finalNBT.setLong("lastAccess", island.lastAccess);
 

@@ -18,14 +18,13 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
 
-public class EntityBear extends EntityAnimal 
+public class EntityBigCat extends EntityAnimal
 {
-	BearType bearType;
-	Gender gender;
-	protected static final DataParameter<Gender> GENDER = EntityDataManager.createKey(EntityBear.class, DataSerializersTFC.GENDER);
-	protected static final DataParameter<BearType> BEARTYPE = EntityDataManager.createKey(EntityBear.class, DataSerializersTFC.BEARTYPE);
-
-	public EntityBear(World worldIn) 
+	private Gender gender = Gender.Male;
+	private BigCatType catType;
+	protected static final DataParameter<Gender> GENDER = EntityDataManager.createKey(EntityBigCat.class, DataSerializersTFC.GENDER);
+	protected static final DataParameter<BigCatType> BIGCATTYPE = EntityDataManager.createKey(EntityBigCat.class, DataSerializersTFC.BIGCATTYPE);
+	public EntityBigCat(World worldIn) 
 	{
 		super(worldIn);
 		this.setSize(1.5F, 1.7F);
@@ -39,8 +38,31 @@ public class EntityBear extends EntityAnimal
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
 		setGender(worldIn.rand.nextBoolean() ? Gender.Male : Gender.Female);
-		setBearType(BearType.values()[worldIn.rand.nextInt(3)]);
-		this.enablePersistence();
+	}
+
+	public EntityBigCat(World worldIn, Gender gender) 
+	{
+		this(worldIn);
+		this.gender = gender;
+	}
+
+	public Gender getGender()
+	{
+		return gender;
+	}
+
+	protected void setGender(Gender t)
+	{
+		this.gender = t;
+		getDataManager().set(GENDER, t);	
+	}
+
+	@Override
+	protected void entityInit ()
+	{
+		super.entityInit ();
+		getDataManager().register(GENDER, gender);
+		getDataManager().register(BIGCATTYPE, catType);
 	}
 
 	@Override
@@ -52,17 +74,10 @@ public class EntityBear extends EntityAnimal
 	@Override
 	protected void updateAITick ()
 	{
-		//getDataManager().set (18, getHealth());
 		this.motionY += 0.03999999910593033D;
 	}
 
-	@Override
-	protected void entityInit ()
-	{
-		super.entityInit ();
-		getDataManager().register(GENDER, gender);
-		getDataManager().register(BEARTYPE, bearType);
-	}
+
 
 
 	@Override
@@ -89,8 +104,8 @@ public class EntityBear extends EntityAnimal
 	public void writeEntityToNBT (NBTTagCompound nbt)
 	{
 		super.writeEntityToNBT (nbt);
-		nbt.setInteger("BearType", bearType.ordinal());
-		nbt.setInteger("gender", gender.ordinal());
+		nbt.setInteger("gender", getGender().ordinal());
+		nbt.setInteger("catType", getCatType().ordinal());
 	}
 
 
@@ -101,8 +116,8 @@ public class EntityBear extends EntityAnimal
 	public void readEntityFromNBT(NBTTagCompound nbt)
 	{
 		super.readEntityFromNBT(nbt);
-		this.setBearType(BearType.values()[nbt.getInteger("BearType")]);
-		this.setGender(Gender.values()[nbt.getInteger("gender")]);
+		setGender(Gender.values()[nbt.getInteger("gender")]);
+		setCatType(BigCatType.values()[nbt.getInteger("catType")]);
 	}
 
 
@@ -119,38 +134,27 @@ public class EntityBear extends EntityAnimal
 	 * Returns the sound this mob makes while it's alive.
 	 */
 	@Override
-	protected SoundEvent getAmbientSound ()
+	protected SoundEvent getAmbientSound()
 	{
-		if(isChild() && worldObj.rand.nextInt(100) < 5)
-			return TFC_Sounds.BEARCUBCRY;
-		else if(worldObj.rand.nextInt(100) < 5)
-			return TFC_Sounds.BEARCRY;
-
-		return isChild() ? null : TFC_Sounds.BEARSAY;
+		return TFC_Sounds.BEARSAY;
 	}
 
 	/**
 	 * Returns the sound this mob makes when it is hurt.
 	 */
 	@Override
-	protected SoundEvent getHurtSound()
+	protected SoundEvent getHurtSound ()
 	{
-		if(!isChild())
-			return TFC_Sounds.BEARHURT;
-		else
-			return TFC_Sounds.BEARCUBCRY;
+		return TFC_Sounds.BEARHURT;
 	}
 
 	/**
 	 * Returns the sound this mob makes on death.
 	 */
 	@Override
-	protected SoundEvent getDeathSound()
+	protected SoundEvent getDeathSound ()
 	{
-		if(!isChild())
-			return TFC_Sounds.BEARDEATH;
-		else
-			return TFC_Sounds.BEARCUBCRY;
+		return TFC_Sounds.BEARDEATH;
 	}
 
 	/**
@@ -159,7 +163,7 @@ public class EntityBear extends EntityAnimal
 	@Override
 	protected float getSoundVolume ()
 	{
-		return 0.4F;
+		return 1.0F;
 	}
 
 	/**
@@ -199,35 +203,29 @@ public class EntityBear extends EntityAnimal
 	@Override
 	public float getEyeHeight ()
 	{
-		return height * 0.8F;
+		return height * 0.85F;
 	}
 
 	@Override
 	public boolean attackEntityAsMob (Entity par1Entity)
 	{
-		int dam =  5;
+		int dam =  100;
 		return par1Entity.attackEntityFrom (DamageSource.causeMobDamage (this), dam);
 	}
 
-	public void setGender(Gender t)
+	protected void setCatType(BigCatType t)
 	{
-		this.gender = t;
-		getDataManager().set(GENDER, t);	
+		this.catType = t;
+		getDataManager().set(BIGCATTYPE, t);	
 	}
 
-	public void setBearType(BearType t)
+	public BigCatType getCatType()
 	{
-		this.bearType = t;
-		getDataManager().set(BEARTYPE, t);	
+		return getDataManager().get(BIGCATTYPE);	
 	}
 
-	public BearType getBearType()
+	public enum BigCatType
 	{
-		return getDataManager().get(BEARTYPE);	
-	}
-
-	public enum BearType
-	{
-		Brown, Polar, Black, Panda;
+		MountainLion, Panther, Leopard, Sabertooth;
 	}
 }

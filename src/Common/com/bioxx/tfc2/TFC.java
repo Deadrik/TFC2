@@ -4,9 +4,10 @@ import java.io.File;
 
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -21,7 +22,6 @@ import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.commands.*;
 import com.bioxx.tfc2.core.PortalSchematic;
-import com.bioxx.tfc2.handlers.PlayerTracker;
 import com.bioxx.tfc2.networking.client.ClientMapPacket;
 import com.bioxx.tfc2.networking.server.KnappingUpdatePacket;
 import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
@@ -67,11 +67,7 @@ public class TFC
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		// Register Packet Handler
-		//packetPipeline.initalise();
 		proxy.init(event);
-		FMLCommonHandler.instance().bus().register(new PlayerTracker());
-
 	}
 
 	@EventHandler

@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
 import com.bioxx.tfc2.core.FoodStatsTFC;
@@ -241,15 +242,6 @@ public class Core
 		return WorldGen.getInstance().getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
 	}
 
-	public static IslandMap getClientMapForWorld(World w, BlockPos pos)
-	{
-		if(w.provider.getDimension() == 2)
-		{
-			return WorldGen.getInstance().getIslandMap(pos.getX() >> 9, pos.getZ() >> 9);
-		}
-		return WorldGen.getInstance().getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
-	}
-
 	public static void dropItem(World world, BlockPos pos, ItemStack is)
 	{
 		dropItem(world, (double)pos.getX()+0.5, (double)pos.getY(), (double)pos.getZ()+0.5, is);
@@ -266,5 +258,12 @@ public class Core
 	public static void playSoundAtEntity(Entity e, SoundEvent name, float volume, float pitch)
 	{
 		e.worldObj.playSound(e.posX, e.posY, e.posZ, name, SoundCategory.BLOCKS, volume, pitch, false);
+	}
+
+	public static boolean isCenterInRect(Center c, int x, int z, int xRange, int zRange)
+	{
+		if(c.point.x >= x && c.point.x < x+xRange && c.point.y >= z && c.point.y < z+zRange)
+			return true;
+		return false;
 	}
 }

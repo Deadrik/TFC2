@@ -131,12 +131,7 @@ public class EntityLion extends EntityAnimal
 	@Override
 	protected SoundEvent getAmbientSound()
 	{
-		if(isChild() && worldObj.rand.nextInt(100) < 5)
-			return TFC_Sounds.BEARCUBCRY;
-		else if(worldObj.rand.nextInt(100) < 5)
-			return TFC_Sounds.BEARCRY;
-
-		return isChild() ? null : TFC_Sounds.BEARSAY;
+		return TFC_Sounds.BEARSAY;
 	}
 
 	/**
@@ -145,10 +140,7 @@ public class EntityLion extends EntityAnimal
 	@Override
 	protected SoundEvent getHurtSound ()
 	{
-		if(!isChild())
-			return TFC_Sounds.BEARHURT;
-		else
-			return TFC_Sounds.BEARCUBCRY;
+		return TFC_Sounds.BEARHURT;
 	}
 
 	/**
@@ -157,10 +149,7 @@ public class EntityLion extends EntityAnimal
 	@Override
 	protected SoundEvent getDeathSound ()
 	{
-		if(!isChild())
-			return TFC_Sounds.BEARDEATH;
-		else
-			return TFC_Sounds.BEARCUBCRY;
+		return TFC_Sounds.BEARDEATH;
 	}
 
 	/**
@@ -169,7 +158,7 @@ public class EntityLion extends EntityAnimal
 	@Override
 	protected float getSoundVolume ()
 	{
-		return 0.4F;
+		return 1.0F;
 	}
 
 	/**
@@ -217,18 +206,5 @@ public class EntityLion extends EntityAnimal
 	{
 		int dam =  100;
 		return par1Entity.attackEntityFrom (DamageSource.causeMobDamage (this), dam);
-	}
-
-	@Override
-	public void handleStatusUpdate (byte par1)
-	{
-		if (par1 == 8)
-		{
-			//isWet = true;
-		}
-		else
-		{
-			super.handleStatusUpdate (par1);
-		}
 	}
 }

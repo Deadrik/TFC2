@@ -8,7 +8,9 @@ import java.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -43,6 +45,8 @@ import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.ore.OreConfig;
@@ -211,9 +215,8 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 	public void populate(int x, int z)
 	{
 		net.minecraft.block.BlockFalling.fallInstantly = true;
-		int i = x * 16;
-		int j = z * 16;
-		BlockPos blockpos = new BlockPos(i, 0, j);
+
+		BlockPos blockpos = new BlockPos(z * 16, 0, z * 16);
 		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(blockpos.add(16, 0, 16));
 		this.rand.setSeed(this.worldObj.getSeed());
 		long k = this.rand.nextLong() / 2L * 2L + 1L;
@@ -224,38 +227,69 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 		ForgeEventFactory.onChunkPopulate(true, this, this.worldObj, x, z, flag);
 
-		/*if ((biomegenbase != net.minecraft.init.Biomes.DESERT) && (biomegenbase != net.minecraft.init.Biomes.DESERT_HILLS) && (this.settings.useWaterLakes) && (!flag) && (this.rand.nextInt(this.settings.waterLakeChance) == 0) && 
-       (TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAKE)))
-     {
-       int i1 = this.rand.nextInt(16) + 8;
-       int j1 = this.rand.nextInt(256);
-       int k1 = this.rand.nextInt(16) + 8;
-       new WorldGenLakes(Blocks.WATER).generate(this.worldObj, this.rand, blockpos.add(i1, j1, k1));
-     }
-
-     if ((!flag) && (this.rand.nextInt(this.settings.lavaLakeChance / 10) == 0) && (this.settings.useLavaLakes) && 
-       (TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAVA)))
-     {
-       int i2 = this.rand.nextInt(16) + 8;
-       int l2 = this.rand.nextInt(this.rand.nextInt(248) + 8);
-       int k3 = this.rand.nextInt(16) + 8;
-
-       if ((l2 < this.worldObj.getSeaLevel()) || (this.rand.nextInt(this.settings.lavaLakeChance / 8) == 0))
-       {
-         new WorldGenLakes(Blocks.LAVA).generate(this.worldObj, this.rand, blockpos.add(i2, l2, k3));
-       }
-     }*/
-
-
 		TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAKE);
 		TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAVA);
 
-		biomegenbase.decorate(this.worldObj, this.rand, new BlockPos(i, 0, j));
+		biomegenbase.decorate(this.worldObj, this.rand, new BlockPos(x * 16, 0, z * 16));
 
-		TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.ANIMALS);
+		if(TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.ANIMALS))
+		{
+			BlockPos chunkWorldPos = new BlockPos(x * 16, 0, z * 16);
+			worldX = x * 16;
+			worldZ = z * 16;
+			islandChunkX = worldX % MAP_SIZE;
+			islandChunkZ = worldZ % MAP_SIZE;
+			Point islandPos = new Point(islandChunkX, islandChunkZ).toIslandCoord();
+			IslandMap map = Core.getMapForWorld(worldObj, chunkWorldPos);
+			Center centerInChunk = null;
 
-		/*if (TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.ANIMALS))
-			net.minecraft.world.WorldEntitySpawner.performWorldGenSpawning(this.worldObj, biomegenbase, i + 8, j + 8, 16, 16, this.rand);*/
+			Center temp = islandMap.getClosestCenter(islandPos);
+			if(Core.isCenterInRect(temp, (int)islandPos.x, (int)islandPos.y, 16, 16))
+				centerInChunk = temp;
+			else 
+			{
+				temp = map.getClosestCenter(islandPos.plus(15, 0));
+				if(Core.isCenterInRect(temp, (int)islandPos.x, (int)islandPos.y, 16, 16))
+					centerInChunk = temp;
+				else
+				{
+					temp = map.getClosestCenter(islandPos.plus(0, 15));
+					if(Core.isCenterInRect(temp, (int)islandPos.x, (int)islandPos.y, 16, 16))
+						centerInChunk = temp;
+					else
+					{
+						temp = map.getClosestCenter(islandPos.plus(15, 15));
+						if(Core.isCenterInRect(temp, (int)islandPos.x, (int)islandPos.y, 16, 16))
+							centerInChunk = temp;
+					}
+				}
+			}
+
+			if(centerInChunk != null && centerInChunk.getCustomNBT().hasKey("animalsToSpawn"))
+			{
+				NBTTagList tag = centerInChunk.getCustomNBT().getTagList("animalsToSpawn", 8);
+				IEntityLivingData ientitylivingdata = null;
+				/*Iterator iter = tag.getKeySet().iterator();
+				while(iter.hasNext())
+				{
+					String key = (String)iter.next();
+					String groupName = tag.getString(key);
+					SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(groupName);
+					AnimalSpawner.SpawnAnimalGroup(worldObj, group, worldObj.getChunkFromChunkCoords(x, z));
+					tag.removeTag(key);
+				}*/
+				for(int i = 0; i < tag.tagCount(); i++)
+				{
+					String groupName = tag.getStringTagAt(i);
+
+					SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(groupName);
+					AnimalSpawner.SpawnAnimalGroup(worldObj, group, worldObj.getChunkFromChunkCoords(x, z));
+				}
+
+				centerInChunk.getCustomNBT().removeTag("animalsToSpawn");
+			}
+		}
+
 		blockpos = blockpos.add(8, 0, 8);
 
 		if (TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.ICE))

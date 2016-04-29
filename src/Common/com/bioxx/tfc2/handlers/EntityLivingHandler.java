@@ -9,6 +9,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.WorldSettings.GameType;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.world.WorldGen;
@@ -184,6 +186,9 @@ public class EntityLivingHandler
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 
+		if(event.getEntity().worldObj.isRemote)
+			return;
+
 		if (entity instanceof EntityPlayer)
 		{
 			//Removed on port
@@ -199,8 +204,16 @@ public class EntityLivingHandler
 			}*/
 		}
 
-		if (event.getEntity().dimension == 1)
-			event.getEntity().changeDimension(0);
+		if(entity.getEntityData().hasKey("TFC2"))
+		{
+			NBTTagCompound nbt = entity.getEntityData().getCompoundTag("TFC2");
+			if(nbt.getBoolean("isWild"))
+			{
+				IslandMap map = Core.getMapForWorld(event.getEntity().getEntityWorld(), event.getEntity().getPosition());
+				SpawnEntry entry = map.getIslandData().animalEntries.get(nbt.getString("SpawnGroup"));
+				entry.removeAnimal();
+			}
+		}
 	}
 
 	@SubscribeEvent

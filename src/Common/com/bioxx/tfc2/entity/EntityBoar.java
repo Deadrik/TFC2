@@ -227,7 +227,7 @@ public class EntityBoar extends EntityAnimal
 		getDataManager().set(GENDER, t);	
 	}
 
-	protected void setBoarStage(BoarStage t)
+	public void setBoarStage(BoarStage t)
 	{
 		this.boarStage = t;
 		getDataManager().set(BOARSTAGE, t);

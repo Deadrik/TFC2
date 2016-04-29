@@ -238,7 +238,7 @@ public class EntityTiger extends EntityAnimal
 		getDataManager().set(GENDER, t);	
 	}
 
-	protected void setTigerType(TigerType t)
+	public void setTigerType(TigerType t)
 	{
 		this.tigerType = t;
 		getDataManager().set(TIGERTYPE, t);

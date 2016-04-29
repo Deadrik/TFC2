@@ -1,5 +1,6 @@
 package com.bioxx.jmapgen;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Random;
 
@@ -9,6 +10,8 @@ import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
@@ -34,6 +37,8 @@ public class IslandParameters
 	private String treeRare = WoodType.Ash.getName();
 	private Moisture moisture = Moisture.MEDIUM;
 	private ClimateTemp temp = ClimateTemp.TEMPERATE;
+
+	public ArrayList<SpawnGroup> animalSpawnGroups = new ArrayList<SpawnGroup>();
 
 	public IslandParameters() 
 	{
@@ -224,6 +229,16 @@ public class IslandParameters
 		this.moisture = Moisture.values()[nbt.getInteger("moisture")];
 		this.temp = ClimateTemp.values()[nbt.getInteger("temp")];
 		this.seed = nbt.getLong("seed");
+		this.animalSpawnGroups = new ArrayList<SpawnGroup>();
+		fnbt = nbt.getCompoundTag("spawnGroups");
+		for(int i = 0; i < fnbt.getSize(); i++)
+		{
+			SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(fnbt.getString("animal-"+i));
+			if(group != null)
+			{
+				animalSpawnGroups.add(group);
+			}
+		}
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
@@ -247,6 +262,13 @@ public class IslandParameters
 		nbt.setInteger("moisture", moisture.ordinal());
 		nbt.setInteger("temp", temp.ordinal());
 		nbt.setLong("seed", seed);
+
+		fnbt = new NBTTagCompound();
+		for(int i = 0; i < animalSpawnGroups.size(); i++)
+		{
+			fnbt.setString("animal-"+i, animalSpawnGroups.get(i).getGroupName());
+		}
+		nbt.setTag("spawnGroups", fnbt);
 	}
 
 	public enum Feature

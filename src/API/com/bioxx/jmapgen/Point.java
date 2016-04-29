@@ -56,13 +56,13 @@ public class Point extends Point2D
 
 	public Point toIslandCoord()
 	{
-		x = x % 4096;
-		y = y % 4096;
-		if(x < 0)
-			x = 4095 - x * -1;
+		int x1 = (int) (x % 4096);
+		int y1 = (int) (y % 4096);
+		if(x1 < 0)
+			x1 = 4095 - x1 * -1;
 		if(y < 0)
-			y = 4095 - y * -1;
-		return this;
+			y1 = 4095 - y1 * -1;
+		return new Point(x1, y1);
 	}
 
 	public double getLength()

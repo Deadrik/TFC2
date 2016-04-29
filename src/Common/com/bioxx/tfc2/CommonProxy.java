@@ -2,6 +2,8 @@ package com.bioxx.tfc2;
 
 import java.io.File;
 
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.passive.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -16,19 +18,28 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import com.bioxx.tfc2.api.Crop;
-import com.bioxx.tfc2.api.FoodRegistry;
-import com.bioxx.tfc2.api.Global;
-import com.bioxx.tfc2.api.TFCFluids;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.attributes.Attribute;
+import com.bioxx.jmapgen.attributes.LakeAttribute;
+import com.bioxx.jmapgen.attributes.RiverAttribute;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
+import com.bioxx.tfc2.api.*;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnParameters;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
+import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.core.Recipes;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.*;
+import com.bioxx.tfc2.entity.EntityBear.BearType;
+import com.bioxx.tfc2.entity.EntityTiger.TigerType;
 import com.bioxx.tfc2.handlers.*;
 import com.bioxx.tfc2.world.DimensionTFC;
 import com.bioxx.tfc2.world.generators.WorldGenGrass;
@@ -74,12 +85,9 @@ public class CommonProxy
 
 	public void init(FMLInitializationEvent event)
 	{
-
-
-
 		registerGuiHandler();
 
-		FMLCommonHandler.instance().bus().register(new PlayerTracker());
+		MinecraftForge.EVENT_BUS.register(new PlayerTracker());
 
 		registerEntities();
 	}
@@ -101,6 +109,8 @@ public class CommonProxy
 		EntityRegistry.registerModEntity(EntityFoxArctic.class, "FoxArctic", 11, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 		EntityRegistry.registerModEntity(EntityFoxDesert.class, "FoxDesert", 12, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 		EntityRegistry.registerModEntity(EntityHippo.class, "Hippo", 13, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(EntityBigCat.class, "BigCat", 14, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(EntitySabertooth.class, "Sabertooth", 15, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 	}
 
 	public void postInit(FMLPostInitializationEvent event)
@@ -110,8 +120,11 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(new WorldLoadHandler());
 		MinecraftForge.EVENT_BUS.register(new EntityLivingHandler());
 		MinecraftForge.EVENT_BUS.register(new JoinWorldHandler());
-		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
+		MinecraftForge.EVENT_BUS.register(new ChunkLoadHandler());
+		MinecraftForge.EVENT_BUS.register(new ServerTickHandler());
 		Global.EVENT_BUS.register(new HexUpdateHandler());
+		Global.EVENT_BUS.register(new IslandUpdateHandler());
+		registerAnimals();
 	}
 
 	protected void setupOre()
@@ -153,6 +166,160 @@ public class CommonProxy
 		FoodRegistry.getInstance().registerCropProduce(Crop.Rye, new ItemStack(TFCItems.FoodRyeWhole, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Oat, new ItemStack(TFCItems.FoodOatWhole, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Rice, new ItemStack(TFCItems.FoodRiceWhole, 1, 0));
+	}
+
+	protected void registerAnimals()
+	{
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Elephant",  EntityElephant.class, 2, 4, 20, 20, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MAX)
+		{
+			@Override
+			public boolean canSpawnInDesert()
+			{
+				return true;
+			}
+		}));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Brown Bear",  EntityBear.class, 1, 1, 200, 30, new SpawnParameters(ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, Moisture.MEDIUM, Moisture.MAX)){
+			@Override
+			public void onSpawn(EntityLiving e)
+			{
+				((EntityBear)e).setBearType(BearType.Brown);
+			}
+		});
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Black Bear",  EntityBear.class, 1, 1, 200, 30, new SpawnParameters(ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, Moisture.MEDIUM, Moisture.MAX)){
+			@Override
+			public void onSpawn(EntityLiving e)
+			{
+				((EntityBear)e).setBearType(BearType.Black);
+			}
+		});
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Polar Bear",  EntityBear.class, 1, 1, 300, 30, new SpawnParameters(ClimateTemp.POLAR, ClimateTemp.POLAR, Moisture.LOW, Moisture.MAX)){
+			@Override
+			public void onSpawn(EntityLiving e)
+			{
+				((EntityBear)e).setBearType(BearType.Polar);
+			}
+		});
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Panda Bear",  EntityBearPanda.class, 1, 1, 200, 20, 
+				new SpawnParameters(ClimateTemp.TEMPERATE, ClimateTemp.TEMPERATE, Moisture.HIGH, Moisture.MAX)
+		{
+			@Override
+			public boolean canSpawnHere(IslandMap map, Center closest)
+			{
+				//TODO make this check for a bamboo forest
+				return super.canSpawnHere(map, closest);
+			}
+		}){
+			@Override
+			public void onSpawn(EntityLiving e)
+			{
+				((EntityBearPanda)e).setBearType(BearType.Panda);
+			}
+		});
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Bison",  EntityBison.class, 3, 5, 300, 50, new SpawnParameters(ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, Moisture.LOW, Moisture.MEDIUM)));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Cow",  EntityCow.class, 2, 4, 300, 50, new SpawnParameters(ClimateTemp.SUBPOLAR, ClimateTemp.SUBTROPICAL, Moisture.LOW, Moisture.HIGH)));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Boar",  EntityBoar.class, 2, 4, 500, 50, new SpawnParameters(ClimateTemp.TEMPERATE, ClimateTemp.SUBTROPICAL, Moisture.LOW, Moisture.MEDIUM)));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Wolf",  EntityWolf.class, 2, 4, 200, 20, new SpawnParameters(ClimateTemp.POLAR, ClimateTemp.TEMPERATE, Moisture.LOW, Moisture.MAX)));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Fox Arctic",  EntityFoxArctic.class, 1, 1, 200, 30, new SpawnParameters(ClimateTemp.POLAR, ClimateTemp.SUBPOLAR, Moisture.MEDIUM, Moisture.MAX)));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Fox Red",  EntityFoxRed.class, 1, 1, 200, 30, new SpawnParameters(ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, Moisture.MEDIUM, Moisture.HIGH)));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Fox Desert",  EntityFoxDesert.class, 1, 1, 200, 30, new SpawnParameters(ClimateTemp.TEMPERATE, ClimateTemp.SUBTROPICAL, Moisture.LOW, Moisture.LOW){
+			@Override
+			public boolean canSpawnInDesert()
+			{
+				return true;
+			}
+		}));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Hippo",  EntityHippo.class, 1, 1, 50, 20, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MEDIUM, EntityLiving.SpawnPlacementType.IN_WATER){
+			@Override
+			public boolean canSpawnHere(IslandMap map, Center closest)
+			{
+				boolean isValid = false;
+				if(closest.hasAttribute(Attribute.River))
+				{
+					RiverAttribute attrib = (RiverAttribute) closest.getAttribute(Attribute.River);
+					isValid = attrib.getRiver() >= 1.0;
+				}
+
+				if(closest.hasMarker(Marker.Pond))
+					isValid = true;
+
+				if(closest.hasAttribute(Attribute.Lake))
+				{
+					LakeAttribute attrib = (LakeAttribute) closest.getAttribute(Attribute.Lake);
+					if(attrib.getBorderDistance() <= 1)
+						isValid = true;
+				}
+
+				return isValid;
+			}
+
+			@Override
+			public boolean canSpawnInDesert()
+			{
+				return true;
+			}
+		}));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Lion",  EntityLion.class, 1, 3, 200, 30, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.HIGH){
+			@Override
+			public boolean canSpawnHere(IslandMap map, Center closest)
+			{
+				boolean isValid = super.canSpawnHere(map, closest);
+
+				//This makes sure that the hex isn't too heavily forested
+				if(closest.getMoisture().isGreaterThan(Moisture.MEDIUM))
+					return false;
+
+				return isValid;
+			}
+		}));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Rhino",  EntityRhino.class, 1, 1, 50, 20, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.HIGH){
+			@Override
+			public boolean canSpawnHere(IslandMap map, Center closest)
+			{
+				boolean isValid = super.canSpawnHere(map, closest);
+
+				//This makes sure that the hex isn't too heavily forested
+				if(closest.getMoisture().isGreaterThan(Moisture.LOW))
+					return false;
+
+				return isValid;
+			}
+
+			@Override
+			public boolean canSpawnInDesert()
+			{
+				return true;
+			}
+		}));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Tiger",  EntityTiger.class, 1, 1, 100, 20, new SpawnParameters(ClimateTemp.TEMPERATE, ClimateTemp.TROPICAL, Moisture.MEDIUM, Moisture.MAX))
+		{
+			@Override
+			public void onSpawn(EntityLiving e)
+			{
+				((EntityTiger)e).setTigerType(TigerType.Normal);
+			}
+		});
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Snow Tiger",  EntityTiger.class, 1, 1, 100, 20, new SpawnParameters(ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, Moisture.MEDIUM, Moisture.MAX))
+		{
+			@Override
+			public void onSpawn(EntityLiving e)
+			{
+				((EntityTiger)e).setTigerType(TigerType.Snow);
+			}
+		});
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Ocelot",  EntityOcelot.class, 2, 4, 300, 40, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.HIGH, Moisture.MAX)));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Chicken",  EntityChicken.class, 2, 4, 500, 50, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.MEDIUM, Moisture.VERYHIGH)));
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Sheep",  EntitySheep.class, 2, 4, 300, 30, new SpawnParameters(ClimateTemp.SUBPOLAR, ClimateTemp.TEMPERATE, Moisture.MEDIUM, Moisture.VERYHIGH){
+			@Override
+			public boolean canSpawnHere(IslandMap map, Center closest)
+			{
+				boolean isValid = super.canSpawnHere(map, closest);
+
+				if(closest.getElevation() < 0.5)
+					return false;
+
+				return isValid;
+			}
+		}));
 	}
 
 	public void registerGuiHandler()

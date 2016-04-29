@@ -7,6 +7,7 @@ import net.minecraft.network.datasync.DataSerializers;
 
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.entity.EntityBear.BearType;
+import com.bioxx.tfc2.entity.EntityBigCat.BigCatType;
 import com.bioxx.tfc2.entity.EntityBoar.BoarStage;
 import com.bioxx.tfc2.entity.EntityElephant.ElephantType;
 import com.bioxx.tfc2.entity.EntityTiger.TigerType;
@@ -113,6 +114,26 @@ public class DataSerializersTFC
 		}
 	};
 
+	public static final DataSerializer<BigCatType> BIGCATTYPE = new DataSerializer<BigCatType>(){
+
+		@Override
+		public BigCatType read(PacketBuffer buf) {
+			return (BigCatType)buf.readEnumValue(BigCatType.class);
+		}
+
+
+		@Override
+		public DataParameter<BigCatType> createKey(int id) {
+			return new DataParameter(id, this);
+		}
+
+
+		@Override
+		public void write(PacketBuffer buf, BigCatType value) {
+			buf.writeEnumValue(value);
+		}
+	};
+
 	public static void register()
 	{
 		DataSerializers.registerSerializer(GENDER);
@@ -120,5 +141,6 @@ public class DataSerializersTFC
 		DataSerializers.registerSerializer(BEARTYPE);
 		DataSerializers.registerSerializer(ELEPHANTTYPE);
 		DataSerializers.registerSerializer(BOARTYPE);
+		DataSerializers.registerSerializer(BIGCATTYPE);
 	}
 }
