@@ -111,6 +111,7 @@ public class CommonProxy
 		EntityRegistry.registerModEntity(EntityHippo.class, "Hippo", 13, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 		EntityRegistry.registerModEntity(EntityBigCat.class, "BigCat", 14, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 		EntityRegistry.registerModEntity(EntitySabertooth.class, "Sabertooth", 15, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(EntityElk.class, "Elk", 16, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 	}
 
 	public void postInit(FMLPostInitializationEvent event)

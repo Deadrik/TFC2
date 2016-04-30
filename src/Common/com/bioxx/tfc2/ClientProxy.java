@@ -235,6 +235,12 @@ public class ClientProxy extends CommonProxy
 				return new RenderSabertooth(manager);
 			}
 		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityElk.class, new IRenderFactory<EntityElk>() { 
+			@Override
+			public Render<? super EntityElk> createRenderFor(RenderManager manager) {
+				return new RenderElk(manager);
+			}
+		});
 
 	}
 
