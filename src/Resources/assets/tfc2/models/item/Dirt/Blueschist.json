@@ -1,5 +1,5 @@
 {
-    "parent": "tfc2:block/dirt/Blueschist",
+    "parent": "tfc2:block/Dirt/Blueschist",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

@@ -1,5 +1,5 @@
 {
-    "parent": "tfc2:block/dirt/Gneiss",
+    "parent": "tfc2:block/Dirt/Gneiss",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

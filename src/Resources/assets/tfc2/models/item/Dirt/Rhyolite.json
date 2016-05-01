@@ -1,5 +1,5 @@
 {
-    "parent": "tfc2:block/dirt/Rhyolite",
+    "parent": "tfc2:block/Dirt/Rhyolite",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

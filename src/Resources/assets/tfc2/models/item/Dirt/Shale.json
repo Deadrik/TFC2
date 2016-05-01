@@ -1,5 +1,5 @@
 {
-    "parent": "tfc2:block/dirt/Shale",
+    "parent": "tfc2:block/Dirt/Shale",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

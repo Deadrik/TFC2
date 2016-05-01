@@ -1,5 +1,5 @@
 {
-    "parent": "tfc2:block/dirt/Basalt",
+    "parent": "tfc2:block/Dirt/Basalt",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],
