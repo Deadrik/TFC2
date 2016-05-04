@@ -32,7 +32,7 @@ public class AnimalProcessor
 			SpawnGroup workingGroup = spawnGroupsIter.next();
 			Vector<Center> spawnableList = GetSpawnableCenters(workingGroup, map);
 			//Each animal has X number that should be spawned at any given time.
-			for(int i = 0; i < workingGroup.getMaxConcurrent(); i++)
+			for(int i = 0; spawnableList.size() > 0 && i < workingGroup.getMaxConcurrent(); i++)
 			{
 				Center c = spawnableList.get(map.mapRandom.nextInt(spawnableList.size()));
 				NBTTagList spawnList = GetCenterSpawnList(c);

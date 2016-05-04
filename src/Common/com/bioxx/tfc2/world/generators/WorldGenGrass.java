@@ -58,7 +58,7 @@ public class WorldGenGrass implements IWorldGenerator
 
 				if(!map.getParams().hasFeature(Feature.Desert) && Core.isStone(world.getBlockState(bp.down())) && random.nextInt(3) == 0)
 				{
-					Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.Grass1), bp);
+					Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.Grass1), bp, 2);
 				}
 				else if(Core.isGrass(world.getBlockState(bp.down())))
 				{
@@ -72,17 +72,17 @@ public class WorldGenGrass implements IWorldGenerator
 						float m = Core.getMoistureFromChunk(c, bp);
 						if(random.nextFloat() > closest.getMoisture().getInverse())
 						{
-							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottom), bp);
-							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTop), bp.up());
+							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottom), bp, 2);
+							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTop), bp.up(), 2);
 						}
 						else
-							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.Grass0), bp);
+							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.Grass0), bp, 2);
 					}
 				}
 				else if(Core.isSand(world.getBlockState(bp.down())) && !closest.hasAnyMarkersOf(Marker.Coast, Marker.CoastWater) && 
 						map.getParams().hasFeature(Feature.Desert) && random.nextInt(20) == 0)
 				{
-					world.setBlockState(bp, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DeadBush));
+					world.setBlockState(bp, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DeadBush), 2);
 				}
 			}
 		}

@@ -26,7 +26,7 @@ public class ItemLooseRock extends ItemTerra implements IRegisterSelf
 		this.setHasSubtypes(true);
 		this.maxSubTypeMeta = 15;
 		this.setCreativeTab(CreativeTabs.MATERIALS);
-		this.subTypeNames = Global.STONE_ALL;
+		this.subTypeNames = Core.capitalizeStringArray(Global.STONE_ALL);
 	}
 
 	@Override

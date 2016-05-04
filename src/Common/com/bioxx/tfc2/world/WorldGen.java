@@ -16,10 +16,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.IslandParameters;
+import com.bioxx.jmapgen.*;
 import com.bioxx.jmapgen.IslandParameters.Feature;
-import com.bioxx.jmapgen.RandomCollection;
+import com.bioxx.jmapgen.IslandParameters.Feature.FeatureSig;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
@@ -203,12 +202,12 @@ public class WorldGen implements IThreadCompleteListener
 		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
 		Random r = new Random(seed);
 		id.setCoords(x, z);
-		int fcount = 2+r.nextInt(2+r.nextInt(3));
+		int fcount = 2+r.nextInt(1)+r.nextInt(1);
 		Feature.setupFeatures(r);
-		//Choose Features
+		//Choose Major Features
 		for(int i = 0; i < fcount; i++)
 		{
-			Feature f = Feature.getRandomFeature();
+			Feature f = Feature.getRandomFeature(FeatureSig.Major);
 			if(f == Feature.Canyons)
 				id.setFeatures(Feature.Gorges);
 
@@ -222,6 +221,15 @@ public class WorldGen implements IThreadCompleteListener
 				continue;
 			}
 
+			if(id.hasFeature(f)){i--; continue;}
+			else id.setFeatures(f);
+		}
+
+		//Choose Minor Features
+		fcount = r.nextInt(3)-r.nextInt(1)-r.nextInt(1);
+		for(int i = 0; i < fcount; i++)
+		{
+			Feature f = Feature.getRandomFeature(FeatureSig.Minor);
 			if(id.hasFeature(f)){i--; continue;}
 			else id.setFeatures(f);
 		}
@@ -320,7 +328,7 @@ public class WorldGen implements IThreadCompleteListener
 		 */
 		ArrayList<SpawnGroup> spawnGroups = AnimalSpawnRegistry.getInstance().getValidSpawnGroups(id);
 
-		int max = Math.min(4, spawnGroups.size());
+		int max = Math.min(spawnGroups.size(), 4+r.nextInt(Math.max(spawnGroups.size()-4, 1)));
 		for(int i = 0; i < max; i++)
 		{
 			SpawnGroup group = spawnGroups.get(r.nextInt(spawnGroups.size()));

@@ -123,20 +123,6 @@ public class IslandParameters
 		features.clear();
 	}
 
-	/**
-	 * Used for reading stored nbt information
-	 */
-	private void setFeatures(int i)
-	{
-		for(Feature f : Feature.values())
-		{
-			if((i & f.ordinal()) > 0)
-			{
-				features.add(f);
-			}
-		}
-	}
-
 	public boolean hasFeature(Feature feat)
 	{
 		return features.contains(feat);
@@ -273,63 +259,90 @@ public class IslandParameters
 
 	public enum Feature
 	{
-		//Important not to change this order if it can be helped.
-		Gorges(0.3, "Gorges"), 
+		Gorges(1, "Gorges"), 
 		Volcano(0.001, "Volcano"), 
-		Cliffs(0.3, "Cliffs"), 
-		SharperMountains(0.3, "Sharper Mountians"), 
-		EvenSharperMountains(0.3, "Even Sharper Mountains"), 
+		Cliffs(1, "Cliffs"), 
+		SharperMountains(1, "Sharper Mountains"), 
+		EvenSharperMountains(1, "Even Sharper Mountains"), 
 		Valleys(0.6, "Valleys"), 
-		SmallCraters(0.2, "Small Crater"), 
-		LargeCrater(0.2, "Large Crater"), 
-		Canyons(0.3, "Canyons"),
-		NoLand(0.3,"NO LAND", false),
-		LowLand(0.1,"Low Land"),
-		MineralRich(0.05,"Mineral Rich"),
-		Spires(0.05,"Spires"),
-		NutrientRich(0.1,"Nutrient Rich"),
-		Desert(0.0,"Desert", false);
+		SmallCraters(0.75, "Small Crater"), 
+		LargeCrater(0.75, "Large Crater"), 
+		Canyons(1, "Canyons"),
+		NoLand(1,"NO LAND", false),
+		LowLand(0.5,"Low Land"),
+		MineralRich(0.25,"Mineral Rich", FeatureSig.Minor),
+		Spires(0.25,"Spires", FeatureSig.Minor),
+		NutrientRich(0.5,"Nutrient Rich", FeatureSig.Minor),
+		Desert(0.0,"Desert", false),
+		DiverseCrops(0.5,"Diverse Crops", FeatureSig.Minor),
+		RampantWildAnimals(0.25,"Rampant Wild Animals", FeatureSig.Minor);
 
 		public final double rarity;
 		private String name;
-		private static RandomCollection<Feature> pot = new RandomCollection<Feature>();
+		private static RandomCollection<Feature> potMajor = new RandomCollection<Feature>();
+		private static RandomCollection<Feature> potMinor = new RandomCollection<Feature>();
 		private boolean shouldGen = true;
+		public FeatureSig featureSig = FeatureSig.Major;
 
 		private Feature(double r, String n)
 		{
 			rarity = r;
 			name = n;
+			featureSig = FeatureSig.Major;
+		}
+
+		private Feature(double r, String n, FeatureSig sig)
+		{
+			this(r, n);
+			featureSig = sig;
 		}
 
 		private Feature(double r, String n, boolean gen)
 		{
-			rarity = r;
-			name = n;
+			this(r, n);
 			shouldGen = gen;
 		}
 
 		public static void setupFeatures(Random r)
 		{
-			pot = new RandomCollection<Feature>(r);
-			if(pot.size() == 0)
+			potMajor = new RandomCollection<Feature>(r);
+			if(potMajor.size() == 0)
 			{
 				for(Feature f : Feature.values())
 				{
-					if(f.shouldGen)
-						pot.add(f.rarity, f);
+					if(f.shouldGen && f.featureSig == FeatureSig.Major)
+						potMajor.add(f.rarity, f);
+				}
+			}
+
+			potMinor = new RandomCollection<Feature>(r);
+			if(potMinor.size() == 0)
+			{
+				for(Feature f : Feature.values())
+				{
+					if(f.shouldGen && f.featureSig == FeatureSig.Minor)
+						potMinor.add(f.rarity, f);
 				}
 			}
 		}
 
-		public static Feature getRandomFeature()
+		public static Feature getRandomFeature(FeatureSig sig)
 		{
-			return pot.next();
+			if(sig == FeatureSig.Major)
+				return potMajor.next();
+			else
+				return potMinor.next();
 		}
 
 		@Override
 		public String toString()
 		{
 			return name;
+		}
+
+		public enum FeatureSig
+		{
+			Major, Minor;
 		}
 	}
 }

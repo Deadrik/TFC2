@@ -31,8 +31,8 @@ public class WorldGenLooseRock implements IWorldGenerator
 	{
 		if(world.provider.getDimension() != 0)
 			return;
-		chunkX *= 16;
-		chunkZ *= 16;
+		chunkX = chunkX * 16;
+		chunkZ = chunkZ * 16 ;
 		map = WorldGen.getInstance().getIslandMap(chunkX >> 12, chunkZ >> 12);
 		Center c;
 		Point p = new Point(chunkX, chunkZ);
@@ -62,31 +62,8 @@ public class WorldGenLooseRock implements IWorldGenerator
 					chance -= 10;
 				if((world.getBlockState(bp.down()).getBlock() == TFCBlocks.Grass && random.nextInt(chance) == 0))
 				{
-					Core.setBlock(world, TFCBlocks.LooseRocks.getStateFromMeta(map.getParams().getSurfaceRock().getMeta()), bp);
+					Core.setBlock(world, TFCBlocks.LooseRocks.getStateFromMeta(map.getParams().getSurfaceRock().getMeta()), bp, 2);
 				}
-
-				/*int e = elevN;
-				EnumFacing facing = EnumFacing.NORTH;
-
-				if(elevS > e || (elevS == e && random.nextBoolean()))
-				{e = elevS; facing = EnumFacing.SOUTH;}
-				if(elevE > e || (elevE == e && random.nextBoolean()))
-				{e = elevE; facing = EnumFacing.EAST;}
-				if(elevW > e || (elevW == e && random.nextBoolean()))
-				{e = elevW; facing = EnumFacing.WEST;}
-
-				if(e > 2)
-				{
-					for(int i = 1; i < e; i++)
-					{
-						if(random.nextFloat() < 0.3)
-						{
-							bp = new BlockPos(chunkX+x, elev+i, chunkZ+z);
-							if(Core.isStone(world.getBlockState(bp.offset(facing))))
-								Core.setBlock(world, TFCBlocks.ClimbingRocks.getStateFromMeta(map.getParams().getSurfaceRock().getMeta()), bp);
-						}
-					}
-				}*/
 			}
 		}
 	}

@@ -6,7 +6,7 @@ public enum OreType implements IStringSerializable
 {
 	Bismuthinite("bismuthinite", 0),Cassiterite("cassiterite", 1),Garnierite("garnierite", 2),Hematite("hematite", 3),
 	Limonite("limonite", 4),Magnetite("magnetite", 5),Malachite("malachite", 6),
-	NativeGold("nativegold", 7),Sphalerite("sphalerite", 8),Tetrahedrite("tetrahedrite", 9),Galena("galena", 10),
+	NativeGold("native_gold", 7),Sphalerite("sphalerite", 8),Tetrahedrite("tetrahedrite", 9),Galena("galena", 10),
 	Anthracite("anthracite", 11),Lignite("lignite", 12);
 
 	private String name;

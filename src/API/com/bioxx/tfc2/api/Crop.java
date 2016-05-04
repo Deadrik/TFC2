@@ -75,6 +75,16 @@ public class Crop implements IStringSerializable, Comparable
 		return this;
 	}
 
+	public Crop setClimateZones(ClimateTemp... ct)
+	{
+		wildGrowthZones.clear();
+		for(ClimateTemp c : ct)
+		{
+			wildGrowthZones.add(c);
+		}
+		return this;
+	}
+
 	public static Crop fromID(int id)
 	{
 		for(Crop c : Crop.cropList)

@@ -55,7 +55,7 @@ public class Core
 	 */
 	public static boolean setBlock(World world, Block b, BlockPos bp)
 	{
-		return world.setBlockState(bp, b.getActualState(b.getDefaultState(), world, bp));
+		return setBlock(world, b.getActualState(b.getDefaultState(), world, bp), bp, 3);
 	}
 
 	/**
@@ -64,7 +64,12 @@ public class Core
 	 */
 	public static boolean setBlock(World world, IBlockState b, BlockPos bp)
 	{
-		return world.setBlockState(bp, b.getBlock().getActualState(b, world, bp));
+		return setBlock(world, b, bp, 3);
+	}
+
+	public static boolean setBlock(World world, IBlockState b, BlockPos bp, int flag)
+	{
+		return world.setBlockState(bp, b.getBlock().getActualState(b, world, bp), flag);
 	}
 
 	public static String translate(String s)
@@ -75,6 +80,16 @@ public class Core
 	public static String textConvert(String s)
 	{
 		return WordUtils.capitalize(s, '_').replaceAll("_", " ");
+	}
+
+	public static String[] capitalizeStringArray(String[] array)
+	{
+		String[] outArray = new String[array.length];
+		for(int i = 0; i < array.length; i++)
+		{
+			outArray[i] = WordUtils.capitalize(array[i]);
+		}
+		return outArray;
 	}
 
 	public static String getUnlocalized(String s)

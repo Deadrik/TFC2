@@ -145,7 +145,6 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		Block block = world.getBlockState(pos.up()).getBlock();
 		return state.withProperty(IS_ON_STONE, world.getBlockState(pos.down()).getBlock() == TFCBlocks.Stone);
 	}
 

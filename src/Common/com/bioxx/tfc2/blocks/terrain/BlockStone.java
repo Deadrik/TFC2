@@ -9,13 +9,19 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.IPlantable;
+
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.blocks.BlockVegetation;
+import com.bioxx.tfc2.blocks.BlockVegetation.VegType;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
 public class BlockStone extends BlockCollapsible
@@ -120,6 +126,17 @@ public class BlockStone extends BlockCollapsible
 	{
 		int worldElev = world.getTopSolidOrLiquidBlock(pos).getY();
 		return Math.max((int)Math.floor(scanDepth * ((float)pos.getY() / (float)worldElev)), 2);
+	}
+
+	@Override
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
+	{
+		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
+		EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
+
+		if(plantable == TFCBlocks.Vegetation && (VegType)plant.getValue(BlockVegetation.META_PROPERTY) == VegType.Grass1)
+			return true;
+		return false;
 	}
 
 	/*******************************************************************************

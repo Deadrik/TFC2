@@ -2,6 +2,7 @@ package com.bioxx.tfc2.items;
 
 import net.minecraft.creativetab.CreativeTabs;
 
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.interfaces.IRegisterSelf;
 
 public class ItemPlank extends ItemTerra implements IRegisterSelf
@@ -10,11 +11,11 @@ public class ItemPlank extends ItemTerra implements IRegisterSelf
 	{
 		this.hasSubtypes = true;
 		this.maxSubTypeMeta = 17;
-		this.subTypeNames = new String[] {"ash","aspen","birch","chestnut",
+		this.subTypeNames = Core.capitalizeStringArray(new String[] {"ash","aspen","birch","chestnut",
 				"douglas fir","hickory","maple","oak",
 				"pine","sequoia","spruce","sycamore",
 				"white cedar","willow","kapok","acacia",
-				"rosewood","blackwood","palm"};
+				"rosewood","blackwood","palm"});
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
 
