@@ -182,14 +182,14 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 		this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
-		/*generateTerrain(chunkprimer, chunkX, chunkZ);
+		generateTerrain(chunkprimer, chunkX, chunkZ);
 		decorate(chunkprimer, chunkX, chunkZ);
 		carveRiverSpline(chunkprimer);
 		carveCaves(chunkprimer);
 		placeOreSeams(chunkprimer);
 		placeOreLayers(chunkprimer);
 		createSpires(chunkprimer);
-		createDungeons(chunkprimer);*/
+		createDungeons(chunkprimer);
 
 		if(TFCOptions.shouldStripChunks)
 			stripChunk(chunkprimer);
