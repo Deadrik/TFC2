@@ -12,6 +12,7 @@ import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
+import com.bioxx.tfc2.api.Crop;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
@@ -37,6 +38,7 @@ public class IslandParameters
 	private String treeRare = WoodType.Ash.getName();
 	private Moisture moisture = Moisture.MEDIUM;
 	private ClimateTemp temp = ClimateTemp.TEMPERATE;
+	private ArrayList<Crop> cropList = new ArrayList<Crop>();
 
 	public ArrayList<SpawnGroup> animalSpawnGroups = new ArrayList<SpawnGroup>();
 
@@ -196,6 +198,18 @@ public class IslandParameters
 		return this.zCoord*SIZE;
 	}
 
+	public ArrayList<Crop> getCrops()
+	{
+		return cropList;
+	}
+
+	public boolean addCrop(Crop c)
+	{
+		if(!cropList.contains(c))
+			return cropList.add(c);
+		return false;
+	}
+
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		NBTTagCompound fnbt = nbt.getCompoundTag("features");
@@ -224,6 +238,12 @@ public class IslandParameters
 			{
 				animalSpawnGroups.add(group);
 			}
+		}
+		cropList.clear();
+		int[] cropArray = nbt.getIntArray("crops");
+		for(int i = 0; i < cropArray.length; i++)
+		{
+			cropList.add(Crop.fromID(cropArray[i]));
 		}
 	}
 
@@ -255,6 +275,12 @@ public class IslandParameters
 			fnbt.setString("animal-"+i, animalSpawnGroups.get(i).getGroupName());
 		}
 		nbt.setTag("spawnGroups", fnbt);
+		int[] cropArray = new int[cropList.size()];
+		for(int i = 0; i < cropArray.length; i++)
+		{
+			cropArray[i] = cropList.get(i).getID();
+		}
+		nbt.setIntArray("crops", cropArray);
 	}
 
 	public enum Feature

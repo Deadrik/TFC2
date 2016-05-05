@@ -116,4 +116,18 @@ public class Crop implements IStringSerializable, Comparable
 		}
 		return -1;
 	}
+
+	public static ArrayList<Crop> getCropsForTemp(ClimateTemp temp)
+	{
+		ArrayList<Crop> suitableCrops = new ArrayList<Crop>();
+		for(Crop c : cropList)
+		{
+			if(c.wildGrowthZones.contains(temp))
+			{
+				suitableCrops.add(c);
+			}
+		}
+
+		return suitableCrops;
+	}
 }

@@ -29,6 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.Crop;
 import com.bioxx.tfc2.api.FoodRegistry;
 import com.bioxx.tfc2.api.Global;
@@ -86,6 +87,12 @@ public class BlockCrop extends BlockTerra implements ITileEntityProvider
 			}
 		}
 		return true;
+	}
+
+	public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)
+	{
+		IBlockState soil = worldIn.getBlockState(pos.down());
+		return (worldIn.getLight(pos) >= 8 || worldIn.canSeeSky(pos)) && (Core.isSoil(soil) || soil.getBlock() == TFCBlocks.Farmland);
 	}
 
 	/*******************************************************************************
