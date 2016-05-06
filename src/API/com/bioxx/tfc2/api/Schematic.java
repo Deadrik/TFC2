@@ -102,6 +102,12 @@ public class Schematic implements ISchematic
 	}
 
 	@Override
+	public void PostProcess()
+	{
+
+	}
+
+	@Override
 	public int getSizeY()
 	{
 		return height;

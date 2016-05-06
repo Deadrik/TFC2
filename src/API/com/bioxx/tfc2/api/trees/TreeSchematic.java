@@ -24,39 +24,33 @@ public class TreeSchematic extends Schematic
 	}
 
 	@Override
-	public boolean Load()
+	public void PostProcess()
 	{
-		if(super.Load())
+		ArrayList<SchemBlock> map = new ArrayList<SchemBlock>();
+		for(SchemBlock b : blockMap)
 		{
-			ArrayList<SchemBlock> map = new ArrayList<SchemBlock>();
-			for(SchemBlock b : blockMap)
+			if(b.state.getBlock() != Blocks.AIR)
 			{
-				if(b.state.getBlock() != Blocks.AIR)
-				{
-					if(b.pos.getY() == 0)
-						baseCount++;
-					map.add(b);
-					if(b.state.getBlock().getMaterial(b.state) == Material.WOOD)
-						logCount++;
-				}
-
+				if(b.pos.getY() == 0)
+					baseCount++;
+				map.add(b);
+				if(b.state.getBlock().getMaterial(b.state) == Material.WOOD)
+					logCount++;
 			}
-			blockMap = map;
 
-			int num = filename.indexOf('_');
-			String s = filename.substring(0, num);
-			if(s.equals("Large"))
-				size = 2;
-			else if(s.equals("Normal"))
-				size = 1;
-			else
-				size = 0;
-
-			aabb = new AxisAlignedBB(0, 0, 0, width, height, length);
-
-			return true;
 		}
-		return false;
+		blockMap = map;
+
+		int num = filename.indexOf('_');
+		String s = filename.substring(0, num);
+		if(s.equals("Large"))
+			size = 2;
+		else if(s.equals("Normal"))
+			size = 1;
+		else
+			size = 0;
+
+		aabb = new AxisAlignedBB(0, 0, 0, width, height, length);
 	}
 
 	@Override

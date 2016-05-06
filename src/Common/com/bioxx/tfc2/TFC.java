@@ -177,7 +177,10 @@ public class TFC
 
 					TreeSchematic schem = new TreeSchematic(p, size+"_"+String.format("%02d", j), WoodType.getTypeFromString(s));
 					if(schem.Load())
+					{
+						schem.PostProcess();
 						TreeRegistry.instance.RegisterSchematic(schem, s);
+					}
 					else
 						break;
 				}

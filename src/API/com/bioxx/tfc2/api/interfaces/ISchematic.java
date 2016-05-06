@@ -9,6 +9,8 @@ import com.bioxx.tfc2.api.Schematic.SchemBlock;
 public interface ISchematic
 {
 	public boolean Load();
+
+	public void PostProcess();
 	/**
 	 * @return Schematic "Height"
 	 */
