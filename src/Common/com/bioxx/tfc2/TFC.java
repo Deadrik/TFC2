@@ -1,6 +1,8 @@
 package com.bioxx.tfc2;
 
 import java.io.File;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.config.Configuration;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
+import com.bioxx.jmapgen.dungeon.DungeonSchemManager;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.trees.TreeConfig;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
@@ -26,6 +29,8 @@ import com.bioxx.tfc2.networking.client.ClientMapPacket;
 import com.bioxx.tfc2.networking.server.KnappingUpdatePacket;
 import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
 import com.bioxx.tfc2.world.WorldGen;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,6 +63,8 @@ public class TFC
 
 		//Register tree types and load tree schematics
 		loadTrees();
+
+		loadDungeonSchems();
 
 		Core.PortalSchematic = new PortalSchematic("/assets/tfc2/schematics/portal.schematic", "portal");
 		Core.PortalSchematic.Load();
@@ -186,6 +193,41 @@ public class TFC
 				}
 			}
 		}
+	}
+
+	private void loadDungeonSchems()
+	{
+		log.info("Load Dungeon Schematics-Start");
+		DungeonSchemManager dsm = DungeonSchemManager.getInstance();
+		try
+		{
+			Gson gson = new Gson();
+			JsonReader reader = new JsonReader(new InputStreamReader(getClass().getResourceAsStream("/assets/tfc2/schematics/dungeons/themes.json")));
+
+			reader.beginObject();
+			while (reader.hasNext()) 
+			{
+				String arrayName = reader.nextName();
+				ArrayList<String> roomNames = new ArrayList<String>();
+				reader.beginArray();
+				while (reader.hasNext()) 
+				{
+					roomNames.add(reader.nextString());
+				}
+				reader.endArray();
+				dsm.loadRooms(arrayName, roomNames, "/assets/tfc2/schematics/dungeons/");
+				log.info("Loaded Dungeon Theme - " + arrayName);
+			}
+
+			reader.endObject();
+
+			reader.close();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		log.info("Load Dungeon Schematics-Finish");
 	}
 
 }

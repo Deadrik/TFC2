@@ -27,12 +27,10 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 import com.bioxx.jmapgen.*;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.attributes.*;
-import com.bioxx.jmapgen.dungeon.*;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor.DoorType;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonLevel;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRect;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRoom;
+import com.bioxx.jmapgen.dungeon.Dungeon;
+import com.bioxx.jmapgen.dungeon.DungeonChunk;
+import com.bioxx.jmapgen.dungeon.DungeonRoom;
+import com.bioxx.jmapgen.dungeon.RoomSchematic;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.processing.CaveAttrNode;
@@ -45,10 +43,9 @@ import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry;
+import com.bioxx.tfc2.api.*;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
-import com.bioxx.tfc2.api.Global;
-import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.api.Schematic.SchemBlock;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
@@ -69,6 +66,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 	int islandChunkZ;//This is the z coordinate of the chunk within the bounds of the island (0 - MAP_SIZE)
 	int mapX;//This is the x coordinate of the chunk using world coords.
 	int mapZ;//This is the z coordinate of the chunk using world coords.
+	int chunkX, chunkZ;
 
 	Plane turbMap;
 	Plane turbMap1_4;
@@ -163,6 +161,10 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		centerCache = new Center[48][48];
 
 		elevationMap = new int[256];
+
+		this.chunkX = chunkX;
+		this.chunkZ = chunkZ;
+
 		worldX = chunkX * 16;
 		worldZ = chunkZ * 16;
 		islandChunkX = worldX % MAP_SIZE;
@@ -1215,151 +1217,46 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 	public void createDungeons(ChunkPrimer primer)
 	{
-		Point iPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
-		IBlockState state = Blocks.AIR.getDefaultState();
+		Point p = new Point(islandChunkX, islandChunkZ).toIslandCoord();
+		int iChunkX = ((int)p.x >> 4);
+		int iChunkZ = ((int)p.y >> 4);
+		//world chunk coord for the top left of this island
+		int islandStartChunkX = (islandMap.getParams().getXCoord() << 8);
+		int islandStartChunkZ = (islandMap.getParams().getZCoord() << 8);
 
-		if(TFCOptions.shouldStripChunks)
-			state = Blocks.WOOL.getDefaultState();
-
-		for(Dungeon dungeon : islandMap.dungeons)
+		for(Dungeon d : islandMap.dungeons)
 		{
-			for(DungeonLevel level : dungeon.levels)
+			if(iChunkX < d.getDungeonX() || iChunkX >= d.getDungeonX()+d.getSize())
+				continue;
+			if(iChunkZ < d.getDungeonZ() || iChunkZ >= d.getDungeonZ()+d.getSize())
+				continue;
+
+			int cX = iChunkX - d.getDungeonX();
+			int cZ = iChunkZ - d.getDungeonZ();
+
+			DungeonChunk dc = d.getChunk(cX, cZ);
+			for(int i = 0; i < 8; i++)
 			{
-				DungeonRect chunkRect = new DungeonRect((int)iPoint.x, (int)iPoint.y, 16, 16);
-				//We expand the bounding boxes so that we wont have issues at chunk edges.
-				if(chunkRect.expand(1).intersects(level.getBoundingBox().expand(1)))
+				DungeonRoom dr = dc.get(i);
+				if(dr != null)
 				{
-					for(DungeonRoom room : level.rooms)
-					{
-						if(chunkRect.expand(1).intersects(room.getBoundingBox().expand(1)))
-						{
-							for(DungeonRect rect : room.rects)
-							{
-								int rx = rect.X - (int)iPoint.x;
-								int rz = rect.Z - (int)iPoint.y;
-
-								for(int x = 0; x < rect.width; x++)
-								{
-									for(int z = 0; z < rect.height; z++)
-									{
-										for(int y = 0; y < dungeon.roomHeight; y++)
-										{
-											if(getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z)).getBlock() != TFCBlocks.Stone)
-												continue;
-											setState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z), state);
-											if(y == 0)
-												setState(primer, new BlockPos(rx+x, level.yLevel+y-1, rz+z), dungeon.floorType);
-											if(y == 2)
-												setState(primer, new BlockPos(rx+x, level.yLevel+y+1, rz+z), dungeon.ceilingType);
-
-											if(x == 0 && getState(primer, new BlockPos(rx+x-1, level.yLevel+y, rz+z)).getBlock() != Blocks.AIR)
-												setState(primer, new BlockPos(rx+x-1, level.yLevel+y, rz+z), dungeon.wallType);
-											if(x == rect.width-1 && getState(primer, new BlockPos(rx+x+1, level.yLevel+y, rz+z)).getBlock() != Blocks.AIR)
-												setState(primer, new BlockPos(rx+x+1, level.yLevel+y, rz+z), dungeon.wallType);
-											if(z == 0 && getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z-1)).getBlock() != Blocks.AIR)
-												setState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z-1), dungeon.wallType);
-											if(z == rect.height-1 && getState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z+1)).getBlock() != Blocks.AIR)
-												setState(primer, new BlockPos(rx+x, level.yLevel+y, rz+z+1), dungeon.wallType);
-										}
-									}
-								}
-							}
-						}
-					}
-
-					for(DungeonDoor door : level.doors)
-					{
-						int rx = door.location.getX() - (int)chunkRect.getMinX();
-						int rz = door.location.getZ() - (int)chunkRect.getMinZ();
-						state = Blocks.AIR.getDefaultState();
-
-
-						if(rx >= 0 && rz >= 0 && rx < 16 && rz < 16)
-						{
-							if(door.doorType == DoorType.Ruins2x2 || door.doorType == DoorType.Ruins3x2)
-							{
-								state = TFCBlocks.Rubble.getStateFromMeta(dungeon.wallType.getBlock().getMetaFromState(dungeon.wallType));
-								setState(primer, new BlockPos(rx, level.yLevel, rz), state);
-								setState(primer, new BlockPos(rx, level.yLevel+1, rz), state);
-								if(door.doorType == DoorType.Ruins3x2)
-									setState(primer, new BlockPos(rx, level.yLevel+2, rz), state);
-
-								if(getState(primer, new BlockPos(rx+1, level.yLevel, rz)) == dungeon.wallType)
-								{
-									setState(primer, new BlockPos(rx+1, level.yLevel, rz), state);
-									setState(primer, new BlockPos(rx+1, level.yLevel+1, rz), state);
-									if(door.doorType == DoorType.Ruins3x2)
-										setState(primer, new BlockPos(rx+1, level.yLevel+2, rz), state);
-								}
-								else if(getState(primer, new BlockPos(rx, level.yLevel, rz+1)) == dungeon.wallType)
-								{
-									setState(primer, new BlockPos(rx, level.yLevel, rz+1), state);
-									setState(primer, new BlockPos(rx, level.yLevel+1, rz+1), state);
-									if(door.doorType == DoorType.Ruins3x2)
-										setState(primer, new BlockPos(rx, level.yLevel+2, rz+1), state);
-								}
-
-
-								continue;
-							}
-							setState(primer, new BlockPos(rx, level.yLevel-1, rz), dungeon.floorType);
-							setState(primer, new BlockPos(rx, level.yLevel, rz), state);
-							setState(primer, new BlockPos(rx, level.yLevel+1, rz), state);
-							//dungSurroundBlock(primer, new BlockPos(rx, level.yLevel, rz), state, dungeon.wallType, dungeon.floorType, dungeon.wallType);
-							//dungSurroundBlock(primer, new BlockPos(rx, level.yLevel+1, rz), state, dungeon.wallType, dungeon.floorType, dungeon.wallType);
-							if(door.doorType == DoorType.Tall || door.doorType == DoorType.TallDoubleLeft || door.doorType == DoorType.TallDoubleRight)
-							{
-								setState(primer, new BlockPos(rx, level.yLevel+2, rz), state);
-								//dungSurroundBlock(primer, new BlockPos(rx, level.yLevel+2, rz), state, dungeon.wallType, dungeon.floorType, dungeon.wallType);
-							}
-						}
-					}
+					genRoom(primer, d, dr);
 				}
 			}
 
 		}
 	}
 
-	public void dungSurroundBlock(ChunkPrimer primer, BlockPos pos, IBlockState center, IBlockState up, IBlockState down, IBlockState side)
+	protected void genRoom(ChunkPrimer primer, Dungeon dungeon, DungeonRoom room)
 	{
-		IBlockState state = getState(primer, pos.up());
-		if(state.getBlock() != center.getBlock())
-		{
-			setState(primer, pos.up(), up);
-		}
+		RoomSchematic schem = room.schematic;
 
-		state = getState(primer, pos.down());
-		if(state.getBlock() != center.getBlock())
+		for(SchemBlock b : schem.getProcessedBlockList(dungeon))
 		{
-			setState(primer, pos.down(), down);
-		}
-
-		state = getState(primer, pos.west());
-		if(state.getBlock() != Blocks.AIR)
-		{
-			setState(primer, pos.west(), side);
-			setState(primer, pos.west().up(), side);
-		}
-
-		state = getState(primer, pos.east());
-		if(state.getBlock() != Blocks.AIR)
-		{
-			setState(primer, pos.east(), side);
-			setState(primer, pos.east().up(), side);
-		}
-
-		state = getState(primer, pos.north());
-		if(state.getBlock() != Blocks.AIR)
-		{
-			setState(primer, pos.north(), side);
-			setState(primer, pos.north().up(), side);
-		}
-
-		state = getState(primer, pos.south());
-		if(state.getBlock() != Blocks.AIR)
-		{
-			setState(primer, pos.south(), side);
-			setState(primer, pos.south().up(), side);
+			if(b.state == Blocks.AIR.getDefaultState())
+				primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), b.state);
+			primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), b.state);
 		}
 	}
+
 }

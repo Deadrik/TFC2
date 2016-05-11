@@ -51,6 +51,8 @@ public interface ISchematic
 	 */
 	public String getPath();
 
+	public String getFileName();
+
 	/**
 	 * Sets the file path for future reference.
 	 * @param path The path to the schematic file

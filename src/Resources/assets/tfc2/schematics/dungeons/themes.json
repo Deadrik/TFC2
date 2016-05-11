@@ -1,0 +1,12 @@
+{
+	"generic" : [
+		"Generic_HallNS",
+		"Generic_HallNSEW",
+		"Generic_StairsSouthBottom",
+		"Generic_StairsSouthTop",
+		"Generic_Entrance03_S",
+		"Generic_Room01_E",
+		"Generic_Room02_NW",
+		"Generic_Room03_NSE"
+	]
+}

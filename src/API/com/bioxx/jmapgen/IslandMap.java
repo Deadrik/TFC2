@@ -225,10 +225,10 @@ public class IslandMap
 		if(!this.getParams().hasFeature(Feature.NoLand))
 		{
 			createPortals();
-			Dungeon d = new Dungeon(this);
+			/*Dungeon d = new Dungeon();
 			Vector<Center> dungeonCenters = this.getCentersAbove(0.4);
 			d.generate(seed, dungeonCenters.get(this.mapRandom.nextInt(dungeonCenters.size())));
-			dungeons.add(d);
+			dungeons.add(d);*/
 		}
 
 		animalProc.generate();
@@ -1564,10 +1564,10 @@ public class IslandMap
 		return out;
 	}
 
-	public Vector<Center> getCentersBelow(double elev, boolean allowWater)
+	public Vector<Center> getCentersBelow(Vector<Center> inCenters, double elev, boolean allowWater)
 	{
 		Vector<Center> out = new Vector<Center>();
-		for(Center c : centers)
+		for(Center c : inCenters)
 		{
 			if (c.elevation <= elev)
 			{
@@ -1576,6 +1576,11 @@ public class IslandMap
 			}
 		}
 		return out;
+	}
+
+	public Vector<Center> getCentersBelow(double elev, boolean allowWater)
+	{
+		return getCentersBelow(centers, elev, allowWater);
 	}
 
 	public Vector<Center> getLandCenters()
@@ -2368,7 +2373,7 @@ public class IslandMap
 		NBTTagList dungeonList = nbt.getTagList("dungeons", 10);
 		for(int i = 0; i < dungeonList.tagCount(); i++)
 		{
-			Dungeon d = new Dungeon(this);
+			Dungeon d = new Dungeon("generic", 1, 0, 0, 0);
 			d.readFromNBT(this, dungeonList.getCompoundTagAt(i));
 			dungeons.add(d);
 		}

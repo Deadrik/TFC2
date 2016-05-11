@@ -4,14 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.*;
 import net.minecraft.block.BlockStairs.EnumHalf;
 import net.minecraft.block.BlockStairs.EnumShape;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -37,11 +34,8 @@ import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
 import com.google.common.collect.Lists;
 
-public class BlockStairs extends BlockCollapsible
+public class BlockStairsTFC extends BlockCollapsible
 {
-	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-	public static final PropertyEnum<EnumHalf> HALF = PropertyEnum.create("half", EnumHalf.class);
-	public static final PropertyEnum<EnumShape> SHAPE = PropertyEnum.create("shape", EnumShape.class);
 	protected static final AxisAlignedBB AABB_SLAB_TOP = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D);
 	protected static final AxisAlignedBB AABB_QTR_TOP_WEST = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 0.5D, 1.0D, 1.0D);
 	protected static final AxisAlignedBB AABB_QTR_TOP_EAST = new AxisAlignedBB(0.5D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D);
@@ -66,10 +60,10 @@ public class BlockStairs extends BlockCollapsible
 	private boolean hasRaytraced;
 	private int rayTracePass;
 
-	public BlockStairs(IBlockState modelState)
+	public BlockStairsTFC(IBlockState modelState)
 	{
 		super(modelState.getBlock().getMaterial(modelState), null);
-		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(HALF, EnumHalf.BOTTOM).withProperty(SHAPE, EnumShape.STRAIGHT));
+		setDefaultState(this.blockState.getBaseState().withProperty(BlockStairs.FACING, EnumFacing.NORTH).withProperty(BlockStairs.HALF, EnumHalf.BOTTOM).withProperty(BlockStairs.SHAPE, EnumShape.STRAIGHT));
 		this.modelBlock = modelState.getBlock();
 		this.modelState = modelState;
 		//setHardness(this.modelBlock.blockHardness);
@@ -117,9 +111,9 @@ public class BlockStairs extends BlockCollapsible
 	@Override
 	public boolean isSideSolid(IBlockState state,IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		boolean flipped = state.getValue(HALF) == EnumHalf.TOP;
-		EnumShape shape = (EnumShape)state.getValue(SHAPE);
-		EnumFacing facing = (EnumFacing)state.getValue(FACING);
+		boolean flipped = state.getValue(BlockStairs.HALF) == EnumHalf.TOP;
+		EnumShape shape = (EnumShape)state.getValue(BlockStairs.SHAPE);
+		EnumFacing facing = (EnumFacing)state.getValue(BlockStairs.FACING);
 		if (side == EnumFacing.UP) return flipped;
 		if (side == EnumFacing.DOWN) return !flipped;
 		if (facing == side) return true;
@@ -151,8 +145,8 @@ public class BlockStairs extends BlockCollapsible
 		}
 
 		IBlockState iblockstate = world.getBlockState(pos);
-		EnumHalf half = (EnumHalf)iblockstate.getValue(HALF);
-		EnumFacing side = (EnumFacing)iblockstate.getValue(FACING);
+		EnumHalf half = (EnumHalf)iblockstate.getValue(BlockStairs.HALF);
+		EnumFacing side = (EnumFacing)iblockstate.getValue(BlockStairs.FACING);
 		return (side == face.getOpposite()) || ((half == EnumHalf.TOP) && (face == EnumFacing.DOWN)) || ((half == EnumHalf.BOTTOM) && (face == EnumFacing.UP));
 	}
 
@@ -164,7 +158,7 @@ public class BlockStairs extends BlockCollapsible
 
 	public void setBaseCollisionBounds(IBlockAccess worldIn, BlockPos pos)
 	{
-		if (worldIn.getBlockState(pos).getValue(HALF) == EnumHalf.TOP)
+		if (worldIn.getBlockState(pos).getValue(BlockStairs.HALF) == EnumHalf.TOP)
 		{
 			setBlockBounds(0.0F, 0.5F, 0.0F, 1.0F, 1.0F, 1.0F);
 		}
@@ -176,7 +170,7 @@ public class BlockStairs extends BlockCollapsible
 
 	public static boolean isBlockStairs(Block blockIn)
 	{
-		return blockIn instanceof BlockStairs;
+		return blockIn instanceof BlockStairsTFC;
 	}
 
 	public static boolean isSameStair(IBlockAccess worldIn, BlockPos pos, IBlockState state)
@@ -186,14 +180,14 @@ public class BlockStairs extends BlockCollapsible
 
 
 
-		return (isBlockStairs(block)) && (iblockstate.getValue(HALF) == state.getValue(HALF)) && (iblockstate.getValue(FACING) == state.getValue(FACING));
+		return (isBlockStairs(block)) && (iblockstate.getValue(BlockStairs.HALF) == state.getValue(BlockStairs.HALF)) && (iblockstate.getValue(BlockStairs.FACING) == state.getValue(BlockStairs.FACING));
 	}
 
 	public int func_176307_f(IBlockAccess blockAccess, BlockPos pos)
 	{
 		IBlockState iblockstate = blockAccess.getBlockState(pos);
-		EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(FACING);
-		EnumHalf blockstairs$enumhalf = (EnumHalf)iblockstate.getValue(HALF);
+		EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(BlockStairs.FACING);
+		EnumHalf blockstairs$enumhalf = (EnumHalf)iblockstate.getValue(BlockStairs.HALF);
 		boolean flag = blockstairs$enumhalf == EnumHalf.TOP;
 
 		if (enumfacing == EnumFacing.EAST)
@@ -201,9 +195,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate1 = blockAccess.getBlockState(pos.east());
 			Block block = iblockstate1.getBlock();
 
-			if ((isBlockStairs(block)) && (blockstairs$enumhalf == iblockstate1.getValue(HALF)))
+			if ((isBlockStairs(block)) && (blockstairs$enumhalf == iblockstate1.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(FACING);
+				EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(BlockStairs.FACING);
 
 				if ((enumfacing1 == EnumFacing.NORTH) && (!isSameStair(blockAccess, pos.south(), iblockstate)))
 				{
@@ -221,9 +215,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate2 = blockAccess.getBlockState(pos.west());
 			Block block1 = iblockstate2.getBlock();
 
-			if ((isBlockStairs(block1)) && (blockstairs$enumhalf == iblockstate2.getValue(HALF)))
+			if ((isBlockStairs(block1)) && (blockstairs$enumhalf == iblockstate2.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(FACING);
+				EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(BlockStairs.FACING);
 
 				if ((enumfacing2 == EnumFacing.NORTH) && (!isSameStair(blockAccess, pos.south(), iblockstate)))
 				{
@@ -241,9 +235,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate3 = blockAccess.getBlockState(pos.south());
 			Block block2 = iblockstate3.getBlock();
 
-			if ((isBlockStairs(block2)) && (blockstairs$enumhalf == iblockstate3.getValue(HALF)))
+			if ((isBlockStairs(block2)) && (blockstairs$enumhalf == iblockstate3.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(FACING);
+				EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(BlockStairs.FACING);
 
 				if ((enumfacing3 == EnumFacing.WEST) && (!isSameStair(blockAccess, pos.east(), iblockstate)))
 				{
@@ -261,9 +255,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate4 = blockAccess.getBlockState(pos.north());
 			Block block3 = iblockstate4.getBlock();
 
-			if ((isBlockStairs(block3)) && (blockstairs$enumhalf == iblockstate4.getValue(HALF)))
+			if ((isBlockStairs(block3)) && (blockstairs$enumhalf == iblockstate4.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(FACING);
+				EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(BlockStairs.FACING);
 
 				if ((enumfacing4 == EnumFacing.WEST) && (!isSameStair(blockAccess, pos.east(), iblockstate)))
 				{
@@ -283,8 +277,8 @@ public class BlockStairs extends BlockCollapsible
 	public int func_176305_g(IBlockAccess blockAccess, BlockPos pos)
 	{
 		IBlockState iblockstate = blockAccess.getBlockState(pos);
-		EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(FACING);
-		EnumHalf blockstairs$enumhalf = (EnumHalf)iblockstate.getValue(HALF);
+		EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(BlockStairs.FACING);
+		EnumHalf blockstairs$enumhalf = (EnumHalf)iblockstate.getValue(BlockStairs.HALF);
 		boolean flag = blockstairs$enumhalf == EnumHalf.TOP;
 
 		if (enumfacing == EnumFacing.EAST)
@@ -292,9 +286,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate1 = blockAccess.getBlockState(pos.west());
 			Block block = iblockstate1.getBlock();
 
-			if ((isBlockStairs(block)) && (blockstairs$enumhalf == iblockstate1.getValue(HALF)))
+			if ((isBlockStairs(block)) && (blockstairs$enumhalf == iblockstate1.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(FACING);
+				EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(BlockStairs.FACING);
 
 				if ((enumfacing1 == EnumFacing.NORTH) && (!isSameStair(blockAccess, pos.north(), iblockstate)))
 				{
@@ -312,9 +306,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate2 = blockAccess.getBlockState(pos.east());
 			Block block1 = iblockstate2.getBlock();
 
-			if ((isBlockStairs(block1)) && (blockstairs$enumhalf == iblockstate2.getValue(HALF)))
+			if ((isBlockStairs(block1)) && (blockstairs$enumhalf == iblockstate2.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(FACING);
+				EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(BlockStairs.FACING);
 
 				if ((enumfacing2 == EnumFacing.NORTH) && (!isSameStair(blockAccess, pos.north(), iblockstate)))
 				{
@@ -332,9 +326,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate3 = blockAccess.getBlockState(pos.north());
 			Block block2 = iblockstate3.getBlock();
 
-			if ((isBlockStairs(block2)) && (blockstairs$enumhalf == iblockstate3.getValue(HALF)))
+			if ((isBlockStairs(block2)) && (blockstairs$enumhalf == iblockstate3.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(FACING);
+				EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(BlockStairs.FACING);
 
 				if ((enumfacing3 == EnumFacing.WEST) && (!isSameStair(blockAccess, pos.west(), iblockstate)))
 				{
@@ -352,9 +346,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate4 = blockAccess.getBlockState(pos.south());
 			Block block3 = iblockstate4.getBlock();
 
-			if ((isBlockStairs(block3)) && (blockstairs$enumhalf == iblockstate4.getValue(HALF)))
+			if ((isBlockStairs(block3)) && (blockstairs$enumhalf == iblockstate4.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(FACING);
+				EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(BlockStairs.FACING);
 
 				if ((enumfacing4 == EnumFacing.WEST) && (!isSameStair(blockAccess, pos.west(), iblockstate)))
 				{
@@ -374,8 +368,8 @@ public class BlockStairs extends BlockCollapsible
 	public boolean func_176306_h(IBlockAccess blockAccess, BlockPos pos)
 	{
 		IBlockState iblockstate = blockAccess.getBlockState(pos);
-		EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(FACING);
-		EnumHalf blockstairs$enumhalf = (EnumHalf)iblockstate.getValue(HALF);
+		EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(BlockStairs.FACING);
+		EnumHalf blockstairs$enumhalf = (EnumHalf)iblockstate.getValue(BlockStairs.HALF);
 		boolean flag = blockstairs$enumhalf == EnumHalf.TOP;
 		float f = 0.5F;
 		float f1 = 1.0F;
@@ -399,9 +393,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate1 = blockAccess.getBlockState(pos.east());
 			Block block = iblockstate1.getBlock();
 
-			if ((isBlockStairs(block)) && (blockstairs$enumhalf == iblockstate1.getValue(HALF)))
+			if ((isBlockStairs(block)) && (blockstairs$enumhalf == iblockstate1.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(FACING);
+				EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(BlockStairs.FACING);
 
 				if ((enumfacing1 == EnumFacing.NORTH) && (!isSameStair(blockAccess, pos.south(), iblockstate)))
 				{
@@ -422,9 +416,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate2 = blockAccess.getBlockState(pos.west());
 			Block block1 = iblockstate2.getBlock();
 
-			if ((isBlockStairs(block1)) && (blockstairs$enumhalf == iblockstate2.getValue(HALF)))
+			if ((isBlockStairs(block1)) && (blockstairs$enumhalf == iblockstate2.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(FACING);
+				EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(BlockStairs.FACING);
 
 				if ((enumfacing2 == EnumFacing.NORTH) && (!isSameStair(blockAccess, pos.south(), iblockstate)))
 				{
@@ -445,9 +439,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate3 = blockAccess.getBlockState(pos.south());
 			Block block2 = iblockstate3.getBlock();
 
-			if ((isBlockStairs(block2)) && (blockstairs$enumhalf == iblockstate3.getValue(HALF)))
+			if ((isBlockStairs(block2)) && (blockstairs$enumhalf == iblockstate3.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(FACING);
+				EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(BlockStairs.FACING);
 
 				if ((enumfacing3 == EnumFacing.WEST) && (!isSameStair(blockAccess, pos.east(), iblockstate)))
 				{
@@ -466,9 +460,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate4 = blockAccess.getBlockState(pos.north());
 			Block block3 = iblockstate4.getBlock();
 
-			if ((isBlockStairs(block3)) && (blockstairs$enumhalf == iblockstate4.getValue(HALF)))
+			if ((isBlockStairs(block3)) && (blockstairs$enumhalf == iblockstate4.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(FACING);
+				EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(BlockStairs.FACING);
 
 				if ((enumfacing4 == EnumFacing.WEST) && (!isSameStair(blockAccess, pos.east(), iblockstate)))
 				{
@@ -490,8 +484,8 @@ public class BlockStairs extends BlockCollapsible
 	public boolean func_176304_i(IBlockAccess blockAccess, BlockPos pos)
 	{
 		IBlockState iblockstate = blockAccess.getBlockState(pos);
-		EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(FACING);
-		EnumHalf blockstairs$enumhalf = (EnumHalf)iblockstate.getValue(HALF);
+		EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(BlockStairs.FACING);
+		EnumHalf blockstairs$enumhalf = (EnumHalf)iblockstate.getValue(BlockStairs.HALF);
 		boolean flag = blockstairs$enumhalf == EnumHalf.TOP;
 		float f = 0.5F;
 		float f1 = 1.0F;
@@ -513,9 +507,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate1 = blockAccess.getBlockState(pos.west());
 			Block block = iblockstate1.getBlock();
 
-			if ((isBlockStairs(block)) && (blockstairs$enumhalf == iblockstate1.getValue(HALF)))
+			if ((isBlockStairs(block)) && (blockstairs$enumhalf == iblockstate1.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(FACING);
+				EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(BlockStairs.FACING);
 
 				if ((enumfacing1 == EnumFacing.NORTH) && (!isSameStair(blockAccess, pos.north(), iblockstate)))
 				{
@@ -536,11 +530,11 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate2 = blockAccess.getBlockState(pos.east());
 			Block block1 = iblockstate2.getBlock();
 
-			if ((isBlockStairs(block1)) && (blockstairs$enumhalf == iblockstate2.getValue(HALF)))
+			if ((isBlockStairs(block1)) && (blockstairs$enumhalf == iblockstate2.getValue(BlockStairs.HALF)))
 			{
 				f2 = 0.5F;
 				f3 = 1.0F;
-				EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(FACING);
+				EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(BlockStairs.FACING);
 
 				if ((enumfacing2 == EnumFacing.NORTH) && (!isSameStair(blockAccess, pos.north(), iblockstate)))
 				{
@@ -561,11 +555,11 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate3 = blockAccess.getBlockState(pos.north());
 			Block block2 = iblockstate3.getBlock();
 
-			if ((isBlockStairs(block2)) && (blockstairs$enumhalf == iblockstate3.getValue(HALF)))
+			if ((isBlockStairs(block2)) && (blockstairs$enumhalf == iblockstate3.getValue(BlockStairs.HALF)))
 			{
 				f4 = 0.0F;
 				f5 = 0.5F;
-				EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(FACING);
+				EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(BlockStairs.FACING);
 
 				if ((enumfacing3 == EnumFacing.WEST) && (!isSameStair(blockAccess, pos.west(), iblockstate)))
 				{
@@ -584,9 +578,9 @@ public class BlockStairs extends BlockCollapsible
 			IBlockState iblockstate4 = blockAccess.getBlockState(pos.south());
 			Block block3 = iblockstate4.getBlock();
 
-			if ((isBlockStairs(block3)) && (blockstairs$enumhalf == iblockstate4.getValue(HALF)))
+			if ((isBlockStairs(block3)) && (blockstairs$enumhalf == iblockstate4.getValue(BlockStairs.HALF)))
 			{
-				EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(FACING);
+				EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(BlockStairs.FACING);
 
 				if ((enumfacing4 == EnumFacing.WEST) && (!isSameStair(blockAccess, pos.west(), iblockstate)))
 				{
@@ -626,9 +620,9 @@ public class BlockStairs extends BlockCollapsible
 	private static List<AxisAlignedBB> getCollisionBoxList(IBlockState bstate)
 	{
 		List<AxisAlignedBB> list = Lists.newArrayList();
-		boolean flag = bstate.getValue(HALF) == EnumHalf.TOP;
+		boolean flag = bstate.getValue(BlockStairs.HALF) == EnumHalf.TOP;
 		list.add(flag ? AABB_SLAB_TOP : AABB_SLAB_BOTTOM);
-		EnumShape blockstairs$enumshape = (EnumShape)bstate.getValue(SHAPE);
+		EnumShape blockstairs$enumshape = (EnumShape)bstate.getValue(BlockStairs.SHAPE);
 
 		if ((blockstairs$enumshape == EnumShape.STRAIGHT) || (blockstairs$enumshape == EnumShape.INNER_LEFT) || (blockstairs$enumshape == EnumShape.INNER_RIGHT))
 		{
@@ -649,9 +643,9 @@ public class BlockStairs extends BlockCollapsible
 
 	private static AxisAlignedBB getCollQuarterBlock(IBlockState bstate)
 	{
-		boolean flag = bstate.getValue(HALF) == EnumHalf.TOP;
+		boolean flag = bstate.getValue(BlockStairs.HALF) == EnumHalf.TOP;
 
-		switch (((EnumFacing)bstate.getValue(FACING)).ordinal())
+		switch (((EnumFacing)bstate.getValue(BlockStairs.FACING)).ordinal())
 		{
 		case 1: 
 		default: 
@@ -671,9 +665,9 @@ public class BlockStairs extends BlockCollapsible
 
 	private static AxisAlignedBB getCollEighthBlock(IBlockState bstate)
 	{
-		EnumFacing enumfacing = (EnumFacing)bstate.getValue(FACING);
+		EnumFacing enumfacing = (EnumFacing)bstate.getValue(BlockStairs.FACING);
 		EnumFacing enumfacing1;
-		switch (((EnumShape)bstate.getValue(SHAPE)).ordinal())
+		switch (((EnumShape)bstate.getValue(BlockStairs.SHAPE)).ordinal())
 		{
 		case 1: 
 		default: 
@@ -689,7 +683,7 @@ public class BlockStairs extends BlockCollapsible
 			enumfacing1 = enumfacing.rotateYCCW();
 		}
 
-		boolean flag = bstate.getValue(HALF) == EnumHalf.TOP;
+		boolean flag = bstate.getValue(BlockStairs.HALF) == EnumHalf.TOP;
 
 		switch (enumfacing1.ordinal())
 		{
@@ -851,8 +845,8 @@ public class BlockStairs extends BlockCollapsible
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
 		IBlockState iblockstate = super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
-		iblockstate = iblockstate.withProperty(FACING, placer.getHorizontalFacing()).withProperty(SHAPE, EnumShape.STRAIGHT);
-		return (facing != EnumFacing.DOWN) && ((facing == EnumFacing.UP) || (hitY <= 0.5D)) ? iblockstate.withProperty(HALF, EnumHalf.BOTTOM) : iblockstate.withProperty(HALF, EnumHalf.TOP);
+		iblockstate = iblockstate.withProperty(BlockStairs.FACING, placer.getHorizontalFacing()).withProperty(BlockStairs.SHAPE, EnumShape.STRAIGHT);
+		return (facing != EnumFacing.DOWN) && ((facing == EnumFacing.UP) || (hitY <= 0.5D)) ? iblockstate.withProperty(BlockStairs.HALF, EnumHalf.BOTTOM) : iblockstate.withProperty(BlockStairs.HALF, EnumHalf.TOP);
 	}
 
 	@Override
@@ -860,8 +854,8 @@ public class BlockStairs extends BlockCollapsible
 	{
 		RayTraceResult[] amovingobjectposition = new RayTraceResult[8];
 		IBlockState iblockstate = worldIn.getBlockState(pos);
-		int i = ((EnumFacing)iblockstate.getValue(FACING)).getHorizontalIndex();
-		boolean flag = iblockstate.getValue(HALF) == EnumHalf.TOP;
+		int i = ((EnumFacing)iblockstate.getValue(BlockStairs.FACING)).getHorizontalIndex();
+		boolean flag = iblockstate.getValue(BlockStairs.HALF) == EnumHalf.TOP;
 		int[] aint = field_150150_a[(i + 0)];
 		this.hasRaytraced = true;
 
@@ -906,8 +900,8 @@ public class BlockStairs extends BlockCollapsible
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		IBlockState iblockstate = getDefaultState().withProperty(HALF, (meta & 0x4) > 0 ? EnumHalf.TOP : EnumHalf.BOTTOM);
-		iblockstate = iblockstate.withProperty(FACING, EnumFacing.getFront(5 - (meta & 0x3)));
+		IBlockState iblockstate = getDefaultState().withProperty(BlockStairs.HALF, (meta & 0x4) > 0 ? EnumHalf.TOP : EnumHalf.BOTTOM);
+		iblockstate = iblockstate.withProperty(BlockStairs.FACING, EnumFacing.getFront(5 - (meta & 0x3)));
 		return iblockstate;
 	}
 
@@ -919,12 +913,12 @@ public class BlockStairs extends BlockCollapsible
 	{
 		int i = 0;
 
-		if (state.getValue(HALF) == EnumHalf.TOP)
+		if (state.getValue(BlockStairs.HALF) == EnumHalf.TOP)
 		{
 			i |= 0x4;
 		}
 
-		i |= 5 - ((EnumFacing)state.getValue(FACING)).getIndex();
+		i |= 5 - ((EnumFacing)state.getValue(BlockStairs.FACING)).getIndex();
 		return i;
 	}
 
@@ -940,13 +934,13 @@ public class BlockStairs extends BlockCollapsible
 			switch (func_176305_g(worldIn, pos))
 			{
 			case 0: 
-				state = state.withProperty(SHAPE, EnumShape.STRAIGHT);
+				state = state.withProperty(BlockStairs.SHAPE, EnumShape.STRAIGHT);
 				break;
 			case 1: 
-				state = state.withProperty(SHAPE, EnumShape.INNER_RIGHT);
+				state = state.withProperty(BlockStairs.SHAPE, EnumShape.INNER_RIGHT);
 				break;
 			case 2: 
-				state = state.withProperty(SHAPE, EnumShape.INNER_LEFT);
+				state = state.withProperty(BlockStairs.SHAPE, EnumShape.INNER_LEFT);
 
 			}
 
@@ -954,13 +948,13 @@ public class BlockStairs extends BlockCollapsible
 			switch (func_176307_f(worldIn, pos))
 			{
 			case 0: 
-				state = state.withProperty(SHAPE, EnumShape.STRAIGHT);
+				state = state.withProperty(BlockStairs.SHAPE, EnumShape.STRAIGHT);
 				break;
 			case 1: 
-				state = state.withProperty(SHAPE, EnumShape.OUTER_RIGHT);
+				state = state.withProperty(BlockStairs.SHAPE, EnumShape.OUTER_RIGHT);
 				break;
 			case 2: 
-				state = state.withProperty(SHAPE, EnumShape.OUTER_LEFT);
+				state = state.withProperty(BlockStairs.SHAPE, EnumShape.OUTER_LEFT);
 			}
 
 		}
@@ -970,6 +964,6 @@ public class BlockStairs extends BlockCollapsible
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] { FACING, HALF, SHAPE });
+		return new BlockStateContainer(this, new IProperty[] { BlockStairs.FACING, BlockStairs.HALF, BlockStairs.SHAPE });
 	}
 }

@@ -133,25 +133,25 @@ public class TFCBlocks
 		SupportBeam2 = new BlockWoodSupport2().setHardness(2F).setUnlocalizedName("wood_support2");
 		SupportBeam3 = new BlockWoodSupport3().setHardness(2F).setUnlocalizedName("wood_support3");
 
-		StairsAsh = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Ash)).setUnlocalizedName("stairs_ash");
-		StairsAspen = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Aspen)).setUnlocalizedName("stairs_aspen");
-		StairsBirch = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Birch)).setUnlocalizedName("stairs_birch");
-		StairsChestnut = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Chestnut)).setUnlocalizedName("stairs_chestnut");
-		StairsDouglasFir = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.DouglasFir)).setUnlocalizedName("stairs_douglasfir");
-		StairsHickory = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Hickory)).setUnlocalizedName("stairs_hickory");
-		StairsMaple = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Maple)).setUnlocalizedName("stairs_maple");
-		StairsOak = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Oak)).setUnlocalizedName("stairs_oak");
-		StairsPine = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Pine)).setUnlocalizedName("stairs_pine");
-		StairsSequoia = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Sequoia)).setUnlocalizedName("stairs_sequoia");
-		StairsSpruce = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Spruce)).setUnlocalizedName("stairs_spruce");
-		StairsSycamore = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Sycamore)).setUnlocalizedName("stairs_sycamore");
-		StairsWhiteCedar = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.WhiteCedar)).setUnlocalizedName("stairs_whitecedar");
-		StairsWillow = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Willow)).setUnlocalizedName("stairs_willow");
-		StairsKapok = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Kapok)).setUnlocalizedName("stairs_kapok");
-		StairsAcacia = new BlockStairs(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Acacia)).setUnlocalizedName("stairs_acacia");
-		StairsRosewood = new BlockStairs(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Rosewood)).setUnlocalizedName("stairs_rosewood");
-		StairsBlackwood = new BlockStairs(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Blackwood)).setUnlocalizedName("stairs_blackwood");
-		StairsPalm = new BlockStairs(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Palm)).setUnlocalizedName("stairs_palm");
+		StairsAsh = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Ash)).setUnlocalizedName("stairs_ash");
+		StairsAspen = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Aspen)).setUnlocalizedName("stairs_aspen");
+		StairsBirch = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Birch)).setUnlocalizedName("stairs_birch");
+		StairsChestnut = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Chestnut)).setUnlocalizedName("stairs_chestnut");
+		StairsDouglasFir = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.DouglasFir)).setUnlocalizedName("stairs_douglasfir");
+		StairsHickory = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Hickory)).setUnlocalizedName("stairs_hickory");
+		StairsMaple = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Maple)).setUnlocalizedName("stairs_maple");
+		StairsOak = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Oak)).setUnlocalizedName("stairs_oak");
+		StairsPine = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Pine)).setUnlocalizedName("stairs_pine");
+		StairsSequoia = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Sequoia)).setUnlocalizedName("stairs_sequoia");
+		StairsSpruce = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Spruce)).setUnlocalizedName("stairs_spruce");
+		StairsSycamore = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Sycamore)).setUnlocalizedName("stairs_sycamore");
+		StairsWhiteCedar = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.WhiteCedar)).setUnlocalizedName("stairs_whitecedar");
+		StairsWillow = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Willow)).setUnlocalizedName("stairs_willow");
+		StairsKapok = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Kapok)).setUnlocalizedName("stairs_kapok");
+		StairsAcacia = new BlockStairsTFC(Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.Acacia)).setUnlocalizedName("stairs_acacia");
+		StairsRosewood = new BlockStairsTFC(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Rosewood)).setUnlocalizedName("stairs_rosewood");
+		StairsBlackwood = new BlockStairsTFC(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Blackwood)).setUnlocalizedName("stairs_blackwood");
+		StairsPalm = new BlockStairsTFC(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Palm)).setUnlocalizedName("stairs_palm");
 	}
 
 	public static void RegisterBlocks()

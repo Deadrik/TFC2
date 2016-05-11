@@ -43,7 +43,7 @@ public class Schematic implements ISchematic
 		blockMap = new ArrayList<SchemBlock>();
 		try
 		{
-			InputStream fis = getClass().getResourceAsStream(path);
+			InputStream fis = getClass().getResourceAsStream(path+".schematic");
 			if(fis == null)
 				return false;
 			tree = CompressedStreamTools.readCompressed(fis);
@@ -138,6 +138,12 @@ public class Schematic implements ISchematic
 	}
 
 	@Override
+	public String getFileName()
+	{
+		return filename;
+	}
+
+	@Override
 	public void setPath(String str)
 	{
 		path = str;
@@ -221,6 +227,13 @@ public class Schematic implements ISchematic
 		public SchemBlock(int id, int meta, BlockPos p)
 		{
 			state = Block.getBlockById(id).getStateFromMeta(meta);
+			pos = p;
+			te = null;
+		}
+
+		public SchemBlock(IBlockState state, BlockPos p)
+		{
+			this.state = state;
 			pos = p;
 			te = null;
 		}

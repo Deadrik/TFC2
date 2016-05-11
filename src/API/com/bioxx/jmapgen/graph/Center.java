@@ -125,6 +125,20 @@ public class Center
 		return true;
 	}
 
+	public double getAverageElevation()
+	{
+		double sum = elevation;
+		int total = 1;
+		for(Center n : neighbors)
+		{
+			total++;
+			sum += n.getElevation();
+		}
+
+		sum/=total;
+		return sum;
+	}
+
 	public Center getClosestNeighbor(Point p)
 	{
 		double angle = (Math.atan2((p.y - point.y) , (p.x - point.x)) * 180 / Math.PI) - 30;

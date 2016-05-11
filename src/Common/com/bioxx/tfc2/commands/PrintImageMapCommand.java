@@ -21,11 +21,6 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
-import com.bioxx.jmapgen.dungeon.*;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonDoor;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonLevel;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRect;
-import com.bioxx.jmapgen.dungeon.Dungeon.DungeonRoom;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Corner;
 import com.bioxx.jmapgen.pathfinding.Path;
@@ -293,14 +288,14 @@ public class PrintImageMapCommand extends CommandBase
 				int xM = ((int)Math.floor(player.posX) >> 12);
 				int zM = ((int)Math.floor(player.posZ) >> 12);
 				IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
-				drawDungeon(name, map);
+				drawDungeon2(name, map);
 			}
 		}
 	}
 
-	public void drawDungeon(String name, IslandMap map)
+	public void drawDungeon2(String name, IslandMap map)
 	{
-		Dungeon d = map.dungeons.get(0);
+		/*Dungeon d = map.dungeons.get(0);
 		//d.generate(0, map.centers.get(0));
 		int size = 1024;
 		int size2 = size/2;
@@ -338,10 +333,8 @@ public class PrintImageMapCommand extends CommandBase
 		catch (Exception e) 
 		{
 			e.printStackTrace();
-		}
+		}*/
 	}
-
-
 
 	public static void drawMapImage(int xCoord, int zCoord, World world, String name)
 	{

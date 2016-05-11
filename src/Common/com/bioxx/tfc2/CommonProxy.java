@@ -88,6 +88,7 @@ public class CommonProxy
 		registerGuiHandler();
 
 		MinecraftForge.EVENT_BUS.register(new PlayerTracker());
+		Global.EVENT_BUS.register(new CreateDungeonHandler());
 
 		registerEntities();
 	}
