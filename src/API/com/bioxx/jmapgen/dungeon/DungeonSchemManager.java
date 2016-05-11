@@ -27,7 +27,7 @@ public class DungeonSchemManager
 
 		for(String s : roomNames)
 		{
-			RoomSchematic r = new RoomSchematic(path+s, s);
+			RoomSchematic r = new RoomSchematic(path+s+".schematic", s);
 			r.Load();
 			r.PostProcess();
 			rooms.add(r);

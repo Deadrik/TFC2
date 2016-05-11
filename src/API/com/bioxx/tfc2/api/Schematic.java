@@ -43,7 +43,7 @@ public class Schematic implements ISchematic
 		blockMap = new ArrayList<SchemBlock>();
 		try
 		{
-			InputStream fis = getClass().getResourceAsStream(path+".schematic");
+			InputStream fis = getClass().getResourceAsStream(path);
 			if(fis == null)
 				return false;
 			tree = CompressedStreamTools.readCompressed(fis);
