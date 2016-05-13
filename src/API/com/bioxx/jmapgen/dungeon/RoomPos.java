@@ -15,6 +15,11 @@ public class RoomPos extends BlockPos
 		super(pos.getX(), pos.getY(), pos.getZ());
 	}
 
+	public RoomPos add(RoomPos pos)
+	{
+		return new RoomPos(this.getX()+pos.getX(), this.getY()+pos.getY(), this.getZ()+pos.getZ());
+	}
+
 	public RoomPos offset(DungeonDirection facing)
 	{
 

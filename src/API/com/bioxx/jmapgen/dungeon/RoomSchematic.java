@@ -1,11 +1,13 @@
 package com.bioxx.jmapgen.dungeon;
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.Schematic;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -21,6 +23,9 @@ public class RoomSchematic extends Schematic
 	 * This map allows us to guarantee that a certain schematic will always appear in next to this schematic. Good for stairs or very large rooms.
 	 */
 	Map<DungeonDirection, String> matchingRoomMap = new HashMap<DungeonDirection, String>();
+
+	Map<RoomPos, String> setPieceMap = new HashMap<RoomPos, String>();
+
 	double chooseWeight = 1.0;
 	RoomType roomType = RoomType.Normal;
 
@@ -35,7 +40,8 @@ public class RoomSchematic extends Schematic
 		try
 		{
 			Gson gson = new Gson();
-			InputStreamReader sr = new InputStreamReader(getClass().getResourceAsStream("/assets/tfc2/schematics/dungeons/" + this.filename + ".json"));
+			InputStream stream = this.getClass().getResourceAsStream(this.path.replace(".schematic", ".json"));
+			InputStreamReader sr = new InputStreamReader(stream);
 			JsonReader reader = new JsonReader(sr);
 
 			RoomJSON r = gson.fromJson(reader, RoomJSON.class);
@@ -67,6 +73,22 @@ public class RoomSchematic extends Schematic
 				matchingRoomMap.put(dir, schemString);
 			}
 
+			iter = r.getSetPieceMap().iterator();
+			while(iter.hasNext())
+			{
+				String key = iter.next();
+				String[] template = key.split("\\|");
+				String[] directions = template[0].split("\\-\\>");
+				String schemString = template[1];
+				RoomPos pos = new RoomPos(0,0,0);
+				for(String d : directions)
+				{
+					DungeonDirection dir = DungeonDirection.fromString(d);
+					pos = pos.offset(dir);
+				}
+				setPieceMap.put(pos, schemString);
+			}
+
 			ArrayList<SchemBlock> outList = new ArrayList<SchemBlock>();
 			for(SchemBlock block : this.getBlockMap())
 			{
@@ -84,6 +106,11 @@ public class RoomSchematic extends Schematic
 		}
 		catch(JsonSyntaxException ex)
 		{
+			ex.printStackTrace();
+		}
+		catch(NullPointerException ex)
+		{
+			TFC.log.error("NullPointerException while loading "+this.filename);
 			ex.printStackTrace();
 		}
 		catch(Exception ex)
@@ -114,17 +141,23 @@ public class RoomSchematic extends Schematic
 			}
 			else if(block.state == templateMap.get("dungeon_stairs_floor"))
 			{
-				IBlockState state = dungeon.blockMap.get("dungeon_stairs_floor").getBlock().getStateFromMeta(block.state.getBlock().getMetaFromState(block.state));
-				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_stairs_floor"), block.pos));
+				IBlockState state = dungeon.blockMap.get("dungeon_stairs_floor");
+				state = state.getBlock().getStateFromMeta(state.getBlock().getMetaFromState(block.state));
+				outList.add(new SchemBlock(state, block.pos));
 			}
 			else if(block.state == templateMap.get("dungeon_stairs_wall"))
 			{
-				IBlockState state = dungeon.blockMap.get("dungeon_stairs_wall").getBlock().getStateFromMeta(block.state.getBlock().getMetaFromState(block.state));
-				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_stairs_wall"), block.pos));
+				IBlockState state = dungeon.blockMap.get("dungeon_stairs_wall");
+				state = state.getBlock().getStateFromMeta(state.getBlock().getMetaFromState(block.state));
+				outList.add(new SchemBlock(state, block.pos));
 			}
 			else if(block.state == templateMap.get("dungeon_door"))
 			{
 				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_door"), block.pos));
+			}
+			else if(block.state == templateMap.get("dungeon_smoothstone"))
+			{
+				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_smoothstone"), block.pos));
 			}
 			else
 			{
@@ -153,6 +186,10 @@ public class RoomSchematic extends Schematic
 
 	public Map<DungeonDirection, String> getMatchingRoomMap() {
 		return matchingRoomMap;
+	}
+
+	public Map<RoomPos, String> getSetPieceMap() {
+		return setPieceMap;
 	}
 
 	public RoomType getRoomType()
@@ -208,12 +245,17 @@ public class RoomSchematic extends Schematic
 		@Expose
 		private String roomType = "normal";
 
+		@SerializedName("setPieceMap")
+		@Expose
+		private List<String> setPieceMap = new ArrayList<String>();
+
 		/**
 		 * 
 		 * @return
 		 * The blockMap
 		 */
-		public List<String> getBlockMap() {
+		public List<String> getBlockMap() 
+		{
 			return blockMap;
 		}
 
@@ -222,7 +264,8 @@ public class RoomSchematic extends Schematic
 		 * @param blockMap
 		 * The blockMap
 		 */
-		public void setBlockMap(List<String> blockMap) {
+		public void setBlockMap(List<String> blockMap) 
+		{
 			this.blockMap = blockMap;
 		}
 
@@ -231,7 +274,8 @@ public class RoomSchematic extends Schematic
 		 * @return
 		 * The floorY
 		 */
-		public Integer getFloorY() {
+		public Integer getFloorY() 
+		{
 			return floorY;
 		}
 
@@ -240,7 +284,8 @@ public class RoomSchematic extends Schematic
 		 * @param floorY
 		 * The floorY
 		 */
-		public void setFloorY(Integer floorY) {
+		public void setFloorY(Integer floorY) 
+		{
 			this.floorY = floorY;
 		}
 
@@ -249,7 +294,8 @@ public class RoomSchematic extends Schematic
 		 * @return
 		 * The connections
 		 */
-		public List<String> getConnections() {
+		public List<String> getConnections() 
+		{
 			return connections;
 		}
 
@@ -258,15 +304,18 @@ public class RoomSchematic extends Schematic
 		 * @param connections
 		 * The connections
 		 */
-		public void setConnections(List<String> connections) {
+		public void setConnections(List<String> connections) 
+		{
 			this.connections = connections;
 		}
 
-		public double getWeight() {
+		public double getWeight() 
+		{
 			return weight;
 		}
 
-		public void setWeight(double weight) {
+		public void setWeight(double weight) 
+		{
 			this.weight = weight;
 		}
 
@@ -277,18 +326,33 @@ public class RoomSchematic extends Schematic
 			return new ArrayList<String>();
 		}
 
-		public void setMatchingRoomMap(List<String> matchingRoomMap) {
+		public void setMatchingRoomMap(List<String> matchingRoomMap) 
+		{
 			this.matchingRoomMap = matchingRoomMap;
 		}
 
-		public String getRoomType() {
+		public String getRoomType() 
+		{
 			if(roomType != null)
 				return roomType;
 			return "normal";
 		}
 
-		public void setRoomType(String roomType) {
+		public void setRoomType(String roomType) 
+		{
 			this.roomType = roomType;
+		}
+
+		public List<String> getSetPieceMap() 
+		{
+			if(setPieceMap != null)
+				return setPieceMap;
+			return new ArrayList<String>();
+		}
+
+		public void setSetPieceMap(List<String> setPieceMap) 
+		{
+			this.setPieceMap = setPieceMap;
 		}
 
 	}

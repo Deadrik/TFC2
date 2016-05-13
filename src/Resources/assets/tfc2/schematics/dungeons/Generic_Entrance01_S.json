@@ -8,6 +8,8 @@
 		"dungeon_stairs_wall|minecraft:brick_stairs"
 	],
 	"floorY" : 0,
-	"connections" : ["down"],
-	"roomtype" : "entrance"
+	"connections" : ["south"],
+	"matchingRoomMap" : ["south|Generic_HallNSEW"],
+	"roomtype" : "entrance",
+	"weight" : 1.0
 }

@@ -7,6 +7,7 @@
 		"dungeon_stairs_floor|minecraft:stone_brick_stairs",
 		"dungeon_stairs_wall|minecraft:brick_stairs"
 	],
-	"floorY" : 2,
-	"connections" : ["north", "south"]
+	"floorY" : 0,
+	"connections" : ["east", "west"],
+	"weight" : 1.0
 }

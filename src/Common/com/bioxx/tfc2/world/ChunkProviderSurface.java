@@ -27,10 +27,7 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 import com.bioxx.jmapgen.*;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.attributes.*;
-import com.bioxx.jmapgen.dungeon.Dungeon;
-import com.bioxx.jmapgen.dungeon.DungeonChunk;
-import com.bioxx.jmapgen.dungeon.DungeonRoom;
-import com.bioxx.jmapgen.dungeon.RoomSchematic;
+import com.bioxx.jmapgen.dungeon.*;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.processing.CaveAttrNode;
@@ -1253,10 +1250,43 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 		for(SchemBlock b : schem.getProcessedBlockList(dungeon))
 		{
-			if(b.state == Blocks.AIR.getDefaultState())
-				primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), b.state);
+			DungeonDirection borderFacing = isOnBorder(b);
+			if(borderFacing != null && b.state.getBlock() == Blocks.OAK_DOOR)
+			{
+				if(!room.hasConnection(borderFacing))
+				{
+					primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), dungeon.blockMap.get("dungeon_wall"));
+					continue;
+				}
+				else if(room.hasConnection(borderFacing) && !room.getConnection(borderFacing).placeDoor)
+				{
+					primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), Blocks.AIR.getDefaultState());
+					continue;
+				}
+			}
+			else if(borderFacing != null && b.state.getBlock() == Blocks.AIR)
+			{
+				if(!room.hasConnection(borderFacing) && b.pos.getY() < 10)//the <10 check here makes sure that the surface sections of entrances
+				{
+					primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), dungeon.blockMap.get("dungeon_wall"));
+					continue;
+				}
+			}
 			primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), b.state);
 		}
+	}
+
+	private DungeonDirection isOnBorder(SchemBlock b)
+	{
+		if(b.pos.getX() == -8)
+			return DungeonDirection.WEST;
+		else if(b.pos.getX() == 7)
+			return DungeonDirection.EAST;
+		else if(b.pos.getZ() == -8)
+			return DungeonDirection.NORTH;
+		else if(b.pos.getZ() == 7)
+			return DungeonDirection.SOUTH;
+		return null;
 	}
 
 }
