@@ -26,7 +26,7 @@ public class RoomPos extends BlockPos
 		switch(facing)
 		{
 		case DOWN:
-			return new RoomPos(this.down());
+			return new RoomPos(this.down(10));
 		case EAST:
 			return new RoomPos(this.east());
 		case NORTH:
@@ -34,7 +34,7 @@ public class RoomPos extends BlockPos
 		case SOUTH:
 			return new RoomPos(this.south());
 		case UP:
-			return new RoomPos(this.up());
+			return new RoomPos(this.up(10));
 		case WEST:
 			return new RoomPos(this.west());
 		default:

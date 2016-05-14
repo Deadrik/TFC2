@@ -1223,30 +1223,28 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 		for(Dungeon d : islandMap.dungeons)
 		{
-			if(iChunkX < d.getDungeonX() || iChunkX >= d.getDungeonX()+d.getSize())
-				continue;
-			if(iChunkZ < d.getDungeonZ() || iChunkZ >= d.getDungeonZ()+d.getSize())
-				continue;
-
-			int cX = iChunkX - d.getDungeonX();
-			int cZ = iChunkZ - d.getDungeonZ();
+			int cX = iChunkX;
+			int cZ = iChunkZ;
 
 			DungeonChunk dc = d.getChunk(cX, cZ);
-			for(int i = 0; i < 8; i++)
+			if(dc != null)
 			{
-				DungeonRoom dr = dc.get(i);
-				if(dr != null)
+				Iterator<DungeonRoom> iter = dc.getRoomMap().values().iterator();
+				while(iter.hasNext())
 				{
-					genRoom(primer, d, dr);
+					DungeonRoom dr = iter.next();
+					if(dr != null)
+					{
+						genRoom(primer, d, dr);
+					}
 				}
 			}
-
 		}
 	}
 
 	protected void genRoom(ChunkPrimer primer, Dungeon dungeon, DungeonRoom room)
 	{
-		RoomSchematic schem = room.schematic;
+		RoomSchematic schem = room.getSchematic();
 
 		for(SchemBlock b : schem.getProcessedBlockList(dungeon))
 		{
@@ -1255,12 +1253,12 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			{
 				if(!room.hasConnection(borderFacing))
 				{
-					primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), dungeon.blockMap.get("dungeon_wall"));
+					primer.setBlockState(8+b.pos.getX(), room.getPosition().getY() + b.pos.getY(), 8+b.pos.getZ(), dungeon.blockMap.get("dungeon_wall"));
 					continue;
 				}
 				else if(room.hasConnection(borderFacing) && !room.getConnection(borderFacing).placeDoor)
 				{
-					primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), Blocks.AIR.getDefaultState());
+					primer.setBlockState(8+b.pos.getX(), room.getPosition().getY() + b.pos.getY(), 8+b.pos.getZ(), Blocks.AIR.getDefaultState());
 					continue;
 				}
 			}
@@ -1268,11 +1266,11 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			{
 				if(!room.hasConnection(borderFacing) && b.pos.getY() < 10)//the <10 check here makes sure that the surface sections of entrances
 				{
-					primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), dungeon.blockMap.get("dungeon_wall"));
+					primer.setBlockState(8+b.pos.getX(), room.getPosition().getY() + b.pos.getY(), 8+b.pos.getZ(), dungeon.blockMap.get("dungeon_wall"));
 					continue;
 				}
 			}
-			primer.setBlockState(8+b.pos.getX(), dungeon.getDungeonY() - room.getPosition().getY()*10 + b.pos.getY(), 8+b.pos.getZ(), b.state);
+			primer.setBlockState(8+b.pos.getX(), room.getPosition().getY() + b.pos.getY(), 8+b.pos.getZ(), b.state);
 		}
 	}
 

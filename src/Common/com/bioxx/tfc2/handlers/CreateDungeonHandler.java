@@ -6,6 +6,8 @@ import net.minecraft.init.Blocks;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.dungeon.*;
 import com.bioxx.jmapgen.dungeon.RoomSchematic.RoomType;
@@ -50,17 +52,14 @@ public class CreateDungeonHandler
 		int xStartChunk = ((int)(start.point.x) >> 4);
 		int zStartChunk = ((int)(start.point.y) >> 4);
 
-		int xStartLocal = 4+random.nextInt(8);
-		int zStartLocal = 4+random.nextInt(8);
-
 		//Elevation of the center
 		int startElev = event.islandMap.convertHeightToMC(start.getElevation())+64;
 		//this is the Y level where the dungeon will start
 		int elev = startElev-30;
 
-		Dungeon dungeon = new Dungeon(dsm.getRandomTheme(random), 16, xStartChunk-xStartLocal, elev, zStartChunk-zStartLocal);
+
+		Dungeon dungeon = new Dungeon(dsm.getRandomTheme(random), xStartChunk, elev, zStartChunk);
 		dungeon.blockMap.put("dungeon_wall", TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
-		//dungeon.blockMap.put("dungeon_floor", TFCBlocks.Planks.getDefaultState().withProperty(BlockPlanks.META_PROPERTY, WoodType.getTypeFromString(event.islandMap.getParams().getCommonTree())));
 		dungeon.blockMap.put("dungeon_floor", Core.getPlanks(WoodType.getTypeFromString(event.islandMap.getParams().getCommonTree())));
 		dungeon.blockMap.put("dungeon_ceiling", TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
 		dungeon.blockMap.put("dungeon_smoothstone", TFCBlocks.StoneSmooth.getDefaultState().withProperty(BlockStoneSmooth.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
@@ -68,129 +67,114 @@ public class CreateDungeonHandler
 		dungeon.blockMap.put("dungeon_stairs_wall", TFCBlocks.StairsOak.getDefaultState());
 		dungeon.blockMap.put("dungeon_door", Blocks.OAK_DOOR.getDefaultState());
 
-		TFC.log.info("Dungeon: " + start.point.toString());
+		while(true)
+		{
+			genDungeon(dsm, random, xStartChunk, zStartChunk, dungeon);
+			if(dungeon.getRoomCount() > 30)
+				break;
+			dungeon.resetDungeonMap();
+		}
+		TFC.log.info("Dungeon: " + start.point.toString() + " | Size : " + dungeon.getRoomCount());
+		event.islandMap.dungeons.add(dungeon);
+	}
 
-		DungeonRoom dungeonEntrance = new DungeonRoom(dsm.getRandomEntrance(random, dungeon.getTheme()), new RoomPos(xStartLocal, 0, zStartLocal));
-		dungeon.setRoom(xStartLocal, 0, zStartLocal, dungeonEntrance);
+	private void genDungeon(DungeonSchemManager dsm, Random random, int xStartChunk, int zStartChunk, Dungeon dungeon) 
+	{
+		DungeonRoom dungeonEntrance = new DungeonRoom(dsm.getRandomEntrance(random, dungeon.getTheme()), dungeon.dungeonStart);
+		dungeon.setRoom(xStartChunk, 0, zStartChunk, dungeonEntrance);
 		LinkedList<DungeonRoom> queue = new LinkedList<DungeonRoom>();
 		queue.add(dungeonEntrance);
 		while(queue.peek() != null)
 		{
 			DungeonRoom room = queue.poll();
 			boolean isRoomValid = true;
-			for(DungeonDirection dir : room.schematic.getConnections())
+			boolean addedRoom = false;
+			for(DungeonDirection dir : room.getSchematic().getConnections())
 			{
 				RoomPos pos = room.getPosition().offset(dir);
-				if(pos.getX() < 0 || pos.getZ() < 0 || pos.getX() >= dungeon.getSize() || pos.getZ() >= dungeon.getSize() || pos.getY() < 0 || pos.getY() >= 8)
-					continue;
 				//Have we already established a connection in this direction?
 				if(isRoomValid && !room.hasConnection(dir))
 				{
+					DungeonRoom neighbor = dungeon.getRoom(room.getPosition().offset(dir));
 					/**
-					 * If this room requires a matching room in a direction, then find the schematic,
-					 * create a link for these rooms, and add the other room to the queue.
+					 * Create a new random room in this direction
 					 */
-					if(room.schematic.getMatchingRoomMap().get(dir) != null)
+					if(neighbor == null)
 					{
-						String matching = room.schematic.getMatchingRoomMap().get(dir);
-						RoomSchematic matchingSchem = dsm.getSchematic(matching.split("_")[0], matching);
-						if(matchingSchem == null)
-						{
-							TFC.log.warn("[Dungeon Gen] Attempted to place a matching room with an invalid schem name.");
-						}
+						RoomSchematic schem = null;
+						double dist = room.getPosition().offset(dir).distanceSq(dungeon.dungeonStart);
+						if(dist > 256)
+							schem = dsm.getRandomRoomSingleDirection(random, dungeon.getTheme(), dir.getOpposite());
+						else if(random.nextDouble() < 0.1 && room.getPosition().getY() > 16)
+							schem = dsm.getRandomRoomForDirection(random, dungeon.getTheme(), dir.getOpposite(), RoomType.Stairs);
 						else
+							schem = dsm.getRandomRoomForDirection(random, dungeon.getTheme(), dir.getOpposite());
+
+						if(schem == null)
+							continue;
+
+						neighbor = new DungeonRoom(schem, room.getPosition().offset(dir));
+						linkRooms(room, neighbor, dir);
+						addedRoom = true;
+
+						if(!neighbor.getSchematic().getSetPieceMap().isEmpty())
 						{
-							DungeonRoom matchingRoom = dungeon.getRoom(room.getPosition().offset(dir));
-							/**
-							 * Make sure that there is not already a room in this direction. If there is
-							 * and it doesnt match the expected schematic then we should forget about placing 
-							 * this schematic in this location.
-							 */
-							if(matchingRoom == null)
+							if(checkSetPiece(dungeon, neighbor.getPosition(), neighbor.getSchematic().getSetPieceMap()))
 							{
-								matchingRoom = new DungeonRoom(matchingSchem, room.getPosition().offset(dir));
-								linkRooms(room, matchingRoom, dir);
-								queue.add(matchingRoom);
-								dungeon.setRoom(matchingRoom);
-							}
-							else if(matchingRoom != null && matchingRoom.schematic.getFileName() == matchingSchem.getFileName())
-							{
-								linkRooms(room, matchingRoom, dir);
-							}
-							else
-							{
-								isRoomValid = false;
-							}
-						}
-					}
-					else
-					{
-						DungeonRoom neighbor = dungeon.getRoom(room.getPosition().offset(dir));
-						/**
-						 * Create a new random room in this direction
-						 */
-						if(neighbor == null)
-						{
-							RoomSchematic schem = null;
-
-							if(random.nextDouble() < 0.1 && dungeon.getDungeonY() - (room.getPosition().getY()+1)*10 > 10)
-								schem = dsm.getRandomRoomForDirection(random, dungeon.getTheme(), dir.getOpposite(), RoomType.Stairs);
-							else
-								schem = dsm.getRandomRoomForDirection(random, dungeon.getTheme(), dir.getOpposite());
-
-							if(schem == null)
-								continue;
-
-							neighbor = new DungeonRoom(schem, room.getPosition().offset(dir));
-							linkRooms(room, neighbor, dir);
-
-							if(!neighbor.schematic.getSetPieceMap().isEmpty())
-							{
-								if(checkSetPiece(dungeon, neighbor.getPosition(), neighbor.schematic.getSetPieceMap()))
+								Iterator<RoomPos> iter = neighbor.getSchematic().getSetPieceMap().keySet().iterator();
+								while(iter.hasNext())
 								{
-									Iterator<RoomPos> iter = neighbor.schematic.getSetPieceMap().keySet().iterator();
-									while(iter.hasNext())
-									{
-										RoomPos setPos = iter.next();
-										String s = neighbor.schematic.getSetPieceMap().get(setPos);
-										setPos = pos.add(setPos);
-										DungeonRoom setpieceRoom = new DungeonRoom(dsm.getSchematic(dungeon.getTheme(), s), setPos);
-										dungeon.setRoom(setPos, setpieceRoom);
-										queue.add(setpieceRoom);
-									}
+									RoomPos setPos = iter.next();
+									String s = neighbor.getSchematic().getSetPieceMap().get(setPos);
+									setPos = pos.add(setPos);
+									DungeonRoom setpieceRoom = new DungeonRoom(dsm.getSchematic(dungeon.getTheme(), s), setPos);
+									dungeon.setRoom(setPos, setpieceRoom);
+									queue.add(setpieceRoom);
 								}
 							}
-
-						}
-						else//A room already exists in this neighbor location
-						{
-							//If the neighbor can connect to this room then link them
-							if(neighbor.schematic.getConnections().contains(dir.getOpposite()))
+							else
 							{
-								linkRooms(room, neighbor, dir);
+								neighbor.clearConnections(dungeon);
+								neighbor = null;
 							}
 						}
 
-						if(neighbor != null)
+					}
+					else//A room already exists in this neighbor location
+					{
+						//If the neighbor can connect to this room then link them
+						if(neighbor.getSchematic().getConnections().contains(dir.getOpposite()))
 						{
-							queue.add(neighbor);
-							dungeon.setRoom(neighbor);
+							linkRooms(room, neighbor, dir);
 						}
 					}
+
+					if(neighbor != null && addedRoom)
+					{
+						queue.add(neighbor);
+						dungeon.setRoom(neighbor);
+					}
 				}
+
 				if(!isRoomValid)
 					break;
 			}
 
 			if(!isRoomValid)
 			{
-				room.clearConnections();
+				room.clearConnections(dungeon);
 				requeueNeighbors(queue, dungeon, room);
 				dungeon.setRoom(room.getPosition(), null);
 			}
 		}
+	}
 
-		event.islandMap.dungeons.add(dungeon);
+	boolean checkElevation(IslandMap map, RoomPos pos)
+	{
+		Center closest = map.getClosestCenter(new Point((pos.getX() << 4)+8, (pos.getZ() << 4)+8));
+		if(map.convertHeightToMC(closest.getElevation()) < pos.getY()+14)//we do 14 instead of 10 to make sure that the schematic is a bit deeper underground
+			return false;
+		return true;
 	}
 
 	boolean checkSetPiece(Dungeon dungeon, RoomPos startPos, Map<RoomPos, String> map)
@@ -199,6 +183,7 @@ public class CreateDungeonHandler
 		while(iter.hasNext())
 		{
 			RoomPos pos = iter.next();
+			RoomPos pos2 = startPos.add(pos);
 			if(dungeon.getRoom(startPos.add(pos)) != null)
 				return false;
 		}
@@ -230,8 +215,8 @@ public class CreateDungeonHandler
 
 	void linkRooms(DungeonRoom room1, DungeonRoom room2, DungeonDirection room1_dir)
 	{
-		room1.addConnection(room1_dir, new RoomLink(room2, true));
-		room2.addConnection(room1_dir.getOpposite(), new RoomLink(room1, false));
+		room1.addConnection(room1_dir, new RoomLink(true));
+		room2.addConnection(room1_dir.getOpposite(), new RoomLink(false));
 	}
 
 	public Vector<Center> removeRiverCenters(Vector<Center> list)

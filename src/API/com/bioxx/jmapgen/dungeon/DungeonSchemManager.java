@@ -29,6 +29,7 @@ public class DungeonSchemManager
 		for(String s : roomNames)
 		{
 			RoomSchematic r = new RoomSchematic(path+s+".schematic", s);
+			r.setTheme(theme);
 			r.Load();
 			r.PostProcess();
 			rooms.add(r);
@@ -77,7 +78,7 @@ public class DungeonSchemManager
 		for(RoomSchematic rs : themeMap.get(theme.toLowerCase()))
 		{
 			//Schematic must be able to connect in this direction, but must not have a matching schematic for this direction registered.
-			if(rs.getConnections().contains(dir) && rs.getMatchingRoomMap().get(dir) == null && rs.getRoomType() == rt && rs.getChooseWeight() > 0)
+			if(rs.getConnections().contains(dir) && rs.getSetPieceMap().get(new RoomPos(0,0,0).offset(dir)) == null && rs.getRoomType() == rt && rs.getChooseWeight() > 0)
 				rooms.add(rs.getChooseWeight(), rs);
 		}
 
@@ -90,5 +91,21 @@ public class DungeonSchemManager
 	public RoomSchematic getRandomRoomForDirection(Random random, String theme, DungeonDirection dir)
 	{
 		return getRandomRoomForDirection(random, theme, dir, RoomType.Normal);
+	}
+
+	public RoomSchematic getRandomRoomSingleDirection(Random random, String theme, DungeonDirection dir)
+	{
+		RandomCollection<RoomSchematic> rooms = new RandomCollection<RoomSchematic>();
+		for(RoomSchematic rs : themeMap.get(theme.toLowerCase()))
+		{
+			//Schematic must be able to connect in this direction, but must not have a matching schematic for this direction registered.
+			if(rs.getConnections().contains(dir) && rs.getConnections().size() == 1 && rs.getSetPieceMap().get(new RoomPos(0,0,0).offset(dir)) == null && rs.getRoomType() == RoomType.Normal && rs.getChooseWeight() > 0)
+				rooms.add(rs.getChooseWeight(), rs);
+		}
+
+		if(rooms.size() == 0)
+			return null;
+
+		return rooms.next();
 	}
 }

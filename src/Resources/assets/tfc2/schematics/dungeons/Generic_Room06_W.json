@@ -8,7 +8,6 @@
 		"dungeon_stairs_wall|minecraft:brick_stairs"
 	],
 	"floorY" : 0,
-	"connections" : ["south", "west"],
-	"setPieceMap" : ["south|Generic_Cistern_SE", "south->east|Generic_Cistern_SW", "south->south|Generic_Cistern_NE", "south->south->east|Generic_Cistern_NW", "south->south->east->south|Generic_CisternTunnel_SE"],
+	"connections" : ["west"],
 	"weight" : 1.0
 }

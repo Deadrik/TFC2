@@ -1,13 +1,23 @@
 package com.bioxx.jmapgen.dungeon;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 public class RoomLink
 {
-	public final DungeonRoom room;
-	public final boolean placeDoor;
+	public boolean placeDoor;
 
-	public RoomLink(DungeonRoom room, boolean door)
+	public RoomLink(boolean door)
 	{
-		this.room = room;
 		placeDoor = door;
+	}
+
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		nbt.setBoolean("placeDoor", this.placeDoor);
+	}
+
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		placeDoor = nbt.getBoolean("placeDoor");
 	}
 }

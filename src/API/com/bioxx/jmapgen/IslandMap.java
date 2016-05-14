@@ -2373,7 +2373,7 @@ public class IslandMap
 		NBTTagList dungeonList = nbt.getTagList("dungeons", 10);
 		for(int i = 0; i < dungeonList.tagCount(); i++)
 		{
-			Dungeon d = new Dungeon("generic", 1, 0, 0, 0);
+			Dungeon d = new Dungeon("generic", 0, 0, 0);
 			d.readFromNBT(this, dungeonList.getCompoundTagAt(i));
 			dungeons.add(d);
 		}

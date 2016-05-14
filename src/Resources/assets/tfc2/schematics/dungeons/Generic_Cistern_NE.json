@@ -6,11 +6,10 @@
 		"dungeon_ceiling|minecraft:wool 11",
 		"dungeon_stairs_floor|minecraft:stone_brick_stairs",
 		"dungeon_stairs_wall|minecraft:brick_stairs",
-		"dungeon_smoothstonel|minecraft:wool 14"
+		"dungeon_smoothstone|minecraft:wool 14"
 	],
 	"floorY" : 0,
 	"connections" : ["east","north"],
-	"matchingRoomMap" : ["east|Generic_Cistern_NW", "north|Generic_Cistern_SE"],
 	"weight" : 0,
 	"roomType" : "normal"
 }

@@ -9,7 +9,6 @@
 	],
 	"floorY" : 0,
 	"connections" : ["north", "east"],
-	"matchingRoomMap" : ["north|Generic_Cistern_NW"],
 	"setPieceMap" : ["north|Generic_Cistern_NW", "north->west|Generic_Cistern_NE", "north->north|Generic_Cistern_SW", "north->north->west|Generic_Cistern_SE", "north->north->west->north|Generic_CisternTunnel_NW"],
 	"weight" : 1.0
 }

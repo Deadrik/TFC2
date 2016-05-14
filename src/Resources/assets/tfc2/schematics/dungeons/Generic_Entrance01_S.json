@@ -9,7 +9,7 @@
 	],
 	"floorY" : 0,
 	"connections" : ["south"],
-	"matchingRoomMap" : ["south|Generic_HallNSEW"],
-	"roomtype" : "entrance",
+	"setPieceMap" : ["south|Generic_HallNSEW"],
+	"roomType" : "entrance",
 	"weight" : 1.0
 }

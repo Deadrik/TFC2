@@ -6,6 +6,7 @@ import java.util.*;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.Schematic;
@@ -17,13 +18,9 @@ import com.google.gson.stream.JsonReader;
 
 public class RoomSchematic extends Schematic
 {
+	String theme;
 	EnumSet<DungeonDirection> connections = EnumSet.noneOf(DungeonDirection.class);
 	Map<String, IBlockState> templateMap = new HashMap<String, IBlockState>();
-	/**
-	 * This map allows us to guarantee that a certain schematic will always appear in next to this schematic. Good for stairs or very large rooms.
-	 */
-	Map<DungeonDirection, String> matchingRoomMap = new HashMap<DungeonDirection, String>();
-
 	Map<RoomPos, String> setPieceMap = new HashMap<RoomPos, String>();
 
 	double chooseWeight = 1.0;
@@ -61,16 +58,6 @@ public class RoomSchematic extends Schematic
 				String[] blockString = template[1].split(" ");
 				int meta = (blockString.length == 2 ? Integer.parseInt(blockString[1]) : 0);
 				templateMap.put(template[0], Block.getBlockFromName(blockString[0]).getStateFromMeta(meta));
-			}
-
-			iter = r.getMatchingRoomMap().iterator();
-			while(iter.hasNext())
-			{
-				String key = iter.next();
-				String[] template = key.split("\\|");
-				String schemString = template[1];
-				DungeonDirection dir = DungeonDirection.fromString(template[0]);
-				matchingRoomMap.put(dir, schemString);
 			}
 
 			iter = r.getSetPieceMap().iterator();
@@ -125,47 +112,93 @@ public class RoomSchematic extends Schematic
 
 		for(SchemBlock block : this.getBlockMap())
 		{
-			if(block.state == templateMap.get("null"))
+			if(matchesTranslation(block.state, templateMap.get("null")))
 				continue;
-			else if(block.state == templateMap.get("dungeon_wall"))
+			else if(block.state.getBlock() == Blocks.AIR)
+			{
+				outList.add(block);
+			}
+			else if(matchesTranslation(block.state, templateMap.get("dungeon_wall")))
 			{
 				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_wall"), block.pos));
 			}
-			else if(block.state == templateMap.get("dungeon_floor"))
-			{
-				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_floor"), block.pos));
-			}
-			else if(block.state == templateMap.get("dungeon_ceiling"))
+			else if(matchesTranslation(block.state, templateMap.get("dungeon_ceiling")))
 			{
 				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_ceiling"), block.pos));
 			}
-			else if(block.state == templateMap.get("dungeon_stairs_floor"))
+			else if(matchesTranslation(block.state, templateMap.get("dungeon_floor")))
+			{
+				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_floor"), block.pos));
+			}
+			else if(block.state.getBlock() == templateMap.get("dungeon_stairs_floor").getBlock())
 			{
 				IBlockState state = dungeon.blockMap.get("dungeon_stairs_floor");
 				state = state.getBlock().getStateFromMeta(state.getBlock().getMetaFromState(block.state));
 				outList.add(new SchemBlock(state, block.pos));
 			}
-			else if(block.state == templateMap.get("dungeon_stairs_wall"))
+			else if(block.state.getBlock() == templateMap.get("dungeon_stairs_wall").getBlock())
 			{
 				IBlockState state = dungeon.blockMap.get("dungeon_stairs_wall");
 				state = state.getBlock().getStateFromMeta(state.getBlock().getMetaFromState(block.state));
 				outList.add(new SchemBlock(state, block.pos));
 			}
-			else if(block.state == templateMap.get("dungeon_door"))
+			else if(matchesTranslationBlock(block.state, templateMap.get("dungeon_door")))
 			{
 				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_door"), block.pos));
 			}
-			else if(block.state == templateMap.get("dungeon_smoothstone"))
+			else if(matchesTranslation(block.state, templateMap.get("dungeon_smoothstone")))
 			{
 				outList.add(new SchemBlock(dungeon.blockMap.get("dungeon_smoothstone"), block.pos));
 			}
 			else
 			{
-				outList.add(block);
+
+				boolean found = false;
+				for(String s : templateMap.keySet())
+				{
+					if(templateMap.get(s) == block.state)
+					{
+						String[] blockString = s.split(" ");
+						int meta = (blockString.length == 2 ? Integer.parseInt(blockString[1]) : 0);
+						Block b = Block.getBlockFromName(blockString[0]);
+						if(b != null)
+						{
+							outList.add(new SchemBlock(b.getStateFromMeta(meta), block.pos));
+							found = true;
+						}
+					}
+				}
+				if(!found)
+					outList.add(block);
 			}
 		}
 
 		return outList;
+	}
+
+	private boolean matchesTranslation(IBlockState state, IBlockState blockMapState)
+	{
+		if(blockMapState == null)
+			return false;
+
+		if(blockMapState == state)
+			return true;
+
+		return false;
+	}
+
+	private boolean matchesTranslationBlock(IBlockState state, IBlockState blockMapState)
+	{
+		if(blockMapState == null)
+			return false;
+
+		if(blockMapState.getBlock()== state.getBlock())
+			return true;
+
+		if(blockMapState == state)
+			return true;
+
+		return false;
 	}
 
 	public double getChooseWeight() {
@@ -182,10 +215,6 @@ public class RoomSchematic extends Schematic
 
 	public Map<String, IBlockState> getTemplateMap() {
 		return templateMap;
-	}
-
-	public Map<DungeonDirection, String> getMatchingRoomMap() {
-		return matchingRoomMap;
 	}
 
 	public Map<RoomPos, String> getSetPieceMap() {
@@ -236,10 +265,6 @@ public class RoomSchematic extends Schematic
 		@SerializedName("weight")
 		@Expose
 		private double weight = 1.0;
-
-		@SerializedName("matchingRoomMap")
-		@Expose
-		private List<String> matchingRoomMap = new ArrayList<String>();
 
 		@SerializedName("roomType")
 		@Expose
@@ -319,18 +344,6 @@ public class RoomSchematic extends Schematic
 			this.weight = weight;
 		}
 
-		public List<String> getMatchingRoomMap() 
-		{
-			if(matchingRoomMap != null)
-				return matchingRoomMap;
-			return new ArrayList<String>();
-		}
-
-		public void setMatchingRoomMap(List<String> matchingRoomMap) 
-		{
-			this.matchingRoomMap = matchingRoomMap;
-		}
-
 		public String getRoomType() 
 		{
 			if(roomType != null)
@@ -355,5 +368,13 @@ public class RoomSchematic extends Schematic
 			this.setPieceMap = setPieceMap;
 		}
 
+	}
+
+	public String getTheme() {
+		return theme;
+	}
+
+	public void setTheme(String theme) {
+		this.theme = theme;
 	}
 }

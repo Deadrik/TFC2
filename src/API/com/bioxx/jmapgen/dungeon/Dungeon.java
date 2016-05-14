@@ -10,34 +10,34 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.tfc2.api.util.Helper;
 
 public class Dungeon 
 {
 	String theme = "generic";
 	public Map<String, IBlockState> blockMap = new HashMap<String, IBlockState>();
-	private DungeonChunk[] dungeonMap;
-	private int size;
-	private int dungeonX, dungeonY, dungeonZ;
+	private Map <Integer, DungeonChunk> dungeonMap;
+	public RoomPos dungeonStart;
 
-	public Dungeon(String theme, int size, int x, int y, int z)
+	public Dungeon(String theme, int x, int y, int z)
 	{
 		this.theme = theme;
-		dungeonMap = new DungeonChunk[size*size];
-		this.size = size;
-		dungeonX = x;
-		dungeonY = y;
-		dungeonZ = z;
+		dungeonMap = new HashMap<Integer, DungeonChunk>();
+		dungeonStart = new RoomPos(x, y, z);
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setString("theme", theme);
+		nbt.setInteger("xPos", dungeonStart.getX());
+		nbt.setInteger("yPos", dungeonStart.getY());
+		nbt.setInteger("zPos", dungeonStart.getZ());
 
 		NBTTagList blockMapTag = new NBTTagList();
-		Iterator<String> iter = blockMap.keySet().iterator();
+		Iterator iter = blockMap.keySet().iterator();
 		while(iter.hasNext())
 		{
-			String key = iter.next();
+			String key = (String)iter.next();
 			IBlockState state = blockMap.get(key);
 			NBTTagCompound blockTag = new NBTTagCompound();
 			blockTag.setString("Key", key);
@@ -46,26 +46,45 @@ public class Dungeon
 			blockMapTag.appendTag(blockTag);
 		}
 		nbt.setTag("BlockMap", blockMapTag);
-		nbt.setInteger("xPos", dungeonX);
-		nbt.setInteger("yPos", dungeonY);
-		nbt.setInteger("zPos", dungeonZ);
+
+		NBTTagList chunkMapTag = new NBTTagList();
+		iter = dungeonMap.keySet().iterator();
+		while(iter.hasNext())
+		{
+			int id = (Integer)iter.next();
+			NBTTagCompound chunknbt = new NBTTagCompound();
+			chunknbt.setInteger("id", id);
+			dungeonMap.get(id).writeToNBT(chunknbt);
+			chunkMapTag.appendTag(chunknbt);
+		}
+		nbt.setTag("ChunkMap", chunkMapTag);
+
 	}
 
 	public void readFromNBT(IslandMap map, NBTTagCompound nbt)
 	{
 		theme = nbt.getString("theme");
-		NBTTagList blockMapTag = nbt.getTagList("BlockMap", 10);
-		for(int i = 0; i < blockMapTag.tagCount(); i++)
+		this.dungeonStart = new RoomPos(nbt.getInteger("xPos"), nbt.getInteger("yPos"), nbt.getInteger("zPos"));
+		NBTTagList tagList = nbt.getTagList("BlockMap", 10);
+		for(int i = 0; i < tagList.tagCount(); i++)
 		{
-			NBTTagCompound blockTag = blockMapTag.getCompoundTagAt(i);
+			NBTTagCompound blockTag = tagList.getCompoundTagAt(i);
 			String key = blockTag.getString("Key");
 			Block b = Block.getBlockFromName(blockTag.getString("Block"));
 			IBlockState state = b.getStateFromMeta(blockTag.getInteger("Meta"));
 			blockMap.put(key, state);
 		}
-		dungeonX = nbt.getInteger("xPos");
-		dungeonY = nbt.getInteger("yPos");
-		dungeonZ = nbt.getInteger("zPos");
+
+		tagList = nbt.getTagList("ChunkMap", 10);
+		for(int i = 0; i < tagList.tagCount(); i++)
+		{
+			NBTTagCompound blockTag = tagList.getCompoundTagAt(i);
+			int id = blockTag.getInteger("id");
+			DungeonChunk dc = new DungeonChunk(Helper.getXCoord(id), Helper.getYCoord(id));
+			dc.readFromNBT(blockTag);
+			this.setChunk(dc, dc.chunkX, dc.chunkZ);
+		}
+
 	}
 
 	public String getTheme()
@@ -100,35 +119,39 @@ public class Dungeon
 
 	public DungeonChunk getChunk(int x, int z)
 	{
-		DungeonChunk dc = dungeonMap[x * size + z];
+		DungeonChunk dc = dungeonMap.get(Helper.combineCoords(x, z));
 		if(dc == null)
 		{
-			dc = dungeonMap[x * size + z] = new DungeonChunk(dungeonX+x, dungeonZ+z);
+			dc = new DungeonChunk(x, z);
+			dungeonMap.put(Helper.combineCoords(x, z), dc);
 		}
 		return dc;
 	}
 
-	/**
-	 * This is the X Coordinate of the dungeon
-	 */
-	public int getDungeonX() {
-		return dungeonX;
+	public void setChunk(DungeonChunk dc, int x, int z)
+	{
+		dungeonMap.put(Helper.combineCoords(x, z), dc);
 	}
 
-	/**
-	 * This is 0-255 and would be the y level of the bottom of the first floor schematic
-	 */
-	public int getDungeonY() {
-		return dungeonY;
-	}
-	/**
-	 * This is the Z Coordinate of the dungeon
-	 */
-	public int getDungeonZ() {
-		return dungeonZ;
+	public void resetDungeonMap()
+	{
+		dungeonMap.clear();
 	}
 
-	public int getSize() {
-		return size;
+	public int getRoomCount()
+	{
+		int count = 0;
+
+		for(DungeonChunk c : dungeonMap.values())
+		{
+			Iterator iter = c.getRoomMap().values().iterator();
+			while(iter.hasNext())
+			{
+				iter.next();
+				count++;
+			}
+		}
+
+		return count;
 	}
 }
