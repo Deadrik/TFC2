@@ -9,5 +9,5 @@
 	],
 	"floorY" : 2,
 	"connections" : ["north", "south"],
-	"weight" : 1.0
+	"weight" : 0.5
 }

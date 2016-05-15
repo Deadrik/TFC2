@@ -4,7 +4,10 @@
 		"Generic_Hall_EW",
 		"Generic_Hall_NSEW",
 		"Generic_Hall_SEW",
+		"Generic_Hall_NEW",
 		"Generic_StairsBottom_S",
+		"Generic_StairsTop_N",
+		"Generic_StairsBottom_N",
 		"Generic_StairsTop_S",
 		"Generic_Entrance01_S",
 		"Generic_Entrance03_S",
@@ -20,6 +23,10 @@
 		"Generic_Cistern_SE",
 		"Generic_Cistern_NE",
 		"Generic_CisternTunnel_SE",
-		"Generic_CisternTunnel_NW"
+		"Generic_CisternTunnel_NW",
+		"Generic_BigRoom01_BottomNorth_NS",
+		"Generic_BigRoom01_TopNorth_N",
+		"Generic_BigRoom01_BottomSouth_NS",
+		"Generic_BigRoom01_TopSouth"
 	]
 }

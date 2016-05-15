@@ -69,7 +69,7 @@ public class CreateDungeonHandler
 
 		while(true)
 		{
-			genDungeon(dsm, random, xStartChunk, zStartChunk, dungeon);
+			genDungeon(event.islandMap, dsm, random, xStartChunk, zStartChunk, dungeon);
 			if(dungeon.getRoomCount() > 30)
 				break;
 			dungeon.resetDungeonMap();
@@ -78,7 +78,7 @@ public class CreateDungeonHandler
 		event.islandMap.dungeons.add(dungeon);
 	}
 
-	private void genDungeon(DungeonSchemManager dsm, Random random, int xStartChunk, int zStartChunk, Dungeon dungeon) 
+	private void genDungeon(IslandMap map, DungeonSchemManager dsm, Random random, int xStartChunk, int zStartChunk, Dungeon dungeon) 
 	{
 		DungeonRoom dungeonEntrance = new DungeonRoom(dsm.getRandomEntrance(random, dungeon.getTheme()), dungeon.dungeonStart);
 		dungeon.setRoom(xStartChunk, 0, zStartChunk, dungeonEntrance);
@@ -99,13 +99,13 @@ public class CreateDungeonHandler
 					/**
 					 * Create a new random room in this direction
 					 */
-					if(neighbor == null)
+					if(neighbor == null && checkElevation(map, dungeon, room.getPosition().offset(dir)))
 					{
 						RoomSchematic schem = null;
 						double dist = room.getPosition().offset(dir).distanceSq(dungeon.dungeonStart);
 						if(dist > 256)
 							schem = dsm.getRandomRoomSingleDirection(random, dungeon.getTheme(), dir.getOpposite());
-						else if(random.nextDouble() < 0.1 && room.getPosition().getY() > 16)
+						else if(random.nextDouble() < 0.15 && room.getPosition().getY() > 16)
 							schem = dsm.getRandomRoomForDirection(random, dungeon.getTheme(), dir.getOpposite(), RoomType.Stairs);
 						else
 							schem = dsm.getRandomRoomForDirection(random, dungeon.getTheme(), dir.getOpposite());
@@ -119,7 +119,7 @@ public class CreateDungeonHandler
 
 						if(!neighbor.getSchematic().getSetPieceMap().isEmpty())
 						{
-							if(checkSetPiece(dungeon, neighbor.getPosition(), neighbor.getSchematic().getSetPieceMap()))
+							if(checkSetPiece(map, dungeon, neighbor.getPosition(), neighbor.getSchematic().getSetPieceMap()))
 							{
 								Iterator<RoomPos> iter = neighbor.getSchematic().getSetPieceMap().keySet().iterator();
 								while(iter.hasNext())
@@ -140,7 +140,7 @@ public class CreateDungeonHandler
 						}
 
 					}
-					else//A room already exists in this neighbor location
+					else if(neighbor != null)//A room already exists in this neighbor location
 					{
 						//If the neighbor can connect to this room then link them
 						if(neighbor.getSchematic().getConnections().contains(dir.getOpposite()))
@@ -169,22 +169,26 @@ public class CreateDungeonHandler
 		}
 	}
 
-	boolean checkElevation(IslandMap map, RoomPos pos)
+	boolean checkElevation(IslandMap map, Dungeon dungeon, RoomPos pos)
 	{
 		Center closest = map.getClosestCenter(new Point((pos.getX() << 4)+8, (pos.getZ() << 4)+8));
-		if(map.convertHeightToMC(closest.getElevation()) < pos.getY()+14)//we do 14 instead of 10 to make sure that the schematic is a bit deeper underground
+		if(pos.getY()+14 > map.convertHeightToMC(closest.getElevation())+64)//we do 14 instead of 10 to make sure that the schematic is a bit deeper underground
+			return false;
+		if(pos.getY() > dungeon.dungeonStart.getY())
 			return false;
 		return true;
 	}
 
-	boolean checkSetPiece(Dungeon dungeon, RoomPos startPos, Map<RoomPos, String> map)
+	boolean checkSetPiece(IslandMap islandMap, Dungeon dungeon, RoomPos startPos, Map<RoomPos, String> map)
 	{
 		Iterator<RoomPos> iter = map.keySet().iterator();
 		while(iter.hasNext())
 		{
 			RoomPos pos = iter.next();
 			RoomPos pos2 = startPos.add(pos);
-			if(dungeon.getRoom(startPos.add(pos)) != null)
+			if(dungeon.getRoom(pos2) != null)
+				return false;
+			if(!checkElevation(islandMap, dungeon, pos2))
 				return false;
 		}
 

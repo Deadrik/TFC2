@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 
@@ -161,10 +162,20 @@ public class RoomSchematic extends Schematic
 						String[] blockString = s.split(" ");
 						int meta = (blockString.length == 2 ? Integer.parseInt(blockString[1]) : 0);
 						Block b = Block.getBlockFromName(blockString[0]);
+
+						if(block.state.getBlock().getMaterial(block.state) == Material.WATER || block.state.getBlock().getMaterial(block.state) == Material.LAVA)
+						{
+							meta = block.state.getBlock().getMetaFromState(block.state);
+							outList.add(new SchemBlock(b.getStateFromMeta(meta), block.pos));
+							found = true;
+							break;
+						}
+
 						if(b != null)
 						{
 							outList.add(new SchemBlock(b.getStateFromMeta(meta), block.pos));
 							found = true;
+							break;
 						}
 					}
 				}
