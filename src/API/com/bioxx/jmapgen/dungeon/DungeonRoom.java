@@ -83,7 +83,7 @@ public class DungeonRoom
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		DungeonSchemManager dsm = DungeonSchemManager.getInstance();
-		schematic = dsm.getSchematic(nbt.getString("SchemTheme"), nbt.getString("SchemName"));
+		schematic = dsm.getTheme(nbt.getString("SchemTheme")).getSchematic(nbt.getString("SchemName"));
 		this.position = new RoomPos(nbt.getInteger("xPos"), nbt.getInteger("yPos"), nbt.getInteger("zPos"));
 
 		NBTTagList tagList = nbt.getTagList("LinkMap", 10);

@@ -57,8 +57,8 @@ public class CreateDungeonHandler
 		//this is the Y level where the dungeon will start
 		int elev = startElev-30;
 
-
-		Dungeon dungeon = new Dungeon(dsm.getRandomTheme(random), xStartChunk, elev, zStartChunk);
+		DungeonTheme dungeonTheme = dsm.getRandomTheme(random);
+		Dungeon dungeon = new Dungeon(dungeonTheme.getThemeName(), xStartChunk, elev, zStartChunk);
 		dungeon.blockMap.put("dungeon_wall", TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
 		dungeon.blockMap.put("dungeon_floor", Core.getPlanks(WoodType.getTypeFromString(event.islandMap.getParams().getCommonTree())));
 		dungeon.blockMap.put("dungeon_ceiling", TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
@@ -69,7 +69,7 @@ public class CreateDungeonHandler
 
 		while(true)
 		{
-			genDungeon(event.islandMap, dsm, random, xStartChunk, zStartChunk, dungeon);
+			genDungeon(event.islandMap, dungeonTheme, random, xStartChunk, zStartChunk, dungeon);
 			if(dungeon.getRoomCount() > 30)
 				break;
 			dungeon.resetDungeonMap();
@@ -78,9 +78,9 @@ public class CreateDungeonHandler
 		event.islandMap.dungeons.add(dungeon);
 	}
 
-	private void genDungeon(IslandMap map, DungeonSchemManager dsm, Random random, int xStartChunk, int zStartChunk, Dungeon dungeon) 
+	private void genDungeon(IslandMap map, DungeonTheme dungeonTheme, Random random, int xStartChunk, int zStartChunk, Dungeon dungeon) 
 	{
-		DungeonRoom dungeonEntrance = new DungeonRoom(dsm.getRandomEntrance(random, dungeon.getTheme()), dungeon.dungeonStart);
+		DungeonRoom dungeonEntrance = new DungeonRoom(dungeonTheme.getRandomEntrance(random), dungeon.dungeonStart);
 		dungeon.setRoom(xStartChunk, 0, zStartChunk, dungeonEntrance);
 		LinkedList<DungeonRoom> queue = new LinkedList<DungeonRoom>();
 		queue.add(dungeonEntrance);
@@ -104,11 +104,11 @@ public class CreateDungeonHandler
 						RoomSchematic schem = null;
 						double dist = room.getPosition().offset(dir).distanceSq(dungeon.dungeonStart);
 						if(dist > 256)
-							schem = dsm.getRandomRoomSingleDirection(random, dungeon.getTheme(), dir.getOpposite());
-						else if(random.nextDouble() < 0.15 && room.getPosition().getY() > 16)
-							schem = dsm.getRandomRoomForDirection(random, dungeon.getTheme(), dir.getOpposite(), RoomType.Stairs);
+							schem = dungeonTheme.getRandomRoomSingleDirection(random, dir.getOpposite());
+						else if(random.nextDouble() < 0.25 && room.getPosition().getY() > 16)
+							schem = dungeonTheme.getRandomRoomForDirection(random, dir.getOpposite(), RoomType.Stairs);
 						else
-							schem = dsm.getRandomRoomForDirection(random, dungeon.getTheme(), dir.getOpposite());
+							schem = dungeonTheme.getRandomRoomForDirection(random, dir.getOpposite());
 
 						if(schem == null)
 							continue;
@@ -127,7 +127,7 @@ public class CreateDungeonHandler
 									RoomPos setPos = iter.next();
 									String s = neighbor.getSchematic().getSetPieceMap().get(setPos);
 									setPos = pos.add(setPos);
-									DungeonRoom setpieceRoom = new DungeonRoom(dsm.getSchematic(dungeon.getTheme(), s), setPos);
+									DungeonRoom setpieceRoom = new DungeonRoom(dungeonTheme.getSchematic(s), setPos);
 									dungeon.setRoom(setPos, setpieceRoom);
 									queue.add(setpieceRoom);
 								}
