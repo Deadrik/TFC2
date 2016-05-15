@@ -10,6 +10,6 @@
 	"floorY" : 0,
 	"connections" : ["up","south"],
 	"setPieceMap" : ["up|Generic_StairsTop_N"],
-	"weight" : 0,
+	"weight" : 1.0,
 	"roomType" : "stairs"
 }

@@ -8,8 +8,8 @@
 		"dungeon_stairs_wall|minecraft:brick_stairs"
 	],
 	"floorY" : 0,
-	"connections" : ["up","north"],
-	"setPieceMap" : ["up|Generic_StairsTop_S"],
-	"weight" : 1.0,
-	"roomType" : "stairs"
+	"connections" : ["down","east"],
+	"setPieceMap" : ["down|Generic_StairsBottom_W"],
+	"roomType" : "stairs",
+	"weight" : 1.0
 }
