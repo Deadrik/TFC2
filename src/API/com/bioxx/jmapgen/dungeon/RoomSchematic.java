@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 
@@ -157,13 +156,23 @@ public class RoomSchematic extends Schematic
 				boolean found = false;
 				for(String s : templateMap.keySet())
 				{
-					if(templateMap.get(s) == block.state)
+					String[] blockString = s.split(" ");
+					int meta = (blockString.length == 2 ? Integer.parseInt(blockString[1]) : 0);
+
+					if(templateMap.get(s) == block.state || (meta == -1 && templateMap.get(s).getBlock() == block.state.getBlock()))
 					{
-						String[] blockString = s.split(" ");
-						int meta = (blockString.length == 2 ? Integer.parseInt(blockString[1]) : 0);
 						Block b = Block.getBlockFromName(blockString[0]);
 
-						if(block.state.getBlock().getMaterial(block.state) == Material.WATER || block.state.getBlock().getMaterial(block.state) == Material.LAVA)
+						/*if((block.state.getBlock().getMaterial(block.state) == Material.WATER || block.state.getBlock().getMaterial(block.state) == Material.LAVA))
+						{
+							if(block.state.getBlock().getMetaFromState(block.state) != 0)
+							{
+								outList.add(new SchemBlock(Blocks.AIR.getDefaultState(), block.pos));
+								found = true;
+								break;
+							}
+						}*/
+						if(meta == -1)
 						{
 							meta = block.state.getBlock().getMetaFromState(block.state);
 							outList.add(new SchemBlock(b.getStateFromMeta(meta), block.pos));

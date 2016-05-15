@@ -25,6 +25,12 @@ public class BlockFreshWaterStatic extends BlockFreshWater
 	}
 
 	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(LEVEL, meta);
+	}
+
+	@Override
 	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
 		this.updateLiquid(worldIn, pos, state);
