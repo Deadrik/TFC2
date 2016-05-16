@@ -12,6 +12,8 @@ public class DungeonTheme
 {
 	String themeName;
 	Map<String, RoomSchematic> schematicMap;
+	boolean canBeMainDungeon = true;
+	EntranceType entranceType = EntranceType.Vertical;
 
 	public DungeonTheme(String n)
 	{
@@ -90,5 +92,41 @@ public class DungeonTheme
 
 	public String getThemeName() {
 		return themeName;
+	}
+
+	public boolean isCanBeMainDungeon() {
+		return canBeMainDungeon;
+	}
+
+	public void setCanBeMainDungeon(boolean canBeMainDungeon) {
+		this.canBeMainDungeon = canBeMainDungeon;
+	}
+
+	public static enum EntranceType
+	{
+		Vertical("vertical"), Horizontal("horizontal");
+
+		String name;
+		EntranceType(String n)
+		{
+			name = n;
+		}
+
+		public static EntranceType fromString(String s)
+		{
+			if(s.equals(Vertical.name))
+				return Vertical;
+			else if(s.equals(Horizontal.name))
+				return Horizontal;
+			else return null;
+		}
+	}
+
+	public EntranceType getEntranceType() {
+		return entranceType;
+	}
+
+	public void setEntranceType(EntranceType entranceType) {
+		this.entranceType = entranceType;
 	}
 }

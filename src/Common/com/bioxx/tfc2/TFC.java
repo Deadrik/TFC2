@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.bioxx.jmapgen.dungeon.DungeonSchemManager;
+import com.bioxx.jmapgen.dungeon.DungeonTheme.EntranceType;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.trees.TreeConfig;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
@@ -203,25 +204,59 @@ public class TFC
 		{
 			Gson gson = new Gson();
 			JsonReader reader = new JsonReader(new InputStreamReader(getClass().getResourceAsStream("/assets/tfc2/schematics/dungeons/themes.json")));
-
+			ArrayList<String> themes = new ArrayList<String>();
 			reader.beginObject();
 			while (reader.hasNext()) 
 			{
 				String arrayName = reader.nextName();
-				ArrayList<String> roomNames = new ArrayList<String>();
-				reader.beginArray();
-				while (reader.hasNext()) 
+
+				if(arrayName.equals("themes"))
 				{
-					roomNames.add(reader.nextString());
+					reader.beginArray();
+					while (reader.hasNext()) 
+					{
+						themes.add(reader.nextString());
+					}
+					reader.endArray();
 				}
-				reader.endArray();
-				dsm.loadRooms(arrayName, roomNames, "/assets/tfc2/schematics/dungeons/");
 				log.info("Loaded Dungeon Theme - " + arrayName);
 			}
 
 			reader.endObject();
-
 			reader.close();
+
+			for(String themeName : themes)
+			{
+				gson = new Gson();
+				reader = new JsonReader(new InputStreamReader(getClass().getResourceAsStream("/assets/tfc2/schematics/dungeons/themes/"+ themeName +".json")));
+				reader.beginObject();
+				while (reader.hasNext()) 
+				{
+					String nextName = reader.nextName();
+					if(nextName.equals("roomlist"))
+					{
+						ArrayList<String> rooms = new ArrayList<String>();
+						reader.beginArray();
+						while (reader.hasNext()) 
+						{
+							rooms.add(reader.nextString());
+						}
+						reader.endArray();
+						dsm.loadRooms(themeName, rooms, "/assets/tfc2/schematics/dungeons/"+themeName+"/");
+					}
+					else if(nextName.equals("canbemaindungeon"))
+					{
+						dsm.getTheme(themeName).setCanBeMainDungeon(reader.nextBoolean());
+					}
+					else if(nextName.equals("entrancetype"))
+					{
+						dsm.getTheme(themeName).setEntranceType(EntranceType.fromString(reader.nextString()));
+					}
+				}
+
+				reader.endObject();
+				reader.close();
+			}
 		} 
 		catch (Exception e) 
 		{
