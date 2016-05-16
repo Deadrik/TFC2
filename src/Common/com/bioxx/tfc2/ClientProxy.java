@@ -38,7 +38,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.tfc2.api.Global;
-import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.api.util.KeyBindings;
 import com.bioxx.tfc2.blocks.BlockLeaves;
@@ -441,7 +440,7 @@ public class ClientProxy extends CommonProxy
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.LogVertical2), "Wood/Logs/", WoodType.getNamesArray(), 16, 19);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Leaves2), "Wood/Leaves/", WoodType.getNamesArray(), 16, 18);
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Leaves2), 18, new ModelResourceLocation(Reference.ModID + ":leaves_palm", "inventory"));
-		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Ore), "Ore/", OreType.getNamesArray(), 0, 13);
+		//registerVariantModel(Item.getItemFromBlock(TFCBlocks.Ore), "Ore/", OreType.getNamesArray(), 0, 13);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.StoneBrick), "StoneBrick/", Global.STONE_ALL, 0, 16);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.StoneSmooth), "StoneSmooth/", Global.STONE_ALL, 0, 16);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam), "Wood/SupportBeams/", WoodType.getNamesArray(), 0, 8);

@@ -18,6 +18,9 @@
         	"galena": { "textures": { "all": "tfc2:blocks/ores/Galena Ore" } },
         	"anthracite": { "textures": { "all": "tfc2:blocks/ores/Anthracite Ore" } },
         	"lignite": { "textures": { "all": "tfc2:blocks/ores/Lignite Ore" } }
-        }
+        },
+        "inventory": [{
+            "transform": "forge:default-block"
+        }]
     }
 }
