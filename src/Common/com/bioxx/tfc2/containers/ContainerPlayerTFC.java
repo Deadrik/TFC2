@@ -68,7 +68,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				}
 			});
 		}
-		PlayerInventory.buildInventoryLayout(this, playerInv, 8, 90, false, true);
+		PlayerInventory.buildInventoryLayout(this, playerInv, 8, 107, false, true);
 
 		//Manually built the remaining crafting slots because of an order issue. These have to be created after the default slots
 		if(player.getEntityData().hasKey("craftingTable") || !player.worldObj.isRemote)
@@ -89,6 +89,24 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			x = 2; y = 2; this.addSlotToContainer(new Slot(craftMatrix, y + x * 3, 82 + y * 18-50000, 18 + x * 18));
 		}
 		PlayerInventory.addExtraEquipables(this, playerInv, 8, 90, false);
+
+		this.addSlotToContainer(new Slot(playerInv, 40, 62, 80)
+		{
+			/**
+			 * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
+			 */
+			@Override
+			public boolean isItemValid(ItemStack stack)
+			{
+				return super.isItemValid(stack);
+			}
+			@Override
+			@SideOnly(Side.CLIENT)
+			public String getSlotTexture()
+			{
+				return "minecraft:items/empty_armor_slot_shield";
+			}
+		});
 		this.onCraftMatrixChanged(this.craftMatrix);
 	}
 

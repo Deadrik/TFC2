@@ -35,7 +35,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		this.allowUserInput = true;
 		player.addStat(AchievementList.OPEN_INVENTORY, 1);
 		xSize = 176;
-		ySize = 85 + PlayerInventory.invYSize;
+		ySize = 102 + PlayerInventory.invYSize;
 		this.player = player;
 	}
 
@@ -49,7 +49,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 			Core.bindTexture(UPPER_TEXTURE_2X2);
 		int k = this.guiLeft;
 		int l = this.guiTop;
-		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, 86);
+		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, 102);
 		//Draw the player avatar
 		GuiInventory.drawEntityOnScreen(k + 51, l + 75, 30, k + 51 - this.xSizeLow, l + 75 - 50 - this.ySizeLow, this.mc.thePlayer);
 
