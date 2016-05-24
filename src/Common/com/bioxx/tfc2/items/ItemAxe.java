@@ -22,17 +22,19 @@ import com.google.common.collect.Sets;
 
 public class ItemAxe extends ItemTerraTool 
 {
-	private static final Set EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER});
+	private static final Set EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER, TFCBlocks.LogNatural, TFCBlocks.LogNatural2, TFCBlocks.LogNaturalPalm});
 
 	public ItemAxe(ToolMaterial mat)
 	{
 		super(mat, EFFECTIVE_ON);
+		this.damageVsEntity = 1;
+		this.attackSpeed = -3.2f;
 	}
 
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if(worldIn.isRemote)
+		if(worldIn.isRemote || !playerIn.capabilities.isCreativeMode)
 			return EnumActionResult.FAIL;
 		IBlockState state = worldIn.getBlockState(pos);
 		if(state.getBlock() == TFCBlocks.Sapling)
@@ -58,26 +60,13 @@ public class ItemAxe extends ItemTerraTool
 			scanState = worldIn.getBlockState(scanPos);
 			if(Core.isNaturalLog(scanState))
 			{
-				state.getBlock().dropBlockAsItem(worldIn, scanPos, scanState, 0);
+				scanState.getBlock().dropBlockAsItem(worldIn, scanPos, scanState, 0);
 				worldIn.setBlockToAir(scanPos);
-				queue.add(scanPos.north());
-				queue.add(scanPos.north().east());
-				queue.add(scanPos.north().west());
-				queue.add(scanPos.south());
-				queue.add(scanPos.south().east());
-				queue.add(scanPos.south().west());
-				queue.add(scanPos.east());
-				queue.add(scanPos.west());
-
-				queue.add(scanPos.up());
-				queue.add(scanPos.up().north());
-				queue.add(scanPos.up().north().east());
-				queue.add(scanPos.up().north().west());
-				queue.add(scanPos.up().south());
-				queue.add(scanPos.up().south().east());
-				queue.add(scanPos.up().south().west());
-				queue.add(scanPos.up().east());
-				queue.add(scanPos.up().west());
+				Iterable<BlockPos> list = BlockPos.getAllInBox(scanPos.add(-1, 0, -1), scanPos.add(1, 1, 1));
+				for(BlockPos p : list)
+				{
+					queue.add(p);
+				}
 			}
 		}
 

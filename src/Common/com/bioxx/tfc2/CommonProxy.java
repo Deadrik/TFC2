@@ -78,8 +78,8 @@ public class CommonProxy
 		registerCropProduce();//Must run after item setup
 		setupOre();
 
-		TFCFluids.SALTWATER.setBlock(TFCBlocks.SaltWater).setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());//Must run after block setup
-		TFCFluids.FRESHWATER.setBlock(TFCBlocks.FreshWater).setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());//Must run after block setup
+		TFCFluids.SALTWATER.setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());//Must run after block setup
+		TFCFluids.FRESHWATER.setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());//Must run after block setup
 
 	}
 
