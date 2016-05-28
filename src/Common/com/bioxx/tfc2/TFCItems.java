@@ -13,13 +13,16 @@ public class TFCItems
 	public static Item StoneShovel;
 	public static Item StoneKnife;
 	public static Item StoneHoe;
-	public static Item LooseRock;
+	public static Item StoneHammer;
+
 	public static Item StoneAxeHead;
 	public static Item StoneShovelHead;
 	public static Item StoneKnifeHead;
 	public static Item StoneHoeHead;
+	public static Item StoneHammerHead;
 
 	public static Item Plank;
+	public static Item LooseRock;
 
 	//Vegetables
 	public static Item FoodCabbage;
@@ -112,11 +115,13 @@ public class TFCItems
 		StoneShovel = registerItem(new ItemShovel(ToolMaterial.STONE).setUnlocalizedName("stone_shovel"));
 		StoneKnife = registerItem(new ItemKnife(ToolMaterial.STONE).setUnlocalizedName("stone_knife"));
 		StoneHoe = registerItem(new ItemHoe(ToolMaterial.STONE).setUnlocalizedName("stone_hoe"));
+		StoneHammer = registerItem(new ItemHoe(ToolMaterial.STONE).setUnlocalizedName("stone_hammer"));
 
 		StoneAxeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_axe_head"));
 		StoneShovelHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_shovel_head"));
 		StoneKnifeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_knife_head"));
 		StoneHoeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_hoe_head"));
+		StoneHammerHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_hammer_head"));
 
 		//Vegetables
 		FoodCabbage = registerItem(new ItemFoodTFC(EnumFoodGroup.Vegetable, 1f, 1).setExpiration(3600).setUnlocalizedName("food_cabbage"));

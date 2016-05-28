@@ -19,6 +19,7 @@ import com.bioxx.tfc2.blocks.liquids.BlockSaltWaterStatic;
 import com.bioxx.tfc2.blocks.terrain.*;
 import com.bioxx.tfc2.blocks.vanilla.BlockTorchTFC;
 import com.bioxx.tfc2.items.itemblocks.*;
+import com.bioxx.tfc2.tileentities.TileAnvil;
 import com.bioxx.tfc2.tileentities.TileCrop;
 import com.bioxx.tfc2.tileentities.TileFarmland;
 import com.bioxx.tfc2.tileentities.TileTorch;
@@ -86,6 +87,8 @@ public class TFCBlocks
 	public static Block StairsBlackwood;
 	public static Block StairsPalm;
 
+	public static Block Anvil;
+
 	public static void LoadBlocks()
 	{
 		TFC.log.info(new StringBuilder().append("[TFC2] Loading Blocks").toString());
@@ -152,6 +155,8 @@ public class TFCBlocks
 		StairsRosewood = new BlockStairsTFC(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Rosewood)).setUnlocalizedName("stairs_rosewood");
 		StairsBlackwood = new BlockStairsTFC(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Blackwood)).setUnlocalizedName("stairs_blackwood");
 		StairsPalm = new BlockStairsTFC(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Palm)).setUnlocalizedName("stairs_palm");
+
+		Anvil = new BlockAnvil().setHardness(4F).setUnlocalizedName("anvil");
 	}
 
 	public static void RegisterBlocks()
@@ -201,6 +206,9 @@ public class TFCBlocks
 		register(SupportBeam, ItemWoodSupport.class);
 		register(SupportBeam2, ItemWoodSupport.class);
 		register(SupportBeam3, ItemWoodSupport.class);
+
+		register(Anvil, ItemBlock.class);
+
 		stairsList = new ArrayList<Block>();
 		stairsList.add(register(StairsAsh, ItemBlock.class));
 		stairsList.add(register(StairsAspen, ItemBlock.class));
@@ -261,6 +269,7 @@ public class TFCBlocks
 		registerTileEntity(TileTorch.class, "torch");
 		registerTileEntity(TileCrop.class, "crop");
 		registerTileEntity(TileFarmland.class, "farmland");
+		registerTileEntity(TileAnvil.class, "anvil");
 	}
 
 	private static void registerTileEntity(Class<? extends TileEntity> c, String id)

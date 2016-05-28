@@ -49,6 +49,8 @@ import com.bioxx.tfc2.entity.*;
 import com.bioxx.tfc2.handlers.client.*;
 import com.bioxx.tfc2.rendering.MeshDef;
 import com.bioxx.tfc2.rendering.model.*;
+import com.bioxx.tfc2.rendering.tesr.AnvilTESR;
+import com.bioxx.tfc2.tileentities.TileAnvil;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class ClientProxy extends CommonProxy
@@ -241,6 +243,9 @@ public class ClientProxy extends CommonProxy
 			}
 		});
 
+		//TESR
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAnvil.class, new AnvilTESR());
+
 	}
 
 	@Override
@@ -264,7 +269,7 @@ public class ClientProxy extends CommonProxy
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		super.postInit(event);
-
+		MinecraftForge.EVENT_BUS.register(new ModelBakeHandler());
 	}
 
 	private void registerItemMesh(Item i, ModelResourceLocation mrl)
@@ -412,6 +417,8 @@ public class ClientProxy extends CommonProxy
 
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.LooseRocks), 0, new ModelResourceLocation(Reference.ModID + ":loose_rock", "inventory"));
 
+		Item anvilItem = Item.getItemFromBlock(TFCBlocks.Anvil);
+		ModelLoader.setCustomModelResourceLocation(anvilItem, 0, new ModelResourceLocation(Reference.ModID + ":anvil"));
 		//Change the StateMapper for this block so that it will point to a different file for a specific Property
 		StateMapperBase ignoreState = new StateMapperBase() {
 			@Override

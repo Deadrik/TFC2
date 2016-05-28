@@ -1,0 +1,27 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"side": "tfc2:blocks/devices/anvil_3_side",
+			"top": "tfc2:blocks/devices/anvil_3_top",
+			"particle": "tfc2:blocks/metal/Wrought Iron"
+		},
+		"model": "tfc2:anvil",
+		"y":90
+	},
+	"variants": {
+		"facing" : {
+			"north" : {"y":90},
+			"south" : {"y":270},
+			"east" : {"y":0},
+			"west" : {"y":180},
+			"up": {},
+			"down": {}
+		},
+		"inventory": [{
+            "transform": "forge:default-block"
+        }],
+		"normal": [{}]
+		
+	}
+}
