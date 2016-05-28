@@ -2,8 +2,8 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"side": "tfc2:blocks/devices/anvil_3_side",
-			"top": "tfc2:blocks/devices/anvil_3_top",
+			"side": "tfc2:blocks/devices/Iron Anvil",
+			"top": "tfc2:blocks/devices/Iron Anvil",
 			"particle": "tfc2:blocks/metal/Wrought Iron"
 		},
 		"model": "tfc2:anvil",
