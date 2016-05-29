@@ -46,7 +46,7 @@ public abstract class TileTFC extends TileEntity
 	public void onDataPacket(net.minecraft.network.NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
 		this.readSyncableNBT(pkt.getNbtCompound());
-		getWorld().markBlockRangeForRenderUpdate(getPos(), getPos());
+		getWorld().markBlockRangeForRenderUpdate(getPos(), getPos().add(1, 1, 1));
 	}
 
 	/**

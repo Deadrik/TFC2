@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -30,7 +31,10 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.api.properties.PropertyItem;
+import com.bioxx.tfc2.rendering.particles.ParticleAnvil;
 import com.bioxx.tfc2.tileentities.TileAnvil;
 
 public class BlockAnvil extends BlockTerra implements ITileEntityProvider
@@ -38,8 +42,8 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyItem INVENTORY = new PropertyItem();
 
-	public static final AxisAlignedBB AABB_EW = new AxisAlignedBB(0.2,0,0,0.8,0.62,1);
-	public static final AxisAlignedBB AABB_NS = new AxisAlignedBB(0,0,0.2,1,0.62,0.8);
+	public static final AxisAlignedBB AABB_EW = new AxisAlignedBB(0.19,0,0,0.81,0.63,1);
+	public static final AxisAlignedBB AABB_NS = new AxisAlignedBB(0,0,0.19,1,0.63,0.81);
 
 	public BlockAnvil()
 	{
@@ -78,6 +82,22 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	/*******************************************************************************
 	 * 2. Rendering
 	 *******************************************************************************/
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand)
+	{
+		TileAnvil te = (TileAnvil)world.getTileEntity(pos);
+
+		/*if(rand.nextInt(5) == 0)
+		{
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleStrikeCrit(world, pos.getX()+Math.floor(4+rand.nextInt(4)*2)/16f, pos.getY()+0.71, pos.getZ()+Math.floor(4+rand.nextInt(4)*2)/16f));
+		}
+		else if(rand.nextInt(5) == 0)
+		{
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleStrike(world, pos.getX()+Math.floor(4+rand.nextInt(4)*2)/16f, pos.getY()+0.71, pos.getZ()+Math.floor(4+rand.nextInt(4)*2)/16f));
+		}*/
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -173,5 +193,41 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
 	{
 		return true;
+	}
+
+	/*******************************************************************************
+	 * Particles 
+	 *******************************************************************************/
+
+	public static class ParticleStrike extends ParticleAnvil
+	{
+		static final ResourceLocation TEX = Core.CreateRes(Reference.ModID+":textures/particles/strike.png");
+		protected ParticleStrike(World worldIn, double posXIn, double posYIn, double posZIn) 
+		{
+			super(worldIn, posXIn, posYIn, posZIn);
+		}
+
+		@Override
+		protected ResourceLocation getTexture() 
+		{
+			return TEX;
+		}
+
+	}
+
+	public static class ParticleStrikeCrit extends ParticleAnvil
+	{
+		static final ResourceLocation TEX = Core.CreateRes(Reference.ModID+":textures/particles/strike_crit.png");
+		protected ParticleStrikeCrit(World worldIn, double posXIn, double posYIn, double posZIn) 
+		{
+			super(worldIn, posXIn, posYIn, posZIn);
+		}
+
+		@Override
+		protected ResourceLocation getTexture() 
+		{
+			return TEX;
+		}
+
 	}
 }

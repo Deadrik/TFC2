@@ -67,9 +67,9 @@ public class BakedAnvilModel implements IPerspectiveAwareModel
 			for(PropertyItem.PItem item : items) 
 			{
 				if(state.getValue(BlockAnvil.FACING) == EnumFacing.NORTH || state.getValue(BlockAnvil.FACING) == EnumFacing.SOUTH)
-					builder.add(new TRSRBakedModel(item.model, item.x, item.y + 0.62f, item.z, item.r, (float) (Math.PI), 0.7853981633974483f, item.s), null, 0);
+					builder.add(new TRSRBakedModel(item.model, item.x, item.y +0.15f, item.z, item.r, (float) (Math.PI), 0.7853981633974483f, item.s), null, 0);
 				else 
-					builder.add(new TRSRBakedModel(item.model, item.x, item.y + 0.62f, item.z, item.r, (float) (Math.PI), -0.7853981633974483f, item.s), null, 0);
+					builder.add(new TRSRBakedModel(item.model, item.x, item.y + 0.15f, item.z, item.r, (float) (Math.PI), -0.7853981633974483f, item.s), null, 0);
 			}
 
 			bakedModel = builder.build(bakedModel);
