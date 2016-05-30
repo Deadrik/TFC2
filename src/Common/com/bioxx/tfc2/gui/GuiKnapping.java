@@ -22,7 +22,7 @@ import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
 import com.bioxx.tfc2.containers.ContainerSpecialCrafting;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
-import com.bioxx.tfc2.networking.server.KnappingUpdatePacket;
+import com.bioxx.tfc2.networking.server.SKnappingPacket;
 
 public class GuiKnapping extends GuiContainerTFC
 {
@@ -97,7 +97,7 @@ public class GuiKnapping extends GuiContainerTFC
 		if(guibutton.id < 81)
 		{
 			resetButton(guibutton.id);
-			TFC.network.sendToServer(new KnappingUpdatePacket(guibutton.id));
+			TFC.network.sendToServer(new SKnappingPacket(guibutton.id));
 
 			if(PlayerManagerTFC.getInstance().getClientPlayer().isInDebug)
 			{

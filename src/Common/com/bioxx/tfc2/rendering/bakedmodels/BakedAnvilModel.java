@@ -64,12 +64,25 @@ public class BakedAnvilModel implements IPerspectiveAwareModel
 		if(items != null && !items.isEmpty()) {
 			BakedCompositeModel.Builder builder = new BakedCompositeModel.Builder();
 			builder.add(bakedModel, null, 0);
+			EnumFacing anvilFacing = state.getValue(BlockAnvil.FACING);
 			for(PropertyItem.PItem item : items) 
 			{
-				if(state.getValue(BlockAnvil.FACING) == EnumFacing.NORTH || state.getValue(BlockAnvil.FACING) == EnumFacing.SOUTH)
+				float rot = 0;
+				/*if(state.getValue(BlockAnvil.FACING) == EnumFacing.NORTH || state.getValue(BlockAnvil.FACING) == EnumFacing.SOUTH)
 					builder.add(new TRSRBakedModel(item.model, item.x, item.y +0.15f, item.z, item.r, (float) (Math.PI), 0.7853981633974483f, item.s), null, 0);
 				else 
-					builder.add(new TRSRBakedModel(item.model, item.x, item.y + 0.15f, item.z, item.r, (float) (Math.PI), -0.7853981633974483f, item.s), null, 0);
+					builder.add(new TRSRBakedModel(item.model, item.x, item.y + 0.15f, item.z, item.r, (float) (Math.PI), -0.7853981633974483f, item.s), null, 0);*/
+				if(anvilFacing == EnumFacing.NORTH)
+					rot = (float)Math.toRadians(0);
+				else if(anvilFacing == EnumFacing.SOUTH)
+					rot = (float)Math.toRadians(180);
+				else if(anvilFacing == EnumFacing.EAST)
+					rot = (float)Math.toRadians(270);
+				else if(anvilFacing == EnumFacing.WEST)
+					rot = (float)Math.toRadians(90);
+
+
+				builder.add(new TRSRBakedModel(item.model, item.x, item.y + 0.15f, item.z, item.r, (float) (Math.PI), rot, item.s), null, 0);
 			}
 
 			bakedModel = builder.build(bakedModel);

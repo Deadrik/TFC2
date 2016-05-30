@@ -33,6 +33,7 @@ public abstract class ParticleAnvil extends EntityFX
 		this.xSpeed = 0;
 		this.ySpeed = 0;
 		this.zSpeed = 0;
+		this.particleScale = 0.05f;
 	}
 
 	protected abstract ResourceLocation getTexture();
@@ -43,19 +44,31 @@ public abstract class ParticleAnvil extends EntityFX
 		Tessellator tessellator = Tessellator.getInstance();
 
 		Core.bindTexture(getTexture());
-		float f4 = 0.05f;
+
+		if(((float)this.particleAge/(float)this.particleMaxAge) > 1)
+			return;
+
+		float f4 = particleScale-(particleScale/2f)*((float)this.particleAge/(float)this.particleMaxAge);
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
 		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
 		float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
-		rotationXY = 0;
-		rotationXZ = 0;
+		//rotationXY = 0;
+		//rotationXZ = 0.05f;
 		height = 1f;
+
 		worldRendererIn.begin(7, getVertexFormat());
 		worldRendererIn.pos((double) (f5 - rotationX * f4 - rotationXY * f4),  (f6 - rotationZ * f4 * height), (double) (f7 - rotationYZ * f4 - rotationXZ * f4)).tex((double) 1, (double) 1).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(0, 240).endVertex();
 		worldRendererIn.pos((double) (f5 - rotationX * f4 + rotationXY * f4),  (f6 + rotationZ * f4 * height), (double) (f7 - rotationYZ * f4 + rotationXZ * f4)).tex((double) 1, (double) 0).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(0, 240).endVertex();
 		worldRendererIn.pos((double) (f5 + rotationX * f4 + rotationXY * f4),  (f6 + rotationZ * f4 * height), (double) (f7 + rotationYZ * f4 + rotationXZ * f4)).tex((double) 0, (double) 0).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(0, 240).endVertex();
 		worldRendererIn.pos((double) (f5 + rotationX * f4 - rotationXY * f4),  (f6 - rotationZ * f4 * height), (double) (f7 + rotationYZ * f4 - rotationXZ * f4)).tex((double) 0, (double) 1).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(0, 240).endVertex();
+
 		tessellator.draw();
+	}
+
+	@Override
+	public int getFXLayer()
+	{
+		return 3;
 	}
 
 	protected VertexFormat getVertexFormat() {

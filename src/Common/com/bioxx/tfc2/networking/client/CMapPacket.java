@@ -11,18 +11,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.world.WorldGen;
 
-public class ClientMapPacket implements IMessage
+public class CMapPacket implements IMessage
 {
 	public int islandX;
 	public int islandZ;
 	public long seed;
 
-	public ClientMapPacket()
+	public CMapPacket()
 	{
 
 	}
 
-	public ClientMapPacket(int iX, int iZ, long seed)
+	public CMapPacket(int iX, int iZ, long seed)
 	{
 		islandX = iX;
 		islandZ = iZ; 
@@ -45,10 +45,10 @@ public class ClientMapPacket implements IMessage
 		this.seed = buffer.readLong();
 	}
 
-	public static class Handler implements IMessageHandler<ClientMapPacket, IMessage> 
+	public static class Handler implements IMessageHandler<CMapPacket, IMessage> 
 	{
 		@Override
-		public IMessage onMessage(final ClientMapPacket message, MessageContext ctx) {
+		public IMessage onMessage(final CMapPacket message, MessageContext ctx) {
 			IThreadListener mainThread = net.minecraft.client.Minecraft.getMinecraft(); //(WorldServer) ctx.getServerHandler().playerEntity.worldObj; // or Minecraft.getMinecraft() on the client
 			mainThread.addScheduledTask(new Runnable() 
 			{

@@ -255,7 +255,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
 		MinecraftForge.EVENT_BUS.register(new ClientRenderHandler());
 		MinecraftForge.EVENT_BUS.register(new BackgroundMusicHandler());
-
+		MinecraftForge.EVENT_BUS.register(new AnvilHighlightHandler());
 
 		setupBlockColors();
 

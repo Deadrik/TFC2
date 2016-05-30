@@ -34,16 +34,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.api.properties.PropertyItem;
+import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.rendering.particles.ParticleAnvil;
 import com.bioxx.tfc2.tileentities.TileAnvil;
+import com.bioxx.tfc2.tileentities.TileAnvil.AnvilStrikePoint;
+import com.bioxx.tfc2.tileentities.TileAnvil.AnvilStrikeType;
 
 public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyItem INVENTORY = new PropertyItem();
 
-	public static final AxisAlignedBB AABB_EW = new AxisAlignedBB(0.19,0,0,0.81,0.63,1);
-	public static final AxisAlignedBB AABB_NS = new AxisAlignedBB(0,0,0.19,1,0.63,0.81);
+	public static final AxisAlignedBB AABB_EW = new AxisAlignedBB(0.19,0,0.0625,0.81,0.63,0.9375);
+	public static final AxisAlignedBB AABB_NS = new AxisAlignedBB(0.0625,0,0.19,0.9375,0.63,0.81);
 
 	public BlockAnvil()
 	{
@@ -58,11 +61,13 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	 *******************************************************************************/
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if(worldIn.isRemote)
+		if(world.isRemote)
 			return false;
-		worldIn.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), 200, worldIn.provider.getDimension(), worldIn.getTileEntity(pos).getDescriptionPacket());
+		world.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), 200, world.provider.getDimension(), world.getTileEntity(pos).getDescriptionPacket());
+		TileAnvil te = (TileAnvil)world.getTileEntity(pos);
+		te.setSmithID(playerIn);
 		return true;
 	}
 
@@ -89,13 +94,46 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	{
 		TileAnvil te = (TileAnvil)world.getTileEntity(pos);
 
-		/*if(rand.nextInt(5) == 0)
+		for (int x = 0; x < 6; x++)
 		{
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleStrikeCrit(world, pos.getX()+Math.floor(4+rand.nextInt(4)*2)/16f, pos.getY()+0.71, pos.getZ()+Math.floor(4+rand.nextInt(4)*2)/16f));
+			for (int z = 0; z < 4; z++)
+			{
+				AnvilStrikePoint point = te.getStrikePoint(x, z);
+				if(point != null && ! point.hasSpawnedParticle())
+				{
+					double xPos = 0.125 + (Math.floor(x*2D)) / 16D + 0.0625D;
+					double yPos = 0.71;
+					double zPos = 0.25 + (Math.floor(z*2D)) / 16D + 0.0625D;
+
+					if(state.getValue(FACING) == EnumFacing.EAST || state.getValue(FACING) == EnumFacing.WEST)
+					{
+						double temp = xPos;
+						xPos = zPos;
+						zPos = temp;
+					}
+					ParticleAnvil particle;
+					if(point.getType() == AnvilStrikeType.CRITICAL)
+						particle = new ParticleStrikeCrit(world, pos.getX()+xPos, pos.getY()+yPos, pos.getZ()+zPos);
+					else
+						particle = new ParticleStrike(world, pos.getX()+xPos, pos.getY()+yPos, pos.getZ()+zPos);
+
+					long time = Timekeeper.getInstance().getTotalTicks();
+					particle.setMaxAge(point.getLifeTime());
+
+					net.minecraft.client.Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+
+					point.setSpawnedParticle(true);
+				}
+			}
 		}
-		else if(rand.nextInt(5) == 0)
+
+		/*if(rand.nextInt(10) == 0)
 		{
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleStrike(world, pos.getX()+Math.floor(4+rand.nextInt(4)*2)/16f, pos.getY()+0.71, pos.getZ()+Math.floor(4+rand.nextInt(4)*2)/16f));
+			net.minecraft.client.Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleStrikeCrit(world, pos.getX()+Math.floor(4+rand.nextInt(4)*2)/16f+0.0625f, pos.getY()+0.71, pos.getZ()+Math.floor(4+rand.nextInt(4)*2)/16f+0.0625f));
+		}
+		else if(rand.nextInt(8) == 0)
+		{
+			net.minecraft.client.Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleStrike(world, pos.getX()+Math.floor(4+rand.nextInt(4)*2)/16f+0.0625f, pos.getY()+0.71, pos.getZ()+Math.floor(4+rand.nextInt(4)*2)/16f+0.0625f));
 		}*/
 	}
 

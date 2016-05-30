@@ -11,20 +11,20 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.TFC;
-import com.bioxx.tfc2.networking.client.ClientMapPacket;
+import com.bioxx.tfc2.networking.client.CMapPacket;
 import com.bioxx.tfc2.world.WorldGen;
 
-public class ServerMapRequestPacket implements IMessage
+public class SMapRequestPacket implements IMessage
 {
 	public int islandX;
 	public int islandZ;
 
-	public ServerMapRequestPacket()
+	public SMapRequestPacket()
 	{
 
 	}
 
-	public ServerMapRequestPacket(int iX, int iZ)
+	public SMapRequestPacket(int iX, int iZ)
 	{
 		islandX = iX;
 		islandZ = iZ; 
@@ -44,10 +44,10 @@ public class ServerMapRequestPacket implements IMessage
 		this.islandZ = buffer.readInt();
 	}
 
-	public static class Handler implements IMessageHandler<ServerMapRequestPacket, IMessage> 
+	public static class Handler implements IMessageHandler<SMapRequestPacket, IMessage> 
 	{
 		@Override
-		public IMessage onMessage(final ServerMapRequestPacket message, final MessageContext ctx) {
+		public IMessage onMessage(final SMapRequestPacket message, final MessageContext ctx) {
 			IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj; // or Minecraft.getMinecraft() on the client
 			mainThread.addScheduledTask(new Runnable() 
 			{
@@ -56,7 +56,7 @@ public class ServerMapRequestPacket implements IMessage
 				{
 					int j;
 					IslandMap map = WorldGen.getInstance().getIslandMap(message.islandX, message.islandZ);
-					TFC.network.sendTo(new ClientMapPacket(message.islandX, message.islandZ, map.seed), ctx.getServerHandler().playerEntity);
+					TFC.network.sendTo(new CMapPacket(message.islandX, message.islandZ, map.seed), ctx.getServerHandler().playerEntity);
 				}
 			});
 			return null; // no response in this case

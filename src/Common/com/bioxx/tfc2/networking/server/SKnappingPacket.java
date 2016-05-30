@@ -11,16 +11,16 @@ import com.bioxx.tfc2.containers.ContainerSpecialCrafting;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 
-public class KnappingUpdatePacket implements IMessage
+public class SKnappingPacket implements IMessage
 {
 	byte id = 0;
 
-	public KnappingUpdatePacket()
+	public SKnappingPacket()
 	{
 
 	}
 
-	public KnappingUpdatePacket(int id)
+	public SKnappingPacket(int id)
 	{
 		this.id = (byte)id;
 	}
@@ -37,10 +37,10 @@ public class KnappingUpdatePacket implements IMessage
 		this.id = buffer.readByte();
 	}
 
-	public static class Handler implements IMessageHandler<KnappingUpdatePacket, IMessage> 
+	public static class Handler implements IMessageHandler<SKnappingPacket, IMessage> 
 	{
 		@Override
-		public IMessage onMessage(final KnappingUpdatePacket message, final MessageContext ctx) {
+		public IMessage onMessage(final SKnappingPacket message, final MessageContext ctx) {
 			IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj; // or Minecraft.getMinecraft() on the client
 			mainThread.addScheduledTask(new Runnable() 
 			{

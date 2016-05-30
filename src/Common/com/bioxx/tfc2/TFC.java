@@ -26,9 +26,10 @@ import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.commands.*;
 import com.bioxx.tfc2.core.PortalSchematic;
-import com.bioxx.tfc2.networking.client.ClientMapPacket;
-import com.bioxx.tfc2.networking.server.KnappingUpdatePacket;
-import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
+import com.bioxx.tfc2.networking.client.CAnvilStrikePacket;
+import com.bioxx.tfc2.networking.client.CMapPacket;
+import com.bioxx.tfc2.networking.server.SKnappingPacket;
+import com.bioxx.tfc2.networking.server.SMapRequestPacket;
 import com.bioxx.tfc2.world.WorldGen;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -58,9 +59,10 @@ public class TFC
 		proxy.preInit(event);
 
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("TFC2");
-		network.registerMessage(ClientMapPacket.Handler.class, ClientMapPacket.class, 0, Side.CLIENT);
-		network.registerMessage(ServerMapRequestPacket.Handler.class, ServerMapRequestPacket.class, 1, Side.SERVER);
-		network.registerMessage(KnappingUpdatePacket.Handler.class, KnappingUpdatePacket.class, 2, Side.SERVER);
+		network.registerMessage(CMapPacket.Handler.class, CMapPacket.class, 0, Side.CLIENT);
+		network.registerMessage(SMapRequestPacket.Handler.class, SMapRequestPacket.class, 1, Side.SERVER);
+		network.registerMessage(SKnappingPacket.Handler.class, SKnappingPacket.class, 2, Side.SERVER);
+		network.registerMessage(CAnvilStrikePacket.Handler.class, CAnvilStrikePacket.class, 3, Side.CLIENT);
 
 		//Register tree types and load tree schematics
 		loadTrees();

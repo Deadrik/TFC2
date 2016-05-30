@@ -13,7 +13,7 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
-import com.bioxx.tfc2.networking.client.ClientMapPacket;
+import com.bioxx.tfc2.networking.client.CMapPacket;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class PlayerTracker
@@ -31,7 +31,7 @@ public class PlayerTracker
 		int islandZ = (int)(event.player.posZ) >> 12;
 
 		IslandMap map = WorldGen.getInstance().getIslandMap(islandX, islandZ);
-		TFC.network.sendTo(new ClientMapPacket(islandX, islandZ, event.player.worldObj.getSeed()+map.seed), (EntityPlayerMP)event.player);
+		TFC.network.sendTo(new CMapPacket(islandX, islandZ, event.player.worldObj.getSeed()+map.seed), (EntityPlayerMP)event.player);
 	}
 
 	@SubscribeEvent

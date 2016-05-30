@@ -29,7 +29,7 @@ import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.api.util.IThreadCompleteListener;
-import com.bioxx.tfc2.networking.server.ServerMapRequestPacket;
+import com.bioxx.tfc2.networking.server.SMapRequestPacket;
 
 
 public class WorldGen implements IThreadCompleteListener
@@ -120,7 +120,7 @@ public class WorldGen implements IThreadCompleteListener
 	private IslandMap createFakeMap(int x, int z)
 	{
 		long seed = world.getSeed()+Helper.combineCoords(x, z);
-		TFC.network.sendToServer(new ServerMapRequestPacket(x, z));
+		TFC.network.sendToServer(new SMapRequestPacket(x, z));
 		return createFakeMap(x, z, seed, false);
 	}
 
