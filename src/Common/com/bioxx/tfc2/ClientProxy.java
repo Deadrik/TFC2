@@ -16,11 +16,9 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.Packet;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ChunkCache;
-import net.minecraft.world.ColorizerFoliage;
-import net.minecraft.world.ColorizerGrass;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.*;
 
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.model.ModelLoader;
@@ -471,6 +469,16 @@ public class ClientProxy extends CommonProxy
 			ModelLoader.setCustomModelResourceLocation(item, meta, itemModelResourceLocation);
 			//ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(new ResourceLocation(Reference.ModID, item.getRegistryName().getResourcePath()), vName));
 		}
+	}
+
+	@Override
+	@Deprecated
+	/**
+	 * Should not be used clientside
+	 */
+	public void sendToAllNear(World world, BlockPos pos, int range, Packet<?> packet)
+	{
+
 	}
 
 }

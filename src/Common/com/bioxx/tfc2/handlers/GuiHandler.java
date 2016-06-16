@@ -4,13 +4,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
+import com.bioxx.tfc2.containers.ContainerAnvil;
 import com.bioxx.tfc2.containers.ContainerCart;
 import com.bioxx.tfc2.containers.ContainerSpecialCrafting;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.entity.EntityCart;
+import com.bioxx.tfc2.tileentities.TileAnvil;
 
 
 public class GuiHandler implements IGuiHandler
@@ -31,6 +34,10 @@ public class GuiHandler implements IGuiHandler
 		case 1://cart
 		{
 			return new ContainerCart(player.inventory, ((EntityCart)pi.entityForInventory).cartInv, world, x, y, z);
+		}
+		case 2://cart
+		{
+			return new ContainerAnvil(player.inventory, (TileAnvil)te, world, x, y, z);
 		}
 		default:
 		{

@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class Helper 
 {
@@ -71,5 +72,50 @@ public class Helper
 				out[byte0] = ItemStack.loadItemStackFromNBT(tag);
 		}
 		return out;
+	}
+
+	/**
+	 * Rotates a Vec3d around an arbitrary rotation point along an axis with a rotation in radians
+	 */
+	public static Vec3d rotateVertex(Vec3d origin, Vec3d src, Vec3d axis, double rotation)
+	{
+		double q0 = 1;
+		double q1 = 0;
+		double q2 = 0;
+		double q3 = 0;
+		double norm = axis.lengthVector();
+		if (norm == 0) {
+			throw new ArithmeticException("zero norm for rotation axis");
+		}
+
+		double halfAngle = -0.5 * rotation;
+		double coeff = Math.sin(halfAngle) / norm;
+
+		q0 = Math.cos (halfAngle);
+		q1 = coeff * axis.xCoord;
+		q2 = coeff * axis.yCoord;
+		q3 = coeff * axis.zCoord;
+
+		return origin.add(applyTo(src.subtract(origin), q0, q1, q2, q3));
+
+	}
+
+	/** Apply the rotation to a vector.
+	 * @param u vector to apply the rotation to
+	 * @return a new vector which is the image of u by the rotation
+	 */
+	public static Vec3d applyTo(Vec3d u, double q0, double q1, double q2, double q3) 
+	{
+
+		double x = u.xCoord;
+		double y = u.yCoord;
+		double z = u.zCoord;
+
+		double s = q1 * x + q2 * y + q3 * z;
+
+		return new Vec3d(2 * (q0 * (x * q0 - (q2 * z - q3 * y)) + s * q1) - x,
+				2 * (q0 * (y * q0 - (q3 * x - q1 * z)) + s * q2) - y,
+				2 * (q0 * (z * q0 - (q1 * y - q2 * x)) + s * q3) - z);
+
 	}
 }

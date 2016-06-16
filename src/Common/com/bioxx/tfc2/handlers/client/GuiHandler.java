@@ -13,9 +13,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.entity.EntityCart;
+import com.bioxx.tfc2.gui.GuiAnvil;
 import com.bioxx.tfc2.gui.GuiCart;
 import com.bioxx.tfc2.gui.GuiInventoryTFC;
 import com.bioxx.tfc2.gui.GuiKnapping;
+import com.bioxx.tfc2.tileentities.TileAnvil;
 
 public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
 {
@@ -40,6 +42,8 @@ public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
 			return new GuiKnapping(player.inventory, pi.specialCraftingTypeAlternate == null ? pi.specialCraftingType : null, world, x, y, z);
 		case 1:
 			return new GuiCart(player.inventory, ((EntityCart)pi.entityForInventory).cartInv, world, x, y, z);
+		case 2:
+			return new GuiAnvil(player.inventory, (TileAnvil)te, world, x, y, z);
 		default:
 			return null;
 		}

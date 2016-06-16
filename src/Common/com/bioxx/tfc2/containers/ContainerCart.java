@@ -23,8 +23,8 @@ public class ContainerCart extends ContainerTFC
 		this.world = world;
 		this.cart = cart;
 		cart.openInventory(player);
-		layoutContainer(playerinv, cart, 0, 0);
 		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 93, false, true);
+		layoutContainer(playerinv, cart, 0, 0);
 	}
 
 	/**
@@ -53,14 +53,14 @@ public class ContainerCart extends ContainerTFC
 			origStack = slotStack.copy();
 
 			// From pile to inventory
-			if (slotNum < 27)
+			if (slotNum < 36)
 			{
-				if (!this.mergeItemStack(slotStack, 27, inventorySlots.size(), true))
+				if (!this.mergeItemStack(slotStack, 36, inventorySlots.size(), true))
 					return null;
 			}
 			else
 			{
-				if (!this.mergeItemStack(slotStack, 0, 27, false))
+				if (!this.mergeItemStack(slotStack, 0, 36, false))
 					return null;
 			}
 

@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.tileentities;
 
+import java.util.LinkedList;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
@@ -22,24 +24,30 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.properties.PropertyItem;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.BlockAnvil;
 import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.networking.client.CAnvilStrikePacket;
+import com.bioxx.tfc2.networking.server.SAnvilCraftingPacket;
 
 public class TileAnvil extends TileTFC implements ITickable, IInventory
 {
 	UUID smithID;
 	ItemStack[] inventory;
 	AnvilStrikePoint[] hitArray;
+	int anvilRecipeIndex = -1;
+	int timer = 0;
+	LinkedList<Integer> availableHitPoints = new LinkedList<Integer>();
 
 	public TileAnvil()
 	{
 		smithID = new UUID(0L, 0L);
 		inventory = new ItemStack[3];
-		inventory[0] = new ItemStack(Items.IRON_INGOT);
+		inventory[0] = new ItemStack(Items.IRON_INGOT, 2);
 		//inventory[1] = new ItemStack(Items.GOLD_INGOT);
 		hitArray = new AnvilStrikePoint[24];
 	}
@@ -51,23 +59,68 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	public void update() 
 	{
 		Timekeeper time = Timekeeper.getInstance();
-		if(!worldObj.isRemote && time.getTotalTicks()%50 == 0)
+		if(timer > 0)
+			timer--;
+		if(!worldObj.isRemote && timer >0 && timer%10 == 0)
 		{
 			AnvilStrikePoint p = new AnvilStrikePoint();
 			p.setBirthTime(time.getTotalTicks());
 			if(worldObj.rand.nextFloat() < 0.25)
-				p.setType(AnvilStrikeType.CRITICAL);
-			else
-				p.setType(AnvilStrikeType.HIT);
-			p.setLifeTime(100);
-
-			int x = worldObj.rand.nextInt(6);
-			int z = worldObj.rand.nextInt(4);
-
-			if(this.getStrikePoint(x, z) == null)
 			{
-				this.setStrikePoint(x, z, p);
-				sendSmithingPacket(x, z, p);
+				if(worldObj.rand.nextFloat() < 0.25)
+				{
+					int type = worldObj.rand.nextInt(3);
+					if(type == 0)
+						p.setType(AnvilStrikeType.EFF_CRIT);
+					else if(type == 1)
+						p.setType(AnvilStrikeType.DUR_CRIT);
+					else if(type == 2)
+						p.setType(AnvilStrikeType.DAM_CRIT);
+					else if(type == 3)
+						p.setType(AnvilStrikeType.SPD_CRIT);
+
+					p.setLifeTime(50);
+				}
+				else
+				{
+					int type = worldObj.rand.nextInt(3);
+					if(type == 0)
+						p.setType(AnvilStrikeType.EFF_NORM);
+					else if(type == 1)
+						p.setType(AnvilStrikeType.DUR_NORM);
+					else if(type == 2)
+						p.setType(AnvilStrikeType.DAM_NORM);
+					else if(type == 3)
+						p.setType(AnvilStrikeType.SPD_NORM);
+
+					p.setLifeTime(100);
+				}
+			}
+			else
+			{
+				int type = worldObj.rand.nextInt(7);
+				if(type == 0)
+					p.setType(AnvilStrikeType.HIT_LIGHT);
+				else if(type == 1)
+					p.setType(AnvilStrikeType.HIT_MEDIUM);
+				else if(type == 2)
+					p.setType(AnvilStrikeType.HIT_HEAVY);
+				else if(type == 3)
+					p.setType(AnvilStrikeType.HIT_BEND);
+				else if(type == 4)
+					p.setType(AnvilStrikeType.HIT_UPSET);
+				else if(type == 5)
+					p.setType(AnvilStrikeType.HIT_PUNCH);
+				else if(type == 6)
+					p.setType(AnvilStrikeType.HIT_SHRINK);
+			}
+
+			int xz = worldObj.rand.nextInt(availableHitPoints.size());
+
+			if(this.getStrikePoint(availableHitPoints.get(xz)) == null)
+			{
+				this.setStrikePoint(xz, p);
+				sendSmithingPacket(xz, p);
 			}
 
 
@@ -85,12 +138,11 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 
 	}
 
-	public void sendSmithingPacket(int x, int z, AnvilStrikePoint point)
+	public void sendSmithingPacket(int xz, AnvilStrikePoint point)
 	{
-		//worldObj.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), 200, getWorld().provider.getDimension(), this.getDescriptionPacket());
 		EntityPlayerMP player = worldObj.getMinecraftServer().getPlayerList().getPlayerByUUID(smithID);
 		if(player != null)
-			TFC.network.sendTo(new CAnvilStrikePacket(this.getPos(), getStrikePointIndex(x, z), point), player);
+			TFC.network.sendTo(new CAnvilStrikePacket(this.getPos(), xz, point), player);
 	}
 
 	public IExtendedBlockState writeExtendedBlockState(IExtendedBlockState state) 
@@ -169,6 +221,33 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		return item;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void selectRecipe(int index)
+	{
+		this.anvilRecipeIndex = index;
+	}
+
+	public void startCrafting(UUID id)
+	{
+		if(worldObj.isRemote)
+		{
+			TFC.network.sendToServer(new SAnvilCraftingPacket(this.getPos(),this.getAnvilRecipeIndex(), true, id));
+			this.timer = 2000;
+		}
+		else
+		{
+			if(timer <= 0)
+			{
+				this.smithID = id;
+				this.timer = 2000;
+				for(int i = 0; i < 24; i++)
+				{
+					availableHitPoints.add(i);
+				}
+			}
+		}
+	}
+
 	/***********************************************************************************
 	 * 2. Getters and Setters
 	 ***********************************************************************************/
@@ -178,9 +257,16 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		smithID = EntityPlayer.getUUID(player.getGameProfile());
 	}
 
+	public EntityPlayer getSmith()
+	{
+		return worldObj.getMinecraftServer().getPlayerList().getPlayerByUUID(smithID);
+	}
+
 	public void setStrikePoint(int index, AnvilStrikePoint point)
 	{
 		hitArray[index] = point;
+		if(point == null)
+			availableHitPoints.add(index);
 	}
 
 	public void setStrikePoint(int x, int z, AnvilStrikePoint point)
@@ -201,6 +287,23 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	public static int getStrikePointIndex(int x, int z)
 	{
 		return z * 6 + x;
+	}
+
+	public int getAnvilRecipeIndex() {
+		return anvilRecipeIndex;
+	}
+
+
+	public void setAnvilRecipeIndex(int anvilRecipeIndex) {
+		this.anvilRecipeIndex = anvilRecipeIndex;
+	}
+
+	public int getTimer() {
+		return timer;
+	}
+
+	public void setTimer(int timer) {
+		this.timer = timer;
 	}
 
 	/***********************************************************************************
@@ -231,6 +334,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	{
 		nbt.setLong("farmerID_least", this.smithID.getLeastSignificantBits());
 		nbt.setLong("farmerID_most", this.smithID.getMostSignificantBits());
+
 	}
 
 	/*********************************************************
@@ -266,9 +370,22 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	@Override
 	public ItemStack decrStackSize(int index, int count) 
 	{
-		if(index < getSizeInventory() && inventory[index] != null)
-			inventory[index].stackSize--;
-		return inventory[index];
+		if(inventory[index] != null)
+		{
+			if(inventory[index].stackSize <= count)
+			{
+				ItemStack itemstack = inventory[index];
+				inventory[index] = null;
+				TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getDescriptionPacket());
+				return itemstack;
+			}
+			ItemStack itemstack1 = inventory[index].splitStack(count);
+			if(inventory[index].stackSize == 0)
+				inventory[index] = null;
+			return itemstack1;
+		}
+		else
+			return null;
 	}
 
 	@Override
@@ -278,6 +395,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		{
 			ItemStack out = inventory[index];
 			inventory[index] = null;
+			TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getDescriptionPacket());
 			return out;
 		}
 		return null;
@@ -289,8 +407,8 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		if(index < getSizeInventory())
 		{
 			inventory[index] = stack;
+			TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getDescriptionPacket());
 		}
-
 	}
 
 	@Override
@@ -315,19 +433,29 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	public boolean isItemValidForSlot(int index, ItemStack stack) {return true;}
 
 	@Override
-	public int getField(int id) {
-		return 0;
+	public int getField(int id) 
+	{
+		if(id == 0)
+			return this.getAnvilRecipeIndex();
+		return -1;
 	}
 
 	@Override
 	public void setField(int id, int value) 
 	{
-
+		if(id == 0)
+		{
+			this.setAnvilRecipeIndex(value);
+			if(worldObj.isRemote)
+			{
+				TFC.network.sendToServer(new SAnvilCraftingPacket(this.getPos(), this.getAnvilRecipeIndex(), false, this.smithID));
+			}
+		}
 	}
 
 	@Override
 	public int getFieldCount() {
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -343,8 +471,6 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		long birthTime;
 		int lifeTime;
 		AnvilStrikeType type;
-		//Used on Client only
-		boolean spawnedParticle = false;
 
 		public long getBirthTime() {
 			return birthTime;
@@ -358,12 +484,6 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		public void setType(AnvilStrikeType type) {
 			this.type = type;
 		}
-		public boolean hasSpawnedParticle() {
-			return spawnedParticle;
-		}
-		public void setSpawnedParticle(boolean spawnedParticle) {
-			this.spawnedParticle = spawnedParticle;
-		}
 		public int getLifeTime() {
 			return lifeTime;
 		}
@@ -374,6 +494,32 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 
 	public enum AnvilStrikeType
 	{
-		HIT, CRITICAL;
+		EFF_NORM(Core.CreateRes(Reference.ModID+":textures/blocks/anvil/eff_norm.png")), 
+		EFF_CRIT(Core.CreateRes(Reference.ModID+":textures/blocks/anvil/eff_crit.png")),
+		DUR_NORM(Core.CreateRes(Reference.ModID+":textures/blocks/anvil/dur_norm.png")), 
+		DUR_CRIT(Core.CreateRes(Reference.ModID+":textures/blocks/anvil/dur_crit.png")),
+		SPD_NORM(Core.CreateRes(Reference.ModID+":textures/blocks/anvil/spd_norm.png")), 
+		SPD_CRIT(Core.CreateRes(Reference.ModID+":textures/blocks/anvil/spd_crit.png")),
+		DAM_NORM(Core.CreateRes(Reference.ModID+":textures/blocks/anvil/dam_norm.png")), 
+		DAM_CRIT(Core.CreateRes(Reference.ModID+":textures/blocks/anvil/dam_crit.png")), 
+		HIT_LIGHT(Core.CreateRes(Reference.ModID+":textures/gui/anvil_hit_light.png")), 
+		HIT_MEDIUM(Core.CreateRes(Reference.ModID+":textures/gui/anvil_hit_medium.png")), 
+		HIT_HEAVY(Core.CreateRes(Reference.ModID+":textures/gui/anvil_hit_heavy.png")), 
+		HIT_BEND(Core.CreateRes(Reference.ModID+":textures/gui/anvil_bend.png")), 
+		HIT_UPSET(Core.CreateRes(Reference.ModID+":textures/gui/anvil_upset.png")), 
+		HIT_PUNCH(Core.CreateRes(Reference.ModID+":textures/gui/anvil_punch.png")), 
+		HIT_SHRINK(Core.CreateRes(Reference.ModID+":textures/gui/anvil_shrink.png"));
+
+		ResourceLocation texture;
+
+		AnvilStrikeType(ResourceLocation image)
+		{
+			texture = image;
+		}
+
+		public ResourceLocation getTexture() 
+		{
+			return texture;
+		}
 	}
 }

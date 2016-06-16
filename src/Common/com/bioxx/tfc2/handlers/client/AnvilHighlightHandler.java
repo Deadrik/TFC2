@@ -84,17 +84,14 @@ public class AnvilHighlightHandler
 		double maxY = minY + 0.07;
 		double maxZ = minZ + 0.125;
 
-
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.disableCull();
 		GlStateManager.disableTexture2D();
-		//GlStateManager.disableDepth();
 
 		//Draw the mini Box
 		drawBox(new AxisAlignedBB(minX,minY,minZ,maxX,maxY,maxZ).expand(0.002F, 0.002F, 0.002F).offset(-posX, -posY, -posZ), new float[]{1,0.5f,0, 0.5f});
 
-		//GlStateManager.enableDepth();
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableCull();
 		GlStateManager.disableBlend();

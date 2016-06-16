@@ -33,12 +33,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.properties.PropertyItem;
-import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.rendering.particles.ParticleAnvil;
 import com.bioxx.tfc2.tileentities.TileAnvil;
-import com.bioxx.tfc2.tileentities.TileAnvil.AnvilStrikePoint;
-import com.bioxx.tfc2.tileentities.TileAnvil.AnvilStrikeType;
 
 public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 {
@@ -65,9 +63,24 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	{
 		if(world.isRemote)
 			return false;
-		world.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), 200, world.provider.getDimension(), world.getTileEntity(pos).getDescriptionPacket());
+		EnumFacing facing = state.getValue(BlockAnvil.FACING);
 		TileAnvil te = (TileAnvil)world.getTileEntity(pos);
-		te.setSmithID(playerIn);
+		if(te.getTimer() <= 0)
+			playerIn.openGui(TFC.instance, 2, world, pos.getX(), pos.getY(), pos.getZ());
+		else if(te.getSmith() == playerIn && side == EnumFacing.UP)
+		{
+
+			//get the targeted sub block coords
+			/*double subX = hitX/8D;
+			double subZ = hitZ/8D;
+
+			if(facing == EnumFacing.EAST || facing == EnumFacing.WEST)
+			{
+				subX = (hitZ+2)/8D; subZ = (hitX+1)/8D;
+			}
+
+			te.setStrikePoint((int)subX, (int)subZ, null);*/
+		}
 		return true;
 	}
 
@@ -81,7 +94,6 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing()));
-
 	}
 
 	/*******************************************************************************
@@ -94,7 +106,7 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	{
 		TileAnvil te = (TileAnvil)world.getTileEntity(pos);
 
-		for (int x = 0; x < 6; x++)
+		/*for (int x = 0; x < 6; x++)
 		{
 			for (int z = 0; z < 4; z++)
 			{
@@ -125,7 +137,7 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 					point.setSpawnedParticle(true);
 				}
 			}
-		}
+		}*/
 
 		/*if(rand.nextInt(10) == 0)
 		{

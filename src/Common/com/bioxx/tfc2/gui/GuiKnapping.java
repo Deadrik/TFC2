@@ -79,7 +79,7 @@ public class GuiKnapping extends GuiContainerTFC
 			}
 		}
 
-		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.Knapping);
+		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.KNAPPING);
 		int x = 0, y = 0;
 		for (int i = 0; i < recipes.size(); i++)
 		{
@@ -134,7 +134,7 @@ public class GuiKnapping extends GuiContainerTFC
 		{
 			((GuiKnappingButton) this.buttonList.get(i)).highlight(true);
 		}
-		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.Knapping);
+		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.KNAPPING);
 		IRecipeTFC rec = recipes.get(id - 81);
 		for(int i = 0; i < rec.getRecipeSize(); i++)
 		{

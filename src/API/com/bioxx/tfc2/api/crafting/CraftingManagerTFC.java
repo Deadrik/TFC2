@@ -23,19 +23,22 @@ public class CraftingManagerTFC
 
 	private List<IRecipeTFC> recipes;
 	private List<IRecipeTFC> recipes_knapping;
+	private List<IRecipeTFC> recipes_anvil;
 
 	private CraftingManagerTFC()
 	{
 		recipes = new ArrayList<IRecipeTFC>();
 		recipes_knapping = new ArrayList<IRecipeTFC>();
+		recipes_anvil = new ArrayList<IRecipeTFC>();
 
 		Collections.sort(recipes, new RecipeSorterTFC(this));
 		Collections.sort(recipes_knapping, new RecipeSorterTFC(this));
+		Collections.sort(recipes_anvil, new RecipeSorterTFC(this));
 	}
 
 	public ShapedRecipesTFC addRecipe(ItemStack itemstack, Object... aobj)
 	{
-		return addRecipe(RecipeType.Normal, itemstack, aobj);
+		return addRecipe(RecipeType.NORMAL, itemstack, aobj);
 	}
 
 	public ShapedRecipesTFC addRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
@@ -100,16 +103,18 @@ public class CraftingManagerTFC
 		}
 
 		ShapedRecipesTFC shapedRecipesTFC = new ShapedRecipesTFC(j, k, aitemstack, itemstack);
-		if(rt == RecipeType.Normal)
+		if(rt == RecipeType.NORMAL)
 			recipes.add(shapedRecipesTFC);
-		else if(rt == RecipeType.Knapping)
+		else if(rt == RecipeType.KNAPPING)
 			recipes_knapping.add(shapedRecipesTFC);
+		else if(rt == RecipeType.ANVIL)
+			recipes_anvil.add(shapedRecipesTFC);
 		return shapedRecipesTFC;
 	}
 
 	public ShapedRecipesTFC addShapelessRecipe(ItemStack itemstack, Object... aobj)
 	{
-		return addRecipe(RecipeType.Normal, itemstack, aobj);
+		return addRecipe(RecipeType.NORMAL, itemstack, aobj);
 	}
 
 	public ShapelessRecipesTFC addShapelessRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
@@ -140,25 +145,29 @@ public class CraftingManagerTFC
 			}
 		}
 		ShapelessRecipesTFC recipesTFC = new ShapelessRecipesTFC(itemstack, arraylist);
-		if(rt == RecipeType.Normal)
+		if(rt == RecipeType.NORMAL)
 			recipes.add(recipesTFC);
-		else if(rt == RecipeType.Knapping)
+		else if(rt == RecipeType.KNAPPING)
 			recipes_knapping.add(recipesTFC);
+		else if(rt == RecipeType.ANVIL)
+			recipes_anvil.add(recipesTFC);
 		return recipesTFC;
 	}
 
 	public ItemStack findMatchingRecipe(InventoryCrafting inventorycrafting, World world)
 	{
-		return findMatchingRecipe(RecipeType.Normal, inventorycrafting, world);
+		return findMatchingRecipe(RecipeType.NORMAL, inventorycrafting, world);
 	}
 
 	public ItemStack findMatchingRecipe(RecipeType rt, InventoryCrafting inventorycrafting, World world)
 	{
 		List<IRecipeTFC> rec = Collections.emptyList();
-		if(rt == RecipeType.Normal)
+		if(rt == RecipeType.NORMAL)
 			rec = recipes;
-		else if(rt == RecipeType.Knapping)
+		else if(rt == RecipeType.KNAPPING)
 			rec = recipes_knapping;
+		else if(rt == RecipeType.ANVIL)
+			rec = recipes_anvil;
 
 		for (int k = 0; k < rec.size(); k++)
 		{
@@ -174,16 +183,17 @@ public class CraftingManagerTFC
 
 	public List<IRecipeTFC> getRecipeList(RecipeType rt)
 	{
-		if(rt == RecipeType.Normal)
-			return recipes;
-		else if(rt == RecipeType.Knapping)
+		if(rt == RecipeType.KNAPPING)
 			return recipes_knapping;
+		else if(rt == RecipeType.ANVIL)
+			return recipes_anvil;
 
 		return recipes;
 	}
 
 	public enum RecipeType
 	{
-		Normal, Knapping;
+		NORMAL, KNAPPING, ANVIL;
 	}
+
 }

@@ -5,7 +5,10 @@ import java.io.File;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.Packet;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -49,8 +52,6 @@ import com.bioxx.tfc2.world.generators.WorldGenTrees;
 
 public class CommonProxy
 {
-
-
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		TFC_Sounds.register();
@@ -361,6 +362,11 @@ public class CommonProxy
 	public boolean isClientSide()
 	{
 		return false;
+	}
+
+	public void sendToAllNear(World world, BlockPos pos, int range, Packet<?> packet)
+	{
+		world.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), range, world.provider.getDimension(), packet);
 	}
 
 }

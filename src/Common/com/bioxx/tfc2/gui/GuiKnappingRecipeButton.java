@@ -29,10 +29,14 @@ public class GuiKnappingRecipeButton extends GuiButton
 			PlayerInfo pi = PlayerManagerTFC.getInstance().getClientPlayer();
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			Core.bindTexture(GuiKnapping.texture);
-			if(hovered)
+			if(hovered && this.enabled)
 				this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 203+18, 18, 18);
 			else
+			{
+				if(!enabled)
+					GL11.glColor4f(0.8F, 0.8F, 0.8F, 1.0F);
 				this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 203, 18, 18);
+			}
 
 			Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(is, xPosition+1, yPosition+1);
 

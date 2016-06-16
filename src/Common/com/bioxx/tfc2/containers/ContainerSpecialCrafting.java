@@ -71,7 +71,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	@Override
 	public void onCraftMatrixChanged(IInventory ii)
 	{
-		ItemStack result = CraftingManagerTFC.getInstance().findMatchingRecipe(RecipeType.Knapping, this.craftMatrix, worldObj);
+		ItemStack result = CraftingManagerTFC.getInstance().findMatchingRecipe(RecipeType.KNAPPING, this.craftMatrix, worldObj);
 
 		// Handle decreasing the stack of the held item used to open the interface.
 		if (!decreasedStack && !isConstructing)
@@ -98,7 +98,9 @@ public class ContainerSpecialCrafting extends ContainerTFC
 			{
 				setDecreasedStack(true); // Mark container so it won't decrease again.
 				if (!this.worldObj.isRemote) // Server only to prevent it removing multiple times.
-					invPlayer.getCurrentItem().stackSize--;
+				{
+					invPlayer.decrStackSize(invPlayer.currentItem, 1);
+				}
 			}
 		}
 
