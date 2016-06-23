@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
@@ -481,4 +482,9 @@ public class ClientProxy extends CommonProxy
 
 	}
 
+	@Override
+	public EntityPlayer getPlayer()
+	{
+		return Minecraft.getMinecraft().thePlayer;
+	}
 }

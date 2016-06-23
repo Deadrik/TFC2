@@ -59,16 +59,38 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	 *******************************************************************************/
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, 
+			net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if(world.isRemote)
-			return false;
 		EnumFacing facing = state.getValue(BlockAnvil.FACING);
 		TileAnvil te = (TileAnvil)world.getTileEntity(pos);
-		if(te.getTimer() <= 0)
+		if(!world.isRemote && te.getTimer() <= 0)
 			playerIn.openGui(TFC.instance, 2, world, pos.getX(), pos.getY(), pos.getZ());
 		else if(te.getSmith() == playerIn && side == EnumFacing.UP)
 		{
+			int subX = 0;
+			int subZ = 0;
+
+			if(facing == EnumFacing.EAST || facing == EnumFacing.WEST)
+			{
+				hitX -= 0.25f;
+				hitZ -= 0.125f;
+
+				subX = (int)Math.floor(hitZ/0.125f);
+				subZ = (int)Math.floor(hitX/0.125f);
+			}
+			else
+			{
+				hitZ -= 0.25f;
+				hitX -= 0.125f;
+
+				subX = (int)Math.floor(hitX/0.125f);
+				subZ = (int)Math.floor(hitZ/0.125f);
+			}
+
+			TFC.log.info("Hit: " + subX + "," + subZ + " | " + TileAnvil.getStrikePointIndex(subX, subZ));
+
+			te.hitStrikePoint(TileAnvil.getStrikePointIndex(subX, subZ));
 
 			//get the targeted sub block coords
 			/*double subX = hitX/8D;

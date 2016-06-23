@@ -1,6 +1,6 @@
 package com.bioxx.tfc2.tileentities;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -40,15 +39,15 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	ItemStack[] inventory;
 	AnvilStrikePoint[] hitArray;
 	int anvilRecipeIndex = -1;
-	int timer = 0;
-	LinkedList<Integer> availableHitPoints = new LinkedList<Integer>();
+	int craftingTimer = 0;
+	int craftingProgress = 0;
+	AnvilStrikeType strikeTarget;
+	ArrayList<Integer> availableHitPoints = new ArrayList<Integer>();
 
 	public TileAnvil()
 	{
 		smithID = new UUID(0L, 0L);
 		inventory = new ItemStack[3];
-		inventory[0] = new ItemStack(Items.IRON_INGOT, 2);
-		//inventory[1] = new ItemStack(Items.GOLD_INGOT);
 		hitArray = new AnvilStrikePoint[24];
 	}
 
@@ -59,12 +58,28 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	public void update() 
 	{
 		Timekeeper time = Timekeeper.getInstance();
-		if(timer > 0)
-			timer--;
-		if(!worldObj.isRemote && timer >0 && timer%10 == 0)
+		if(craftingTimer > 0)
+			craftingTimer--;
+
+		generateStrikePoints();
+
+		resetStrikePoints();
+
+		if(craftingTimer == 0 && craftingProgress >= 100)
+			endCrafting(CraftingResult.SUCCEED);
+		else if(craftingTimer == 0)
+			endCrafting(CraftingResult.FAILED);
+	}
+
+	protected void generateStrikePoints()
+	{
+		Timekeeper time = Timekeeper.getInstance();
+		if(!worldObj.isRemote && craftingTimer > 0 && craftingTimer % 10 == 0)
 		{
 			AnvilStrikePoint p = new AnvilStrikePoint();
+
 			p.setBirthTime(time.getTotalTicks());
+			//Create Specials
 			if(worldObj.rand.nextFloat() < 0.25)
 			{
 				if(worldObj.rand.nextFloat() < 0.25)
@@ -113,29 +128,81 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 					p.setType(AnvilStrikeType.HIT_PUNCH);
 				else if(type == 6)
 					p.setType(AnvilStrikeType.HIT_SHRINK);
+
+				p.setLifeTime(100);
 			}
+
 
 			int xz = worldObj.rand.nextInt(availableHitPoints.size());
+			int index = availableHitPoints.remove(xz);
 
-			if(this.getStrikePoint(availableHitPoints.get(xz)) == null)
+			if(this.getStrikePoint(index) == null)
 			{
-				this.setStrikePoint(xz, p);
-				sendSmithingPacket(xz, p);
+				this.setStrikePoint(index, p);
+				sendSmithingPacket(index, p);
 			}
-
-
 		}
+	}
 
-		for(int i = 0; i < 24; i++)
+	protected void resetStrikePoints()
+	{
+		Timekeeper time = Timekeeper.getInstance();
+		if(craftingTimer <= 0)
 		{
-			AnvilStrikePoint p = hitArray[i];
-			if(p != null && p.getBirthTime()+p.getLifeTime() < time.getTotalTicks())
+			for(int i = 0; i < 24; i++)
 			{
-				hitArray[i] = null;
+				AnvilStrikePoint p = hitArray[i];
+				if(p != null)
+				{
+					resetStrikePoint(i);
+				}
 			}
+		}
+		else
+		{
+			for(int i = 0; i < 24; i++)
+			{
+				AnvilStrikePoint p = hitArray[i];
+				if(p != null && p.getBirthTime()+p.getLifeTime() < time.getTotalTicks())
+				{
+					resetStrikePoint(i);
+				}
+			}
+		}
+	}
 
+	public boolean resetStrikePoint(int index)
+	{
+		if(index < 24 && this.getStrikePoint(index) != null)
+		{
+			this.setStrikePoint(index, null);
+			this.availableHitPoints.add(index);
+			return true;
+		}
+		return false;
+	}
+
+	public void hitStrikePoint(int index)
+	{
+		resetStrikePoint(index);
+	}
+
+	public void endCrafting(CraftingResult r)
+	{
+		anvilRecipeIndex = -1;//Resets the selected recipe
+		craftingTimer = -1;//This effectively turns off crafting stuff when we're done
+
+		switch(r)
+		{
+		case SUCCEED:
+			//Create the final item
+			break;
+		case FAILED:
+			//Do something if the smith fails
+			break;
 		}
 
+		//Send a packet to reset the info for the client
 	}
 
 	public void sendSmithingPacket(int xz, AnvilStrikePoint point)
@@ -232,14 +299,14 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		if(worldObj.isRemote)
 		{
 			TFC.network.sendToServer(new SAnvilCraftingPacket(this.getPos(),this.getAnvilRecipeIndex(), true, id));
-			this.timer = 2000;
+			this.craftingTimer = 2000;
 		}
 		else
 		{
-			if(timer <= 0)
+			if(craftingTimer <= 0)
 			{
 				this.smithID = id;
-				this.timer = 2000;
+				this.craftingTimer = 2000;
 				for(int i = 0; i < 24; i++)
 				{
 					availableHitPoints.add(i);
@@ -259,7 +326,9 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 
 	public EntityPlayer getSmith()
 	{
-		return worldObj.getMinecraftServer().getPlayerList().getPlayerByUUID(smithID);
+		if(!worldObj.isRemote)
+			return worldObj.getMinecraftServer().getPlayerList().getPlayerByUUID(smithID);
+		else return TFC.proxy.getPlayer();
 	}
 
 	public void setStrikePoint(int index, AnvilStrikePoint point)
@@ -276,6 +345,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 
 	public AnvilStrikePoint getStrikePoint(int index)
 	{
+		if(index < 0 || index > 23) return null;
 		return hitArray[index];
 	}
 
@@ -299,11 +369,11 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	}
 
 	public int getTimer() {
-		return timer;
+		return craftingTimer;
 	}
 
 	public void setTimer(int timer) {
-		this.timer = timer;
+		this.craftingTimer = timer;
 	}
 
 	/***********************************************************************************
@@ -521,5 +591,10 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		{
 			return texture;
 		}
+	}
+
+	public enum CraftingResult
+	{
+		SUCCEED, FAILED;
 	}
 }

@@ -40,7 +40,6 @@ public class AnvilTESR extends TileEntitySpecialRenderer<TileAnvil>
 	@Override
 	public void renderTileEntityAt(TileAnvil te, double xPos, double yPos, double zPos, float partialTicks, int destroyStage) 
 	{
-
 		tile = te;
 		if(te.getTimer() <= 0)
 			return;

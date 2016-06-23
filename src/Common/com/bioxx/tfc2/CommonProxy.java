@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.util.ResourceLocation;
@@ -369,4 +370,8 @@ public class CommonProxy
 		world.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), range, world.provider.getDimension(), packet);
 	}
 
+	public EntityPlayer getPlayer()
+	{
+		return null;
+	}
 }
