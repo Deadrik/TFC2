@@ -69,7 +69,7 @@ public class EntityLion extends EntityAnimal
 	}
 
 	@Override
-	protected void updateAITick ()
+	protected void updateAITasks ()
 	{
 		this.motionY += 0.03999999910593033D;
 	}

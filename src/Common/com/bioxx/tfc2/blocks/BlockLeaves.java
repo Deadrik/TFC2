@@ -73,9 +73,9 @@ public class BlockLeaves extends BlockTerra
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
-		world.scheduleUpdate(pos, this, tickRate(world));
+		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 	}
 
 	@Override

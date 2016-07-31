@@ -2,7 +2,7 @@ package com.bioxx.tfc2.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -43,12 +43,12 @@ public class ContainerAnvil extends ContainerTFC
 			anvil.closeInventory(par1EntityPlayer);
 	}
 
-	@Override
-	public void onCraftGuiOpened(ICrafting listener)
+	/*@Override
+	public void onCraftGuiOpened(IContainerListener listener)
 	{
 		super.onCraftGuiOpened(listener);
 		listener.sendAllWindowProperties(this, this.anvil);
-	}
+	}*/
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -63,7 +63,7 @@ public class ContainerAnvil extends ContainerTFC
 		super.detectAndSendChanges();
 		for (int i = 0; i < this.listeners.size(); ++i)
 		{
-			ICrafting icrafting = (ICrafting)this.listeners.get(i);
+			IContainerListener icrafting = (IContainerListener)this.listeners.get(i);
 
 			if(this.recipeIndex != anvil.getField(0))
 			{

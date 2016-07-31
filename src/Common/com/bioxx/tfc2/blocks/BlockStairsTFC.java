@@ -3,9 +3,11 @@ package com.bioxx.tfc2.blocks;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockStairs.EnumHalf;
 import net.minecraft.block.BlockStairs.EnumShape;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -354,7 +356,7 @@ public class BlockStairsTFC extends BlockCollapsible
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
-		onNeighborBlockChange(worldIn, pos, this.modelState, net.minecraft.init.Blocks.AIR);
+		neighborChanged(this.modelState, worldIn, pos,  net.minecraft.init.Blocks.AIR);
 		this.modelBlock.onBlockAdded(worldIn, pos, this.modelState);
 	}
 

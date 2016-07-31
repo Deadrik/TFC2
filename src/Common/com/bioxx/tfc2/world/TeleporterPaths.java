@@ -1,15 +1,14 @@
 package com.bioxx.tfc2.world;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 
@@ -25,6 +24,7 @@ import com.bioxx.tfc2.api.types.PortalEnumType;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.BlockPortal;
 import com.bioxx.tfc2.world.generators.WorldGenPortals;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 
 public class TeleporterPaths extends Teleporter
 {
@@ -111,14 +111,14 @@ public class TeleporterPaths extends Teleporter
 		boolean shouldAddPortalPosition = true;
 		boolean foundPortal = false;
 		BlockPos object = BlockPos.ORIGIN;
-		long k = ChunkCoordIntPair.chunkXZ2Int(playerX, playerZ);
+		long k = ChunkPos.chunkXZ2Int(playerX, playerZ);
 
 		IslandMap islandMap = Core.getMapForWorld(worldServerInstance, entityIn.getPosition());
 		Center closest = islandMap.getClosestCenter(new Point((playerX*8) % 4096,(playerZ*8) % 4096));
 		//Check if we already have a portal position cached here
-		if (this.destinationCoordinateCache.containsItem(k))
+		if (this.destinationCoordinateCache.containsKey(k))
 		{
-			Teleporter.PortalPosition portalposition = (Teleporter.PortalPosition)this.destinationCoordinateCache.getValueByKey(k);
+			Teleporter.PortalPosition portalposition = (Teleporter.PortalPosition)this.destinationCoordinateCache.get(k);
 			object = portalposition;
 			portalposition.lastUpdateTime = this.worldServerInstance.getTotalWorldTime();
 			shouldAddPortalPosition = false;
@@ -135,8 +135,8 @@ public class TeleporterPaths extends Teleporter
 		{
 			if (shouldAddPortalPosition)
 			{
-				this.destinationCoordinateCache.add(k, new Teleporter.PortalPosition((BlockPos)object, this.worldServerInstance.getTotalWorldTime()));
-				this.destinationCoordinateKeys.add(Long.valueOf(k));
+				this.destinationCoordinateCache.put(k, new Teleporter.PortalPosition((BlockPos)object, this.worldServerInstance.getTotalWorldTime()));
+				//this.destinationCoordinateKeys.add(Long.valueOf(k));
 			}
 
 			EnumFacing enumfacing = null;
@@ -278,18 +278,16 @@ public class TeleporterPaths extends Teleporter
 	{
 		if (worldTime % 100L == 0L)
 		{
-			Iterator iterator = this.destinationCoordinateKeys.iterator();
-			long j = worldTime - 600L;
+			long i = worldTime - 600L;
+			ObjectIterator<Teleporter.PortalPosition> objectiterator = this.destinationCoordinateCache.values().iterator();
 
-			while (iterator.hasNext())
+			while (objectiterator.hasNext())
 			{
-				Long olong = (Long)iterator.next();
-				Teleporter.PortalPosition portalposition = (Teleporter.PortalPosition)this.destinationCoordinateCache.getValueByKey(olong.longValue());
+				Teleporter.PortalPosition teleporter$portalposition = (Teleporter.PortalPosition)objectiterator.next();
 
-				if (portalposition == null || portalposition.lastUpdateTime < j)
+				if (teleporter$portalposition == null || teleporter$portalposition.lastUpdateTime < i)
 				{
-					iterator.remove();
-					this.destinationCoordinateCache.remove(olong.longValue());
+					objectiterator.remove();
 				}
 			}
 		}

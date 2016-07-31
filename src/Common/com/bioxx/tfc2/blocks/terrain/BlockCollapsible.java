@@ -37,7 +37,7 @@ public class BlockCollapsible extends BlockTerra
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
 	{
 		world.scheduleUpdate(pos, this, tickRate(world));
 	}

@@ -1,6 +1,6 @@
 package com.bioxx.tfc2.rendering.particles;
 
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 import com.bioxx.tfc2.Core;
 
-public abstract class ParticleAnvil extends EntityFX
+public abstract class ParticleAnvil extends Particle
 {
 	public static final VertexFormat VERTEX_FORMAT = (new VertexFormat()).addElement(DefaultVertexFormats.POSITION_3F).addElement(DefaultVertexFormats.TEX_2F).addElement(DefaultVertexFormats.COLOR_4UB).addElement(DefaultVertexFormats.TEX_2S).addElement(DefaultVertexFormats.NORMAL_3B).addElement(DefaultVertexFormats.PADDING_1B);
 
@@ -30,9 +30,9 @@ public abstract class ParticleAnvil extends EntityFX
 	protected void init()
 	{
 		this.setMaxAge(100);
-		this.xSpeed = 0;
-		this.ySpeed = 0;
-		this.zSpeed = 0;
+		this.motionX = 0;
+		this.motionY = 0;
+		this.motionZ = 0;
 		this.particleScale = 0.05f;
 	}
 

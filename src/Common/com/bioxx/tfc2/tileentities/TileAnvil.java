@@ -446,7 +446,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 			{
 				ItemStack itemstack = inventory[index];
 				inventory[index] = null;
-				TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getDescriptionPacket());
+				TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getUpdatePacket());
 				return itemstack;
 			}
 			ItemStack itemstack1 = inventory[index].splitStack(count);
@@ -465,7 +465,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		{
 			ItemStack out = inventory[index];
 			inventory[index] = null;
-			TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getDescriptionPacket());
+			TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getUpdatePacket());
 			return out;
 		}
 		return null;
@@ -477,7 +477,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		if(index < getSizeInventory())
 		{
 			inventory[index] = stack;
-			TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getDescriptionPacket());
+			TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getUpdatePacket());
 		}
 	}
 

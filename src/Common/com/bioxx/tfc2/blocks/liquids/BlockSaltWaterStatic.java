@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.Fluid;
 
 import com.bioxx.tfc2.TFCBlocks;
@@ -19,9 +20,9 @@ public class BlockSaltWaterStatic extends BlockSaltWater
 	}
 
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
 	{
-		this.updateLiquid(worldIn, pos, state);
+		this.updateLiquid(world, pos, state);
 	}
 
 	private void updateLiquid(World worldIn, BlockPos pos, IBlockState state)

@@ -62,7 +62,7 @@ public class RegenChunkCommand extends CommandBase
 					ChunkProviderServer cps = ((ChunkProviderServer)world.getChunkProvider());
 					net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(x, z, world, cps.chunkGenerator, cps);
 
-					player.playerNetServerHandler.sendPacket(new SPacketChunkData(cps.provideChunk(x, z), true, 0xffffffff));
+					player.connection.sendPacket(new SPacketChunkData(cps.provideChunk(x, z), 0xffffffff));
 				}
 			}
 		}

@@ -46,7 +46,7 @@ public class EntityBison extends EntityAnimal
 	}
 
 	@Override
-	protected void updateAITick ()
+	protected void updateAITasks()
 	{
 		//getDataManager().set (18, getHealth());
 		this.motionY += 0.03999999910593033D;

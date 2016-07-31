@@ -301,7 +301,7 @@ public class EntityCart extends Entity
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean isTeleport)
+	public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean isTeleport)
 	{
 		this.setPosition(x, y, z);
 		this.setRotation(yaw, pitch);

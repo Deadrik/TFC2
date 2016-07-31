@@ -40,13 +40,13 @@ public class BlockLeaves2 extends BlockLeaves
 	 * 1. Content 
 	 *******************************************************************************/
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) 
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
 		if(worldIn.getBlockState(pos).getValue(META_PROPERTY) == WoodType.Palm && worldIn.getBlockState(pos.down()).getBlock() != TFCBlocks.LogNatural2)
 		{
 			worldIn.setBlockToAir(pos);
 		}
-		else super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+		else super.neighborChanged(state, worldIn, pos, blockIn);
 	}
 
 	@Override

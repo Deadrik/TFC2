@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -261,11 +261,11 @@ public class ContainerTFC extends Container
 					this.saveContents((ItemStack)inventoryItemStacks.get(slotNum));
 					player.inventory.setInventorySlotContents(bagsSlotNum, (ItemStack)inventoryItemStacks.get(slotNum));
 					for (int j = 0; j < this.listeners.size(); ++j)
-						((ICrafting)this.listeners.get(j)).sendSlotContents(this, slotNum, (ItemStack)inventoryItemStacks.get(slotNum));
+						((IContainerListener)this.listeners.get(j)).sendSlotContents(this, slotNum, (ItemStack)inventoryItemStacks.get(slotNum));
 				}
 
 				for (int j = 0; j < this.listeners.size(); ++j)
-					((ICrafting)this.listeners.get(j)).sendSlotContents(this, i, itemstack1);
+					((IContainerListener)this.listeners.get(j)).sendSlotContents(this, i, itemstack1);
 			}
 		}
 

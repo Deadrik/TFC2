@@ -5,21 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.bioxx.tfc2.TFCASMLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LineNumberNode;
-import org.objectweb.asm.tree.MethodNode;
-
-import com.bioxx.tfc2.TFCASMLoadingPlugin;
+import org.objectweb.asm.tree.*;
 
 public class ClassTransformer implements net.minecraft.launchwrapper.IClassTransformer
 {

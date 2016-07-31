@@ -93,7 +93,7 @@ public class WeatherRenderer extends IRenderHandler
 					int index = (z - entityZ + 16) * 32 + x - entityX + 16;
 					double d3 = this.rainXCoords[index] * 0.5D;
 					double d4 = this.rainYCoords[index] * 0.5D;
-					mPos.set(x, 0, z);
+					mPos.setPos(x, 0, z);
 
 
 					int j2 = world.getPrecipitationHeight(mPos).getY();
@@ -120,7 +120,7 @@ public class WeatherRenderer extends IRenderHandler
 					if (k2 != l2)
 					{
 						world.rand.setSeed(x * x * 3121 + x * 45238971 ^ z * z * 418711 + z * 13761);
-						mPos.set(x, k2, z);
+						mPos.setPos(x, k2, z);
 
 						if (WeatherManager.getInstance().getTemperature(mPos) >= 0F)
 						{
@@ -141,7 +141,7 @@ public class WeatherRenderer extends IRenderHandler
 							double offsetZ = z + 0.5F - entity.posZ;
 							float f3 = MathHelper.sqrt_double(offsetX * offsetX + offsetZ * offsetZ) / precipDensity;
 							float precipAlpha = ((1.0F - f3 * f3) * 0.5F + 0.5F) * Math.max((float)rainStrength, 0.2f);
-							mPos.set(x, i3, z);
+							mPos.setPos(x, i3, z);
 							int j3 = world.getCombinedLight(mPos, 0);
 							int k3 = (j3 >> 16 & 0xFFFF);
 							int l3 = (j3 & 0xFFFF);
@@ -171,7 +171,7 @@ public class WeatherRenderer extends IRenderHandler
 							double d12 = z + 0.5F - entity.posZ;
 							float f6 = MathHelper.sqrt_double(d11 * d11 + d12 * d12) / precipDensity;
 							float precipAlpha = ((1.0F - f6 * f6) * 0.3F + 0.5F) * (float)rainStrength;
-							mPos.set(x, i3, z);
+							mPos.setPos(x, i3, z);
 							int i4 = (world.getCombinedLight(mPos, 0) * 3 + 15728880) / 4;
 							int j4 = (i4 >> 16 & 0xFFFF);
 							int k4 = (i4 & 0xFFFF);

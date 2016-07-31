@@ -231,7 +231,7 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
 	{
 		state = getActualState(state, world, pos);
 		if(state.getValue(SPAN))
@@ -247,7 +247,7 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 				return;
 			}
 		}
-		super.onNeighborBlockChange(world, pos, state, neighborBlock);
+		super.neighborChanged(state, world, pos, blockIn);
 	}
 
 	/*******************************************************************************

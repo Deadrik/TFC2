@@ -1,7 +1,6 @@
 package com.bioxx.tfc2.tileentities;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
@@ -24,12 +23,13 @@ public abstract class TileTFC extends TileEntity
 
 	@Override
 	@Deprecated
-	public void writeToNBT(NBTTagCompound compound)
+	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		super.writeToNBT(compound);
 		writeSyncableNBT(getTileData());
 		writeNonSyncableNBT(getTileData());
 		compound.setTag("TFC2Data", getTileData());
+		return compound;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public abstract class TileTFC extends TileEntity
 	 * server to the client easily. For example this is used by signs to synchronise the text to be displayed.
 	 */
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeSyncableNBT(nbt);

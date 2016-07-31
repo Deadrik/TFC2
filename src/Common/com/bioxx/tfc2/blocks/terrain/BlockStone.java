@@ -41,7 +41,7 @@ public class BlockStone extends BlockCollapsible
 	 * 1. Content 
 	 *******************************************************************************/
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) 
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
 		IBlockState stateUp = worldIn.getBlockState(pos.up());
 		IBlockState stateDown = worldIn.getBlockState(pos.down());
@@ -58,7 +58,7 @@ public class BlockStone extends BlockCollapsible
 		}
 		else
 		{
-			super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+			super.neighborChanged(state, worldIn, pos, blockIn);
 		}
 	}
 

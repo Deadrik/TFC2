@@ -31,7 +31,7 @@ public class BlockFreshWaterStatic extends BlockFreshWater
 	}
 
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
 		this.updateLiquid(worldIn, pos, state);
 	}

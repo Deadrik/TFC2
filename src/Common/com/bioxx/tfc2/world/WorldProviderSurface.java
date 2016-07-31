@@ -8,7 +8,7 @@ import net.minecraft.network.play.server.SPacketChangeGameState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkGenerator;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -101,10 +101,10 @@ public class WorldProviderSurface extends WorldProvider
 	}
 
 	@Override
-	public BiomeGenBase getBiomeGenForCoords(BlockPos pos)
+	public Biome getBiomeForCoords(BlockPos pos)
 	{
 		//TODO make this read the islandmap and output relevant biome types
-		return BiomeGenBase.getBiome(1);
+		return Biome.getBiome(1);
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class WorldProviderSurface extends WorldProvider
 						float precip = (float)WeatherManager.getInstance().getPreciptitation((int)player.posX, (int)player.posZ);
 						if(precip != old)
 						{
-							player.playerNetServerHandler.sendPacket(new SPacketChangeGameState(7, precip));
+							player.connection.sendPacket(new SPacketChangeGameState(7, precip));
 						}
 					}
 				}

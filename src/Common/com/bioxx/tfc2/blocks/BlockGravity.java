@@ -31,9 +31,9 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 	}
 
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
 	{
-		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
+		world.scheduleUpdate(pos, this, tickRate(world));
 	}
 
 	@Override

@@ -12,10 +12,10 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.ChunkProviderOverworld;
@@ -40,9 +40,11 @@ import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.api.*;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
+import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.Schematic.SchemBlock;
+import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
@@ -216,20 +218,20 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		net.minecraft.block.BlockFalling.fallInstantly = true;
 
 		BlockPos blockpos = new BlockPos(x * 16, 0, z * 16);
-		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(blockpos.add(16, 0, 16));
+		Biome Biome = this.worldObj.getBiome(blockpos.add(16, 0, 16));
 		this.rand.setSeed(this.worldObj.getSeed());
 		long k = this.rand.nextLong() / 2L * 2L + 1L;
 		long l = this.rand.nextLong() / 2L * 2L + 1L;
 		this.rand.setSeed(x * k + z * l ^ this.worldObj.getSeed());
 		boolean flag = false;
-		ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(x, z);
+		ChunkPos ChunkPos = new ChunkPos(x, z);
 
 		ForgeEventFactory.onChunkPopulate(true, this, this.worldObj, x, z, flag);
 
 		TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAKE);
 		TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.LAVA);
 
-		biomegenbase.decorate(this.worldObj, this.rand, new BlockPos(x * 16, 0, z * 16));
+		Biome.decorate(this.worldObj, this.rand, new BlockPos(x * 16, 0, z * 16));
 
 		if(TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, PopulateChunkEvent.Populate.EventType.ANIMALS))
 		{
