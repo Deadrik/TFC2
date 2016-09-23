@@ -3,6 +3,7 @@ package com.bioxx.tfc2.gui;
 import java.awt.Rectangle;
 import java.util.Collection;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -152,7 +153,6 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		}
 
 		buttonList.clear();
-		//Removed during Port
 		buttonList.add(new GuiInventoryButton(0, new Rectangle(guiLeft+176, guiTop + 3, 25, 20), 
 				new Rectangle(0, 103, 25, 20), Core.translate("gui.Inventory.Inventory"), new Rectangle(1,223,32,32)));
 		buttonList.add(new GuiInventoryButton(1, new Rectangle(guiLeft+176, guiTop + 22, 25, 20), 
@@ -161,21 +161,15 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 				new Rectangle(0, 103, 25, 20), Core.translate("gui.Calendar.Calendar"), new Rectangle(34,223,32,32)));
 		buttonList.add(new GuiInventoryButton(3, new Rectangle(guiLeft+176, guiTop + 60, 25, 20), 
 				new Rectangle(0, 103, 25, 20), Core.translate("gui.Inventory.Health"), new Rectangle(67,223,32,32)));
-		/*buttonList.add(new GuiInventoryButton(1, guiLeft+176, guiTop + 22, 25, 20, 
-				0, 86, 25, 20, Core.translate("gui.Inventory.Skills"), TFC_Textures.guiSkills));
-		buttonList.add(new GuiInventoryButton(2, guiLeft+176, guiTop + 41, 25, 20, 
-				0, 86, 25, 20, Core.translate("gui.Calendar.Calendar"), TFC_Textures.guiCalendar));
-		buttonList.add(new GuiInventoryButton(3, guiLeft+176, guiTop + 60, 25, 20, 
-				0, 86, 25, 20, Core.translate("gui.Inventory.Health"), TFC_Textures.guiHealth));*/
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton)
 	{
 		//Removed during port
-		/*if (guibutton.id == 1)
+		if (guibutton.id == 1)
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSkills(player));
-		else if (guibutton.id == 2)
+		/*else if (guibutton.id == 2)
 			Minecraft.getMinecraft().displayGuiScreen(new GuiCalendar(player));
 		else if (guibutton.id == 3)
 			Minecraft.getMinecraft().displayGuiScreen(new GuiHealth(player));*/

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import com.bioxx.tfc2.containers.ContainerAnvil;
 import com.bioxx.tfc2.containers.ContainerCart;
+import com.bioxx.tfc2.containers.ContainerSkills;
 import com.bioxx.tfc2.containers.ContainerSpecialCrafting;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
@@ -39,6 +40,8 @@ public class GuiHandler implements IGuiHandler
 		{
 			return new ContainerAnvil(player.inventory, (TileAnvil)te, world, x, y, z);
 		}
+		case 3:
+			return new ContainerSkills(player);
 		default:
 		{
 			return null;

@@ -244,7 +244,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			IslandMap map = Core.getMapForWorld(worldObj, chunkWorldPos);
 			Center centerInChunk = null;
 
-			Center temp = islandMap.getClosestCenter(islandPos);
+			Center temp = map.getClosestCenter(islandPos);
 			if(Core.isCenterInRect(temp, (int)islandPos.x, (int)islandPos.y, 16, 16))
 				centerInChunk = temp;
 			else 

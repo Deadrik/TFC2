@@ -24,6 +24,7 @@ import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
 import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.InventoryPlayerTFC;
+import com.bioxx.tfc2.core.PlayerSkillData;
 import com.bioxx.tfc2.core.PortalSchematic;
 import com.bioxx.tfc2.world.WorldGen;
 import org.apache.commons.lang3.text.WordUtils;
@@ -280,5 +281,17 @@ public class Core
 		if(c.point.x >= x && c.point.x < x+xRange && c.point.y >= z && c.point.y < z+zRange)
 			return true;
 		return false;
+	}
+
+	public static PlayerSkillData getPlayerSkillData(EntityLivingBase entity)
+	{
+		PlayerSkillData data = new PlayerSkillData((EntityPlayer)entity);
+		data.readNBT(entity.getEntityData());
+		return data;
+	}
+
+	public static void setPlayerSkillData(EntityPlayer player, PlayerSkillData data)
+	{
+		data.writeNBT(player.getEntityData());
 	}
 }

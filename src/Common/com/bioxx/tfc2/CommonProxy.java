@@ -31,6 +31,7 @@ import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.api.*;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnParameters;
+import com.bioxx.tfc2.api.SkillsManager.Skill;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
@@ -83,6 +84,14 @@ public class CommonProxy
 		TFCFluids.SALTWATER.setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());//Must run after block setup
 		TFCFluids.FRESHWATER.setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());//Must run after block setup
 
+		SkillsManager.instance.registerSkill(new Skill("Woodworker", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("Smith", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("Toolsmith", 1.0f, 10f));
+		SkillsManager.instance.registerSkill(new Skill("Weaponsmith", 1.0f, 10f));
+		SkillsManager.instance.registerSkill(new Skill("Armorsmith", 1.0f, 10f));
+		SkillsManager.instance.registerSkill(new Skill("Farmer", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("Fisherman", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("Butcher", 1.0f, 1f));
 	}
 
 	public void init(FMLInitializationEvent event)
