@@ -111,7 +111,7 @@ public class TeleporterPaths extends Teleporter
 		boolean shouldAddPortalPosition = true;
 		boolean foundPortal = false;
 		BlockPos object = BlockPos.ORIGIN;
-		long k = ChunkPos.chunkXZ2Int(playerX, playerZ);
+		long k = ChunkPos.asLong(playerX, playerZ);
 
 		IslandMap islandMap = Core.getMapForWorld(worldServerInstance, entityIn.getPosition());
 		Center closest = islandMap.getClosestCenter(new Point((playerX*8) % 4096,(playerZ*8) % 4096));
