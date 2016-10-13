@@ -2,13 +2,11 @@ package com.bioxx.tfc2.api.crafting;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
@@ -36,14 +34,14 @@ public class CraftingManagerTFC
 		Collections.sort(recipes_anvil, new RecipeSorterTFC(this));
 	}
 
-	public ShapedRecipesTFC addRecipe(ItemStack itemstack, Object... aobj)
+	public ShapedOreRecipeTFC addRecipe(ItemStack itemstack, Object... aobj)
 	{
 		return addRecipe(RecipeType.NORMAL, itemstack, aobj);
 	}
 
-	public ShapedRecipesTFC addRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
+	public ShapedOreRecipeTFC addRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
 	{
-		String s = "";
+		/*String s = "";
 		int i = 0;
 		int j = 0;
 		int k = 0;
@@ -100,9 +98,9 @@ public class CraftingManagerTFC
 			{
 				aitemstack.add(i1, null);
 			}
-		}
+		}*/
 
-		ShapedRecipesTFC shapedRecipesTFC = new ShapedRecipesTFC(j, k, aitemstack, itemstack);
+		ShapedOreRecipeTFC shapedRecipesTFC = new ShapedOreRecipeTFC(itemstack, aobj);
 		if(rt == RecipeType.NORMAL)
 			recipes.add(shapedRecipesTFC);
 		else if(rt == RecipeType.KNAPPING)
@@ -112,14 +110,14 @@ public class CraftingManagerTFC
 		return shapedRecipesTFC;
 	}
 
-	public ShapedRecipesTFC addShapelessRecipe(ItemStack itemstack, Object... aobj)
+	public ShapelessOreRecipeTFC addShapelessRecipe(ItemStack itemstack, Object... aobj)
 	{
-		return addRecipe(RecipeType.NORMAL, itemstack, aobj);
+		return addShapelessRecipe(RecipeType.NORMAL, itemstack, aobj);
 	}
 
-	public ShapelessRecipesTFC addShapelessRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
+	public ShapelessOreRecipeTFC addShapelessRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
 	{
-		ArrayList<ItemStack> arraylist = new ArrayList<ItemStack>();
+		/*ArrayList<ItemStack> arraylist = new ArrayList<ItemStack>();
 		Object aobj1[] = aobj;
 		int i = aobj1.length;
 		for (int j = 0; j < i; j++)
@@ -143,8 +141,8 @@ public class CraftingManagerTFC
 			{
 				throw new RuntimeException("Invalid shapeless recipe!");
 			}
-		}
-		ShapelessRecipesTFC recipesTFC = new ShapelessRecipesTFC(itemstack, arraylist);
+		}*/
+		ShapelessOreRecipeTFC recipesTFC = new ShapelessOreRecipeTFC(itemstack, aobj);
 		if(rt == RecipeType.NORMAL)
 			recipes.add(recipesTFC);
 		else if(rt == RecipeType.KNAPPING)
@@ -194,6 +192,26 @@ public class CraftingManagerTFC
 	public enum RecipeType
 	{
 		NORMAL, KNAPPING, ANVIL;
+	}
+
+	public ItemStack[] getRemainingItems(InventoryCrafting craftMatrix, World worldIn)
+	{
+		for (IRecipe irecipe : this.recipes)
+		{
+			if (irecipe.matches(craftMatrix, worldIn))
+			{
+				return irecipe.getRemainingItems(craftMatrix);
+			}
+		}
+
+		ItemStack[] aitemstack = new ItemStack[craftMatrix.getSizeInventory()];
+
+		for (int i = 0; i < aitemstack.length; ++i)
+		{
+			aitemstack[i] = craftMatrix.getStackInSlot(i);
+		}
+
+		return aitemstack;
 	}
 
 }

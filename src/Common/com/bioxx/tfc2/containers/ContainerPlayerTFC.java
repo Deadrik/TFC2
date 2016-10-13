@@ -6,9 +6,11 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
 import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.core.Food;
 import com.bioxx.tfc2.core.PlayerInventory;
@@ -116,7 +118,12 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	@Override
 	public void onCraftMatrixChanged(IInventory iinventory)
 	{
+		if(thePlayer == null)
+			return;
 		super.onCraftMatrixChanged(iinventory);
+		ItemStack is2 = CraftingManagerTFC.getInstance().findMatchingRecipe(this.craftMatrix, this.thePlayer.worldObj);
+		if(is2 != null)
+			this.craftResult.setInventorySlotContents(0, is2);
 
 		Slot craftOut = (Slot) this.inventorySlots.get(0);
 		if (craftOut != null && craftOut.getHasStack())
@@ -131,6 +138,15 @@ public class ContainerPlayerTFC extends ContainerPlayer
 					CraftingHandler.transferNBT(false, thePlayer, craftResult, craftMatrix);*/
 			}
 		}
+		for (int i = 0; i < iinventory.getSizeInventory(); i++)
+		{
+			ItemStack is = iinventory.getStackInSlot(i);
+			if(is != null && is.stackSize == 0)
+			{
+				iinventory.setInventorySlotContents(i, ForgeHooks.getContainerItem(is));
+			}
+		}
+
 	}
 
 	@Override

@@ -24,6 +24,7 @@ public class GuiSkills extends GuiContainerTFC
 	protected EntityPlayer player;
 	private int skillsPage;
 	private static final int SKILLS_PER_PAGE = 9;
+	private static final int skillBarWidth = 168;
 
 	public GuiSkills(EntityPlayer player)
 	{
@@ -45,11 +46,11 @@ public class GuiSkills extends GuiContainerTFC
 			if (count < (SKILLS_PER_PAGE * skillsPage) + SKILLS_PER_PAGE && count >= (SKILLS_PER_PAGE * skillsPage))
 			{
 				bindTexture(texture);
-				drawTexturedModalRect(4, y, 4, 208, 168, 16);
+				drawTexturedModalRect(4, y, 4, 208, skillBarWidth, 16);
 				y += 12;
 				float perc = ss.getPercToNextRank(o.skillName);
-				drawTexturedModalRect(4, y, 4, 168, 168, 4);
-				drawTexturedModalRect(4, y, 4, 172, (int) Math.floor(168 * perc), 4);
+				drawTexturedModalRect(4, y, 4, skillBarWidth, skillBarWidth, 4);
+				drawTexturedModalRect(4, y, 4, 172, (int) Math.floor(skillBarWidth * perc), 4);
 
 				fontRendererObj.drawString(Core.translate(o.skillName) + ": " + TextFormatting.DARK_BLUE + ss.getSkillRank(o.skillName).getLocalizedName(), 6, y - 9, 0, false);
 				y += 3;

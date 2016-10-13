@@ -14,7 +14,10 @@ public class Recipes
 	public static void RegisterNormalRecipes()
 	{
 		CraftingManagerTFC manager = CraftingManagerTFC.getInstance();
-		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneAxe),"X","Y",'X',new ItemStack(TFCItems.StoneAxeHead),'Y', "stickWood");
+		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneAxe), new ItemStack(TFCItems.StoneAxeHead), "stickWood");
+		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneKnife), new ItemStack(TFCItems.StoneKnifeHead), "stickWood");
+		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneShovel), new ItemStack(TFCItems.StoneShovelHead), "stickWood");
+		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneHoe), new ItemStack(TFCItems.StoneHoeHead), "stickWood");
 	}
 
 	public static void RegisterKnappingRecipes()

@@ -128,6 +128,7 @@ public class CommonProxy
 
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		Recipes.RegisterNormalRecipes();
 		Recipes.RegisterKnappingRecipes();
 		MinecraftForge.EVENT_BUS.register(new CreateSpawnHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldLoadHandler());

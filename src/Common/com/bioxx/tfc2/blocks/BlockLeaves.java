@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -13,7 +14,8 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -61,9 +63,11 @@ public class BlockLeaves extends BlockTerra
 	}
 
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		return null;
+		List<ItemStack> ret = new java.util.ArrayList<ItemStack>();
+		ret.add(new ItemStack(Items.STICK, 1, 0));
+		return ret;
 	}
 
 	@Override
