@@ -204,6 +204,9 @@ public class WeatherRenderer extends IRenderHandler
 		if(worldclient.provider.getDimension() != 0)
 			return;
 		float rainStrength = (float)WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+		double tempPlayer = WeatherManager.getInstance().getTemperature((int)mc.thePlayer.posX,(int)mc.thePlayer.posY, (int)mc.thePlayer.posZ);
+		if(tempPlayer <= 0)
+			return;
 
 		if (!mc.gameSettings.fancyGraphics)
 		{
@@ -239,7 +242,7 @@ public class WeatherRenderer extends IRenderHandler
 				IBlockState state = worldclient.getBlockState(blockpos2);
 				Block block = worldclient.getBlockState(blockpos2).getBlock();
 
-				if (blockPos1.getY() <= blockpos.getY() + b0 && blockPos1.getY() >= blockpos.getY() - b0 && temp > 0.15)
+				if (blockPos1.getY() <= blockpos.getY() + b0 && blockPos1.getY() >= blockpos.getY() - b0 && temp > 0)
 				{
 					float f1 = worldclient.rand.nextFloat();
 					float f2 = worldclient.rand.nextFloat();
