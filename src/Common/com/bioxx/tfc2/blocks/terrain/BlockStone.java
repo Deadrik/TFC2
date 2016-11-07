@@ -30,7 +30,7 @@ public class BlockStone extends BlockCollapsible
 
 	public BlockStone()
 	{
-		super(Material.GROUND, META_PROPERTY);
+		super(Material.ROCK, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.setSoundType(SoundType.STONE);
 		scanDepth = 10;

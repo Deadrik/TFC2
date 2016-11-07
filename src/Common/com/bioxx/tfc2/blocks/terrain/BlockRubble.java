@@ -23,7 +23,7 @@ public class BlockRubble extends BlockGravity
 
 	public BlockRubble()
 	{
-		super(Material.GROUND, META_PROPERTY);
+		super(Material.ROCK, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		setSoundType(SoundType.STONE);
 	}

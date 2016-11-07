@@ -2,6 +2,7 @@ package com.bioxx.tfc2.world.generators;
 
 import java.util.Random;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,36 +37,47 @@ public class WorldGenLooseRock implements IWorldGenerator
 		map = WorldGen.getInstance().getIslandMap(chunkX >> 12, chunkZ >> 12);
 		Center c;
 		Point p = new Point(chunkX, chunkZ);
-		int chance;
+		int chance, height;
 		BlockPos bp;
+		Material mat;
 		//Standard placement
 		for(int x = 0; x < 16; x++)
 		{
 			for(int z = 0; z < 16; z++)
 			{
-				int elev = Core.getHeight(world, chunkX+x, chunkZ+z);
-				int elevN = z-1 >= 0 ? (Core.getHeight(world, chunkX+x, chunkZ+z-1) - elev) : 0;
-				int elevS = z+1 < 16 ? (Core.getHeight(world, chunkX+x, chunkZ+z+1) - elev) : 0;
-				int elevE = x+1 < 16 ? (Core.getHeight(world, chunkX+x+1, chunkZ+z) - elev) : 0;
-				int elevW = x-1 >= 0 ? (Core.getHeight(world, chunkX+x-1, chunkZ+z) - elev) : 0;
-
 				chance = 50;
 				c = map.getClosestCenter(p.plus(x, z));
-				bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
-				if(world.getBlockState(bp).getBlock() != Blocks.AIR)
+				height = Core.getHeight(world, chunkX+x, chunkZ+z);
+				for(int y = height; y > 0; y--)
 				{
-					continue;
-				}
-				if(c.hasAttribute(Attribute.River))
-					chance -= 10;
-				if(mcElev(c.getHighestNeighbor().getElevation()) - mcElev(c.getElevation()) > 10 )
-					chance -= 10;
-				if((world.getBlockState(bp.down()).getBlock() == TFCBlocks.Grass && random.nextInt(chance) == 0))
-				{
-					Core.setBlock(world, TFCBlocks.LooseRocks.getStateFromMeta(map.getParams().getSurfaceRock().getMeta()), bp, 2);
+					chance = 50;
+					bp = new BlockPos(chunkX+x, y, chunkZ+z);
+					if(world.getBlockState(bp).getBlock() != Blocks.AIR)
+					{
+						continue;
+					}
+					//if we're on the surface then modify the chance based upon location
+					if(y == height)
+					{
+						if(c.hasAttribute(Attribute.River))
+							chance -= 10;
+						if(mcElev(c.getHighestNeighbor().getElevation()) - mcElev(c.getElevation()) > 10 )
+							chance -= 10;
+					}
+					else //otherwise only place on stone if underground
+					{
+						if(world.getBlockState(bp.down()).getMaterial() != Material.ROCK)
+							chance = 0;
+					}
+					mat = world.getBlockState(bp.down()).getMaterial();
+					if(chance > 0 && ((mat == Material.GROUND || mat == Material.ROCK) && random.nextInt(chance) == 0))
+					{
+						Core.setBlock(world, TFCBlocks.LooseRocks.getStateFromMeta(map.getParams().getSurfaceRock().getMeta()), bp, 2);
+					}
 				}
 			}
 		}
+
 	}
 
 	private int mcElev(double e)
