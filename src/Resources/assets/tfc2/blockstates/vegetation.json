@@ -21,7 +21,9 @@
 			"doublegrasstop": {"textures": {"cross": "blocks/double_plant_grass_top"}},
 			"fern": {"textures": {"cross": "blocks/fern"}},
 			"doublefernbottom": {"textures": {"cross": "blocks/double_plant_fern_bottom"}},
-			"doubleferntop": {"textures": {"cross": "blocks/double_plant_fern_top"}}
+			"doubleferntop": {"textures": {"cross": "blocks/double_plant_fern_top"}},
+			"shortgrass": {"textures": {"cross": "tfc2:blocks/shortgrass"}},
+			"shortergrass": {"textures": {"cross": "tfc2:blocks/shortergrass"}}
 		},
 		"inventory": [{
             "transform": "forge:default-block"

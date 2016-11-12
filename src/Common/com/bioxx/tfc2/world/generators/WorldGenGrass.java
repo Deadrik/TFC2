@@ -43,7 +43,9 @@ public class WorldGenGrass implements IWorldGenerator
 		IBlockState state = TFCBlocks.Vegetation.getDefaultState();
 		IslandMap map = Core.getMapForWorld(world, new BlockPos(chunkX, 0, chunkZ));
 		Moisture iMoisture = map.getParams().getIslandMoisture();
+		Moisture cMoisture;
 		Center closest;
+		float rand, m;
 		//Place grass
 		for(int x = 0; x < 16; x++)
 		{
@@ -69,14 +71,37 @@ public class WorldGenGrass implements IWorldGenerator
 						genGrass = random.nextInt(5) == 0;
 					if(genGrass)
 					{
-						float m = Core.getMoistureFromChunk(c, bp);
-						if(random.nextFloat() > closest.getMoisture().getInverse())
+						cMoisture = closest.getMoisture();
+						rand = random.nextFloat();
+
+						VegType vt = VegType.Grass0;
+						if(iMoisture == Moisture.LOW)
+						{
+							if(random.nextFloat() < 0.5)
+								vt = VegType.ShortGrass;
+							else vt = VegType.ShorterGrass;
+						}
+						else if(iMoisture == Moisture.MEDIUM)
+						{
+							rand = random.nextFloat();
+							if(rand < 0.25)
+								vt = VegType.ShortGrass;
+							else if(rand < 0.5) vt = VegType.ShorterGrass;
+						}
+						else if(iMoisture == Moisture.HIGH)
+						{
+							rand = random.nextFloat();
+							if(rand < 0.3)
+								vt = VegType.ShortGrass;
+						}
+
+						if((iMoisture.isGreaterThan(Moisture.MEDIUM) && rand > cMoisture.getInverse()))
 						{
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottom), bp, 2);
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTop), bp.up(), 2);
 						}
 						else
-							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.Grass0), bp, 2);
+							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, vt), bp, 2);
 					}
 				}
 				else if(Core.isSand(world.getBlockState(bp.down())) && !closest.hasAnyMarkersOf(Marker.Coast, Marker.CoastWater) && 

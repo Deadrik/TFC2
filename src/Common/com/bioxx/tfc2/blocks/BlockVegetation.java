@@ -199,7 +199,9 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		DoubleGrassTop("doublegrasstop", 4),
 		Fern("fern", 5),
 		DoubleFernBottom("doublefernbottom", 6),
-		DoubleFernTop("doubleferntop", 7);
+		DoubleFernTop("doubleferntop", 7),
+		ShortGrass("shortgrass", 8),
+		ShorterGrass("shortergrass", 9);
 
 		private String name;
 		private int meta;
