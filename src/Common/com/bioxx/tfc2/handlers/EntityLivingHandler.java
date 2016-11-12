@@ -10,8 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.GameType;
 
 import net.minecraftforge.client.event.FOVUpdateEvent;
@@ -26,7 +24,6 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
-import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class EntityLivingHandler
@@ -52,7 +49,7 @@ public class EntityLivingHandler
 
 
 			//Set Max Health
-			float newMaxHealth = FoodStatsTFC.getMaxHealth(player);
+			float newMaxHealth = getMaxHealth(player);
 			float oldMaxHealth = (float)player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
 			if(oldMaxHealth != newMaxHealth)
 			{
@@ -77,11 +74,12 @@ public class EntityLivingHandler
 
 
 				//Nullify the Old Food
-				player.getFoodStats().addStats(20 - player.getFoodStats().getFoodLevel(), 0.0F);
+				/*player.getFoodStats().addStats(20 - player.getFoodStats().getFoodLevel(), 0.0F);
 				//Handle Food
 				FoodStatsTFC foodstats = Core.getPlayerFoodStats(player);
 				foodstats.onUpdate(player);
-				Core.setPlayerFoodStats(player, foodstats);
+				Core.setPlayerFoodStats(player, foodstats);*/
+
 				//Send update packet from Server to Client
 				//Removed on port
 				/*if(foodstats.shouldSendUpdate())
@@ -89,7 +87,8 @@ public class EntityLivingHandler
 					AbstractPacket pkt = new PlayerUpdatePacket(player, 0);
 					TerraFirmaCraft.PACKET_PIPELINE.sendTo(pkt, (EntityPlayerMP) player);
 				}*/
-				if(foodstats.waterLevel / foodstats.getMaxWater(player) <= 0.25f)
+
+				/*if(foodstats.waterLevel / foodstats.getMaxWater(player) <= 0.25f)
 				{
 					setThirsty(player, true);
 				}
@@ -106,7 +105,7 @@ public class EntityLivingHandler
 				{
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("mining_fatigue"), 20, 1));
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("weakness"), 20, 1));
-				}
+				}*/
 
 				//Handle Spawn Protection
 				//Removed on port
@@ -134,6 +133,15 @@ public class EntityLivingHandler
 
 			}
 		}
+	}
+
+	public static float getMaxHealth(EntityPlayer player)
+	{
+		//Expand on this later
+		return 20;
+		/*return Math.min(20+(player.experienceLevel * TFCOptions.healthGainRate),
+				TFCOptions.healthGainCap) * Core.getPlayerFoodStats(player).getNutritionHealthModifier() *
+				(1+0.2f * Core.getPlayerFoodStats(player).nutrDairy);*/
 	}
 
 	public void setThirsty(EntityPlayer player, boolean b)

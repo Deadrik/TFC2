@@ -5,8 +5,8 @@ import net.minecraft.launchwrapper.IClassTransformer;
 import com.bioxx.tfc2.ASMConstants;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
-import squeek.asmhelper.ASMHelper;
-import squeek.asmhelper.ObfHelper;
+import squeek.asmhelper.com.bioxx.tfc2.ASMHelper;
+import squeek.asmhelper.com.bioxx.tfc2.ObfHelper;
 
 public class ModuleEntityRenderer implements IClassTransformer 
 {
