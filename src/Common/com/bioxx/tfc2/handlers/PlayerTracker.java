@@ -31,7 +31,7 @@ public class PlayerTracker
 		int islandZ = (int)(event.player.posZ) >> 12;
 
 		IslandMap map = WorldGen.getInstance().getIslandMap(islandX, islandZ);
-		TFC.network.sendTo(new CMapPacket(islandX, islandZ, event.player.worldObj.getSeed()+map.seed), (EntityPlayerMP)event.player);
+		TFC.network.sendTo(new CMapPacket(islandX, islandZ, map.seed), (EntityPlayerMP)event.player);
 	}
 
 	@SubscribeEvent
