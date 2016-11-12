@@ -17,11 +17,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
-import com.bioxx.tfc2.CommonProxy;
-import com.bioxx.tfc2.Reference;
 import com.google.common.eventbus.EventBus;
 
-@MCVersion(value = "1.8")
+@MCVersion(value = "1.10.2")
 public class TFC2Core extends DummyModContainer
 {
 	@Instance("tfc2_coremod")

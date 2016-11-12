@@ -6,9 +6,9 @@ import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
-import com.bioxx.tfc2.asm.transform.TF_EntityRenderer;
+import com.bioxx.tfc2.asm.transform.ModuleEntityRenderer;
 
-@TransformerExclusions({ "com.bioxx.tfc2.asm" })
+@TransformerExclusions({ "com.bioxx.tfc2.asm", "squeek" })
 public class TFCASMLoadingPlugin implements IFMLLoadingPlugin
 {
 	public static boolean runtimeDeobf;
@@ -22,7 +22,7 @@ public class TFCASMLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public String[] getASMTransformerClass() {
 		return new String[]{
-				TF_EntityRenderer.class.getName()
+				ModuleEntityRenderer.class.getName()
 		};
 	}
 

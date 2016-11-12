@@ -1,0 +1,3 @@
+[submodule "squeek502"]
+	path = squeek502
+	url = https://github.com/squeek502/ASMHelper.git
