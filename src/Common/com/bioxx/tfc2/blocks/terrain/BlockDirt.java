@@ -12,10 +12,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.IGravityBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.TFC_Sounds;
@@ -43,9 +43,8 @@ public class BlockDirt extends BlockCollapsible implements IGravityBlock
 		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
 		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
 
-		if(plantable == TFCBlocks.Sapling)
+		if(plantType == EnumPlantType.Plains)
 			return true;
-
 		return false;
 	}
 

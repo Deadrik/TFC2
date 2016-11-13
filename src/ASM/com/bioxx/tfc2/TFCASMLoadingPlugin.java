@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 import com.bioxx.tfc2.asm.transform.ModuleEntityRenderer;
+import com.bioxx.tfc2.asm.transform.ModuleWorldGen;
 
 @TransformerExclusions({ "com.bioxx.tfc2.asm", "squeek" })
 public class TFCASMLoadingPlugin implements IFMLLoadingPlugin
@@ -22,7 +23,7 @@ public class TFCASMLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public String[] getASMTransformerClass() {
 		return new String[]{
-				ModuleEntityRenderer.class.getName()
+				ModuleEntityRenderer.class.getName(), ModuleWorldGen.class.getName()
 		};
 	}
 

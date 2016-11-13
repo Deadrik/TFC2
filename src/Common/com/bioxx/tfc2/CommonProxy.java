@@ -47,20 +47,14 @@ import com.bioxx.tfc2.entity.EntityBear.BearType;
 import com.bioxx.tfc2.entity.EntityTiger.TigerType;
 import com.bioxx.tfc2.handlers.*;
 import com.bioxx.tfc2.world.DimensionTFC;
-import com.bioxx.tfc2.world.generators.WorldGenGrass;
-import com.bioxx.tfc2.world.generators.WorldGenLooseRock;
-import com.bioxx.tfc2.world.generators.WorldGenPortals;
-import com.bioxx.tfc2.world.generators.WorldGenTrees;
+import com.bioxx.tfc2.world.generators.*;
 
 public class CommonProxy
 {
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		TFC_Sounds.register();
-		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 0);
-		GameRegistry.registerWorldGenerator(new WorldGenTrees(), 10);
-		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
-		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 5);
+		registerWorldGen();
 
 		DimensionManager.unregisterDimension(0);
 		DimensionManager.registerDimension(0, DimensionTFC.SURFACE);
@@ -102,6 +96,15 @@ public class CommonProxy
 		Global.EVENT_BUS.register(new CreateDungeonHandler());
 
 		registerEntities();
+	}
+
+	protected void registerWorldGen()
+	{
+		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenTrees(), 10);
+		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
+		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 5);
+		GameRegistry.registerWorldGenerator(new WorldGenPamsGardens(), 6);
 	}
 
 	protected void registerEntities() 

@@ -33,6 +33,10 @@ public class CreateDungeonHandler
 		dungeonCenters = this.removeRiverCenters(dungeonCenters);
 		dungeonCenters = event.islandMap.getCentersAbove(dungeonCenters, 0.3);
 		dungeonCenters = event.islandMap.getCentersBelow(dungeonCenters, 0.6, false);
+
+		if(dungeonCenters.size() == 0)
+			return;
+
 		//Find a suitable location for the entrance
 		Center start = null;
 		int counter = 0;

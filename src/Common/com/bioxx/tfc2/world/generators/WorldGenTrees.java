@@ -78,6 +78,7 @@ public class WorldGenTrees implements IWorldGenerator
 			}
 		}
 
+
 		for(int l = 0; l < numTrees; l++)
 		{
 			double rarity = random.nextDouble();
@@ -181,7 +182,7 @@ public class WorldGenTrees implements IWorldGenerator
 	//*****************
 	private boolean genTree(Schematic schem, TreeConfig tc, World world, Random rand, BlockPos pos)
 	{
-		int rot = rand.nextInt(4);
+		int rot = rand.nextInt(4);//This causes world gen to change every other time we run the regen command. Not sure why.
 		int index;
 		int id;
 		int meta;
