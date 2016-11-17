@@ -66,9 +66,9 @@ public class WorldGenGrass implements IWorldGenerator
 				{
 					boolean genGrass = false;
 					if(closest.biome == BiomeType.MARSH || closest.biome == BiomeType.LAKE)
-						genGrass = random.nextInt(2) == 0;
+						genGrass = random.nextFloat() < 0.75;
 					else
-						genGrass = random.nextInt(5) == 0;
+						genGrass = random.nextFloat() < 0.25;
 					if(genGrass)
 					{
 						cMoisture = closest.getMoisture();
@@ -91,11 +91,12 @@ public class WorldGenGrass implements IWorldGenerator
 						else if(iMoisture == Moisture.HIGH)
 						{
 							rand = random.nextFloat();
-							if(rand < 0.3)
+							if(rand < 0.25)
 								vt = VegType.ShortGrass;
+							else if(rand < 0.35) vt = VegType.ShorterGrass;
 						}
 
-						if((iMoisture.isGreaterThan(Moisture.MEDIUM) && rand > cMoisture.getInverse()))
+						if((iMoisture.isGreaterThan(Moisture.MEDIUM) && rand > cMoisture.getInverse()*2))
 						{
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottom), bp, 2);
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTop), bp.up(), 2);
