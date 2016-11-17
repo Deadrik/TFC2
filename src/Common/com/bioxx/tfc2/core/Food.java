@@ -210,6 +210,7 @@ public class Food
 		if(item instanceof IFood)
 		{
 			IFood food = (IFood)item;
+			arraylist.add(TextFormatting.GREEN+food.getFoodGroup().toString());
 			long time = Food.getDecayTimer(is)-Timekeeper.getInstance().getTotalTicks();
 			if(!Food.hasDecayTimer(is))
 			{

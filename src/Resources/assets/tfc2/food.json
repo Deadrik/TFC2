@@ -1,0 +1,17 @@
+[
+	{
+		"name" : "minecraft:fish",
+		"decay" : 72000,
+		"foodgroup" : "Protein"
+	},
+	{
+		"name" : "minecraft:cooked_fish",
+		"decay" : 72000,
+		"foodgroup" : "Protein"
+	},
+	{
+		"name" : "minecraft:bread",
+		"decay" : 72000,
+		"foodgroup" : "Grain"
+	}
+]

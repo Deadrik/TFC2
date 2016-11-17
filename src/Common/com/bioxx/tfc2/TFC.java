@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
@@ -13,11 +16,13 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.bioxx.jmapgen.dungeon.DungeonSchemManager;
 import com.bioxx.jmapgen.dungeon.DungeonTheme.EntranceType;
 import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.trees.TreeConfig;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
 import com.bioxx.tfc2.api.trees.TreeSchematic;
@@ -26,6 +31,8 @@ import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.commands.*;
 import com.bioxx.tfc2.core.PortalSchematic;
+import com.bioxx.tfc2.core.util.FoodReader;
+import com.bioxx.tfc2.core.util.FoodReader.FoodJSON;
 import com.bioxx.tfc2.networking.client.CAnvilStrikePacket;
 import com.bioxx.tfc2.networking.client.CMapPacket;
 import com.bioxx.tfc2.networking.server.SAnvilCraftingPacket;
@@ -74,6 +81,14 @@ public class TFC
 		Core.PortalSchematic = new PortalSchematic("/assets/tfc2/schematics/portal.schematic", "portal");
 		Core.PortalSchematic.Load();
 
+		//Read our built in food values first
+		FoodReader reader = new FoodReader("/assets/tfc2/food.json");
+		reader.read();
+		applyFoodValues(reader);
+		//Now read from the user's mods folder
+		reader = new FoodReader("");
+		reader.read(new File(TFC.proxy.getMinecraftDir(), "/mods/tfc2/food.json"));
+		applyFoodValues(reader);
 	}
 
 	@EventHandler
@@ -269,4 +284,26 @@ public class TFC
 		log.info("Load Dungeon Schematics-Finish");
 	}
 
+	private void applyFoodValues(FoodReader reader)
+	{
+		for(FoodJSON f : reader.foodList)
+		{
+			ResourceLocation rl = new ResourceLocation(f.itemName);
+			Item i = ForgeRegistries.ITEMS.getValue(rl);
+			if(i == null)
+			{
+				log.warn("Item not found when searching FoodRegistry for food object ->" + f.itemName);
+				continue;
+			}
+			if(!(i instanceof IFood))
+			{
+				log.warn("Item ->" + f.itemName + " is not of type IFood");
+				continue;
+			}
+			IFood food = (IFood)i;
+			food.setExpirationTimer(f.decayTime);
+			food.setFoodGroup(f.foodGroup);
+
+		}
+	}
 }
