@@ -39,7 +39,7 @@ public class ItemTerra extends Item
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems)
+	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
 		if(showInCreative)
 		{

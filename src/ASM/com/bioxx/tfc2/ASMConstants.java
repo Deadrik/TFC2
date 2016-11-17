@@ -20,6 +20,7 @@ public class ASMConstants
 	public static final String HAND_SIDE = "net.minecraft.util.EnumHandSide";
 	public static final String IBLOCKSTATE = "net.minecraft.block.state.IBlockState";
 	public static final String IGROWABLE = "net.minecraft.block.IGrowable";
+	public static final String ITEM = "net.minecraft.item.Item";
 	public static final String ITEM_FOOD = "net.minecraft.item.ItemFood";
 	public static final String ITEM_RENDERER = "net.minecraft.client.renderer.ItemRenderer";
 	public static final String MINECRAFT = "net.minecraft.client.Minecraft";
@@ -32,4 +33,9 @@ public class ASMConstants
 	public static final String ENTITY_RENDERER = "net.minecraft.client.renderer.EntityRenderer";
 	public static final String ICHUNKGENERATOR = "net.minecraft.world.chunk.IChunkGenerator";
 	public static final String ICHUNKPROVIDER = "net.minecraft.world.chunk.IChunkProvider";
+	public static final String ITEMSTACK = "net.minecraft.item.ItemStack";
+	public static final String CREATIVETABS = "net.minecraft.creativetab.CreativeTabs";
+
+	//TFC
+	public static final String ENUMFOODGROUP = "com.bioxx.tfc2.api.types.EnumFoodGroup";
 }

@@ -131,20 +131,20 @@ public class TFCItems
 		FoodBanana = registerItem(new ItemFoodTFC(EnumFoodGroup.Fruit, 1f, 1).setExpiration(3600).setUnlocalizedName("food_banana"));
 
 		//Grains
-		FoodWheatWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setIsEdible(false).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_wheatwhole"));
+		FoodWheatWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_wheatwhole"));
 		FoodWheatGrain = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 0.1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_wheatgrain"));
 		FoodWheatGround = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 0.1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_wheatground"));
 		FoodWheatDough = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 0.1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_wheatdough"));
 		FoodWheatBread = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setExpiration(3600).setUnlocalizedName("food_wheatbread"));
-		FoodBarleyWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setIsEdible(false).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_barleywhole"));
+		FoodBarleyWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_barleywhole"));
 		FoodBarleyGrain = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 0.1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_barleygrain"));
 		FoodBarleyGround = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 0.1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_barleyground"));
 		FoodBarleyDough = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 0.1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_barleydough"));
 		FoodBarleyBread = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setExpiration(3600).setUnlocalizedName("food_barleybread"));
-		FoodRyeWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setIsEdible(false).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_ryewhole"));
-		FoodOatWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setIsEdible(false).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_oatwhole"));
-		FoodRiceWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setIsEdible(false).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_ricewhole"));
-		FoodCornWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Vegetable, 0f, 0).setIsEdible(false).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_cornwhole"));
+		FoodRyeWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_ryewhole"));
+		FoodOatWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_oatwhole"));
+		FoodRiceWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Grain, 1f, 1).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_ricewhole"));
+		FoodCornWhole = registerItem(new ItemFoodTFC(EnumFoodGroup.Vegetable, 0f, 0).setCanUseRaw(false).setExpiration(3600).setUnlocalizedName("food_cornwhole"));
 		//Protein
 		FoodBeefRaw = registerItem(new ItemFoodTFC(EnumFoodGroup.Protein, 1f, 1).setExpiration(360).setUnlocalizedName("food_beefraw"));
 		FoodBeefCooked = registerItem(new ItemFoodTFC(EnumFoodGroup.Protein, 1f, 1).setExpiration(360).setUnlocalizedName("food_beefcooked"));

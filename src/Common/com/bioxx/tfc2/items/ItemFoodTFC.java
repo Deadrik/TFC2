@@ -9,13 +9,11 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,7 +29,6 @@ import com.bioxx.tfc2.core.FoodStatsTFC;
 
 public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInInventory
 {
-	private int foodID = 0;
 	private long expiration = 300000L;//time expressed in milliseconds
 	private float nourishment = 1f;
 	private int filling = 1;
@@ -45,7 +42,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 		foodGroup = fg;
 		nourishment = n;
 		filling = f;
-		foodID = FoodRegistry.getInstance().registerFood(fg, this);
+		FoodRegistry.getInstance().registerFood(fg, this);
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
 
@@ -59,7 +56,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 		return this;
 	}
 
-	public ItemFoodTFC setIsEdible(boolean isEdible)
+	public ItemFoodTFC setEdible(boolean isEdible)
 	{
 		edible = isEdible;
 		return this;
@@ -82,7 +79,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
 		super.addInformation(is, player, arraylist, flag);
-		long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime();
+		/*long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime();
 
 		if(time <= 0)
 		{
@@ -92,18 +89,14 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 		{
 			String out = String.format("%d:%02d", time/60/20, (time/20) % 60);
 			arraylist.add("Expires: " + out);
-		}
+		}*/
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems)
+	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		ItemStack is = new ItemStack(itemIn, 1, 0);
-		NBTTagCompound nbt = new NBTTagCompound();
-		is.setTagCompound(nbt);
-		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+getExpirationTimer(is));
-		subItems.add(is);
+		//Food.getSubItems(itemIn, tab, subItems);
 	}
 
 	/**
@@ -172,25 +165,14 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	}
 
 	@Override
-	public int getFoodID() 
-	{
-		return foodID;
-	}
-
-	@Override
 	public ItemStack onDecayed(ItemStack is, World world, int i, int j, int k) {
 
 		return is;
 	}
 
 	@Override
-	public boolean isEdible(ItemStack is) {
+	public boolean getIsEdible(ItemStack is) {
 		return edible;
-	}
-
-	@Override
-	public boolean isUsable(ItemStack is) {
-		return canBeUsedRaw;
 	}
 
 	@Override
@@ -208,5 +190,20 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 			is.stackSize-=expiredAmt;
 			Food.setDecayTimer(is, Food.getDecayTimer(is)+expiration*expiredAmt);
 		}
+	}
+
+	@Override
+	public void setFoodGroup(EnumFoodGroup fg) {
+		this.foodGroup = fg;
+	}
+
+	@Override
+	public void setIsEdible(boolean b) {
+		this.edible = b;
+	}
+
+	@Override
+	public void setExpirationTimer(long timer) {
+		this.expiration = timer;
 	}
 }

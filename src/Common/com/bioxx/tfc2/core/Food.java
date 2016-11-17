@@ -1,7 +1,18 @@
 package com.bioxx.tfc2.core;
 
+import java.util.List;
+
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextFormatting;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.bioxx.tfc2.api.interfaces.IFood;
 
 public class Food 
 {
@@ -127,8 +138,13 @@ public class Food
 		if (nbt.hasKey("Expiration"))
 			return nbt.getLong("Expiration");
 		else
-			//return (int) TFC_Time.getTotalHours(); //Removed when porting
 			return Timekeeper.getInstance().getTotalTicks();
+	}
+
+	public static boolean hasDecayTimer(ItemStack is)
+	{
+		NBTTagCompound nbt = getNBT(is);
+		return nbt.hasKey("Expiration");
 	}
 
 	public static boolean isDried(ItemStack is)
@@ -187,6 +203,45 @@ public class Food
 	public static boolean hasMealSkill(ItemStack is)
 	{
 		return is.getTagCompound().hasKey("mealSkill");
+	}
+
+	public static void addInformation(ItemStack is, EntityPlayer player, List arraylist, Item item)
+	{
+		if(item instanceof IFood)
+		{
+			IFood food = (IFood)item;
+			long time = Food.getDecayTimer(is)-Timekeeper.getInstance().getTotalTicks();
+			if(!Food.hasDecayTimer(is))
+			{
+				arraylist.add(TextFormatting.GREEN+"NO DECAY");
+			}
+			else if(time <= 0)
+			{
+				arraylist.add(TextFormatting.RED+"Expired x"+Math.min(1+(time / food.getExpirationTimer(is))* (-1), is.stackSize));
+			}
+			else
+			{
+				String out = String.format("%d:%02d", time/60/20, (time/20) % 60);
+				arraylist.add("Expires: " + out);
+			}
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void getSubItems(Item itemIn, CreativeTabs tab, List subItems)
+	{
+		ItemStack is = new ItemStack(itemIn, 1, 0);
+		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+((IFood)itemIn).getExpirationTimer(is));
+		subItems.add(is);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void addDecayTimerForCreative(List<ItemStack> list)
+	{
+		for(ItemStack is : list)
+		{
+			Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+((IFood)is.getItem()).getExpirationTimer(is));
+		}
 	}
 
 }

@@ -8,8 +8,7 @@ import com.bioxx.tfc2.api.types.EnumFoodGroup;
 public interface IFood
 {
 	EnumFoodGroup getFoodGroup();
-
-	int getFoodID();
+	void setFoodGroup(EnumFoodGroup fg);
 
 	/**
 	 * @return Returns an ItemStack that will replace the current ItemStack when the food has reached maximum decay.
@@ -19,11 +18,9 @@ public interface IFood
 	/**
 	 * @return Is this food edible as is.
 	 */
-	boolean isEdible(ItemStack is);
-	/**
-	 * @return Is this item usable in meals
-	 */
-	boolean isUsable(ItemStack is);
+	boolean getIsEdible(ItemStack is);
+	void setIsEdible(boolean b);
 
 	long getExpirationTimer(ItemStack is);
+	void setExpirationTimer(long timer);
 }

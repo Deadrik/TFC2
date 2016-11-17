@@ -22,10 +22,7 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
-import com.bioxx.tfc2.core.FoodStatsTFC;
-import com.bioxx.tfc2.core.InventoryPlayerTFC;
-import com.bioxx.tfc2.core.PlayerSkillData;
-import com.bioxx.tfc2.core.PortalSchematic;
+import com.bioxx.tfc2.core.*;
 import com.bioxx.tfc2.world.WorldGen;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -293,5 +290,17 @@ public class Core
 	public static void setPlayerSkillData(EntityPlayer player, PlayerSkillData data)
 	{
 		data.writeNBT(player.getEntityData());
+	}
+
+	public static void inventoryUpdateFood(EntityPlayer player, ItemStack is) 
+	{
+		long expiration = 300000L;
+		long time = Food.getDecayTimer(is)-player.worldObj.getWorldTime();
+		if(time < 0)
+		{
+			int expiredAmt = (int)Math.min(1+(time / expiration)* (-1), is.stackSize);
+			is.stackSize-=expiredAmt;
+			Food.setDecayTimer(is, Food.getDecayTimer(is)+expiration*expiredAmt);
+		}
 	}
 }

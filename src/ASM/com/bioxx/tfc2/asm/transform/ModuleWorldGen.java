@@ -1,8 +1,11 @@
 package com.bioxx.tfc2.asm.transform;
 
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import com.bioxx.tfc2.ASMConstants;
+import com.bioxx.tfc2.ServerOverrides;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 import squeek.asmhelper.com.bioxx.tfc2.ASMHelper;
@@ -18,31 +21,31 @@ public class ModuleWorldGen implements IClassTransformer
 		if (transformedName.equals("com.pam.harvestcraft.blocks.blocks.BlockBaseGarden"))
 		{
 			String desc = ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD, ASMConstants.BLOCK_POS);
-			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "func_176196_c", "canPlaceBlockAt", desc);
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "checkSoilBlock", "checkSoilBlock", desc);
 
 			if (methodNode != null)
 			{
 				addCanPlaceBlockOverride(classNode, methodNode);
 			}
 			else
-				throw new RuntimeException("BlockBaseGarden: canPlaceBlockAt (func_176196_c) method not found");
+				throw new RuntimeException("BlockBaseGarden: checkSoilBlock (a) method not found");
 		}
 		else if (transformedName.equals("net.minecraft.block.BlockBush"))
 		{
-			String desc = ASMHelper.toMethodDescriptor("Z",ASMConstants.IBLOCKSTATE);
-			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "func_185514_i", "canSustainBush", desc);
+			String desc = ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.IBLOCKSTATE));
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "i", "canSustainBush", desc);
 
 			if (methodNode != null)
 			{
 				addCanSustainPlantOverride(classNode, methodNode);
 			}
 			else
-				throw new RuntimeException("BlockBaseGarden: canSustainBush (func_185514_i) method not found");
+				throw new RuntimeException("BlockBaseGarden: canSustainBush (i) method not found");
 		}
 		else if (transformedName.equals("com.pam.harvestcraft.worldgen.BushWorldWorldGen"))
 		{
 			String desc = ASMHelper.toMethodDescriptor("V", ASMConstants.RANDOM,"I", "I", ASMConstants.WORLD, ASMConstants.ICHUNKGENERATOR, ASMConstants.ICHUNKPROVIDER);
-			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "generate", "generate", desc);
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "func_180709_b", "generate", desc);
 
 			if (methodNode != null)
 			{
@@ -52,13 +55,20 @@ public class ModuleWorldGen implements IClassTransformer
 				methodNode.instructions.insert(list);
 			}
 			else
-				throw new RuntimeException("BushWorldWorldGen: generate (generate) method not found");
+			{
+				String msg = "BushWorldWorldGen: generate (func_180709_b) method not found! | ";
+				for(MethodNode m : classNode.methods)
+				{
+					msg += m.name+", ";
+				}
+				throw new RuntimeException(msg);
+			}
 		}
 		else if (transformedName.equals("net.minecraft.world.gen.feature.WorldGenTallGrass") || 
 				transformedName.equals("net.minecraft.world.gen.feature.WorldGenDoublePlant"))
 		{
-			String desc = ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD,ASMConstants.RANDOM,ASMConstants.BLOCK_POS);
-			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "func_180709_b", "generate", desc);
+			String desc = ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.WORLD),ObfHelper.toObfClassName(ASMConstants.RANDOM),ObfHelper.toObfClassName(ASMConstants.BLOCK_POS));
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "b", "generate", desc);
 
 			if (methodNode != null)
 			{
@@ -68,6 +78,8 @@ public class ModuleWorldGen implements IClassTransformer
 				list.add(new InsnNode(Opcodes.IRETURN));
 				methodNode.instructions.insert(list);
 			}
+			else
+				throw new RuntimeException("WorldGenTallGrass | WorldGenDoublePlant: generate (b) method not found");
 		}
 
 		return ASMHelper.writeClassToBytes(classNode);
@@ -93,23 +105,18 @@ public class ModuleWorldGen implements IClassTransformer
 	{
 		InsnList list = new InsnList();
 		method.instructions.clear();
-		if(!ObfHelper.isObfuscated())
-		{
-			list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			list.add(new VarInsnNode(Opcodes.ALOAD, 2));
-			list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/util/math/BlockPos", "down", ASMHelper.toMethodDescriptor(ASMConstants.BLOCK_POS), false));
-			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ServerOverrides","isSoil",ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD, ASMConstants.BLOCK_POS), false));
-			list.add(new InsnNode(Opcodes.IRETURN));
-		}
-		else
-		{
-			list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			list.add(new VarInsnNode(Opcodes.ALOAD, 2));
-			list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/util/math/BlockPos", "down", ASMHelper.toMethodDescriptor(ASMConstants.BLOCK_POS), false));
-			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ServerOverrides","isSoil",ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD, ASMConstants.BLOCK_POS), false));
-			list.add(new InsnNode(Opcodes.IRETURN));
-		}
+
+		list.add(new VarInsnNode(Opcodes.ALOAD, 1));
+		list.add(new VarInsnNode(Opcodes.ALOAD, 2));
+		list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,	ObfHelper.isObfuscated() ? "cm" : ASMHelper.toInternalClassName(ASMConstants.BLOCK_POS), ObfHelper.isObfuscated() ? "c" : "down", ObfHelper.isObfuscated() ? "()Lcm;" :ASMHelper.toMethodDescriptor(ASMConstants.BLOCK_POS), false));
+		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ServerOverrides","isSoil",ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD, ASMConstants.BLOCK_POS), false));
+		list.add(new InsnNode(Opcodes.IRETURN));
 		method.instructions.insert(list);
+	}
+
+	private boolean checkSoilBlock(World world, BlockPos pos) {
+
+		return ServerOverrides.isSoil(world, pos.down());
 	}
 
 	private void addCanSustainPlantOverride(ClassNode classNode, MethodNode method)
@@ -119,13 +126,13 @@ public class ModuleWorldGen implements IClassTransformer
 		if(!ObfHelper.isObfuscated())
 		{
 			list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/Core", "isSoil", ASMHelper.toMethodDescriptor("Z",ASMConstants.IBLOCKSTATE), false));
+			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/Core", "isSoil", ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.IBLOCKSTATE)), false));
 			list.add(new InsnNode(Opcodes.IRETURN));
 		}
 		else
 		{
 			list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/Core", "isSoil", ASMHelper.toMethodDescriptor("Z",ASMConstants.IBLOCKSTATE), false));
+			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/Core", "isSoil", ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.IBLOCKSTATE)), false));
 			list.add(new InsnNode(Opcodes.IRETURN));
 		}
 		method.instructions.insert(list);
