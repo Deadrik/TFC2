@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.core;
 
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -277,11 +278,12 @@ public class Food
 		if(food != null && is.getItem() instanceof ItemFood)
 		{
 			ItemFood item = (ItemFood)is.getItem();
-			while(food.foodGroup.iterator().hasNext())
+			Iterator iter = food.foodGroup.iterator();
+			while(iter.hasNext())
 			{
-				FoodGroupPair pair = food.foodGroup.iterator().next();
+				FoodGroupPair pair = (FoodGroupPair) iter.next();
 				float amount = pair.amount;
-				amount = Math.min(amount + (item.getHealAmount(is) * (pair.amount / 100)), 20);
+				amount = Math.min(stats.getNutritionMap().get(pair.foodGroup) + (item.getHealAmount(is) * (pair.amount / 100f)*0.25f), 20);
 				stats.getNutritionMap().put(pair.foodGroup, amount);
 			}
 		}

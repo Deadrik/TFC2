@@ -22,10 +22,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
+import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.interfaces.IFood;
+import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
+import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import com.bioxx.tfc2.core.Food;
+import com.bioxx.tfc2.core.Timekeeper;
+import com.bioxx.tfc2.networking.client.CFoodPacket;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class EntityLivingHandler
@@ -79,6 +85,7 @@ public class EntityLivingHandler
 							if(time < 0)
 							{
 								int expiredAmt = (int)Math.min(1+(time / Food.getExpirationTimer(is))* (-1), is.stackSize);
+								expiredAmt = Math.max(expiredAmt, 0);
 								is.stackSize-=expiredAmt;
 								Food.setDecayTimer(is, Food.getDecayTimer(is)+Food.getExpirationTimer(is)*expiredAmt);
 								if(is.stackSize <= 0)
@@ -95,6 +102,30 @@ public class EntityLivingHandler
 					}
 				}
 
+				//Drain Nutrition
+				NBTTagCompound tfcData = getEntityData(player.getEntityData());
+
+				if(!tfcData.hasKey("nutritionDrainTimer"))
+					tfcData.setLong("nutritionDrainTimer", Timekeeper.getInstance().getTotalTicks());
+				long nutritionDrainTimer = tfcData.getLong("nutritionDrainTimer");
+				if(Timekeeper.getInstance().getTotalTicks() > nutritionDrainTimer)
+				{
+					tfcData.setLong("nutritionDrainTimer", nutritionDrainTimer += 1000);
+					IFoodStatsTFC food = (IFoodStatsTFC) player.getFoodStats();
+					//Nutrition drains at a rate of 0.03 per hour. this should give roughly 27 days until zero
+					food.getNutritionMap().put(EnumFoodGroup.Fruit, food.getNutritionMap().get(EnumFoodGroup.Fruit)-0.03f);
+					food.getNutritionMap().put(EnumFoodGroup.Vegetable, food.getNutritionMap().get(EnumFoodGroup.Vegetable)-0.03f);
+					food.getNutritionMap().put(EnumFoodGroup.Grain, food.getNutritionMap().get(EnumFoodGroup.Grain)-0.03f);
+					food.getNutritionMap().put(EnumFoodGroup.Protein, food.getNutritionMap().get(EnumFoodGroup.Protein)-0.03f);
+					food.getNutritionMap().put(EnumFoodGroup.Dairy, food.getNutritionMap().get(EnumFoodGroup.Dairy)-0.03f);
+
+					player.getFoodStats().addExhaustion(1f);
+
+					TFC.network.sendTo(new CFoodPacket(food), player);
+				}
+
+
+				player.getEntityData().setTag("TFC2Data", tfcData);
 			}
 			else
 			{
@@ -103,13 +134,22 @@ public class EntityLivingHandler
 		}
 	}
 
+	public NBTTagCompound getEntityData(NBTTagCompound playerData)
+	{
+		if(playerData == null)
+			return new NBTTagCompound();
+		return playerData.getCompoundTag("TFC2Data");	
+	}
+
 	public static float getMaxHealth(EntityPlayer player)
 	{
-		//Expand on this later
-		return 20;
-		/*return Math.min(20+(player.experienceLevel * TFCOptions.healthGainRate),
-				TFCOptions.healthGainCap) * Core.getPlayerFoodStats(player).getNutritionHealthModifier() *
-				(1+0.2f * Core.getPlayerFoodStats(player).nutrDairy);*/
+		IFoodStatsTFC food = (IFoodStatsTFC) player.getFoodStats();
+		float total = food.getNutritionMap().get(EnumFoodGroup.Fruit) + food.getNutritionMap().get(EnumFoodGroup.Vegetable) +
+				food.getNutritionMap().get(EnumFoodGroup.Grain) + food.getNutritionMap().get(EnumFoodGroup.Protein) +
+				food.getNutritionMap().get(EnumFoodGroup.Dairy);
+
+		total = total / 100;
+		return Math.min(20+(player.experienceLevel * TFCOptions.healthGainRate), TFCOptions.healthGainCap) * total;
 	}
 
 	public void setThirsty(EntityPlayer player, boolean b)

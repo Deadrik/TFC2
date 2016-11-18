@@ -116,7 +116,7 @@ public class RenderOverlayHandler
 			this.drawTexturedModalRect(mid+1, healthRowHeight+5, 90, 25, (int) (90*percentWater), 5);
 
 			//Draw Notifications
-			String healthString = (int) Math.min(player.getHealth(), maxHealth) + "/" + (int) maxHealth;
+			String healthString = ((int) Math.min(player.getHealth()*10, maxHealth*10))/10f + "/" + ((int) (maxHealth*10))/10f;
 			fontrenderer.drawString(healthString, mid-45-(fontrenderer.getStringWidth(healthString)/2), healthRowHeight+2, Color.white.getRGB());
 			//Removed during port
 			//if (player.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getModifier(TFCAttributes.OVERBURDENED_UUID) != null)

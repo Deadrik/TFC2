@@ -35,6 +35,7 @@ import com.bioxx.tfc2.core.PortalSchematic;
 import com.bioxx.tfc2.core.util.FoodReader;
 import com.bioxx.tfc2.core.util.FoodReader.FoodJSON;
 import com.bioxx.tfc2.networking.client.CAnvilStrikePacket;
+import com.bioxx.tfc2.networking.client.CFoodPacket;
 import com.bioxx.tfc2.networking.client.CMapPacket;
 import com.bioxx.tfc2.networking.server.SAnvilCraftingPacket;
 import com.bioxx.tfc2.networking.server.SKnappingPacket;
@@ -73,6 +74,7 @@ public class TFC
 		network.registerMessage(SKnappingPacket.Handler.class, SKnappingPacket.class, 2, Side.SERVER);
 		network.registerMessage(CAnvilStrikePacket.Handler.class, CAnvilStrikePacket.class, 3, Side.CLIENT);
 		network.registerMessage(SAnvilCraftingPacket.Handler.class, SAnvilCraftingPacket.class, 4, Side.SERVER);
+		network.registerMessage(CFoodPacket.Handler.class, CFoodPacket.class, 5, Side.CLIENT);
 
 		//Register tree types and load tree schematics
 		loadTrees();
