@@ -81,7 +81,7 @@ public class BlockCrop extends BlockTerra implements ITileEntityProvider
 					ItemStack is = ((ItemStack) iter.next()).copy();
 					is.stackSize = 1;
 					if(is.getItem() instanceof IFood)
-						Food.setDecayTimer(is, worldIn.getWorldTime()+((IFood)is.getItem()).getExpirationTimer(is));
+						Food.setDecayTimer(is, worldIn.getWorldTime()+Food.getExpirationTimer(is));
 					Core.dropItem(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, is);
 				}
 			}

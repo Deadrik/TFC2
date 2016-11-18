@@ -170,9 +170,9 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		if (guibutton.id == 1)
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSkills(player));
 		/*else if (guibutton.id == 2)
-			Minecraft.getMinecraft().displayGuiScreen(new GuiCalendar(player));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiCalendar(player));*/
 		else if (guibutton.id == 3)
-			Minecraft.getMinecraft().displayGuiScreen(new GuiHealth(player));*/
+			Minecraft.getMinecraft().displayGuiScreen(new GuiHealth(player));
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 
 public class FoodStatsTFC
@@ -328,8 +327,10 @@ public class FoodStatsTFC
 
 	public static float getMaxHealth(EntityPlayer player)
 	{
-		return Math.min(20+(player.experienceLevel * TFCOptions.healthGainRate),
+		/*return Math.min(20+(player.experienceLevel * TFCOptions.healthGainRate),
 				TFCOptions.healthGainCap) * Core.getPlayerFoodStats(player).getNutritionHealthModifier() * (1+0.2f * Core.getPlayerFoodStats(player).nutrDairy);
+		 */
+		return 0;
 	}
 
 	/**

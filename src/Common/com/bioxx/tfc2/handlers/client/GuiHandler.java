@@ -43,6 +43,8 @@ public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
 			return new GuiAnvil(player.inventory, (TileAnvil)te, world, x, y, z);
 		case 3:
 			return new GuiSkills(player);
+		case 4:
+			return new GuiHealth(player);
 		default:
 			return null;
 		}

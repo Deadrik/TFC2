@@ -22,7 +22,6 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
-import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.InventoryPlayerTFC;
 import com.bioxx.tfc2.core.PlayerSkillData;
 import com.bioxx.tfc2.core.PortalSchematic;
@@ -207,23 +206,6 @@ public class Core
 	public static boolean isPlayerInDebugMode(EntityPlayer player)
 	{
 		return true;
-	}
-
-	/**
-	 * If this is modified in any way, setPlayerFoodStats should be called to save the data back 
-	 * to players nbt or the changes will be lost.
-	 * @return Returns the FoodStatsTFC object that is associated with this player. 
-	 */
-	public static FoodStatsTFC getPlayerFoodStats(EntityLivingBase player)
-	{
-		FoodStatsTFC foodstats = new FoodStatsTFC((EntityPlayer)player);
-		foodstats.readNBT(player.getEntityData());
-		return foodstats;
-	}
-
-	public static void setPlayerFoodStats(EntityPlayer player, FoodStatsTFC foodstats)
-	{
-		foodstats.writeNBT(player.getEntityData());
 	}
 
 	public static IBlockState getPlanks(WoodType w)

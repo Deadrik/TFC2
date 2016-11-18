@@ -1,48 +1,55 @@
 package com.bioxx.tfc2.items;
 
+import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.interfaces.ICookableFood;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import com.bioxx.tfc2.core.Food;
-import com.bioxx.tfc2.core.FoodStatsTFC;
 
 public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInInventory
 {
 	private long expiration = 300000L;//time expressed in milliseconds
-	private float nourishment = 1f;
+	private float nourishment = 20f;
 	private int filling = 1;
 	public boolean edible = true;
 	public boolean canBeUsedRaw = true;
 	protected boolean canBeSmoked;
 	private EnumFoodGroup foodGroup = EnumFoodGroup.None;
+	public HashMap<EnumFoodGroup, Float> nutritionMap = new HashMap<EnumFoodGroup, Float>();
 
 	public ItemFoodTFC(EnumFoodGroup fg, float n, int f)
 	{
 		foodGroup = fg;
-		nourishment = n;
+		nourishment = 20;
 		filling = f;
 		//FoodRegistry.getInstance().registerFood(fg, this);
 		this.setCreativeTab(CreativeTabs.FOOD);
+		nutritionMap.put(EnumFoodGroup.Grain, 20f);
+	}
+
+	public void readNBT(NBTTagCompound compound)
+	{
+		if (compound.hasKey("foodLevel", 99))
+		{
+			//ModuleFood.readNBT((IFoodStatsTFC)this, compound);
+		}
 	}
 
 	/**
@@ -99,12 +106,12 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase player)
 	{
-		FoodStatsTFC fs = Core.getPlayerFoodStats(player);
+		/*FoodStatsTFC fs = Core.getPlayerFoodStats(player);
 		fs.addNutrition(foodGroup, nourishment);
 		Core.setPlayerFoodStats((EntityPlayer)player, fs);
 		worldIn.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 		this.onFoodEaten(stack, worldIn, (EntityPlayer)player);
-		((EntityPlayer) player).addStat(StatList.getObjectUseStats(this));
+		((EntityPlayer) player).addStat(StatList.getObjectUseStats(this));*/
 		return stack;
 	}
 

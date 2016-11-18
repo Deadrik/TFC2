@@ -39,8 +39,8 @@ import com.bioxx.jmapgen.processing.CaveAttrNode;
 import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
+import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.api.types.Moisture;
-import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.core.Timekeeper;
@@ -90,14 +90,14 @@ public class RenderOverlayHandler
 			this.drawTexturedModalRect(mid-91, healthRowHeight, 0, 10, (int) (90*percentHealth), 10);
 
 			//Draw Food and Water
-			FoodStatsTFC foodstats = Core.getPlayerFoodStats(player);
-			float foodLevel = foodstats.getFoodLevel();
+			IFoodStatsTFC foodstats = (IFoodStatsTFC)player.getFoodStats();
+			float foodLevel = player.getFoodStats().getFoodLevel();
 			//float preFoodLevel = foodstats.getPrevFoodLevel();
 
-			float waterLevel = foodstats.waterLevel;
+			float waterLevel = foodstats.getWaterLevel();
 
-			float percentFood = Math.min(foodLevel / foodstats.getMaxStomach(player), 1);
-			float percentWater = Math.min(waterLevel / foodstats.getMaxWater(player), 1);
+			float percentFood = Math.min(foodLevel / 20, 1);
+			float percentWater = Math.min(waterLevel / 20, 1);
 
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.drawTexturedModalRect(mid+1, healthRowHeight, 0, 20, 90, 5);

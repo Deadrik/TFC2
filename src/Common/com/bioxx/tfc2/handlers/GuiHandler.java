@@ -40,7 +40,9 @@ public class GuiHandler implements IGuiHandler
 		{
 			return new ContainerAnvil(player.inventory, (TileAnvil)te, world, x, y, z);
 		}
-		case 3:
+		case 3://Skills Screen
+			return new ContainerSkills(player);
+		case 4://Health Screen
 			return new ContainerSkills(player);
 		default:
 		{

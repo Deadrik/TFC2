@@ -15,6 +15,7 @@ public class TFCOptions
 	public static int healthGainCap = 30;
 
 	public static int torchBurnTime = 48;
+	public static boolean enableDebugMode = true;
 
 	public static boolean getBooleanFor(Configuration config,String heading, String item, boolean value)
 	{

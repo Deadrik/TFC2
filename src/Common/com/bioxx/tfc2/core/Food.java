@@ -5,16 +5,20 @@ import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.text.TextFormatting;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.api.FoodRegistry;
+import com.bioxx.tfc2.api.FoodRegistry.FoodGroupPair;
 import com.bioxx.tfc2.api.FoodRegistry.TFCFood;
 import com.bioxx.tfc2.api.interfaces.IFood;
+import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 
 public class Food 
 {
@@ -263,6 +267,23 @@ public class Food
 		for(ItemStack is : list)
 		{
 			Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+Food.getExpirationTimer(is));
+		}
+	}
+
+	public static void addNutrition(FoodStats fs, ItemStack is)
+	{
+		IFoodStatsTFC stats = (IFoodStatsTFC)fs;
+		TFCFood food = FoodRegistry.getInstance().getFood(is.getItem(), is.getItemDamage());
+		if(food != null && is.getItem() instanceof ItemFood)
+		{
+			ItemFood item = (ItemFood)is.getItem();
+			while(food.foodGroup.iterator().hasNext())
+			{
+				FoodGroupPair pair = food.foodGroup.iterator().next();
+				float amount = pair.amount;
+				amount = Math.min(amount + (item.getHealAmount(is) * (pair.amount / 100)), 20);
+				stats.getNutritionMap().put(pair.foodGroup, amount);
+			}
 		}
 	}
 

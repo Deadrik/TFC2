@@ -66,4 +66,13 @@ tile.planks.name=Wood Planks
 item.seeds.seeds_corn=Seeds Corn
 item.seeds.seeds_cabbage=Seeds Cabbage
 
+#=========
+#= GUI =
+#=========
+gui.food.fruit=Fruit
+gui.food.vegetable=Vegetable
+gui.food.grain=Grain
+gui.food.protein=Protein
+gui.food.dairy=Dairy
+
 item.looserock.name=Rock

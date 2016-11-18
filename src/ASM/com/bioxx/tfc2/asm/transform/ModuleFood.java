@@ -1,8 +1,14 @@
 package com.bioxx.tfc2.asm.transform;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.nbt.NBTTagCompound;
 
 import com.bioxx.tfc2.ASMConstants;
+import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
+import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -49,6 +55,19 @@ public class ModuleFood implements IClassTransformer
 			onDecayedMethod.instructions.add(new InsnNode(Opcodes.ARETURN));
 			classNode.methods.add(onDecayedMethod);
 
+			String methDesc = ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), "Ljava/util/List<"+ASMHelper.toDescriptor(ObfHelper.toObfClassName(ASMConstants.ITEMSTACK)+";>"));
+			MethodNode addSubItemsMethod = new MethodNode(Opcodes.ACC_PUBLIC,"getSubItems",ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ASMConstants.LIST),methDesc, null);
+			AnnotationNode addSubAnnotation = new AnnotationNode("Lnet/minecraftforge/fml/relauncher/SideOnly;");
+			addSubAnnotation.visitEnum("value", "Lnet/minecraftforge/fml/relauncher/Side;", "CLIENT");
+			addSubItemsMethod.visibleAnnotations = new ArrayList<AnnotationNode>();
+			addSubItemsMethod.visibleAnnotations.add(addSubAnnotation);
+			addSubItemsMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			addSubItemsMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			addSubItemsMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 3));
+			addSubItemsMethod.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","getSubItems",ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ASMConstants.LIST), false));
+			addSubItemsMethod.instructions.add(new InsnNode(Opcodes.RETURN));
+			classNode.methods.add(addSubItemsMethod);
+
 			return ASMHelper.writeClassToBytes(classNode);
 		}
 		else if (transformedName.equals("net.minecraft.item.ItemFishFood"))
@@ -64,7 +83,136 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.insertBefore(finalNode, toInject);
 			}
 			else
-				throw new RuntimeException("ItemFishFood: getSubItems (5_a) method not found");
+				throw new RuntimeException("ItemFishFood: getSubItems (a) method not found");
+
+			return ASMHelper.writeClassToBytes(classNode);
+		}
+		else if (transformedName.equals("net.minecraft.util.FoodStats"))
+		{
+			classNode.interfaces.add(ASMHelper.toInternalClassName("com.bioxx.tfc2.api.interfaces.IFoodStatsTFC"));
+
+			String fieldNutritionMap = "nutritionMap";
+			String fieldWaterLevel = "waterLevel";
+			classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, fieldNutritionMap,"Ljava/util/HashMap;", "Ljava/util/HashMap<Lcom/bioxx/tfc2/api/types/EnumFoodGroup;Ljava/lang/Float;>;", null));
+			tryAddFieldGetter(classNode, "getNutritionMap", fieldNutritionMap, "Ljava/util/HashMap;");
+			classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, fieldWaterLevel,"F", null, null));
+			tryAddFieldGetter(classNode, "getWaterLevel", fieldWaterLevel, "F");
+			tryAddFieldSetter(classNode, "setWaterLevel", fieldWaterLevel, "F");
+
+			for (MethodNode method : classNode.methods)
+			{
+				if (method.name.equals("<init>"))
+				{
+					MethodNode defaultConstructor = ASMHelper.findMethodNodeOfClass(classNode, "<init>", ASMHelper.toMethodDescriptor("V"));
+					if(defaultConstructor != null)
+					{
+						InsnList toInject = new InsnList();
+
+						toInject.add(new VarInsnNode(Opcodes.ALOAD, 0)); // this
+						toInject.add(new TypeInsnNode(Opcodes.NEW, "java/util/HashMap"));
+						toInject.add(new InsnNode(Opcodes.DUP));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKESPECIAL,"java/util/HashMap", "<init>", "()V", false));
+						toInject.add(new FieldInsnNode(Opcodes.PUTFIELD, classNode.name, fieldNutritionMap, "Ljava/util/HashMap;"));
+
+						toInject.add(new VarInsnNode(Opcodes.ALOAD, 0)); // this
+						toInject.add(new LdcInsnNode(new Float(20f)));
+						toInject.add(new FieldInsnNode(Opcodes.PUTFIELD, classNode.name, fieldWaterLevel, ASMHelper.toDescriptor("F")));
+
+						//Set Grain default Value
+						toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						toInject.add(new FieldInsnNode(Opcodes.GETFIELD, classNode.name, fieldNutritionMap, "Ljava/util/HashMap;"));
+						toInject.add(new FieldInsnNode(Opcodes.GETSTATIC, ASMHelper.toInternalClassName(ASMConstants.ENUMFOODGROUP), "Grain", ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP)));
+						toInject.add(new LdcInsnNode(new Float(20f)));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,"java/util/HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", false));
+						toInject.add(new InsnNode(Opcodes.POP));
+
+						//Set Veg default Value
+						toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						toInject.add(new FieldInsnNode(Opcodes.GETFIELD, classNode.name, fieldNutritionMap, "Ljava/util/HashMap;"));
+						toInject.add(new FieldInsnNode(Opcodes.GETSTATIC, ASMHelper.toInternalClassName(ASMConstants.ENUMFOODGROUP), "Vegetable", ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP)));
+						toInject.add(new LdcInsnNode(new Float(20f)));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,"java/util/HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", false));
+						toInject.add(new InsnNode(Opcodes.POP));
+
+						//Set Fruit default Value
+						toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						toInject.add(new FieldInsnNode(Opcodes.GETFIELD, classNode.name, fieldNutritionMap, "Ljava/util/HashMap;"));
+						toInject.add(new FieldInsnNode(Opcodes.GETSTATIC, ASMHelper.toInternalClassName(ASMConstants.ENUMFOODGROUP), "Fruit", ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP)));
+						toInject.add(new LdcInsnNode(new Float(20f)));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,"java/util/HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", false));
+						toInject.add(new InsnNode(Opcodes.POP));
+
+						//Set Protein default Value
+						toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						toInject.add(new FieldInsnNode(Opcodes.GETFIELD, classNode.name, fieldNutritionMap, "Ljava/util/HashMap;"));
+						toInject.add(new FieldInsnNode(Opcodes.GETSTATIC, ASMHelper.toInternalClassName(ASMConstants.ENUMFOODGROUP), "Protein", ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP)));
+						toInject.add(new LdcInsnNode(new Float(20f)));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,"java/util/HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", false));
+						toInject.add(new InsnNode(Opcodes.POP));
+
+						//Set Dairy default Value
+						toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						toInject.add(new FieldInsnNode(Opcodes.GETFIELD, classNode.name, fieldNutritionMap, "Ljava/util/HashMap;"));
+						toInject.add(new FieldInsnNode(Opcodes.GETSTATIC, ASMHelper.toInternalClassName(ASMConstants.ENUMFOODGROUP), "Dairy", ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP)));
+						toInject.add(new LdcInsnNode(new Float(20f)));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false));
+						toInject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,"java/util/HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", false));
+						toInject.add(new InsnNode(Opcodes.POP));
+
+
+						AbstractInsnNode finalNode = ASMHelper.findLastInstructionWithOpcode(defaultConstructor, Opcodes.RETURN);
+						defaultConstructor.instructions.insertBefore(finalNode, toInject);
+					}
+					else
+						throw new RuntimeException("FoodStats: defaultConstructor()V method not found");
+				}
+			}
+
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "a", "addStats", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.ITEM_FOOD), ObfHelper.toObfClassName(ASMConstants.ITEMSTACK)));
+
+			if (methodNode != null)
+			{
+				AbstractInsnNode finalNode = ASMHelper.findLastInstructionWithOpcode(methodNode, Opcodes.INVOKEVIRTUAL);
+				InsnList toInject = new InsnList();
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 2));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","addNutrition",ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.FOOD_STATS), ObfHelper.toObfClassName(ASMConstants.ITEMSTACK)), false));
+				methodNode.instructions.insert(finalNode, toInject);
+			}
+			else
+				throw new RuntimeException("FoodStats: addStats (a) method not found");
+
+			methodNode = ASMHelper.findMethodNodeOfClass(classNode, "a", "readNBT", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.NBTTAGCOMPOUND)));
+			if (methodNode != null)
+			{
+				AbstractInsnNode finalNode = ASMHelper.findLastInstructionWithOpcode(methodNode, Opcodes.PUTFIELD);
+				InsnList toInject = new InsnList();
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				toInject.add(new TypeInsnNode(Opcodes.CHECKCAST, "com/bioxx/tfc2/api/interfaces/IFoodStatsTFC"));
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/asm/transform/ModuleFood","readNBT",ASMHelper.toMethodDescriptor("V","Lcom/bioxx/tfc2/api/interfaces/IFoodStatsTFC;", ObfHelper.toObfClassName(ASMConstants.NBTTAGCOMPOUND) ), false));
+				methodNode.instructions.insert(finalNode, toInject);
+			}
+			else
+				throw new RuntimeException("FoodStats: readNBT (a) method not found");
+
+			methodNode = ASMHelper.findMethodNodeOfClass(classNode, "b", "writeNBT", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.NBTTAGCOMPOUND)));
+			if (methodNode != null)
+			{
+				AbstractInsnNode finalNode = ASMHelper.findLastInstructionWithOpcode(methodNode, Opcodes.INVOKEVIRTUAL);
+				InsnList toInject = new InsnList();
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				toInject.add(new TypeInsnNode(Opcodes.CHECKCAST, "com/bioxx/tfc2/api/interfaces/IFoodStatsTFC"));
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/asm/transform/ModuleFood","writeNBT",ASMHelper.toMethodDescriptor("V","Lcom/bioxx/tfc2/api/interfaces/IFoodStatsTFC;", ObfHelper.toObfClassName(ASMConstants.NBTTAGCOMPOUND) ), false));
+				methodNode.instructions.insert(finalNode, toInject);
+			}
+			else
+				throw new RuntimeException("FoodStats: writeNBT (b) method not found");
 
 			return ASMHelper.writeClassToBytes(classNode);
 		}
@@ -112,5 +260,24 @@ public class ModuleFood implements IClassTransformer
 		mv.visitInsn(Opcodes.RETURN);
 		mv.visitMaxs(0, 0);
 		return true;
+	}
+
+	public static void readNBT(IFoodStatsTFC fs, NBTTagCompound nbt)
+	{
+		HashMap map = fs.getNutritionMap();
+		map.put(EnumFoodGroup.Fruit, nbt.getFloat("fruitnutrition"));
+		map.put(EnumFoodGroup.Vegetable, nbt.getFloat("vegetablenutrition"));
+		map.put(EnumFoodGroup.Grain, nbt.getFloat("grainnutrition"));
+		map.put(EnumFoodGroup.Protein, nbt.getFloat("proteinnutrition"));
+		map.put(EnumFoodGroup.Dairy, nbt.getFloat("dairynutrition"));
+	}
+
+	public static void writeNBT(IFoodStatsTFC fs, NBTTagCompound nbt)
+	{
+		nbt.setFloat("fruitnutrition", fs.getNutritionMap().get(EnumFoodGroup.Fruit));
+		nbt.setFloat("vegetablenutrition", fs.getNutritionMap().get(EnumFoodGroup.Vegetable));
+		nbt.setFloat("grainnutrition", fs.getNutritionMap().get(EnumFoodGroup.Grain));
+		nbt.setFloat("proteinnutrition", fs.getNutritionMap().get(EnumFoodGroup.Protein));
+		nbt.setFloat("dairynutrition", fs.getNutritionMap().get(EnumFoodGroup.Dairy));
 	}
 }
