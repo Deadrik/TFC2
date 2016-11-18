@@ -23,7 +23,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
+import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
+import com.bioxx.tfc2.core.Food;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class EntityLivingHandler
@@ -58,75 +60,41 @@ public class EntityLivingHandler
 
 			if(!player.worldObj.isRemote)
 			{
-				//Tick Decay
+				//Tick Item Updates
 				for(int i = 0; i < player.inventory.mainInventory.length; i++)
 				{
 					ItemStack is = player.inventory.mainInventory[i];
-					if(is != null && is.getItem() instanceof IUpdateInInventory)
+					if(is != null)
 					{
-						((IUpdateInInventory)is.getItem()).inventoryUpdate(player, is);
-						if(is.stackSize == 0)
-							player.inventory.mainInventory[i] = null;
-					}
-				}
-
-				//Handle Food
-
-
-				//Nullify the Old Food
-				/*player.getFoodStats().addStats(20 - player.getFoodStats().getFoodLevel(), 0.0F);
-				//Handle Food
-				FoodStatsTFC foodstats = Core.getPlayerFoodStats(player);
-				foodstats.onUpdate(player);
-				Core.setPlayerFoodStats(player, foodstats);*/
-
-				//Send update packet from Server to Client
-				//Removed on port
-				/*if(foodstats.shouldSendUpdate())
-				{
-					AbstractPacket pkt = new PlayerUpdatePacket(player, 0);
-					TerraFirmaCraft.PACKET_PIPELINE.sendTo(pkt, (EntityPlayerMP) player);
-				}*/
-
-				/*if(foodstats.waterLevel / foodstats.getMaxWater(player) <= 0.25f)
-				{
-					setThirsty(player, true);
-				}
-				else if(foodstats.waterLevel / foodstats.getMaxWater(player) <= 0.5f)
-				{
-					if(player.isSprinting())
-						player.setSprinting(false);
-				}
-				else
-				{
-					setThirsty(player, false);
-				}
-				if (!player.capabilities.isCreativeMode && foodstats.stomachLevel / foodstats.getMaxStomach(player) <= 0.25f)
-				{
-					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("mining_fatigue"), 20, 1));
-					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("weakness"), 20, 1));
-				}*/
-
-				//Handle Spawn Protection
-				//Removed on port
-				/*NBTTagCompound nbt = player.getEntityData();
-				long spawnProtectionTimer = nbt.hasKey("spawnProtectionTimer") ? nbt.getLong("spawnProtectionTimer") : TFC_Time.getTotalTicks() + TFC_Time.HOUR_LENGTH;
-				if(spawnProtectionTimer < TFC_Time.getTotalTicks())
-				{
-					//Add protection time to the chunks
-					for(int i = -2; i < 3; i++)
-					{
-						for(int k = -2; k < 3; k++)
+						if(is.getItem() instanceof IUpdateInInventory)
 						{
-							int lastChunkX = ((int) Math.floor(player.posX)) >> 4;
-						int lastChunkZ = ((int) Math.floor(player.posZ)) >> 4;
-				TFC_Core.getCDM(player.worldObj).addProtection(lastChunkX + i, lastChunkZ + k, TFCOptions.protectionGain);
+							((IUpdateInInventory)is.getItem()).inventoryUpdate(player, is);
+							if(is.stackSize == 0)
+								player.inventory.mainInventory[i] = null;
+						}
+						if(is.getItem() instanceof IFood)
+						{
+							IFood food = (IFood)is.getItem();
+							long time = Food.getDecayTimer(is)-player.worldObj.getWorldTime();
+							if(time < 0)
+							{
+								int expiredAmt = (int)Math.min(1+(time / Food.getExpirationTimer(is))* (-1), is.stackSize);
+								is.stackSize-=expiredAmt;
+								Food.setDecayTimer(is, Food.getDecayTimer(is)+Food.getExpirationTimer(is)*expiredAmt);
+								if(is.stackSize <= 0)
+									player.inventory.mainInventory[i] = null;
+
+								ItemStack out = food.onDecayed(is, player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+								if(out != null)
+								{
+									out.stackSize = expiredAmt;
+									player.inventory.addItemStackToInventory(out);
+								}
+							}
 						}
 					}
+				}
 
-					spawnProtectionTimer += TFC_Time.HOUR_LENGTH;
-					nbt.setLong("spawnProtectionTimer", spawnProtectionTimer);
-				}*/
 			}
 			else
 			{

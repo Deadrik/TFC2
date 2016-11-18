@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import com.bioxx.jmapgen.dungeon.DungeonSchemManager;
 import com.bioxx.jmapgen.dungeon.DungeonTheme.EntranceType;
+import com.bioxx.tfc2.api.FoodRegistry;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.trees.TreeConfig;
@@ -83,12 +84,16 @@ public class TFC
 
 		//Read our built in food values first
 		FoodReader reader = new FoodReader("/assets/tfc2/food.json");
-		reader.read();
-		applyFoodValues(reader);
+		if(reader.read())
+		{
+			applyFoodValues(reader);
+		}
 		//Now read from the user's mods folder
 		reader = new FoodReader("");
-		reader.read(new File(TFC.proxy.getMinecraftDir(), "/mods/tfc2/food.json"));
-		applyFoodValues(reader);
+		if(reader.read(new File(TFC.proxy.getMinecraftDir(), "/mods/tfc2/food.json")))
+		{
+			applyFoodValues(reader);
+		}
 	}
 
 	@EventHandler
@@ -300,10 +305,11 @@ public class TFC
 				log.warn("Item ->" + f.itemName + " is not of type IFood");
 				continue;
 			}
-			IFood food = (IFood)i;
-			food.setExpirationTimer(f.decayTime);
-			food.setFoodGroup(f.foodGroup);
+			//IFood food = (IFood)i;
+			//food.setExpirationTimer(f.decayTime);
+			//food.setFoodGroup(f.foodGroup);
 
+			FoodRegistry.getInstance().registerFood(f);
 		}
 	}
 }

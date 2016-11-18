@@ -12,6 +12,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.api.FoodRegistry;
+import com.bioxx.tfc2.api.FoodRegistry.TFCFood;
 import com.bioxx.tfc2.api.interfaces.IFood;
 
 public class Food 
@@ -205,12 +207,31 @@ public class Food
 		return is.getTagCompound().hasKey("mealSkill");
 	}
 
+	public static long getExpirationTimer(ItemStack is)
+	{
+		if(FoodRegistry.getInstance().hasKey(is.getItem(), is.getItemDamage()))
+		{
+			return Food.getExpirationTimer(FoodRegistry.getInstance().getFood(is.getItem(), is.getItemDamage()), is);
+		}
+		return -1L;
+	}
+
+	public static long getExpirationTimer(TFCFood food, ItemStack is)
+	{
+		long timer = food.expiration;
+
+		// Do decay timer altering stuff here
+
+		return timer;
+	}
+
 	public static void addInformation(ItemStack is, EntityPlayer player, List arraylist, Item item)
 	{
-		if(item instanceof IFood)
+		if(FoodRegistry.getInstance().hasKey(is.getItem(), is.getItemDamage()))
 		{
-			IFood food = (IFood)item;
-			arraylist.add(TextFormatting.GREEN+food.getFoodGroup().toString());
+			TFCFood food = FoodRegistry.getInstance().getFood(is.getItem(), is.getItemDamage());
+			IFood ifood = (IFood)item;
+			arraylist.add(food.getDisplayString());
 			long time = Food.getDecayTimer(is)-Timekeeper.getInstance().getTotalTicks();
 			if(!Food.hasDecayTimer(is))
 			{
@@ -218,7 +239,7 @@ public class Food
 			}
 			else if(time <= 0)
 			{
-				arraylist.add(TextFormatting.RED+"Expired x"+Math.min(1+(time / food.getExpirationTimer(is))* (-1), is.stackSize));
+				arraylist.add(TextFormatting.RED+"Expired x"+Math.min(1+(time / Food.getExpirationTimer(food, is))* (-1), is.stackSize));
 			}
 			else
 			{
@@ -232,7 +253,7 @@ public class Food
 	public static void getSubItems(Item itemIn, CreativeTabs tab, List subItems)
 	{
 		ItemStack is = new ItemStack(itemIn, 1, 0);
-		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+((IFood)itemIn).getExpirationTimer(is));
+		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+ Food.getExpirationTimer(is));
 		subItems.add(is);
 	}
 
@@ -241,7 +262,7 @@ public class Food
 	{
 		for(ItemStack is : list)
 		{
-			Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+((IFood)is.getItem()).getExpirationTimer(is));
+			Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+Food.getExpirationTimer(is));
 		}
 	}
 

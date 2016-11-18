@@ -1,17 +1,188 @@
 [
 	{
-		"name" : "minecraft:fish",
+		"name" : "minecraft:fish 0",
 		"decay" : 72000,
+		"foodgroup" : "Protein",
+		"edible" : false
+	},
+	{
+		"name" : "minecraft:fish 1",
+		"decay" : 72000,
+		"foodgroup" : "Protein",
+		"edible" : false
+	},
+	{
+		"name" : "minecraft:fish 2",
+		"decay" : 72000,
+		"foodgroup" : "Protein",
+		"edible" : false
+	},
+	{
+		"name" : "minecraft:fish 3",
+		"decay" : 72000,
+		"foodgroup" : "Protein",
+		"edible" : false
+	},
+	{
+		"name" : "minecraft:cooked_fish 0",
+		"decay" : 36000,
 		"foodgroup" : "Protein"
 	},
 	{
-		"name" : "minecraft:cooked_fish",
-		"decay" : 72000,
+		"name" : "minecraft:cooked_fish 1",
+		"decay" : 36000,
 		"foodgroup" : "Protein"
 	},
 	{
 		"name" : "minecraft:bread",
 		"decay" : 72000,
 		"foodgroup" : "Grain"
+	},
+	{
+		"name" : "minecraft:potato",
+		"decay" : 72000,
+		"foodgroup" : "Vegetable"
+	},
+	{
+		"name" : "minecraft:baked_potato",
+		"decay" : 72000,
+		"foodgroup" : "Vegetable"
+	},
+	{
+		"name" : "minecraft:poisonous_potato",
+		"decay" : 36000,
+		"foodgroup" : "Vegetable"
+	},
+	{
+		"name" : "minecraft:carrot",
+		"decay" : 36000,
+		"foodgroup" : "Vegetable"
+	},
+	{
+		"name" : "minecraft:melon",
+		"decay" : 18000,
+		"foodgroup" : "Fruit"
+	},
+	{
+		"name" : "minecraft:cookie",
+		"decay" : 148000,
+		"foodgroup" : "None"
+	},
+	{
+		"name" : "minecraft:beetroot",
+		"decay" : 72000,
+		"foodgroup" : "Vegetable"
+	},
+	{
+		"name" : "minecraft:beetroot_soup",
+		"decay" : 72000,
+		"foodgroup" : "Vegetable"
+	},
+	{
+		"name" : "minecraft:pumpkin_pie",
+		"decay" : 72000,
+		"foodgroup" : "Fruit"
+	},
+	{
+		"name" : "minecraft:apple",
+		"decay" : 36000,
+		"foodgroup" : "Fruit"
+	},
+	{
+		"name" : "minecraft:porkchop",
+		"decay" : 18000,
+		"foodgroup" : "Protein",
+		"edible" : false
+	},
+	{
+		"name" : "minecraft:cooked_porkchop",
+		"decay" : 36000,
+		"foodgroup" : "Protein"
+	},
+	{
+		"name" : "minecraft:beef",
+		"decay" : 18000,
+		"foodgroup" : "Protein",
+		"edible" : false
+	},
+	{
+		"name" : "minecraft:cooked_beef",
+		"decay" : 36000,
+		"foodgroup" : "Protein"
+	},
+	{
+		"name" : "minecraft:chicken",
+		"decay" : 18000,
+		"foodgroup" : "Protein",
+		"edible" : false
+	},
+	{
+		"name" : "minecraft:cooked_chicken",
+		"decay" : 36000,
+		"foodgroup" : "Protein"
+	},
+	{
+		"name" : "minecraft:rabbit",
+		"decay" : 18000,
+		"foodgroup" : "Protein",
+		"edible" : false
+	},
+	{
+		"name" : "minecraft:cooked_rabbit",
+		"decay" : 36000,
+		"foodgroup" : "Protein"
+	},
+	{
+		"name" : "minecraft:mutton",
+		"decay" : 18000,
+		"foodgroup" : "Protein",
+		"edible" : false
+	},
+	{
+		"name" : "minecraft:cooked_mutton",
+		"decay" : 36000,
+		"foodgroup" : "Protein"
+	},
+	{
+		"name" : "minecraft:rabbit_stew",
+		"decay" : 36000,
+		"foodgroup" : "Protein"
+	},
+	{
+		"name" : "minecraft:mushroom_stew",
+		"decay" : 36000,
+		"foodgroup" : "None"
+	},
+	{
+		"name" : "minecraft:rotten_flesh",
+		"decay" : 18000,
+		"foodgroup" : "Protein"
+	},
+	{
+		"name" : "minecraft:spider_eye",
+		"decay" : 36000,
+		"foodgroup" : "None"
+	},
+	{
+		"name" : "minecraft:golden_apple 0",
+		"decay" : 3600,
+		"foodgroup" : {
+			"Protein" : "20", 
+			"Vegetable" : "20", 
+			"Fruit" : "20", 
+			"Grain" : "20", 
+			"Dairy" : "20"
+		}
+	},
+	{
+		"name" : "minecraft:golden_apple 1",
+		"decay" : 3600,
+		"foodgroup" : {
+			"Protein" : "20", 
+			"Vegetable" : "20", 
+			"Fruit" : "20", 
+			"Grain" : "20", 
+			"Dairy" : "20"
+		}
 	}
 ]

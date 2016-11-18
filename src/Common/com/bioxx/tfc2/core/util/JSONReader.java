@@ -18,12 +18,12 @@ public class JSONReader
 		path = filepath;
 	}
 
-	public void read()
+	public boolean read()
 	{
-		read(null);
+		return read(null);
 	}
 
-	public void read(File file)
+	public boolean read(File file)
 	{
 		try
 		{
@@ -31,9 +31,13 @@ public class JSONReader
 			InputStream stream;
 			if(file == null)
 				stream = this.getClass().getResourceAsStream(path);
-			else
+			else if(file.exists())
 			{
 				stream = Files.asByteSource(file).openStream();
+			}
+			else
+			{
+				return false;
 			}
 
 			InputStreamReader sr = new InputStreamReader(stream);
@@ -45,6 +49,7 @@ public class JSONReader
 		{
 			ex.printStackTrace();
 		}
+		return true;
 	}
 
 	public void process(JsonReader reader)

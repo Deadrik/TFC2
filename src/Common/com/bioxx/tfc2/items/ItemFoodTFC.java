@@ -20,7 +20,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.api.FoodRegistry;
 import com.bioxx.tfc2.api.interfaces.ICookableFood;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
@@ -42,7 +41,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 		foodGroup = fg;
 		nourishment = n;
 		filling = f;
-		FoodRegistry.getInstance().registerFood(fg, this);
+		//FoodRegistry.getInstance().registerFood(fg, this);
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
 
@@ -66,12 +65,6 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	{
 		canBeUsedRaw = canUseRaw;
 		return this;
-	}
-
-	@Override
-	public long getExpirationTimer(ItemStack is)
-	{
-		return expiration;
 	}
 
 	@Override
@@ -160,19 +153,9 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	}
 
 	@Override
-	public EnumFoodGroup getFoodGroup() {
-		return this.foodGroup;
-	}
-
-	@Override
 	public ItemStack onDecayed(ItemStack is, World world, int i, int j, int k) {
 
-		return is;
-	}
-
-	@Override
-	public boolean getIsEdible(ItemStack is) {
-		return edible;
+		return null;
 	}
 
 	@Override
@@ -190,20 +173,5 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 			is.stackSize-=expiredAmt;
 			Food.setDecayTimer(is, Food.getDecayTimer(is)+expiration*expiredAmt);
 		}
-	}
-
-	@Override
-	public void setFoodGroup(EnumFoodGroup fg) {
-		this.foodGroup = fg;
-	}
-
-	@Override
-	public void setIsEdible(boolean b) {
-		this.edible = b;
-	}
-
-	@Override
-	public void setExpirationTimer(long timer) {
-		this.expiration = timer;
 	}
 }

@@ -1,13 +1,15 @@
 package com.bioxx.tfc2.api;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
+
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
+import com.bioxx.tfc2.core.util.FoodReader.FoodJSON;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -19,27 +21,13 @@ public class FoodRegistry
 		return INSTANCE;
 	}
 
-	private int proteinCount;
-	private Map<Integer, Item> proteinMap;
-	private int vegetableCount = 10000;
-	private Map<Integer, Item> vegetableMap;
-	private int fruitCount = 100000;
-	private Map<Integer, Item> fruitMap;
-	private int grainCount = 1000000;
-	private Map<Integer, Item> grainMap;
-	private int dairyCount = 10000000;
-	private Map<Integer, Item> dairyMap;
-
 	private Multimap<String, ItemStack> cropMap;
+	private Map<String, TFCFood> foodMap;
 
 	private FoodRegistry()
 	{
-		proteinMap = new HashMap<Integer, Item>();
-		vegetableMap = new HashMap<Integer, Item>();
-		fruitMap = new HashMap<Integer, Item>();
-		grainMap = new HashMap<Integer, Item>();
-		dairyMap = new HashMap<Integer, Item>();
 		cropMap = ArrayListMultimap.create();
+		foodMap = new HashMap<String, TFCFood>();
 	}
 
 	public void registerCropProduce(String crop, ItemStack i)
@@ -57,69 +45,57 @@ public class FoodRegistry
 		return cropMap.get(crop);
 	}
 
-	public int registerFood(EnumFoodGroup efg, Item i)
+	public void registerFood(FoodJSON json)
 	{
-		switch(efg)
+		foodMap.put(json.itemName + " " + json.itemMeta, new TFCFood(json));
+	}
+
+	public boolean hasKey(Item i, int meta)
+	{
+		return foodMap.containsKey(ForgeRegistries.ITEMS.getKey(i) + " " + meta);
+	}
+
+	public TFCFood getFood(Item i, int meta)
+	{
+		return foodMap.get(ForgeRegistries.ITEMS.getKey(i) + " " + meta);
+	}
+
+	public static class TFCFood
+	{
+		public long expiration = 72000L;
+		public boolean isEdible = true;
+		public List<FoodGroupPair> foodGroup = new ArrayList<FoodGroupPair>();
+
+		public TFCFood(FoodJSON f)
 		{
-		case Protein:
-		{
-			proteinMap.put(proteinCount, i);
-			return proteinCount++;
+			expiration = f.decayTime;
+			isEdible = f.isEdible;
+			foodGroup = f.foodGroup;
 		}
-		case Vegetable:
+
+		public String getDisplayString()
 		{
-			vegetableMap.put(vegetableCount, i);
-			return vegetableCount++;
-		}
-		case Fruit:
-		{
-			fruitMap.put(fruitCount, i);
-			return fruitCount++;
-		}
-		case Grain:
-		{
-			grainMap.put(grainCount, i);
-			return grainCount++;
-		}
-		case Dairy:
-		{
-			dairyMap.put(dairyCount, i);
-			return dairyCount++;
-		}
-		default:
-		{
-			return -1;
-		}
+			String s = null;
+			for(FoodGroupPair fg : foodGroup)
+			{
+				if(s == null)
+					s = "";
+				else
+					s += TextFormatting.BLACK+"  ";
+				s += fg.foodGroup.getColoredAbbrv()+ " " + fg.amount+"%";
+			}
+			return s;
 		}
 	}
 
-	public Item getFood(int id)
+	public static class FoodGroupPair
 	{
-		if(proteinMap.containsKey(id))
-			return proteinMap.get(id);
-		if(vegetableMap.containsKey(id))
-			return vegetableMap.get(id);
-		if(fruitMap.containsKey(id))
-			return fruitMap.get(id);
-		if(grainMap.containsKey(id))
-			return grainMap.get(id);
-		if(dairyMap.containsKey(id))
-			return dairyMap.get(id);
-		return null;
-	}
-
-	public EnumFoodGroup getFoodGroup(int id)
-	{
-		if(proteinMap.containsKey(id))
-			return EnumFoodGroup.Protein;
-		if(vegetableMap.containsKey(id))
-			return EnumFoodGroup.Vegetable;
-		if(fruitMap.containsKey(id))
-			return EnumFoodGroup.Fruit;
-		if(grainMap.containsKey(id))
-			return EnumFoodGroup.Grain;
-		if(dairyMap.containsKey(id))
-			return EnumFoodGroup.Dairy;
-		return EnumFoodGroup.None;
+		public final EnumFoodGroup foodGroup;
+		public final float amount;
+		public FoodGroupPair(EnumFoodGroup fg, float a)
+		{
+			foodGroup = fg;
+			amount = a;
+		}
 	}
 }

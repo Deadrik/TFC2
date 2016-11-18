@@ -1,7 +1,5 @@
 package com.bioxx.tfc2.asm.transform;
 
-import java.util.ArrayList;
-
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import com.bioxx.tfc2.ASMConstants;
@@ -45,77 +43,11 @@ public class ModuleFood implements IClassTransformer
 		{
 			classNode.interfaces.add(ASMHelper.toInternalClassName("com.bioxx.tfc2.api.interfaces.IFood"));
 
-			String fieldFoodGroup = "foodGroup";
-			String fieldEdible = "edible";
-			String fieldExpirationTimer = "expirationTimer";
-
-			classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC,"foodGroup",ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP), null, "None"));
-			classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC,"edible",ASMHelper.toDescriptor("Z"), null, 1));
-			classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC,"expirationTimer",ASMHelper.toDescriptor("J"), null, new Long(72000L)));
-
-			MethodNode getFoodGroupMethod = new MethodNode(Opcodes.ACC_PUBLIC,"getFoodGroup",ASMHelper.toMethodDescriptor(ASMConstants.ENUMFOODGROUP),null, null);
-			getFoodGroupMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			getFoodGroupMethod.instructions.add(new FieldInsnNode(Opcodes.GETFIELD,classNode.name, fieldFoodGroup,ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP)));
-			getFoodGroupMethod.instructions.add(new InsnNode(Opcodes.ARETURN));
-			classNode.methods.add(getFoodGroupMethod);
-
-			this.tryAddFieldSetter(classNode, "setFoodGroup", fieldFoodGroup, ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP));
 
 			MethodNode onDecayedMethod = new MethodNode(Opcodes.ACC_PUBLIC,"onDecayed",ASMHelper.toMethodDescriptor(ObfHelper.toObfClassName(ASMConstants.ITEMSTACK), ObfHelper.toObfClassName(ASMConstants.ITEMSTACK),ObfHelper.toObfClassName(ASMConstants.WORLD), "I","I","I"),null, null);
-			onDecayedMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			onDecayedMethod.instructions.add(new InsnNode(Opcodes.ACONST_NULL));
 			onDecayedMethod.instructions.add(new InsnNode(Opcodes.ARETURN));
 			classNode.methods.add(onDecayedMethod);
-
-			MethodNode isEdibleMethod = new MethodNode(Opcodes.ACC_PUBLIC,"getIsEdible",ASMHelper.toMethodDescriptor("Z", ObfHelper.toObfClassName(ASMConstants.ITEMSTACK)),null, null);
-			isEdibleMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			isEdibleMethod.instructions.add(new FieldInsnNode(Opcodes.GETFIELD,classNode.name, fieldEdible,ASMHelper.toDescriptor("Z")));
-			isEdibleMethod.instructions.add(new InsnNode(Opcodes.IRETURN));
-			classNode.methods.add(isEdibleMethod);
-
-			this.tryAddFieldSetter(classNode, "setIsEdible", fieldEdible, ASMHelper.toDescriptor("Z"));
-
-			MethodNode getExpirationTimerMethod = new MethodNode(Opcodes.ACC_PUBLIC,"getExpirationTimer",ASMHelper.toMethodDescriptor("J", ObfHelper.toObfClassName(ASMConstants.ITEMSTACK)),null, null);
-			getExpirationTimerMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			getExpirationTimerMethod.instructions.add(new FieldInsnNode(Opcodes.GETFIELD,classNode.name, fieldExpirationTimer,ASMHelper.toDescriptor("J")));
-			getExpirationTimerMethod.instructions.add(new InsnNode(Opcodes.LRETURN));
-			classNode.methods.add(getExpirationTimerMethod);
-
-			this.tryAddFieldSetter(classNode, "setExpirationTimer", fieldExpirationTimer, ASMHelper.toDescriptor("J"));
-			String methDesc = ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), "Ljava/util/List<"+ASMHelper.toDescriptor(ObfHelper.toObfClassName(ASMConstants.ITEMSTACK)+";>"));
-			MethodNode addSubItemsMethod = new MethodNode(Opcodes.ACC_PUBLIC,"getSubItems",ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ASMConstants.LIST),methDesc, null);
-			AnnotationNode addSubAnnotation = new AnnotationNode("Lnet/minecraftforge/fml/relauncher/SideOnly;");
-			addSubAnnotation.visitEnum("value", "Lnet/minecraftforge/fml/relauncher/Side;", "CLIENT");
-			addSubItemsMethod.visibleAnnotations = new ArrayList<AnnotationNode>();
-			addSubItemsMethod.visibleAnnotations.add(addSubAnnotation);
-			addSubItemsMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			addSubItemsMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 2));
-			addSubItemsMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 3));
-			addSubItemsMethod.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","getSubItems",ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ASMConstants.LIST), false));
-			addSubItemsMethod.instructions.add(new InsnNode(Opcodes.RETURN));
-			classNode.methods.add(addSubItemsMethod);
-
-			//We need to set the default values for our new fields
-			MethodNode defaultConstructor = ASMHelper.findMethodNodeOfClass(classNode, "<init>", ASMHelper.toMethodDescriptor("V", "I", "F", "Z"));
-			if(defaultConstructor != null)
-			{
-				InsnList toInject = new InsnList();
-				toInject.add(new VarInsnNode(Opcodes.ALOAD, 0)); // this
-				toInject.add(new FieldInsnNode(Opcodes.GETSTATIC,ASMHelper.toInternalClassName(ASMConstants.ENUMFOODGROUP), "None", ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP))); // player param
-				toInject.add(new FieldInsnNode(Opcodes.PUTFIELD, classNode.name, fieldFoodGroup, ASMHelper.toDescriptor(ASMConstants.ENUMFOODGROUP)));
-
-				toInject.add(new VarInsnNode(Opcodes.ALOAD, 0)); // this
-				toInject.add(new InsnNode(Opcodes.ICONST_1)); //true
-				toInject.add(new FieldInsnNode(Opcodes.PUTFIELD, classNode.name, fieldEdible, ASMHelper.toDescriptor("Z")));
-
-				toInject.add(new VarInsnNode(Opcodes.ALOAD, 0)); // this
-				toInject.add(new LdcInsnNode(new Long(72000L))); //true
-				toInject.add(new FieldInsnNode(Opcodes.PUTFIELD, classNode.name, fieldExpirationTimer, ASMHelper.toDescriptor("J")));
-
-				AbstractInsnNode finalNode = ASMHelper.findLastInstructionWithOpcode(defaultConstructor, Opcodes.RETURN);
-				defaultConstructor.instructions.insertBefore(finalNode, toInject);
-			}
-			else
-				throw new RuntimeException("ItemFood: defaultConstructor(IFZ)V method not found");
 
 			return ASMHelper.writeClassToBytes(classNode);
 		}
