@@ -270,6 +270,7 @@ public class ModuleFood implements IClassTransformer
 		map.put(EnumFoodGroup.Grain, nbt.getFloat("grainnutrition"));
 		map.put(EnumFoodGroup.Protein, nbt.getFloat("proteinnutrition"));
 		map.put(EnumFoodGroup.Dairy, nbt.getFloat("dairynutrition"));
+		fs.setWaterLevel(nbt.getFloat("waterLevel"));
 	}
 
 	public static void writeNBT(IFoodStatsTFC fs, NBTTagCompound nbt)
@@ -279,5 +280,6 @@ public class ModuleFood implements IClassTransformer
 		nbt.setFloat("grainnutrition", fs.getNutritionMap().get(EnumFoodGroup.Grain));
 		nbt.setFloat("proteinnutrition", fs.getNutritionMap().get(EnumFoodGroup.Protein));
 		nbt.setFloat("dairynutrition", fs.getNutritionMap().get(EnumFoodGroup.Dairy));
+		nbt.setFloat("waterLevel", fs.getWaterLevel());
 	}
 }

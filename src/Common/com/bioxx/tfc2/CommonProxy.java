@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.bioxx.jmapgen.IslandMap;
@@ -46,6 +47,8 @@ import com.bioxx.tfc2.entity.*;
 import com.bioxx.tfc2.entity.EntityBear.BearType;
 import com.bioxx.tfc2.entity.EntityTiger.TigerType;
 import com.bioxx.tfc2.handlers.*;
+import com.bioxx.tfc2.handlers.client.DrinkWaterHandler;
+import com.bioxx.tfc2.potion.PotionTFC;
 import com.bioxx.tfc2.world.DimensionTFC;
 import com.bioxx.tfc2.world.generators.*;
 
@@ -96,6 +99,8 @@ public class CommonProxy
 		Global.EVENT_BUS.register(new CreateDungeonHandler());
 
 		registerEntities();
+
+		ForgeRegistries.POTIONS.register(PotionTFC.THIRST_POTION);
 	}
 
 	protected void registerWorldGen()
@@ -139,6 +144,7 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(new JoinWorldHandler());
 		MinecraftForge.EVENT_BUS.register(new ChunkLoadHandler());
 		MinecraftForge.EVENT_BUS.register(new ServerTickHandler());
+		MinecraftForge.EVENT_BUS.register(new DrinkWaterHandler());
 		Global.EVENT_BUS.register(new HexUpdateHandler());
 		Global.EVENT_BUS.register(new IslandUpdateHandler());
 		registerAnimals();

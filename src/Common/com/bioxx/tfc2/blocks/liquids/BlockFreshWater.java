@@ -5,7 +5,11 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +23,10 @@ import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
+import com.bioxx.tfc2.networking.client.CFoodPacket;
 
 public class BlockFreshWater extends BlockFluidClassic {
 
@@ -163,5 +170,18 @@ public class BlockFreshWater extends BlockFluidClassic {
 				worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d3, d5, d7, 0.0D, 0.0D, 0.0D, new int[0]);
 			}
 		}
+	}
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	{
+		if(worldIn.isRemote)
+			return false;
+
+		IFoodStatsTFC food = (IFoodStatsTFC)playerIn.getFoodStats();
+		food.setWaterLevel((Math.min(food.getWaterLevel()+0.1f, 20)));
+		TFC.network.sendTo(new CFoodPacket(food), (EntityPlayerMP) playerIn);
+
+		return true;
 	}
 }

@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.GameType;
 
 import net.minecraftforge.client.event.FOVUpdateEvent;
@@ -32,10 +35,13 @@ import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import com.bioxx.tfc2.core.Food;
 import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.networking.client.CFoodPacket;
+import com.bioxx.tfc2.potion.PotionTFC;
+import com.bioxx.tfc2.world.WeatherManager;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class EntityLivingHandler
 {
+	public static final AttributeModifier THIRST = new AttributeModifier("Thirsty", -0.1, 2);
 	@SubscribeEvent
 	public void onEntityLivingUpdate(LivingUpdateEvent event)
 	{
@@ -104,34 +110,58 @@ public class EntityLivingHandler
 
 				//Drain Nutrition
 				NBTTagCompound tfcData = getEntityData(player.getEntityData());
-
 				if(!tfcData.hasKey("nutritionDrainTimer"))
 					tfcData.setLong("nutritionDrainTimer", Timekeeper.getInstance().getTotalTicks());
-				long nutritionDrainTimer = tfcData.getLong("nutritionDrainTimer");
-				if(Timekeeper.getInstance().getTotalTicks() > nutritionDrainTimer)
+				long timer = tfcData.getLong("nutritionDrainTimer");
+				IFoodStatsTFC food = (IFoodStatsTFC) player.getFoodStats();
+				if(Timekeeper.getInstance().getTotalTicks() > timer)
 				{
-					tfcData.setLong("nutritionDrainTimer", nutritionDrainTimer += 1000);
-					IFoodStatsTFC food = (IFoodStatsTFC) player.getFoodStats();
-					//Nutrition drains at a rate of 0.03 per hour. this should give roughly 27 days until zero
-					food.getNutritionMap().put(EnumFoodGroup.Fruit, food.getNutritionMap().get(EnumFoodGroup.Fruit)-0.03f);
-					food.getNutritionMap().put(EnumFoodGroup.Vegetable, food.getNutritionMap().get(EnumFoodGroup.Vegetable)-0.03f);
-					food.getNutritionMap().put(EnumFoodGroup.Grain, food.getNutritionMap().get(EnumFoodGroup.Grain)-0.03f);
-					food.getNutritionMap().put(EnumFoodGroup.Protein, food.getNutritionMap().get(EnumFoodGroup.Protein)-0.03f);
-					food.getNutritionMap().put(EnumFoodGroup.Dairy, food.getNutritionMap().get(EnumFoodGroup.Dairy)-0.03f);
-
-					player.getFoodStats().addExhaustion(1f);
+					tfcData.setLong("nutritionDrainTimer", timer += 1000);
+					updateNutrition(tfcData, food, player);
+					updateThirst(tfcData, food, player);
+					updateHunger(tfcData, food, player);
 
 					TFC.network.sendTo(new CFoodPacket(food), player);
 				}
-
-
 				player.getEntityData().setTag("TFC2Data", tfcData);
+				if(food.getWaterLevel() < 5)
+					setThirsty(player, true);
+				else
+					setThirsty(player, false);
 			}
 			else
 			{
 
 			}
 		}
+	}
+
+	public void updateNutrition(NBTTagCompound tfcData, IFoodStatsTFC food, EntityPlayer player)
+	{
+		//Nutrition drains at a rate of 0.03 per hour. this should give roughly 27 days until zero
+		food.getNutritionMap().put(EnumFoodGroup.Fruit, food.getNutritionMap().get(EnumFoodGroup.Fruit)-0.03f);
+		food.getNutritionMap().put(EnumFoodGroup.Vegetable, food.getNutritionMap().get(EnumFoodGroup.Vegetable)-0.03f);
+		food.getNutritionMap().put(EnumFoodGroup.Grain, food.getNutritionMap().get(EnumFoodGroup.Grain)-0.03f);
+		food.getNutritionMap().put(EnumFoodGroup.Protein, food.getNutritionMap().get(EnumFoodGroup.Protein)-0.03f);
+		food.getNutritionMap().put(EnumFoodGroup.Dairy, food.getNutritionMap().get(EnumFoodGroup.Dairy)-0.03f);
+	}
+
+	public void updateThirst(NBTTagCompound tfcData, IFoodStatsTFC food, EntityPlayer player)
+	{
+		double temp = WeatherManager.getInstance().getTemperature(player.getPosition());
+		float thirst = 0.28f;
+		if(temp > 20)
+		{
+			temp -= 20;
+			thirst += thirst * (temp / 0.35);
+		}
+		food.setWaterLevel(Math.max(food.getWaterLevel()-thirst, 0));
+	}
+
+	public void updateHunger(NBTTagCompound tfcData, IFoodStatsTFC food, EntityPlayer player)
+	{
+		//Players suffer less natural hunger exhaustion as they increase in level
+		player.getFoodStats().addExhaustion(1.0f - Math.min(player.experienceLevel / 100f, 0.95f));
 	}
 
 	public NBTTagCompound getEntityData(NBTTagCompound playerData)
@@ -155,17 +185,21 @@ public class EntityLivingHandler
 	public void setThirsty(EntityPlayer player, boolean b)
 	{
 		//Removed on port
-		/*IAttributeInstance iattributeinstance = player.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+		IAttributeInstance iattributeinstance = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
-		if (iattributeinstance.getModifier(TFCAttributes.THIRSTY_UUID) != null)
+		if (iattributeinstance.hasModifier(THIRST))
 		{
-			iattributeinstance.removeModifier(TFCAttributes.THIRSTY);
+			iattributeinstance.removeModifier(THIRST);
+			player.removePotionEffect(PotionTFC.THIRST_POTION);
 		}
 
 		if (b)
 		{
-			iattributeinstance.applyModifier(TFCAttributes.THIRSTY);
-		}*/
+			iattributeinstance.applyModifier(THIRST);
+			player.setSprinting(false);
+			if(!player.isPotionActive(PotionTFC.THIRST_POTION))
+				player.addPotionEffect(new PotionEffect(PotionTFC.THIRST_POTION, 40, 0, false, false));
+		}
 	}
 
 	@SubscribeEvent

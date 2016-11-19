@@ -1,11 +1,15 @@
 package com.bioxx.tfc2.handlers;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.containers.ContainerPlayerTFC;
+import com.bioxx.tfc2.networking.client.CFoodPacket;
 
 public class JoinWorldHandler 
 {
@@ -29,6 +33,10 @@ public class JoinWorldHandler
 
 			((EntityPlayer)event.getEntity()).inventoryContainer = new ContainerPlayerTFC(((EntityPlayer)event.getEntity()).inventory, !event.getWorld().isRemote, (EntityPlayer)event.getEntity());
 			((EntityPlayer)event.getEntity()).openContainer = ((EntityPlayer)event.getEntity()).inventoryContainer;
+			if(!event.getWorld().isRemote)
+			{
+				TFC.network.sendTo(new CFoodPacket((IFoodStatsTFC)((EntityPlayer)event.getEntity()).getFoodStats()), (EntityPlayerMP)event.getEntity());
+			}
 		}
 	}
 }
