@@ -38,7 +38,7 @@ public class DrinkWaterHandler
 			{
 				BlockPos blockpos = result.getBlockPos().offset(result.sideHit);
 				IBlockState state = event.getWorld().getBlockState(blockpos);
-				if(state.getBlock() == TFCBlocks.FreshWater)
+				if(state.getBlock() == TFCBlocks.FreshWater || state.getBlock() == TFCBlocks.FreshWaterStatic)
 				{
 					Minecraft.getMinecraft().playerController.processRightClickBlock((EntityPlayerSP)event.getEntityPlayer(), 
 							(WorldClient)event.getWorld(), event.getItemStack(), blockpos, result.sideHit, result.hitVec, event.getHand());
@@ -58,7 +58,7 @@ public class DrinkWaterHandler
 			}
 			BlockPos blockpos = event.getPos().offset(event.getFace());
 			IBlockState state = event.getWorld().getBlockState(blockpos);
-			if(state.getBlock() == TFCBlocks.FreshWater)
+			if(state.getBlock() == TFCBlocks.FreshWater || state.getBlock() == TFCBlocks.FreshWaterStatic)
 			{
 				Minecraft.getMinecraft().playerController.processRightClickBlock((EntityPlayerSP)event.getEntityPlayer(), 
 						(WorldClient)event.getWorld(), event.getItemStack(), blockpos, event.getFace(), event.getHitVec(), event.getHand());

@@ -123,7 +123,7 @@ public class Core
 
 	public static boolean isSoil(IBlockState state)
 	{
-		return isGrass(state) || isDirt(state);
+		return isGrass(state) || isDirt(state) || state.getBlock() == TFCBlocks.Farmland;
 	}
 
 	public static boolean isSand(IBlockState state)

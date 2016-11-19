@@ -107,7 +107,9 @@ public class BlockFreshWater extends BlockFluidClassic {
 	@Override
 	public boolean isSourceBlock(IBlockAccess world, BlockPos pos)
 	{
-		return world.getBlockState(pos).getBlock() instanceof BlockFluidBase && ((Integer)world.getBlockState(pos).getValue(LEVEL)).intValue() == 0;
+		IBlockState b = world.getBlockState(pos);
+		return world.getBlockState(pos).getBlock() instanceof BlockFluidBase && 
+				((Integer)world.getBlockState(pos).getValue(LEVEL)).intValue() == 0;
 	}
 
 	@Override
@@ -115,13 +117,17 @@ public class BlockFreshWater extends BlockFluidClassic {
 	{
 		super.updateTick(world, pos, state, rand);
 		int myLevel = ((Integer)state.getValue(LEVEL)).intValue();
-		if(state.getBlock() == this && ((Integer)state.getValue(LEVEL)).intValue() > 0)
+		if(state.getBlock() == TFCBlocks.FreshWater && ((Integer)state.getValue(LEVEL)).intValue() > 0)
 		{
 			int count = 0;
-			if(isSourceBlock(world, pos.north())) count++;
-			if(isSourceBlock(world, pos.south())) count++;
-			if(isSourceBlock(world, pos.east())) count++;
-			if(isSourceBlock(world, pos.west())) count++;
+			if(isSourceBlock(world, pos.north())) 
+				count++;
+			if(isSourceBlock(world, pos.south())) 
+				count++;
+			if(isSourceBlock(world, pos.east())) 
+				count++;
+			if(isSourceBlock(world, pos.west())) 
+				count++;
 
 			if(count > 1)
 			{

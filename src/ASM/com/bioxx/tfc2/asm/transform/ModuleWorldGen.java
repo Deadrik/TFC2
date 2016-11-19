@@ -123,18 +123,9 @@ public class ModuleWorldGen implements IClassTransformer
 	{
 		InsnList list = new InsnList();
 		method.instructions.clear();
-		if(!ObfHelper.isObfuscated())
-		{
-			list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/Core", "isSoil", ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.IBLOCKSTATE)), false));
-			list.add(new InsnNode(Opcodes.IRETURN));
-		}
-		else
-		{
-			list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/Core", "isSoil", ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.IBLOCKSTATE)), false));
-			list.add(new InsnNode(Opcodes.IRETURN));
-		}
+		list.add(new VarInsnNode(Opcodes.ALOAD, 1));
+		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/Core", "isSoil", ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.IBLOCKSTATE)), false));
+		list.add(new InsnNode(Opcodes.IRETURN));
 		method.instructions.insert(list);
 	}
 }

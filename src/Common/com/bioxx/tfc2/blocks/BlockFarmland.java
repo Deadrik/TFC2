@@ -14,8 +14,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.StoneType;
 
@@ -43,7 +47,7 @@ public class BlockFarmland extends BlockTerra
 
 		if(world.getBlockState(pos.up()).getBlock() != TFCBlocks.Crop)
 		{
-			if(rand.nextInt(100) == 0)
+			if(!isFertile(world, pos) && rand.nextInt(100) == 0)
 			{
 				world.setBlockState(pos, TFCBlocks.Dirt.getDefaultState().withProperty(META_PROPERTY, state.getValue(META_PROPERTY)));
 			}
@@ -56,8 +60,35 @@ public class BlockFarmland extends BlockTerra
 		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
 		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
 
+		if(plantType == EnumPlantType.Crop)
+			return true;
+
+		if(plantType == EnumPlantType.Plains)
+			return true;
+
 		if(plantable == TFCBlocks.Sapling)
 			return true;
+
+		return false;
+	}
+
+	@Override
+	public boolean isFertile(World world, BlockPos pos)
+	{
+
+		IslandMap map = Core.getMapForWorld(world, pos);
+		Center closest = map.getClosestCenter(pos);
+
+		if(closest != null && closest.getCustomNBT() != null)
+		{
+
+			byte[] hydrationArray = closest.getCustomNBT().getByteArray("hydration");
+			int hydraY = Math.min((int)Math.floor(pos.getY()/4), 64);
+			boolean isIrrigated = hydrationArray.length == 0 ? false : (hydrationArray[hydraY] & 0xFF) > 100;
+
+			return isIrrigated;
+		}
+
 
 		return false;
 	}

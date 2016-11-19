@@ -46,6 +46,7 @@ public class BlockFreshWaterStatic extends BlockFreshWater
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
 		//super.updateTick(world, pos, state, rand);
+		world.setBlockState(pos, TFCBlocks.FreshWater.getDefaultState().withProperty(LEVEL, state.getValue(LEVEL)), 2);
 		if(isGroundWater(world, pos) && world.provider.getDimension() == 0)
 		{
 			IslandMap map = Core.getMapForWorld(world, pos);
@@ -73,11 +74,10 @@ public class BlockFreshWaterStatic extends BlockFreshWater
 
 	public boolean isGroundWater(World w, BlockPos pos)
 	{
-		if(Core.isSoil(w.getBlockState(pos.down(1))))
+		if(Core.isSoil(w.getBlockState(pos.down(1))) || Core.isGravel(w.getBlockState(pos.down(1))))
 		{
 			return true;
 		}
 		return false;
 	}
-
 }

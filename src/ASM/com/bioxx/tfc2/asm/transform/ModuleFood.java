@@ -3,10 +3,13 @@ package com.bioxx.tfc2.asm.transform;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.bioxx.tfc2.ASMConstants;
+import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import org.objectweb.asm.MethodVisitor;
@@ -216,8 +219,38 @@ public class ModuleFood implements IClassTransformer
 
 			return ASMHelper.writeClassToBytes(classNode);
 		}
+		else if (transformedName.equals("com.pam.harvestcraft.blocks.BlockPamCrop"))
+		{
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "isSuitableSoilBlock", "isSuitableSoilBlock", ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.BLOCK)));
+			if(methodNode != null)
+			{
+				AbstractInsnNode finalNode = ASMHelper.findLastInstructionWithOpcode(methodNode, Opcodes.GETSTATIC);
+				methodNode.instructions.insert(finalNode, new FieldInsnNode(Opcodes.GETSTATIC,"com/bioxx/tfc2/TFCBlocks", "Farmland", ObfHelper.toObfClassName(ASMConstants.BLOCK)));
+				methodNode.instructions.remove(finalNode);
+			}
+			else
+				throw new RuntimeException("BlockPamCrop: isSuitableSoilBlock method not found");
+		}
+		/*else if (transformedName.equals("net.minecraft.item.ItemSeedFood"))
+		{
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "<init>", "<init>", ASMHelper.toMethodDescriptor("V","I", "F", ObfHelper.toObfClassName(ASMConstants.BLOCK), ObfHelper.toObfClassName(ASMConstants.BLOCK)));
+			if(methodNode != null)
+			{
+				AbstractInsnNode finalNode = ASMHelper.find(methodNode.instructions, new VarInsnNode(Opcodes.ALOAD, 4));
+				methodNode.instructions.insert(finalNode, new FieldInsnNode(Opcodes.GETSTATIC,"com/bioxx/tfc2/TFCBlocks", "Farmland", ObfHelper.toObfClassName(ASMConstants.BLOCK)));
+				methodNode.instructions.remove(finalNode);
+			}
+			else
+				throw new RuntimeException("ItemSeedFood: <init>(IFLBlockBlock) method not found");
+		}*/
 
 		return basicClass;
+	}
+
+	public void init(int healAmount, float saturation, Block crops, Block soil)
+	{
+		if(soil == Blocks.FARMLAND)
+			soil = TFCBlocks.Farmland;
 	}
 
 	private void addInformationHook(ClassNode classNode, MethodNode method)

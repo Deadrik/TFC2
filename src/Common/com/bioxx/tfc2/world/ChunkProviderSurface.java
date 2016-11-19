@@ -745,7 +745,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							}
 							else if(depth < 0 && pos3.distanceSq(pos4.getX(), pos4.getY(), pos4.getZ()) <= wSq)
 							{
-								IBlockState fillState = TFCBlocks.FreshWater.getDefaultState();
+								IBlockState fillState = TFCBlocks.FreshWaterStatic.getDefaultState();
 
 								//If we're moving up or down a slope then don't place water
 								if(terrainElev != hexElev /* pos3.getY() >= waterLevel*/)
