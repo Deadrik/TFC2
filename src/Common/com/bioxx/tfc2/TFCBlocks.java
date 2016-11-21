@@ -86,8 +86,9 @@ public class TFCBlocks
 	public static Block StairsRosewood;
 	public static Block StairsBlackwood;
 	public static Block StairsPalm;
-
 	public static Block Anvil;
+	public static Block StoneStalag;
+	public static Block StoneStalac;
 
 	public static void LoadBlocks()
 	{
@@ -157,6 +158,8 @@ public class TFCBlocks
 		StairsPalm = new BlockStairsTFC(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Palm)).setUnlocalizedName("stairs_palm");
 
 		Anvil = new BlockAnvil().setHardness(4F).setUnlocalizedName("anvil");
+		StoneStalag = new BlockStoneStalag().setHardness(5F).setUnlocalizedName("stoneStalag");
+		StoneStalac = new BlockStoneStalac().setHardness(5F).setUnlocalizedName("stoneStalac");
 	}
 
 	public static void RegisterBlocks()
@@ -208,6 +211,8 @@ public class TFCBlocks
 		register(SupportBeam3, ItemWoodSupport.class);
 
 		register(Anvil, ItemBlock.class);
+		register(StoneStalag, ItemStone.class);
+		register(StoneStalac, ItemStone.class);
 
 		stairsList = new ArrayList<Block>();
 		stairsList.add(register(StairsAsh, ItemBlock.class));
@@ -229,6 +234,10 @@ public class TFCBlocks
 		stairsList.add(register(StairsRosewood, ItemBlock.class));
 		stairsList.add(register(StairsBlackwood, ItemBlock.class));
 		stairsList.add(register(StairsPalm, ItemBlock.class));
+
+		Stone.setHarvestLevel("pickaxe", 1);
+		StoneStalag.setHarvestLevel("pickaxe", 1);
+		StoneStalac.setHarvestLevel("pickaxe", 1);
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);

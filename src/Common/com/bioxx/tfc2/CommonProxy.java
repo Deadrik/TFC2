@@ -5,7 +5,6 @@ import java.io.File;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -108,6 +107,7 @@ public class CommonProxy
 		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 0);
 		GameRegistry.registerWorldGenerator(new WorldGenTrees(), 10);
 		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
+		GameRegistry.registerWorldGenerator(new WorldGenStalag(), 4);
 		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 5);
 		GameRegistry.registerWorldGenerator(new WorldGenPamsGardens(), 6);
 	}
@@ -181,14 +181,14 @@ public class CommonProxy
 
 	protected void registerCropProduce()
 	{
-		FoodRegistry.getInstance().registerCropProduce(Crop.Corn, new ItemStack(TFCItems.FoodCornWhole, 1, 0));
+		/*FoodRegistry.getInstance().registerCropProduce(Crop.Corn, new ItemStack(TFCItems.FoodCornWhole, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Cabbage, new ItemStack(TFCItems.FoodCabbage, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Tomato, new ItemStack(TFCItems.FoodTomato, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Wheat, new ItemStack(TFCItems.FoodWheatWhole, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Barley, new ItemStack(TFCItems.FoodBarleyWhole, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Rye, new ItemStack(TFCItems.FoodRyeWhole, 1, 0));
 		FoodRegistry.getInstance().registerCropProduce(Crop.Oat, new ItemStack(TFCItems.FoodOatWhole, 1, 0));
-		FoodRegistry.getInstance().registerCropProduce(Crop.Rice, new ItemStack(TFCItems.FoodRiceWhole, 1, 0));
+		FoodRegistry.getInstance().registerCropProduce(Crop.Rice, new ItemStack(TFCItems.FoodRiceWhole, 1, 0));*/
 	}
 
 	protected void registerAnimals()

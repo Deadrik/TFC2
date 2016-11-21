@@ -85,10 +85,10 @@ public class BlockLeaves extends BlockTerra
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
-		if(world.isRemote)
+		if(world.isRemote || state.getBlock() != this)
 			return;
 		IBlockState scanState;
-		WoodType wood = (WoodType)state.getValue(META_PROPERTY);
+		WoodType wood = (WoodType)state.getValue(getMetaProperty());
 		BlockPos scanPos;
 		if (world.isAreaLoaded(pos.add(-5, -5, -5), pos.add(5, 5, 5)))
 		{
@@ -100,7 +100,7 @@ public class BlockLeaves extends BlockTerra
 					{
 						scanPos = pos.add(x, y, z);
 						scanState = world.getBlockState(pos.add(x, y, z));
-						if(Core.isNaturalLog(scanState) && scanState.getValue(META_PROPERTY) == wood)
+						if(Core.isNaturalLog(scanState) && scanState.getValue(getMetaProperty()) == wood)
 							return;
 					}
 				}
@@ -111,6 +111,11 @@ public class BlockLeaves extends BlockTerra
 			world.scheduleUpdate(pos.west(), this, tickRate(world));
 			world.setBlockToAir(pos);
 		}
+	}
+
+	protected IProperty getMetaProperty()
+	{
+		return META_PROPERTY;
 	}
 
 	@Override

@@ -28,6 +28,6 @@ public class Recipes
 		manager.addRecipe(RecipeType.KNAPPING, new ItemStack(TFCItems.StoneKnifeHead, 1, 0) ,"XX       ","XXX      ","XXXX     "," XXXX    ","  XXXX   ","   X XX  ","      XX ","       XX","        X", 'X', new ItemStack(TFCItems.LooseRock, 1, WILDCARD));
 		manager.addRecipe(RecipeType.KNAPPING, new ItemStack(TFCItems.StoneHoeHead, 1, 0) ,"         ","XXX      ","  XX     ","   XX    ","    XX   ","    XXX  ","    XXX  ","         ","         ", 'X', new ItemStack(TFCItems.LooseRock, 1, WILDCARD));
 
-		manager.addRecipe(RecipeType.ANVIL, new ItemStack(TFCItems.FoodWheatBread, 1 , 0),  "XY", 'X', new ItemStack(Items.IRON_INGOT, 1), 'Y', new ItemStack(Items.IRON_INGOT, 1));
+		manager.addRecipe(RecipeType.ANVIL, new ItemStack(Items.BREAD, 1 , 0),  "XY", 'X', new ItemStack(Items.IRON_INGOT, 1), 'Y', new ItemStack(Items.IRON_INGOT, 1));
 	}
 }

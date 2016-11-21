@@ -72,6 +72,12 @@ public class BlockLeaves2 extends BlockLeaves
 		return this.blockHardness;
 	}
 
+	@Override
+	protected IProperty getMetaProperty()
+	{
+		return META_PROPERTY;
+	}
+
 	/*******************************************************************************
 	 * 2. Rendering 
 	 *******************************************************************************/
