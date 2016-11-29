@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
@@ -129,6 +130,14 @@ public class Core
 	public static boolean isSand(IBlockState state)
 	{
 		if(state.getBlock() == TFCBlocks.Sand)
+			return true;
+
+		return false;
+	}
+
+	public static boolean isWater(IBlockState state)
+	{
+		if(state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER)
 			return true;
 
 		return false;

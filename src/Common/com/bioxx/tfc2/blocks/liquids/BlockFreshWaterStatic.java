@@ -1,19 +1,12 @@
 package com.bioxx.tfc2.blocks.liquids;
 
-import java.util.Random;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.Fluid;
 
-import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.TFCBlocks;
 
 public class BlockFreshWaterStatic extends BlockFreshWater 
 {
@@ -24,7 +17,7 @@ public class BlockFreshWaterStatic extends BlockFreshWater
 		this.setTickRandomly(true);
 	}
 
-	@Override
+	/*@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return this.getDefaultState().withProperty(LEVEL, meta);
@@ -70,7 +63,7 @@ public class BlockFreshWaterStatic extends BlockFreshWater
 
 			data.setByteArray("hydration", hydrationArray);
 		}
-	}
+	}*/
 
 	public boolean isGroundWater(World w, BlockPos pos)
 	{

@@ -387,8 +387,8 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		IBlockState dirt = TFCBlocks.Dirt.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		IBlockState sand = TFCBlocks.Sand.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
-		IBlockState freshwater = TFCBlocks.FreshWaterStatic.getDefaultState();
-		IBlockState saltwater = TFCBlocks.SaltWaterStatic.getDefaultState();
+		IBlockState freshwater = Blocks.WATER.getDefaultState();//TFCBlocks.FreshWaterStatic.getDefaultState();
+		IBlockState saltwater = Blocks.WATER.getDefaultState();//TFCBlocks.SaltWaterStatic.getDefaultState();
 		IBlockState top = grass;
 		IBlockState fill = dirt;
 		int closestElev;
@@ -602,7 +602,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 					}
 					else if(y < Global.SEALEVEL)
 					{
-						b = TFCBlocks.SaltWaterStatic;
+						b = Blocks.WATER;
 					}
 
 					if(y <= hexElev * 0.2)
@@ -684,7 +684,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		{
 			wSq = Math.max(rDepth * rDepth*2, 1);
 
-			for(double i = 0; i < 1; i+= 0.02)
+			for(double i = 0; i < 1; i+= 0.05)
 			{
 				//Get the spline point for this iteration
 				splinePos = spline.getPoint(i);
@@ -736,8 +736,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 							if(depth >= 0 && pos3.distanceSq(pos4.getX(), pos4.getY(), pos4.getZ()) < wSq)
 							{
-								if(s.getBlock() != TFCBlocks.SaltWater && s.getBlock() != TFCBlocks.SaltWaterStatic && 
-										s.getBlock() != TFCBlocks.FreshWater && s.getBlock() != TFCBlocks.FreshWaterStatic)
+								if(!Core.isWater(s))
 								{
 									setState(chunkprimer, pos3, Blocks.AIR.getDefaultState());
 								}
@@ -745,7 +744,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							}
 							else if(depth < 0 && pos3.distanceSq(pos4.getX(), pos4.getY(), pos4.getZ()) <= wSq)
 							{
-								IBlockState fillState = TFCBlocks.FreshWaterStatic.getDefaultState();
+								IBlockState fillState = Blocks.WATER.getDefaultState();
 
 								//If we're moving up or down a slope then don't place water
 								if(terrainElev != hexElev /* pos3.getY() >= waterLevel*/)
@@ -755,8 +754,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 
 
-								if(s.getBlock() != TFCBlocks.SaltWater && s.getBlock() != TFCBlocks.SaltWaterStatic && 
-										s.getBlock() != TFCBlocks.FreshWater && s.getBlock() != TFCBlocks.FreshWaterStatic)
+								if(!Core.isWater(s))
 								{
 									setState(chunkprimer, pos3, fillState);
 									convertRiverBank(chunkprimer, pos3.down());
@@ -979,7 +977,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 											continue;
 
 										if(n.isSeaCave() && pos3.getY() < Global.SEALEVEL)
-											fillBlock = TFCBlocks.SaltWaterStatic.getDefaultState();
+											fillBlock = Blocks.WATER.getDefaultState();
 										else if(c.hasAttribute(Attribute.River))
 										{
 											if(up.getBlock() != TFCBlocks.Gravel && b != TFCBlocks.Gravel)

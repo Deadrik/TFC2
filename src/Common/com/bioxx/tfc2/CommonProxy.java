@@ -77,9 +77,6 @@ public class CommonProxy
 		registerCropProduce();//Must run after item setup
 		setupOre();
 
-		TFCFluids.SALTWATER.setUnlocalizedName(TFCBlocks.SaltWater.getUnlocalizedName());//Must run after block setup
-		TFCFluids.FRESHWATER.setUnlocalizedName(TFCBlocks.FreshWater.getUnlocalizedName());//Must run after block setup
-
 		SkillsManager.instance.registerSkill(new Skill("Woodworker", 1.0f, 1f));
 		SkillsManager.instance.registerSkill(new Skill("Smith", 1.0f, 1f));
 		SkillsManager.instance.registerSkill(new Skill("Toolsmith", 1.0f, 10f));

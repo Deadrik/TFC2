@@ -8,8 +8,6 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.Fluid;
 
-import com.bioxx.tfc2.TFCBlocks;
-
 public class BlockSaltWaterStatic extends BlockSaltWater 
 {
 
@@ -27,8 +25,8 @@ public class BlockSaltWaterStatic extends BlockSaltWater
 
 	private void updateLiquid(World worldIn, BlockPos pos, IBlockState state)
 	{
-		worldIn.setBlockState(pos, TFCBlocks.SaltWater.getDefaultState().withProperty(LEVEL, state.getValue(LEVEL)), 2);
-		worldIn.scheduleUpdate(pos, TFCBlocks.SaltWater, this.tickRate(worldIn));
+		/*worldIn.setBlockState(pos, TFCBlocks.SaltWater.getDefaultState().withProperty(LEVEL, state.getValue(LEVEL)), 2);
+		worldIn.scheduleUpdate(pos, TFCBlocks.SaltWater, this.tickRate(worldIn));*/
 	}
 
 }

@@ -3,19 +3,13 @@ package com.bioxx.tfc2;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import com.bioxx.tfc2.api.TFCFluids;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
-import com.bioxx.tfc2.blocks.liquids.BlockFreshWater;
-import com.bioxx.tfc2.blocks.liquids.BlockFreshWaterStatic;
-import com.bioxx.tfc2.blocks.liquids.BlockSaltWater;
-import com.bioxx.tfc2.blocks.liquids.BlockSaltWaterStatic;
 import com.bioxx.tfc2.blocks.terrain.*;
 import com.bioxx.tfc2.blocks.vanilla.BlockTorchTFC;
 import com.bioxx.tfc2.items.itemblocks.*;
@@ -38,10 +32,6 @@ public class TFCBlocks
 	public static Block Effect;
 	public static Block Vegetation;
 	public static Block LooseRocks;
-	public static Block FreshWater;
-	public static Block SaltWater;
-	public static Block FreshWaterStatic;
-	public static Block SaltWaterStatic;
 	public static Block Sapling;
 	public static Block Sapling2;
 	public static Block LogNatural;
@@ -107,10 +97,6 @@ public class TFCBlocks
 		Effect = new BlockEffect().setHardness(0.1F).setUnlocalizedName("effect");
 		Vegetation = new BlockVegetation().setHardness(0.1F).setUnlocalizedName("vegetation");
 		LooseRocks = new BlockLooseRocks().setHardness(0.2F).setUnlocalizedName("loose_rock");
-		FreshWaterStatic = new BlockFreshWaterStatic(TFCFluids.FRESHWATER, Material.WATER).setUnlocalizedName("freshwater_static").setLightOpacity(3);
-		FreshWater = new BlockFreshWater(TFCFluids.FRESHWATER, Material.WATER).setUnlocalizedName("freshwater").setLightOpacity(3);
-		SaltWaterStatic = new BlockSaltWaterStatic(TFCFluids.SALTWATER, Material.WATER).setUnlocalizedName("saltwater_static").setLightOpacity(3);
-		SaltWater = new BlockSaltWater(TFCFluids.SALTWATER, Material.WATER).setUnlocalizedName("saltwater").setLightOpacity(3);
 		Sapling = new BlockSapling().setHardness(0.1F).setUnlocalizedName("sapling");
 		Sapling2 = new BlockSapling2().setHardness(0.1F).setUnlocalizedName("sapling2");
 		LogNatural = new BlockLogNatural().setHardness(6F).setUnlocalizedName("log_natural");
@@ -180,10 +166,6 @@ public class TFCBlocks
 		register(Effect, ItemOre.class);
 		register(Vegetation);
 		register(LooseRocks, ItemStone.class);
-		register(FreshWater, ItemBlock.class);
-		register(FreshWaterStatic, ItemBlock.class);
-		register(SaltWater, ItemBlock.class);
-		register(SaltWaterStatic, ItemBlock.class);
 		register(Sapling, ItemWood.class);
 		register(Sapling2, ItemWood.class);
 		register(LogNatural, ItemWood.class);

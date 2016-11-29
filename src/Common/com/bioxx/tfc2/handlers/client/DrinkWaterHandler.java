@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -14,7 +16,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
+import com.bioxx.tfc2.networking.client.CFoodPacket;
 
 public class DrinkWaterHandler 
 {
@@ -28,7 +32,7 @@ public class DrinkWaterHandler
 			{
 				BlockPos blockpos = result.getBlockPos();
 				IBlockState state = event.getWorld().getBlockState(blockpos);
-				if(state.getBlock() == TFCBlocks.FreshWater)
+				if(state.getBlock() == Blocks.WATER)
 				{
 					Minecraft.getMinecraft().playerController.processRightClickBlock((EntityPlayerSP)event.getEntityPlayer(), 
 							(WorldClient)event.getWorld(), event.getItemStack(), blockpos, result.sideHit, result.hitVec, event.getHand());
@@ -38,7 +42,7 @@ public class DrinkWaterHandler
 			{
 				BlockPos blockpos = result.getBlockPos().offset(result.sideHit);
 				IBlockState state = event.getWorld().getBlockState(blockpos);
-				if(state.getBlock() == TFCBlocks.FreshWater || state.getBlock() == TFCBlocks.FreshWaterStatic)
+				if(state.getBlock() == Blocks.WATER)
 				{
 					Minecraft.getMinecraft().playerController.processRightClickBlock((EntityPlayerSP)event.getEntityPlayer(), 
 							(WorldClient)event.getWorld(), event.getItemStack(), blockpos, result.sideHit, result.hitVec, event.getHand());
@@ -58,11 +62,18 @@ public class DrinkWaterHandler
 			}
 			BlockPos blockpos = event.getPos().offset(event.getFace());
 			IBlockState state = event.getWorld().getBlockState(blockpos);
-			if(state.getBlock() == TFCBlocks.FreshWater || state.getBlock() == TFCBlocks.FreshWaterStatic)
+			if(state.getBlock() == Blocks.WATER)
 			{
 				Minecraft.getMinecraft().playerController.processRightClickBlock((EntityPlayerSP)event.getEntityPlayer(), 
 						(WorldClient)event.getWorld(), event.getItemStack(), blockpos, event.getFace(), event.getHitVec(), event.getHand());
 			}
+		}
+		else
+		{
+			IFoodStatsTFC food = (IFoodStatsTFC)event.getEntityPlayer().getFoodStats();
+			food.setWaterLevel((Math.min(food.getWaterLevel()+0.1f, 20)));
+			TFC.network.sendTo(new CFoodPacket(food), (EntityPlayerMP) event.getEntityPlayer());
+			return;
 		}
 	}
 

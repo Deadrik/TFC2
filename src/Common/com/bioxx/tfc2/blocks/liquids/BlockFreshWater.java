@@ -1,30 +1,18 @@
 package com.bioxx.tfc2.blocks.liquids;
 
-import java.util.Random;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.TFC;
-import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.networking.client.CFoodPacket;
 
@@ -36,7 +24,7 @@ public class BlockFreshWater extends BlockFluidClassic {
 		this.setTickRate(3);
 	}
 
-	@Override
+	/*@Override
 	public Block setUnlocalizedName(String name)
 	{
 		this.setRegistryName(name);
@@ -177,7 +165,7 @@ public class BlockFreshWater extends BlockFluidClassic {
 			}
 		}
 	}
-
+	 */
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
