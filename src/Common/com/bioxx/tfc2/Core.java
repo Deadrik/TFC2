@@ -20,7 +20,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
 import com.bioxx.tfc2.core.InventoryPlayerTFC;
@@ -284,6 +286,28 @@ public class Core
 	public static void setPlayerSkillData(EntityPlayer player, PlayerSkillData data)
 	{
 		data.writeNBT(player.getEntityData());
+	}
+
+	public static boolean isFreshWater( World world, BlockPos pos)
+	{
+		if(pos.getY() > 64)
+			return true;
+		IslandMap map = Core.getMapForWorld(world, pos);
+		Center closest = map.getClosestCenter(pos);
+
+		if(closest.hasMarker(Marker.Ocean))
+			return false;
+
+		if(closest.hasAnyMarkersOf(Marker.Pond, Marker.Water))
+			return true;
+
+		if(closest.hasAttribute(Attribute.River))
+			return true;
+
+		if(closest.hasAttribute(Attribute.Lake))
+			return true;
+
+		return false;
 	}
 
 }
