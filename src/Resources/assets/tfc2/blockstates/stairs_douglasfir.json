@@ -3,9 +3,9 @@
 	"defaults": {
 		"model": "stairs",
 		"textures": {
-			"bottom": "tfc2:blocks/wood/Douglas Fir Plank",
-        	"top": "tfc2:blocks/wood/Douglas Fir Plank",
-        	"side": "tfc2:blocks/wood/Douglas Fir Plank"
+			"bottom": "tfc2:blocks/wood/douglas fir plank",
+        	"top": "tfc2:blocks/wood/douglas fir plank",
+        	"side": "tfc2:blocks/wood/douglas fir plank"
 		}
 	},
 	"variants": {

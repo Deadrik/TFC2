@@ -1,38 +1,38 @@
 {
 	"forge_marker" : 1,
 	"defaults": {
-		"model": "tfc2:Wood/SupportVertical",
-		"textures": {"all": "tfc2:blocks/wood/sheets/Ash"}
+		"model": "tfc2:wood/supportvertical",
+		"textures": {"all": "tfc2:blocks/wood/sheets/ash"}
 	},
     "variants": {
     	"isspan":{
-    		"true":{"model": "tfc2:Wood/SupportSpan"},
-    		"false":{"model": "tfc2:Wood/SupportVertical"}
+    		"true":{"model": "tfc2:wood/supportspan"},
+    		"false":{"model": "tfc2:wood/supportvertical"}
     	},
    	 	"wood":{
-        	"ash":  { "textures": {"all": "tfc2:blocks/wood/sheets/Ash"} },
-        	"aspen":  { "textures": {"all": "tfc2:blocks/wood/sheets/Aspen"} },
-        	"birch":  { "textures": {"all": "tfc2:blocks/wood/sheets/Birch"} },
-        	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/sheets/Chestnut"} },
-        	"douglas_fir":  { "textures": {"all": "tfc2:blocks/wood/sheets/Douglas Fir"} },
-     	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/sheets/Hickory"} },
-        	"maple":  { "textures": {"all": "tfc2:blocks/wood/sheets/Maple"} },
-        	"oak":  { "textures": {"all": "tfc2:blocks/wood/sheets/Oak"} }
+        	"ash":  { "textures": {"all": "tfc2:blocks/wood/sheets/ash"} },
+        	"aspen":  { "textures": {"all": "tfc2:blocks/wood/sheets/aspen"} },
+        	"birch":  { "textures": {"all": "tfc2:blocks/wood/sheets/birch"} },
+        	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/sheets/chestnut"} },
+        	"douglas_fir":  { "textures": {"all": "tfc2:blocks/wood/sheets/douglas fir"} },
+     	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/sheets/hickory"} },
+        	"maple":  { "textures": {"all": "tfc2:blocks/wood/sheets/maple"} },
+        	"oak":  { "textures": {"all": "tfc2:blocks/wood/sheets/oak"} }
         },
         "north":{
-    		"true":{"submodel": "tfc2:Wood/SupportNorth"},
+    		"true":{"submodel": "tfc2:wood/supportnorth"},
     		"false":{}
     	},
     	"south":{
-    		"true":{"submodel": "tfc2:Wood/SupportSouth"},
+    		"true":{"submodel": "tfc2:wood/supportsouth"},
     		"false":{}
     	},
     	"east":{
-    		"true":{"submodel": "tfc2:Wood/SupportEast"},
+    		"true":{"submodel": "tfc2:wood/supporteast"},
     		"false":{}
     	},
     	"west":{
-    		"true":{"submodel": "tfc2:Wood/SupportWest"},
+    		"true":{"submodel": "tfc2:wood/supportwest"},
     		"false":{}
     	}
     }

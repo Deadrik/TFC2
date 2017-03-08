@@ -2,20 +2,20 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"all": "tfc2:blocks/Portal Stone",
-			"side": "tfc2:blocks/Portal Stone",
-			"end": "tfc2:blocks/Portal Stone",
-			"particle": "tfc2:blocks/Portal Stone"
+			"all": "tfc2:blocks/portal stone",
+			"side": "tfc2:blocks/portal stone",
+			"end": "tfc2:blocks/portal stone",
+			"particle": "tfc2:blocks/portal stone"
 		},
 		"model": "cube_column"
 	},
 	"variants": {
 		"state" : {
-			"none": {"model": "cube_all", "textures": {"all": "tfc2:blocks/Portal Stone"}},
-			"enabled": {"textures": {"side": "tfc2:blocks/Portal Stone Enabled"}},
-			"disabled": {"textures": {"side": "tfc2:blocks/Portal Stone Disabled"}},
-			"locked": {"textures": {"side": "tfc2:blocks/Portal Stone Locked"}},
-			"gate": {"model": "cube_all", "textures": {"all": "tfc2:blocks/Portal Stone Gate"}}
+			"none": {"model": "cube_all", "textures": {"all": "tfc2:blocks/portal stone"}},
+			"enabled": {"textures": {"side": "tfc2:blocks/portal stone enabled"}},
+			"disabled": {"textures": {"side": "tfc2:blocks/portal stone disabled"}},
+			"locked": {"textures": {"side": "tfc2:blocks/portal stone locked"}},
+			"gate": {"model": "cube_all", "textures": {"all": "tfc2:blocks/portal stone gate"}}
 		},
 		"inventory": [{
             "transform": "forge:default-block"

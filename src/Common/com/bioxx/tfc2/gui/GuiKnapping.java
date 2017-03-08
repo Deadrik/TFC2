@@ -175,7 +175,7 @@ public class GuiKnapping extends GuiContainerTFC
 	@Override
 	protected boolean checkHotbarKeys(int par1)
 	{
-		if (this.mc.thePlayer.inventory.currentItem != par1 - 2)
+		if (this.mc.player.inventory.currentItem != par1 - 2)
 		{
 			super.checkHotbarKeys(par1);
 			return true;

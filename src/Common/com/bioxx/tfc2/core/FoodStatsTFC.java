@@ -61,7 +61,7 @@ public class FoodStatsTFC
 	 */
 	public void onUpdate(EntityPlayer player)
 	{
-		if(!player.worldObj.isRemote)
+		if(!player.world.isRemote)
 		{
 			Timekeeper time = Timekeeper.instance;
 			/*
@@ -309,7 +309,7 @@ public class FoodStatsTFC
 			byte[] nameBytes = player.getCommandSenderName().getBytes();
 			for(byte b : nameBytes)
 				seed+=b;
-			nameSeed = seed + player.worldObj.getSeed();
+			nameSeed = seed + player.world.getSeed();
 		}
 		return nameSeed;*/
 		return 0;
@@ -411,9 +411,9 @@ public class FoodStatsTFC
 	{
 		//TODO: Add a parameter for alcohol strength
 		/*if(soberTime <= TFC_Time.getTotalTicks())
-			soberTime = TFC_Time.getTotalTicks() + player.worldObj.rand.nextInt(1000) + 400;
+			soberTime = TFC_Time.getTotalTicks() + player.world.rand.nextInt(1000) + 400;
 		else
-			soberTime += player.worldObj.rand.nextInt(1000) + 400;
+			soberTime += player.world.rand.nextInt(1000) + 400;
 		sendUpdate = true;*/
 	}
 }

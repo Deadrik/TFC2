@@ -68,7 +68,7 @@ public class BlockPlanks extends BlockCollapsible implements ISupportBlock
 	{
 		world.setBlockToAir(pos);
 		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.STICK, 1+world.rand.nextInt(3)));
-		world.spawnEntityInWorld(ei);
+		world.spawnEntity(ei);
 	}
 
 	/*******************************************************************************

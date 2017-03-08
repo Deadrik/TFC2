@@ -2,7 +2,7 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {},
-        "model": "tfc2:Leaves/palm_half.obj",
+        "model": "tfc2:leaves/palm_half.obj",
         "custom": { "flip-v": true }
      },
     "variants": {

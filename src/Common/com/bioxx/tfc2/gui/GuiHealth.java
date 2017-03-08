@@ -29,19 +29,19 @@ public class GuiHealth extends GuiContainerTFC
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		fontRendererObj.drawString(Core.translate("gui.food.fruit"), 5, 13, 0, false);
-		fontRendererObj.drawString(Core.translate("gui.food.vegetable"), 5, 23, 0, false);
-		fontRendererObj.drawString(Core.translate("gui.food.grain"), 5, 33, 0, false);
-		fontRendererObj.drawString(Core.translate("gui.food.protein"), 5, 43, 0, false);
-		fontRendererObj.drawString(Core.translate("gui.food.dairy"), 5, 53, 0, false);
+		fontRenderer.drawString(Core.translate("gui.food.fruit"), 5, 13, 0, false);
+		fontRenderer.drawString(Core.translate("gui.food.vegetable"), 5, 23, 0, false);
+		fontRenderer.drawString(Core.translate("gui.food.grain"), 5, 33, 0, false);
+		fontRenderer.drawString(Core.translate("gui.food.protein"), 5, 43, 0, false);
+		fontRenderer.drawString(Core.translate("gui.food.dairy"), 5, 53, 0, false);
 		if (TFCOptions.enableDebugMode)
 		{
 			IFoodStatsTFC food = (IFoodStatsTFC)player.getFoodStats();
-			fontRendererObj.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Fruit)), 85, 13, 0, false);
-			fontRendererObj.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Vegetable)), 85, 23, 0, false);
-			fontRendererObj.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Grain)), 85, 33, 0, false);
-			fontRendererObj.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Protein)), 85, 43, 0, false);
-			fontRendererObj.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Dairy)), 85, 53, 0, false);
+			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Fruit)), 85, 13, 0, false);
+			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Vegetable)), 85, 23, 0, false);
+			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Grain)), 85, 33, 0, false);
+			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Protein)), 85, 43, 0, false);
+			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Dairy)), 85, 53, 0, false);
 		}
 	}
 
@@ -84,11 +84,11 @@ public class GuiHealth extends GuiContainerTFC
 	protected void actionPerformed(GuiButton guibutton)
 	{
 		if (guibutton.id == 0)
-			Minecraft.getMinecraft().displayGuiScreen(new GuiInventoryTFC(Minecraft.getMinecraft().thePlayer));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiInventoryTFC(Minecraft.getMinecraft().player));
 		else if (guibutton.id == 1)
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSkills(Minecraft.getMinecraft().thePlayer));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSkills(Minecraft.getMinecraft().player));
 		/*else if (guibutton.id == 2)
-			Minecraft.getMinecraft().displayGuiScreen(new GuiCalendar(Minecraft.getMinecraft().thePlayer));*/
+			Minecraft.getMinecraft().displayGuiScreen(new GuiCalendar(Minecraft.getMinecraft().player));*/
 	}
 
 	public void createButtons()

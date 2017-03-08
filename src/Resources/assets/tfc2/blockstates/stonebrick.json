@@ -2,29 +2,29 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"all": "tfc2:blocks/rocks/Granite Brick",
-			"particle": "tfc2:blocks/rocks/Granite Brick"
+			"all": "tfc2:blocks/rocks/granite brick",
+			"particle": "tfc2:blocks/rocks/granite brick"
 		},
 		"model": "cube_all"
 	},
 	"variants": {
 		"stone" : {
-			"granite": {"textures": {"all": "tfc2:blocks/rocks/Granite Brick"}},
-			"diorite": {"textures": {"all": "tfc2:blocks/rocks/Diorite Brick"}},
-			"gabbro": {"textures": {"all": "tfc2:blocks/rocks/Gabbro Brick"}},
-			"shale": {"textures": {"all": "tfc2:blocks/rocks/Shale Brick"}},
-			"claystone": {"textures": {"all": "tfc2:blocks/rocks/Claystone Brick"}},
-			"limestone": {"textures": {"all": "tfc2:blocks/rocks/Limestone Brick"}},
-			"dolomite": {"textures": {"all": "tfc2:blocks/rocks/Dolomite Brick"}},
-			"chert": {"textures": {"all": "tfc2:blocks/rocks/Chert Brick"}},
-			"rhyolite": {"textures": {"all": "tfc2:blocks/rocks/Rhyolite Brick"}},
-			"basalt": {"textures": {"all": "tfc2:blocks/rocks/Basalt Brick"}},
-			"andesite": {"textures": {"all": "tfc2:blocks/rocks/Andesite Brick"}},
-			"dacite": {"textures": {"all": "tfc2:blocks/rocks/Dacite Brick"}},
-			"blueschist": {"textures": {"all": "tfc2:blocks/rocks/Blueschist Brick"}},
-			"schist": {"textures": {"all": "tfc2:blocks/rocks/Schist Brick"}},
-			"gneiss": {"textures": {"all": "tfc2:blocks/rocks/Gneiss Brick"}},
-			"marble": {"textures": {"all": "tfc2:blocks/rocks/Marble Brick"}}
+			"granite": {"textures": {"all": "tfc2:blocks/rocks/granite brick"}},
+			"diorite": {"textures": {"all": "tfc2:blocks/rocks/diorite brick"}},
+			"gabbro": {"textures": {"all": "tfc2:blocks/rocks/gabbro brick"}},
+			"shale": {"textures": {"all": "tfc2:blocks/rocks/shale brick"}},
+			"claystone": {"textures": {"all": "tfc2:blocks/rocks/claystone brick"}},
+			"limestone": {"textures": {"all": "tfc2:blocks/rocks/limestone brick"}},
+			"dolomite": {"textures": {"all": "tfc2:blocks/rocks/dolomite brick"}},
+			"chert": {"textures": {"all": "tfc2:blocks/rocks/chert brick"}},
+			"rhyolite": {"textures": {"all": "tfc2:blocks/rocks/rhyolite brick"}},
+			"basalt": {"textures": {"all": "tfc2:blocks/rocks/basalt brick"}},
+			"andesite": {"textures": {"all": "tfc2:blocks/rocks/andesite brick"}},
+			"dacite": {"textures": {"all": "tfc2:blocks/rocks/dacite brick"}},
+			"blueschist": {"textures": {"all": "tfc2:blocks/rocks/blueschist brick"}},
+			"schist": {"textures": {"all": "tfc2:blocks/rocks/schist brick"}},
+			"gneiss": {"textures": {"all": "tfc2:blocks/rocks/gneiss brick"}},
+			"marble": {"textures": {"all": "tfc2:blocks/rocks/marble brick"}}
 		},
 		"inventory": [{
             "transform": "forge:default-block"

@@ -1,8 +1,10 @@
 package com.bioxx.tfc2.networking.server;
 
 import io.netty.buffer.ByteBuf;
+
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.WorldServer;
+
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -41,17 +43,17 @@ public class SKnappingPacket implements IMessage
 	{
 		@Override
 		public IMessage onMessage(final SKnappingPacket message, final MessageContext ctx) {
-			IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj; // or Minecraft.getMinecraft() on the client
+			IThreadListener mainThread = (WorldServer) ctx.getServerHandler().player.world; // or Minecraft.getMinecraft() on the client
 			mainThread.addScheduledTask(new Runnable() 
 			{
 				@Override
 				public void run() 
 				{
-					PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromUUID(ctx.getServerHandler().playerEntity.getUniqueID());
+					PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromUUID(ctx.getServerHandler().player.getUniqueID());
 					pi.knappingInterface[message.id] = true;
-					if(ctx.getServerHandler().playerEntity.openContainer != null && ctx.getServerHandler().playerEntity.openContainer instanceof ContainerSpecialCrafting)
+					if(ctx.getServerHandler().player.openContainer != null && ctx.getServerHandler().player.openContainer instanceof ContainerSpecialCrafting)
 					{
-						((ContainerSpecialCrafting)ctx.getServerHandler().playerEntity.openContainer).craftMatrix.setInventorySlotContents(message.id, pi.specialCraftingTypeAlternate);
+						((ContainerSpecialCrafting)ctx.getServerHandler().player.openContainer).craftMatrix.setInventorySlotContents(message.id, pi.specialCraftingTypeAlternate);
 					}
 				}
 			});

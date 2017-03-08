@@ -5,22 +5,22 @@
 	},
     "variants": {
    	 	"wood":{
-        	"ash":  { "textures": {"side": "tfc2:blocks/wood/trees/Ash Log", "end": "tfc2:blocks/wood/trees/Ash Log Top"} },
-        	"aspen":  { "textures": {"side": "tfc2:blocks/wood/trees/Aspen Log", "end": "tfc2:blocks/wood/trees/Aspen Log Top"} },
-        	"birch":  { "textures": {"side": "tfc2:blocks/wood/trees/Birch Log", "end": "tfc2:blocks/wood/trees/Birch Log Top"} },
-        	"chestnut":  { "textures": {"side": "tfc2:blocks/wood/trees/Chestnut Log", "end": "tfc2:blocks/wood/trees/Chestnut Log Top"} },
-        	"douglas_fir":  { "textures": {"side": "tfc2:blocks/wood/trees/Douglas Fir Log", "end": "tfc2:blocks/wood/trees/Douglas Fir Log Top"} },
-     	   	"hickory":  { "textures": {"side": "tfc2:blocks/wood/trees/Hickory Log", "end": "tfc2:blocks/wood/trees/Hickory Log Top"} },
-        	"maple":  { "textures": {"side": "tfc2:blocks/wood/trees/Maple Log", "end": "tfc2:blocks/wood/trees/Maple Log Top"} },
-        	"oak":  { "textures": {"side": "tfc2:blocks/wood/trees/Oak Log", "end": "tfc2:blocks/wood/trees/Oak Log Top"} },
-        	"pine":  { "textures": {"side": "tfc2:blocks/wood/trees/Pine Log", "end": "tfc2:blocks/wood/trees/Pine Log Top"} },
-   	     	"sequoia":  { "textures": {"side": "tfc2:blocks/wood/trees/Sequoia Log", "end": "tfc2:blocks/wood/trees/Sequoia Log Top"} },
-        	"spruce":  { "textures": {"side": "tfc2:blocks/wood/trees/Spruce Log", "end": "tfc2:blocks/wood/trees/Spruce Log Top"} },
- 	       	"sycamore":  { "textures": {"side": "tfc2:blocks/wood/trees/Sycamore Log", "end": "tfc2:blocks/wood/trees/Sycamore Log Top"} },
-   		    "white_cedar":  { "textures": {"side": "tfc2:blocks/wood/trees/White Cedar Log", "end": "tfc2:blocks/wood/trees/White Cedar Log Top"} },
-    	    "willow":  { "textures": {"side": "tfc2:blocks/wood/trees/Willow Log", "end": "tfc2:blocks/wood/trees/Willow Log Top"} },
-    	    "kapok":  { "textures": {"side": "tfc2:blocks/wood/trees/Kapok Log", "end": "tfc2:blocks/wood/trees/Kapok Log Top"} },
-    	    "acacia":  { "textures": {"side": "tfc2:blocks/wood/trees/Acacia Log", "end": "tfc2:blocks/wood/trees/Acacia Log Top"} }
+        	"ash":  { "textures": {"side": "tfc2:blocks/wood/trees/ash log", "end": "tfc2:blocks/wood/trees/ash log top"} },
+        	"aspen":  { "textures": {"side": "tfc2:blocks/wood/trees/aspen log", "end": "tfc2:blocks/wood/trees/aspen log top"} },
+        	"birch":  { "textures": {"side": "tfc2:blocks/wood/trees/birch log", "end": "tfc2:blocks/wood/trees/birch log top"} },
+        	"chestnut":  { "textures": {"side": "tfc2:blocks/wood/trees/chestnut log", "end": "tfc2:blocks/wood/trees/chestnut log top"} },
+        	"douglas_fir":  { "textures": {"side": "tfc2:blocks/wood/trees/douglas fir log", "end": "tfc2:blocks/wood/trees/douglas fir log top"} },
+     	   	"hickory":  { "textures": {"side": "tfc2:blocks/wood/trees/hickory log", "end": "tfc2:blocks/wood/trees/hickory log top"} },
+        	"maple":  { "textures": {"side": "tfc2:blocks/wood/trees/maple log", "end": "tfc2:blocks/wood/trees/maple log top"} },
+        	"oak":  { "textures": {"side": "tfc2:blocks/wood/trees/oak log", "end": "tfc2:blocks/wood/trees/oak log top"} },
+        	"pine":  { "textures": {"side": "tfc2:blocks/wood/trees/pine log", "end": "tfc2:blocks/wood/trees/pine log top"} },
+   	     	"sequoia":  { "textures": {"side": "tfc2:blocks/wood/trees/sequoia log", "end": "tfc2:blocks/wood/trees/sequoia log top"} },
+        	"spruce":  { "textures": {"side": "tfc2:blocks/wood/trees/spruce log", "end": "tfc2:blocks/wood/trees/spruce log top"} },
+ 	       	"sycamore":  { "textures": {"side": "tfc2:blocks/wood/trees/sycamore log", "end": "tfc2:blocks/wood/trees/sycamore log top"} },
+   		    "white_cedar":  { "textures": {"side": "tfc2:blocks/wood/trees/white cedar log", "end": "tfc2:blocks/wood/trees/white cedar log top"} },
+    	    "willow":  { "textures": {"side": "tfc2:blocks/wood/trees/willow log", "end": "tfc2:blocks/wood/trees/willow log top"} },
+    	    "kapok":  { "textures": {"side": "tfc2:blocks/wood/trees/kapok log", "end": "tfc2:blocks/wood/trees/kapok log top"} },
+    	    "acacia":  { "textures": {"side": "tfc2:blocks/wood/trees/acacia log", "end": "tfc2:blocks/wood/trees/acacia log top"} }
         }
     }
 }

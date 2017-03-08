@@ -69,7 +69,7 @@ public class Helper
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			byte byte0 = tag.getByte("Slot");
 			if(byte0 >= 0 && byte0 < size)
-				out[byte0] = ItemStack.loadItemStackFromNBT(tag);
+				out[byte0] = new ItemStack(tag);
 		}
 		return out;
 	}

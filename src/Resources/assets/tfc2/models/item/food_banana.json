@@ -1,8 +1,8 @@
 {
 	"forge_marker": 1,
-    "parent": "tfc2:item/DefaultItem",
+    "parent": "tfc2:item/defaultitem",
     "textures": {
-        "layer0": "tfc2:items/food/Banana"
+        "layer0": "tfc2:items/food/banana"
     },
     "transform": "forge:default-tool"
 }

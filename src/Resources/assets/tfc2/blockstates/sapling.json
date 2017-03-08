@@ -5,22 +5,22 @@
 	},
     "variants": {
     "type":{
-        	"ash":  { "textures": {"cross": "tfc2:blocks/wood/trees/Ash Sapling"} },
-        	"aspen":  { "textures": {"cross": "tfc2:blocks/wood/trees/Aspen Sapling"} },
-        	"birch":  { "textures": {"cross": "tfc2:blocks/wood/trees/Birch Sapling"} },
-        	"chestnut":  { "textures": {"cross": "tfc2:blocks/wood/trees/Chestnut Sapling"} },
-        	"douglas_fir":  { "textures": {"cross": "tfc2:blocks/wood/trees/Douglas Fir Sapling"} },
-     	   	"hickory":  { "textures": {"cross": "tfc2:blocks/wood/trees/Hickory Sapling"} },
-        	"maple":  { "textures": {"cross": "tfc2:blocks/wood/trees/Maple Sapling"} },
-        	"oak":  { "textures": {"cross": "tfc2:blocks/wood/trees/Oak Sapling"} },
-        	"pine":  { "textures": {"cross": "tfc2:blocks/wood/trees/Pine Sapling"} },
-   	     	"sequoia":  { "textures": {"cross": "tfc2:blocks/wood/trees/Sequoia Sapling"} },
-        	"spruce":  { "textures": {"cross": "tfc2:blocks/wood/trees/Spruce Sapling"} },
- 	       	"sycamore":  { "textures": {"cross": "tfc2:blocks/wood/trees/Sycamore Sapling"} },
-   		    "white_cedar":  { "textures": {"cross": "tfc2:blocks/wood/trees/White Cedar Sapling"} },
-    	    "willow":  { "textures": {"cross": "tfc2:blocks/wood/trees/Willow Sapling"} },
-    	    "kapok":  { "textures": {"cross": "tfc2:blocks/wood/trees/Kapok Sapling"} },
-    	    "acacia":  { "textures": {"cross": "tfc2:blocks/wood/trees/Acacia Sapling"} }
+        	"ash":  { "textures": {"cross": "tfc2:blocks/wood/trees/ash sapling"} },
+        	"aspen":  { "textures": {"cross": "tfc2:blocks/wood/trees/aspen sapling"} },
+        	"birch":  { "textures": {"cross": "tfc2:blocks/wood/trees/birch sapling"} },
+        	"chestnut":  { "textures": {"cross": "tfc2:blocks/wood/trees/chestnut sapling"} },
+        	"douglas_fir":  { "textures": {"cross": "tfc2:blocks/wood/trees/douglas fir sapling"} },
+     	   	"hickory":  { "textures": {"cross": "tfc2:blocks/wood/trees/hickory sapling"} },
+        	"maple":  { "textures": {"cross": "tfc2:blocks/wood/trees/maple sapling"} },
+        	"oak":  { "textures": {"cross": "tfc2:blocks/wood/trees/oak sapling"} },
+        	"pine":  { "textures": {"cross": "tfc2:blocks/wood/trees/pine sapling"} },
+   	     	"sequoia":  { "textures": {"cross": "tfc2:blocks/wood/trees/sequoia sapling"} },
+        	"spruce":  { "textures": {"cross": "tfc2:blocks/wood/trees/spruce sapling"} },
+ 	       	"sycamore":  { "textures": {"cross": "tfc2:blocks/wood/trees/sycamore sapling"} },
+   		    "white_cedar":  { "textures": {"cross": "tfc2:blocks/wood/trees/white cedar sapling"} },
+    	    "willow":  { "textures": {"cross": "tfc2:blocks/wood/trees/willow sapling"} },
+    	    "kapok":  { "textures": {"cross": "tfc2:blocks/wood/trees/kapok sapling"} },
+    	    "acacia":  { "textures": {"cross": "tfc2:blocks/wood/trees/acacia sapling"} }
         }
     }
 }

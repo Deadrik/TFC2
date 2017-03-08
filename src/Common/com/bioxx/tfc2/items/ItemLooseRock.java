@@ -47,8 +47,9 @@ public class ItemLooseRock extends ItemTerra implements IRegisterSelf
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
 	{
+		ItemStack itemStackIn = playerIn.getHeldItem(handIn);
 		PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(playerIn);
 		pi.specialCraftingType = itemStackIn;
 		if(!worldIn.isRemote)

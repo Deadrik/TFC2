@@ -87,7 +87,7 @@ public class GuiAnvil extends GuiContainerTFC
 	{
 		if(guibutton.id == 0)
 		{
-			anvil.startCrafting(EntityPlayer.getUUID(Minecraft.getMinecraft().thePlayer.getGameProfile()));
+			anvil.startCrafting(EntityPlayer.getUUID(Minecraft.getMinecraft().player.getGameProfile()));
 		}
 		else
 			anvil.setField(0, guibutton.id-1);

@@ -2,26 +2,26 @@
 	"forge_marker" : 1,
 	"defaults": {
 		"model": "cube_all",
-		"textures": {"all": "tfc2:blocks/wood/trees/Rosewood Log"}
+		"textures": {"all": "tfc2:blocks/wood/trees/rosewood log"}
 	},
     "variants": {
     "wood":{
-        	"ash":  { "textures": {"all": "tfc2:blocks/wood/trees/Ash Log"} },
-        	"aspen":  { "textures": {"all": "tfc2:blocks/wood/trees/Aspen Log"} },
-        	"birch":  { "textures": {"all": "tfc2:blocks/wood/trees/Birch Log"} },
-        	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/trees/Chestnut Log"} },
-        	"douglas_fir":  { "textures": {"all": "tfc2:blocks/wood/trees/Douglas Fir Log"} },
-     	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/trees/Hickory Log"} },
-        	"maple":  { "textures": {"all": "tfc2:blocks/wood/trees/Maple Log"} },
-        	"oak":  { "textures": {"all": "tfc2:blocks/wood/trees/Oak Log"} },
-        	"pine":  { "textures": {"all": "tfc2:blocks/wood/trees/Pine Log"} },
-   	     	"sequoia":  { "textures": {"all": "tfc2:blocks/wood/trees/Sequoia Log"} },
-        	"spruce":  { "textures": {"all": "tfc2:blocks/wood/trees/Spruce Log"} },
- 	       	"sycamore":  { "textures": {"all": "tfc2:blocks/wood/trees/Sycamore Log"} },
-   		    "white_cedar":  { "textures": {"all": "tfc2:blocks/wood/trees/White Cedar Log"} },
-    	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/Willow Log"} },
-    	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/Kapok Log"} },
-    	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/Acacia Log"} }
+        	"ash":  { "textures": {"all": "tfc2:blocks/wood/trees/ash log"} },
+        	"aspen":  { "textures": {"all": "tfc2:blocks/wood/trees/aspen log"} },
+        	"birch":  { "textures": {"all": "tfc2:blocks/wood/trees/birch log"} },
+        	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/trees/chestnut log"} },
+        	"douglas_fir":  { "textures": {"all": "tfc2:blocks/wood/trees/douglas fir log"} },
+     	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/trees/hickory log"} },
+        	"maple":  { "textures": {"all": "tfc2:blocks/wood/trees/maple log"} },
+        	"oak":  { "textures": {"all": "tfc2:blocks/wood/trees/oak log"} },
+        	"pine":  { "textures": {"all": "tfc2:blocks/wood/trees/pine log"} },
+   	     	"sequoia":  { "textures": {"all": "tfc2:blocks/wood/trees/sequoia log"} },
+        	"spruce":  { "textures": {"all": "tfc2:blocks/wood/trees/spruce log"} },
+ 	       	"sycamore":  { "textures": {"all": "tfc2:blocks/wood/trees/sycamore log"} },
+   		    "white_cedar":  { "textures": {"all": "tfc2:blocks/wood/trees/white cedar log"} },
+    	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/willow log"} },
+    	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/kapok log"} },
+    	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/acacia log"} }
         },
         "inventory": [{
             "transform": "forge:default-block"

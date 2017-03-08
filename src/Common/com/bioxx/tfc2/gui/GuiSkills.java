@@ -36,7 +36,7 @@ public class GuiSkills extends GuiContainerTFC
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		fontRendererObj.drawString(Core.translate("gui.skillpage"), this.xSize / 2 - fontRendererObj.getStringWidth(Core.translate("gui.skillpage")) / 2, 4, 4210752, false);
+		fontRenderer.drawString(Core.translate("gui.skillpage"), this.xSize / 2 - fontRenderer.getStringWidth(Core.translate("gui.skillpage")) / 2, 4, 4210752, false);
 		PlayerSkillData ss = Core.getPlayerSkillData(player);
 		int y = 10;
 		int count = -1;
@@ -52,7 +52,7 @@ public class GuiSkills extends GuiContainerTFC
 				drawTexturedModalRect(4, y, 4, skillBarWidth, skillBarWidth, 4);
 				drawTexturedModalRect(4, y, 4, 172, (int) Math.floor(skillBarWidth * perc), 4);
 
-				fontRendererObj.drawString(Core.translate(o.skillName) + ": " + TextFormatting.DARK_BLUE + ss.getSkillRank(o.skillName).getLocalizedName(), 6, y - 9, 0, false);
+				fontRenderer.drawString(Core.translate(o.skillName) + ": " + TextFormatting.DARK_BLUE + ss.getSkillRank(o.skillName).getLocalizedName(), 6, y - 9, 0, false);
 				y += 3;
 			}
 		}
@@ -84,11 +84,11 @@ public class GuiSkills extends GuiContainerTFC
 	protected void actionPerformed(GuiButton guibutton)
 	{
 		if (guibutton.id == 0)
-			Minecraft.getMinecraft().displayGuiScreen(new GuiInventoryTFC(Minecraft.getMinecraft().thePlayer));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiInventoryTFC(Minecraft.getMinecraft().player));
 		/*else if (guibutton.id == 2)
-			Minecraft.getMinecraft().displayGuiScreen(new GuiCalendar(Minecraft.getMinecraft().thePlayer));*/
+			Minecraft.getMinecraft().displayGuiScreen(new GuiCalendar(Minecraft.getMinecraft().player));*/
 		else if (guibutton.id == 3)
-			Minecraft.getMinecraft().displayGuiScreen(new GuiHealth(Minecraft.getMinecraft().thePlayer));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiHealth(Minecraft.getMinecraft().player));
 		else if (guibutton.id == 4)
 		{
 			if (skillsPage > 0)

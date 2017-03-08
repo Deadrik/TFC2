@@ -3,7 +3,7 @@ package com.bioxx.tfc2.entity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -46,9 +46,9 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 			{
 				BlockPos blockpos = new BlockPos(this);
 
-				if (this.worldObj.getBlockState(blockpos).getBlock() == block)
+				if (this.world.getBlockState(blockpos).getBlock() == block)
 				{
-					this.worldObj.setBlockToAir(blockpos);
+					this.world.setBlockToAir(blockpos);
 				}
 				/*else if (!this.worldObj.isRemote)
 				{
@@ -58,25 +58,25 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 			}
 
 			this.motionY -= 0.03999999910593033D;
-			moveEntity(this.motionX, this.motionY, this.motionZ);
+			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.9800000190734863D;
 			this.motionY *= 0.9800000190734863D;
 			this.motionZ *= 0.9800000190734863D;
 
-			if (!this.worldObj.isRemote)
+			if (!this.world.isRemote)
 			{
 				BlockPos blockpos1 = new BlockPos(this);
 
 				if (this.onGround)
 				{
-					if (this.worldObj.getBlockState(blockpos1).getBlock() != Blocks.PISTON_EXTENSION)
+					if (this.world.getBlockState(blockpos1).getBlock() != Blocks.PISTON_EXTENSION)
 					{
 						this.motionX *= 0.699999988079071D;
 						this.motionZ *= 0.699999988079071D;
 						this.motionY *= -0.5D;
 						setDead();
 
-						if (!this.canSetAsBlock)
+						if (!this.dontSetBlock)
 						{
 							boolean placed = false;
 							BlockPos movePos;
@@ -85,20 +85,20 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 								movePos = blockpos1.add(0,i,0);
 								if(movePos.getY() > origPos.getY())
 									break;
-								if(!placed && this.worldObj.canBlockBePlaced(block, blockpos1.add(0, i, 0), true, net.minecraft.util.EnumFacing.UP, (Entity)null, (ItemStack)null))
+								if(!placed && this.world.mayPlace(block, blockpos1.add(0, i, 0), true, net.minecraft.util.EnumFacing.UP, null))
 								{
-									if((grav != null && !grav.canFallInto(this.worldObj, blockpos1.add(0, i, 0).down())) || (grav == null && !canFallInto(this.worldObj, blockpos1.add(0, i, 0).down())))
-										placed = this.worldObj.setBlockState(blockpos1.add(0, i, 0), this.fallTile, 2);
+									if((grav != null && !grav.canFallInto(this.world, blockpos1.add(0, i, 0).down())) || (grav == null && !canFallInto(this.world, blockpos1.add(0, i, 0).down())))
+										placed = this.world.setBlockState(blockpos1.add(0, i, 0), this.fallTile, 2);
 								}
 							}
 							if(placed)
 							{
 								if(grav != null)
-									grav.onEndFalling(this.worldObj, blockpos1);
+									grav.onEndFalling(this.world, blockpos1);
 
 								if ((this.tileEntityData != null) && ((block instanceof net.minecraft.block.ITileEntityProvider)))
 								{
-									TileEntity tileentity = this.worldObj.getTileEntity(blockpos1);
+									TileEntity tileentity = this.world.getTileEntity(blockpos1);
 
 									if (tileentity != null)
 									{
@@ -120,16 +120,16 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 									}
 								}
 							}
-							else if ((this.shouldDropItem) && (this.worldObj.getGameRules().getBoolean("doEntityDrops")))
+							else if ((this.shouldDropItem) && (this.world.getGameRules().getBoolean("doEntityDrops")))
 							{
 								entityDropItem(new ItemStack(block, 1, block.damageDropped(this.fallTile)), 0.0F);
 							}
 						}
 					}
 				}
-				else if (((this.fallTime > 100) && (!this.worldObj.isRemote) && ((blockpos1.getY() < 1) || (blockpos1.getY() > 256))) || (this.fallTime > 600))
+				else if (((this.fallTime > 100) && (!this.world.isRemote) && ((blockpos1.getY() < 1) || (blockpos1.getY() > 256))) || (this.fallTime > 600))
 				{
-					if ((this.shouldDropItem) && (this.worldObj.getGameRules().getBoolean("doEntityDrops")))
+					if ((this.shouldDropItem) && (this.world.getGameRules().getBoolean("doEntityDrops")))
 					{
 						entityDropItem(new ItemStack(block, 1, block.damageDropped(this.fallTile)), 0.0F);
 					}

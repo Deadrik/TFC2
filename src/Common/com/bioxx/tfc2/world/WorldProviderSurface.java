@@ -33,23 +33,24 @@ public class WorldProviderSurface extends WorldProvider
 	}
 
 	@Override
-	protected void createBiomeProvider()
+	protected void init()
 	{
+		this.hasSkyLight = true;
 		biomeProvider = new BiomeProviderTFC();
-		WorldGen.initialize(worldObj);
-		WeatherManager.setupWeather(worldObj);
+		WorldGen.initialize(world);
+		WeatherManager.setupWeather(world);
 	}
 
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderSurface(this.worldObj, worldObj.getSeed(), false, "");
+		return new ChunkProviderSurface(this.world, world.getSeed(), false, "");
 	}
 
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z)
 	{
-		Block b = Core.getGroundAboveSeaLevel(this.worldObj, new BlockPos(x, 0, z));
+		Block b = Core.getGroundAboveSeaLevel(this.world, new BlockPos(x, 0, z));
 		return b == TFCBlocks.Sand;
 	}
 
@@ -84,7 +85,7 @@ public class WorldProviderSurface extends WorldProvider
 		if(m.islandParams.getIslandTemp() == ClimateTemp.SUBTROPICAL || m.islandParams.getIslandTemp() == ClimateTemp.TROPICAL)
 			return false;*/
 
-		return worldObj.canSnowAtBody(pos, checkLight);
+		return world.canSnowAtBody(pos, checkLight);
 	}
 
 	@Override
@@ -110,46 +111,46 @@ public class WorldProviderSurface extends WorldProvider
 	@Override
 	public void updateWeather()
 	{
-		if (!getHasNoSky())
+		if (!hasNoSky())
 		{
-			if (!worldObj.isRemote && worldObj.provider.getDimension() == 0)
+			if (!world.isRemote && world.provider.getDimension() == 0)
 			{
-				worldObj.getWorldInfo().setRainTime(48000);
-				worldObj.getWorldInfo().setRaining(false);
-				int i = worldObj.getWorldInfo().getCleanWeatherTime();
+				world.getWorldInfo().setRainTime(48000);
+				world.getWorldInfo().setRaining(false);
+				int i = world.getWorldInfo().getCleanWeatherTime();
 
 				if (i > 0)
 				{
 					--i;
-					worldObj.getWorldInfo().setCleanWeatherTime(i);
-					worldObj.getWorldInfo().setThunderTime(worldObj.getWorldInfo().isThundering() ? 1 : 2);
-					worldObj.getWorldInfo().setRainTime(worldObj.getWorldInfo().isRaining() ? 1 : 2);
+					world.getWorldInfo().setCleanWeatherTime(i);
+					world.getWorldInfo().setThunderTime(world.getWorldInfo().isThundering() ? 1 : 2);
+					world.getWorldInfo().setRainTime(world.getWorldInfo().isRaining() ? 1 : 2);
 				}
-				int j = worldObj.getWorldInfo().getThunderTime();
+				int j = world.getWorldInfo().getThunderTime();
 
 				if (j <= 0)
 				{
-					if (worldObj.getWorldInfo().isThundering())
+					if (world.getWorldInfo().isThundering())
 					{
-						worldObj.getWorldInfo().setThunderTime(worldObj.rand.nextInt(12000) + 3600);
+						world.getWorldInfo().setThunderTime(world.rand.nextInt(12000) + 3600);
 					}
 					else
 					{
-						worldObj.getWorldInfo().setThunderTime(worldObj.rand.nextInt(168000) + 12000);
+						world.getWorldInfo().setThunderTime(world.rand.nextInt(168000) + 12000);
 					}
 				}
 				else
 				{
 					--j;
-					worldObj.getWorldInfo().setThunderTime(j);
+					world.getWorldInfo().setThunderTime(j);
 
 					if (j <= 0)
 					{
-						worldObj.getWorldInfo().setThundering(!worldObj.getWorldInfo().isThundering());
+						world.getWorldInfo().setThundering(!world.getWorldInfo().isThundering());
 					}
 				}
 
-				worldObj.prevThunderingStrength = worldObj.thunderingStrength;
+				world.prevThunderingStrength = world.thunderingStrength;
 
 				/*if (worldObj.getWorldInfo().isThundering())
 				{
@@ -163,9 +164,9 @@ public class WorldProviderSurface extends WorldProvider
 				worldObj.thunderingStrength = MathHelper.clamp_float(worldObj.thunderingStrength, 0.0F, 1.0F);*/
 
 
-				worldObj.prevRainingStrength = worldObj.rainingStrength;
+				world.prevRainingStrength = world.rainingStrength;
 
-				Iterator iterator = worldObj.playerEntities.iterator();
+				Iterator iterator = world.playerEntities.iterator();
 
 				//TODO: Add thunder support
 

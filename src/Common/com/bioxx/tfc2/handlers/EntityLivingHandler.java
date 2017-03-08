@@ -10,7 +10,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.GameType;
@@ -28,11 +27,8 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
 import com.bioxx.tfc2.api.TFCOptions;
-import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
-import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
-import com.bioxx.tfc2.core.Food;
 import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.networking.client.CFoodPacket;
 import com.bioxx.tfc2.potion.PotionTFC;
@@ -50,9 +46,9 @@ public class EntityLivingHandler
 			EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
 
 			//If the player enters the portal realm then set them to adventure mode to prevent altering the world
-			if(player.worldObj.provider.getDimension() == 2 && !player.capabilities.isCreativeMode && !player.isSpectator())
+			if(player.world.provider.getDimension() == 2 && !player.capabilities.isCreativeMode && !player.isSpectator())
 				player.setGameType(GameType.ADVENTURE);
-			else if(player.worldObj.provider.getDimension() == 0 && !player.capabilities.isCreativeMode && !player.isSpectator())
+			else if(player.world.provider.getDimension() == 0 && !player.capabilities.isCreativeMode && !player.isSpectator())
 			{
 				IslandMap map = WorldGen.getInstance().getIslandMap((int)player.posX >> 12, (int)player.posZ >> 12);
 				if(map.getIslandData().isIslandUnlocked && !player.isSpectator())
@@ -70,42 +66,43 @@ public class EntityLivingHandler
 				player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newMaxHealth);
 			}
 
-			if(!player.worldObj.isRemote)
+			if(!player.world.isRemote)
 			{
 				//Tick Item Updates
-				for(int i = 0; i < player.inventory.mainInventory.length; i++)
+				for(int i = 0; i < player.inventory.mainInventory.size(); i++)
 				{
-					ItemStack is = player.inventory.mainInventory[i];
+					//Need to fix due to inventory changes in 1.11
+					/*ItemStack is = player.inventory.mainInventory[i];
 					if(is != null)
 					{
 						if(is.getItem() instanceof IUpdateInInventory)
 						{
 							((IUpdateInInventory)is.getItem()).inventoryUpdate(player, is);
-							if(is.stackSize == 0)
+							if(is.getMaxStackSize() == 0)
 								player.inventory.mainInventory[i] = null;
 						}
 						if(is.getItem() instanceof IFood)
 						{
 							IFood food = (IFood)is.getItem();
-							long time = Food.getDecayTimer(is)-player.worldObj.getWorldTime();
+							long time = Food.getDecayTimer(is)-player.world.getWorldTime();
 							if(time < 0)
 							{
-								int expiredAmt = (int)Math.min(1+(time / Food.getExpirationTimer(is))* (-1), is.stackSize);
+								int expiredAmt = (int)Math.min(1+(time / Food.getExpirationTimer(is))* (-1), is.getMaxStackSize());
 								expiredAmt = Math.max(expiredAmt, 0);
-								is.stackSize-=expiredAmt;
+								is.shrink(expiredAmt);
 								Food.setDecayTimer(is, Food.getDecayTimer(is)+Food.getExpirationTimer(is)*expiredAmt);
-								if(is.stackSize <= 0)
+								if(is.getMaxStackSize() <= 0)
 									player.inventory.mainInventory[i] = null;
 
-								ItemStack out = food.onDecayed(is, player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+								ItemStack out = food.onDecayed(is, player.world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
 								if(out != null)
 								{
-									out.stackSize = expiredAmt;
+									out.setCount(expiredAmt);
 									player.inventory.addItemStackToInventory(out);
 								}
 							}
 						}
-					}
+					}*/
 				}
 
 				//Drain Nutrition
@@ -236,7 +233,7 @@ public class EntityLivingHandler
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 
-		if(event.getEntity().worldObj.isRemote)
+		if(event.getEntity().world.isRemote)
 			return;
 
 		if (entity instanceof EntityPlayer)
@@ -248,7 +245,7 @@ public class EntityLivingHandler
 			pi.tempSkills = skills;
 
 			// Save the item in the back slot if keepInventory is set to true.
-			if (entity.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory") && player.inventory instanceof InventoryPlayerTFC)
+			if (entityIn.world.getGameRules().getGameRuleBooleanValue("keepInventory") && player.inventory instanceof InventoryPlayerTFC)
 			{
 				pi.tempEquipment = ((InventoryPlayerTFC) player.inventory).extraEquipInventory.clone();
 			}*/
@@ -270,7 +267,7 @@ public class EntityLivingHandler
 	public void onLivingDrop(LivingDropsEvent event)
 	{
 		boolean processed = false;
-		if (!event.getEntity().worldObj.isRemote && event.isRecentlyHit() && !(event.getEntity() instanceof EntityPlayer) && !(event.getEntity() instanceof EntityZombie))
+		if (!event.getEntity().world.isRemote && event.isRecentlyHit() && !(event.getEntity() instanceof EntityPlayer) && !(event.getEntity() instanceof EntityZombie))
 		{
 			if(event.getSource().getSourceOfDamage() instanceof EntityPlayer || event.getSource().isProjectile())
 			{

@@ -3,9 +3,9 @@
 	"defaults": {
 		"model": "stairs",
 		"textures": {
-			"bottom": "tfc2:blocks/wood/Sequoia Plank",
-        	"top": "tfc2:blocks/wood/Sequoia Plank",
-        	"side": "tfc2:blocks/wood/Sequoia Plank"
+			"bottom": "tfc2:blocks/wood/sequoia plank",
+        	"top": "tfc2:blocks/wood/sequoia plank",
+        	"side": "tfc2:blocks/wood/sequoia plank"
 		}
 	},
 	"variants": {

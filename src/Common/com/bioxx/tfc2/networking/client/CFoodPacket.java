@@ -62,13 +62,13 @@ public class CFoodPacket implements IMessage
 	{
 		@Override
 		public IMessage onMessage(final CFoodPacket message, MessageContext ctx) {
-			IThreadListener mainThread = net.minecraft.client.Minecraft.getMinecraft(); //(WorldServer) ctx.getServerHandler().playerEntity.worldObj; // or Minecraft.getMinecraft() on the client
+			IThreadListener mainThread = net.minecraft.client.Minecraft.getMinecraft(); //(WorldServer) ctx.getServerHandler().playerentityIn.world; // or Minecraft.getMinecraft() on the client
 			mainThread.addScheduledTask(new Runnable() 
 			{
 				@Override
 				public void run() 
 				{
-					IFoodStatsTFC stats = (IFoodStatsTFC)net.minecraft.client.Minecraft.getMinecraft().thePlayer.getFoodStats();
+					IFoodStatsTFC stats = (IFoodStatsTFC)net.minecraft.client.Minecraft.getMinecraft().player.getFoodStats();
 					stats.getNutritionMap().put(EnumFoodGroup.Fruit, message.nutritionFruit);
 					stats.getNutritionMap().put(EnumFoodGroup.Vegetable, message.nutritionVeg);
 					stats.getNutritionMap().put(EnumFoodGroup.Grain, message.nutritionGrain);

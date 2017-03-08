@@ -51,10 +51,11 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	 *******************************************************************************/
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+	public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos blockIn)
 	{
-		super.neighborChanged(state, worldIn, pos, blockIn);
-		checkAndDropBlock(worldIn, pos, state);
+
+		super.onNeighborChange(worldIn, pos, blockIn);
+		checkAndDropBlock((World) worldIn, pos, worldIn.getBlockState(pos));
 	}
 
 	@Override
@@ -167,7 +168,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
 	{
 		return NULL_AABB;
 	}

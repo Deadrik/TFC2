@@ -1,6 +1,5 @@
 package com.bioxx.tfc2.blocks.terrain;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -38,16 +37,16 @@ public class BlockStoneStalac extends BlockTerra
 	 * 1. Content 
 	 *******************************************************************************/
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+	public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos blockIn)
 	{
 		IBlockState s = worldIn.getBlockState(pos.down());
 		if(s.getBlock() != this && s.getBlock() != TFCBlocks.Stone)
 		{
-			worldIn.setBlockToAir(pos);
+			((World)worldIn).setBlockToAir(pos);
 		}
 		else
 		{
-			super.neighborChanged(state, worldIn, pos, blockIn);
+			super.onNeighborChange(worldIn, pos, blockIn);
 		}
 	}
 
@@ -61,7 +60,7 @@ public class BlockStoneStalac extends BlockTerra
 	}
 
 	@Override
-	public boolean isVisuallyOpaque()
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return false;
 	}

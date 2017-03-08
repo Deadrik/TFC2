@@ -34,7 +34,7 @@ public class BlockRubble extends BlockGravity
 	@Override
 	public void onStartFalling(EntityFallingBlockTFC fallingEntity) 
 	{
-		Core.playSoundAtEntity(fallingEntity, TFC_Sounds.FALLININGROCKSHORT, 0.8f, 0.5f+(fallingEntity.worldObj.rand.nextFloat()*0.3f));
+		Core.playSoundAtEntity(fallingEntity, TFC_Sounds.FALLININGROCKSHORT, 0.8f, 0.5f+(fallingEntity.world.rand.nextFloat()*0.3f));
 	}
 
 	@Override

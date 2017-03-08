@@ -5,19 +5,19 @@
 	},
     "variants": {
     	"ore": {
-        	"bismuthinite": { "textures": { "all": "tfc2:blocks/ores/Bismuthinite Ore" } },
-       		"cassiterite": { "textures": { "all": "tfc2:blocks/ores/Cassiterite Ore" } },
-        	"garnierite": { "textures": { "all": "tfc2:blocks/ores/Garnierite Ore" } },
-        	"hematite": { "textures": { "all": "tfc2:blocks/ores/Hematite Ore" } },
-        	"limonite": { "textures": { "all": "tfc2:blocks/ores/Limonite Ore" } },
-        	"magnetite": { "textures": { "all": "tfc2:blocks/ores/Magnetite Ore" } },
-        	"malachite": { "textures": { "all": "tfc2:blocks/ores/Malachite Ore" } },
-        	"native_gold": { "textures": { "all": "tfc2:blocks/ores/Native Gold Ore" } },
-        	"sphalerite": { "textures": { "all": "tfc2:blocks/ores/Sphalerite Ore" } },
-        	"tetrahedrite": { "textures": { "all": "tfc2:blocks/ores/Tetrahedrite Ore" } },
-        	"galena": { "textures": { "all": "tfc2:blocks/ores/Galena Ore" } },
-        	"anthracite": { "textures": { "all": "tfc2:blocks/ores/Anthracite Ore" } },
-        	"lignite": { "textures": { "all": "tfc2:blocks/ores/Lignite Ore" } }
+        	"bismuthinite": { "textures": { "all": "tfc2:blocks/ores/bismuthinite ore" } },
+       		"cassiterite": { "textures": { "all": "tfc2:blocks/ores/cassiterite ore" } },
+        	"garnierite": { "textures": { "all": "tfc2:blocks/ores/garnierite ore" } },
+        	"hematite": { "textures": { "all": "tfc2:blocks/ores/hematite ore" } },
+        	"limonite": { "textures": { "all": "tfc2:blocks/ores/limonite ore" } },
+        	"magnetite": { "textures": { "all": "tfc2:blocks/ores/magnetite ore" } },
+        	"malachite": { "textures": { "all": "tfc2:blocks/ores/malachite ore" } },
+        	"native_gold": { "textures": { "all": "tfc2:blocks/ores/native gold ore" } },
+        	"sphalerite": { "textures": { "all": "tfc2:blocks/ores/sphalerite ore" } },
+        	"tetrahedrite": { "textures": { "all": "tfc2:blocks/ores/tetrahedrite ore" } },
+        	"galena": { "textures": { "all": "tfc2:blocks/ores/galena ore" } },
+        	"anthracite": { "textures": { "all": "tfc2:blocks/ores/anthracite ore" } },
+        	"lignite": { "textures": { "all": "tfc2:blocks/ores/lignite ore" } }
         },
         "inventory": [{
             "transform": "forge:default-block"

@@ -112,23 +112,23 @@ public class CommonProxy
 	protected void registerEntities() 
 	{
 		DataSerializersTFC.register();
-		EntityRegistry.registerModEntity(EntityCart.class, "Cart", 0, TFC.instance, 80, 3, true, 0x000000, 0x00ff00);
-		EntityRegistry.registerModEntity(EntityBear.class, "Bear", 1, TFC.instance, 80, 3, true, 0x000000, 0xff0000);
-		EntityRegistry.registerModEntity(EntityBearPanda.class, "BearPanda", 2, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityLion.class, "Lion", 3, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityTiger.class, "Tiger", 4, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityRhino.class, "Rhino", 5, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityElephant.class, "Elephant", 6, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityMammoth.class, "Mammoth", 7, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityBoar.class, "Boar", 8, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityBison.class, "Bison", 9, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityFoxRed.class, "FoxRed", 10, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityFoxArctic.class, "FoxArctic", 11, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityFoxDesert.class, "FoxDesert", 12, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityHippo.class, "Hippo", 13, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityBigCat.class, "BigCat", 14, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntitySabertooth.class, "Sabertooth", 15, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(EntityElk.class, "Elk", 16, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Cart"), EntityCart.class, "Cart", 0, TFC.instance, 80, 3, true, 0x000000, 0x00ff00);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Bear"), EntityBear.class, "Bear", 1, TFC.instance, 80, 3, true, 0x000000, 0xff0000);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"BearPanda"), EntityBearPanda.class, "BearPanda", 2, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Lion"), EntityLion.class, "Lion", 3, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Tiger"), EntityTiger.class, "Tiger", 4, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Rhino"), EntityRhino.class, "Rhino", 5, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Elephant"), EntityElephant.class, "Elephant", 6, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Mammoth"), EntityMammoth.class, "Mammoth", 7, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Boar"), EntityBoar.class, "Boar", 8, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Bison"), EntityBison.class, "Bison", 9, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"FoxRed"), EntityFoxRed.class, "FoxRed", 10, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"FoxArctic"), EntityFoxArctic.class, "FoxArctic", 11, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"FoxDesert"), EntityFoxDesert.class, "FoxDesert", 12, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Hippo"), EntityHippo.class, "Hippo", 13, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"BigCat"), EntityBigCat.class, "BigCat", 14, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Sabertooth"), EntitySabertooth.class, "Sabertooth", 15, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.ModID+"Elk"), EntityElk.class, "Elk", 16, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 	}
 
 	public void postInit(FMLPostInitializationEvent event)

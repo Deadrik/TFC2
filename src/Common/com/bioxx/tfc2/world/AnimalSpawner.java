@@ -34,7 +34,7 @@ public class AnimalSpawner
 			{
 				EntityLiving e = group.getEntityClass().getConstructor(new Class[] {World.class}).newInstance(new Object[] {world});
 				e.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), world.rand.nextFloat() * 360.0F, 0.0F);
-				world.spawnEntityInWorld(e);
+				world.spawnEntity(e);
 				ientitylivingdata = e.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(e)), ientitylivingdata);
 
 			}

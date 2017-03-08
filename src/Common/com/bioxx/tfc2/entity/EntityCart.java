@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -56,7 +57,7 @@ public class EntityCart extends Entity
 
 			if (j < cartInv.getSizeInventory())
 			{
-				cartInv.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbt1));
+				cartInv.setInventorySlotContents(j, new ItemStack(nbt1));
 			}
 		}
 	}
@@ -122,7 +123,7 @@ public class EntityCart extends Entity
 	}
 
 	@Override
-	public boolean processInitialInteract(EntityPlayer player, ItemStack stack, EnumHand hand)
+	public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
 	{
 		if (this.isBeingRidden() && getPassengers().get(0) instanceof EntityPlayer && getPassengers().get(0) != player)
 		{
@@ -146,9 +147,9 @@ public class EntityCart extends Entity
 			else
 			{
 				PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(player).entityForInventory = this;
-				if(!worldObj.isRemote)
+				if(!world.isRemote)
 				{
-					player.openGui(TFC.instance, 1, worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+					player.openGui(TFC.instance, 1, world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
 				}
 			}
 
@@ -235,7 +236,7 @@ public class EntityCart extends Entity
 			this.motionY *= 0.749999988079071D;
 			this.motionZ *= 0.7900000095367432D;
 
-			this.moveEntity(this.motionX, this.motionY, this.motionZ);
+			this.move(MoverType.SELF,this.motionX, this.motionY, this.motionZ);
 		}
 		else
 		{
@@ -243,14 +244,14 @@ public class EntityCart extends Entity
 			if(dist > 0.05)
 			{
 				double angle = 0;
-				if(!worldObj.isRemote)
+				if(!world.isRemote)
 					angle = setFacingAngle((pullEntity.rotationYaw-90) % 360);
 				angle = getFacingAngle();
 				double posX = pullEntity.posX+Math.cos(Math.toRadians(angle))*1.2;
 				double posY = pullEntity.posY;
 				double posZ = pullEntity.posZ+Math.sin(Math.toRadians(angle))*1.2;
 
-				if(!worldObj.isRemote)
+				if(!world.isRemote)
 					this.setLocationAndAngles(posX, posY, posZ, pullEntity.rotationYaw, 0);
 				else
 				{
@@ -275,9 +276,9 @@ public class EntityCart extends Entity
 		}
 
 
-		if (!this.worldObj.isRemote)
+		if (!this.world.isRemote)
 		{
-			List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+			List list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 
 			if (list != null && !list.isEmpty())
 			{

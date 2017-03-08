@@ -53,7 +53,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		int l = this.guiTop;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, 102);
 		//Draw the player avatar
-		GuiInventory.drawEntityOnScreen(k + 51, l + 75, 30, k + 51 - this.xSizeLow, l + 75 - 50 - this.ySizeLow, this.mc.thePlayer);
+		GuiInventory.drawEntityOnScreen(k + 51, l + 75, 30, k + 51 - this.xSizeLow, l + 75 - 50 - this.ySizeLow, this.mc.player);
 
 		PlayerInventory.drawInventory(this, width, height, ySize - PlayerInventory.invYSize);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -120,7 +120,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		//this.fontRendererObj.drawString(I18n.format("container.crafting", new Object[0]), 86, 7, 4210752);
+		//this.fontRenderer.drawString(I18n.format("container.crafting", new Object[0]), 86, 7, 4210752);
 	}
 
 	@Override
@@ -140,12 +140,12 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 
 		if (this.mc.playerController.isInCreativeMode())
 		{
-			this.mc.displayGuiScreen(new GuiContainerCreative(this.mc.thePlayer));
+			this.mc.displayGuiScreen(new GuiContainerCreative(this.mc.player));
 		}
 		else
 			super.initGui();
 
-		if (!this.mc.thePlayer.getActivePotionEffects().isEmpty())
+		if (!this.mc.player.getActivePotionEffects().isEmpty())
 		{
 			//this.guiLeft = 160 + (this.width - this.xSize - 200) / 2;
 			this.guiLeft = (this.width - this.xSize) / 2;
@@ -196,7 +196,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 
 	protected boolean isMouseOverSlot(Slot par1Slot, int par2, int par3)
 	{
-		return this.isPointInRegion(par1Slot.xDisplayPosition, par1Slot.yDisplayPosition, 16, 16, par2, par3);
+		return this.isPointInRegion(par1Slot.xPos, par1Slot.yPos, 16, 16, par2, par3);
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 	{
 		int var1 = this.guiLeft - 124;
 		int var2 = this.guiTop;
-		Collection var4 = this.mc.thePlayer.getActivePotionEffects();
+		Collection var4 = this.mc.player.getActivePotionEffects();
 
 		//Remvoed during port
 		/*if (!var4.isEmpty())
@@ -218,7 +218,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 			if (var4.size() > 5)
 				var6 = 132 / (var4.size() - 1);
 
-			for (Iterator var7 = this.mc.thePlayer.getActivePotionEffects().iterator(); var7.hasNext(); var2 += var6)
+			for (Iterator var7 = this.mc.player.getActivePotionEffects().iterator(); var7.hasNext(); var2 += var6)
 			{
 				PotionEffect var8 = (PotionEffect)var7.next();
 				Potion var9 = Potion.potionTypes[var8.getPotionID()] instanceof TFCPotion ? 
@@ -243,9 +243,9 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 						else if (var8.getAmplifier() == 3)
 							var12 = var12 + " IV";
 
-						this.fontRendererObj.drawStringWithShadow(var12, var1 + 10 + 18, var2 + 6, 16777215);
+						this.fontRenderer.drawStringWithShadow(var12, var1 + 10 + 18, var2 + 6, 16777215);
 						String var11 = Potion.getDurationString(var8);
-						this.fontRendererObj.drawStringWithShadow(var11, var1 + 10 + 18, var2 + 6 + 10, 8355711);
+						this.fontRenderer.drawStringWithShadow(var11, var1 + 10 + 18, var2 + 6 + 10, 8355711);
 			}
 		}*/
 	}

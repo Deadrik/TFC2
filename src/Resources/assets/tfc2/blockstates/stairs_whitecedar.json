@@ -3,9 +3,9 @@
 	"defaults": {
 		"model": "stairs",
 		"textures": {
-			"bottom": "tfc2:blocks/wood/White Cedar Plank",
-        	"top": "tfc2:blocks/wood/White Cedar Plank",
-        	"side": "tfc2:blocks/wood/White Cedar Plank"
+			"bottom": "tfc2:blocks/wood/white cedar plank",
+        	"top": "tfc2:blocks/wood/white cedar plank",
+        	"side": "tfc2:blocks/wood/white cedar plank"
 		}
 	},
 	"variants": {

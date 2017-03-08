@@ -44,7 +44,7 @@ public class GuiKnappingRecipeButton extends GuiButton
 
 			if(hovered)
 			{
-				((GuiContainerTFC)Minecraft.getMinecraft().currentScreen).drawTooltip(xPos, yPos, is.getTooltip(Minecraft.getMinecraft().thePlayer, false));
+				((GuiContainerTFC)Minecraft.getMinecraft().currentScreen).drawTooltip(xPos, yPos, is.getTooltip(Minecraft.getMinecraft().player, false));
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			}
 		}

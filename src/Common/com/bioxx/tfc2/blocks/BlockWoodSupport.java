@@ -3,7 +3,6 @@ package com.bioxx.tfc2.blocks;
 import java.util.Arrays;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -92,7 +91,7 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 	{
 		world.setBlockToAir(pos);
 		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.STICK, 1+world.rand.nextInt(3)));
-		world.spawnEntityInWorld(ei);
+		world.spawnEntity(ei);
 	}
 
 	@Override
@@ -231,23 +230,23 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos blockIn)
 	{
-		state = getActualState(state, world, pos);
+		IBlockState state = getActualState(world.getBlockState(pos), world, pos);
 		if(state.getValue(SPAN))
 		{
 			if(state.getValue(EAST_CONNECTION) != state.getValue(WEST_CONNECTION) || state.getValue(NORTH_CONNECTION) != state.getValue(SOUTH_CONNECTION))
 			{
-				this.createFallingEntity(world, pos, state);
+				this.createFallingEntity((World) world, pos, state);
 				return;
 			}
 			else if(!state.getValue(EAST_CONNECTION) && !state.getValue(WEST_CONNECTION) && !state.getValue(NORTH_CONNECTION) && !state.getValue(SOUTH_CONNECTION))
 			{
-				this.createFallingEntity(world, pos, state);
+				this.createFallingEntity((World) world, pos, state);
 				return;
 			}
 		}
-		super.neighborChanged(state, world, pos, blockIn);
+		super.onNeighborChange(world, pos, blockIn);
 	}
 
 	/*******************************************************************************

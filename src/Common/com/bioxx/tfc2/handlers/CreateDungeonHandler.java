@@ -91,6 +91,8 @@ public class CreateDungeonHandler
 		while(queue.peek() != null)
 		{
 			DungeonRoom room = queue.poll();
+			if(room == null || room.getSchematic() == null)
+				continue;
 			boolean isRoomValid = true;
 			boolean addedRoom = false;
 			for(DungeonDirection dir : room.getSchematic().getConnections())

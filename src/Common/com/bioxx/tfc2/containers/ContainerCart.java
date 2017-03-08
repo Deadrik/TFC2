@@ -64,15 +64,15 @@ public class ContainerCart extends ContainerTFC
 					return null;
 			}
 
-			if (slotStack.stackSize <= 0)
+			if (slotStack.getMaxStackSize() <= 0)
 				slot.putStack(null);
 			else
 				slot.onSlotChanged();
 
-			if (slotStack.stackSize == origStack.stackSize)
+			if (slotStack.getMaxStackSize() == origStack.getMaxStackSize())
 				return null;
 
-			slot.onPickupFromSlot(player, slotStack);
+			slot.onTake(player, slotStack);
 		}
 
 		return origStack;

@@ -68,30 +68,30 @@ public class ContainerTFC extends Container
 							Food.setDecayTimer(slotStack, ex2);
 					}
 
-					//int l1 = clickedButton == 0 ? itemstack4.stackSize : 1;
-					int l1 = itemstack4.stackSize;
+					//int l1 = clickedButton == 0 ? itemstack4.getMaxStackSize() : 1;
+					int l1 = itemstack4.getMaxStackSize();
 
-					if (l1 > sourceSlot.getItemStackLimit(itemstack4) - slotStack.stackSize)
+					if (l1 > sourceSlot.getItemStackLimit(itemstack4) - slotStack.getMaxStackSize())
 					{
-						l1 = sourceSlot.getItemStackLimit(itemstack4) - slotStack.stackSize;
+						l1 = sourceSlot.getItemStackLimit(itemstack4) - slotStack.getMaxStackSize();
 					}
 
-					if (l1 > itemstack4.getMaxStackSize() - slotStack.stackSize)
+					if (l1 > itemstack4.getMaxStackSize() - slotStack.getMaxStackSize())
 					{
-						l1 = itemstack4.getMaxStackSize() - slotStack.stackSize;
+						l1 = itemstack4.getMaxStackSize() - slotStack.getMaxStackSize();
 					}
 
 					itemstack4.splitStack(l1);
 
-					if (itemstack4.stackSize == 0)
+					if (itemstack4.getMaxStackSize() == 0)
 					{
-						p.inventory.setItemStack((ItemStack)null);
+						p.inventory.setItemStack(ItemStack.EMPTY);
 					}
 
-					slotStack.stackSize += l1;
+					slotStack.grow(l1);
 					return null;
 				}
-				else if (itemstack4.stackSize <= sourceSlot.getItemStackLimit(itemstack4))
+				else if (itemstack4.getMaxStackSize() <= sourceSlot.getItemStackLimit(itemstack4))
 				{
 					sourceSlot.putStack(itemstack4);
 					p.inventory.setItemStack(slotStack);
@@ -136,7 +136,7 @@ public class ContainerTFC extends Container
 
 		if (is.isStackable())
 		{
-			while (is.stackSize > 0 && (!par4 && slotIndex < slotFinish || par4 && slotIndex >= slotStart))
+			while (is.getMaxStackSize() > 0 && (!par4 && slotIndex < slotFinish || par4 && slotIndex >= slotStart))
 			{
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
@@ -145,33 +145,33 @@ public class ContainerTFC extends Container
 						&& slotstack.getItem() == is.getItem()
 						&& (!is.getHasSubtypes() || is.getMetadata() == slotstack.getMetadata())
 						&& ItemStack.areItemStackTagsEqual(is, slotstack)
-						&& slotstack.stackSize < slot.getSlotStackLimit())
+						&& slotstack.getMaxStackSize() < slot.getSlotStackLimit())
 				{
-					int mergedStackSize = is.stackSize + getSmaller(slotstack.stackSize, slot.getSlotStackLimit());
+					int mergedStackSize = is.getMaxStackSize() + getSmaller(slotstack.getMaxStackSize(), slot.getSlotStackLimit());
 
 					//First we check if we can add the two stacks together and the resulting stack is smaller than the maximum size for the slot or the stack
 					if (mergedStackSize <= is.getMaxStackSize() && mergedStackSize <= slot.getSlotStackLimit())
 					{
-						is.stackSize = 0;
-						slotstack.stackSize = mergedStackSize;
+						is.setCount(0);
+						slotstack.setCount(mergedStackSize);
 						slot.onSlotChanged();
 						merged = true;
 					}
-					else if (slotstack.stackSize < is.getMaxStackSize() && slotstack.stackSize < slot.getSlotStackLimit())
+					else if (slotstack.getMaxStackSize() < is.getMaxStackSize() && slotstack.getMaxStackSize() < slot.getSlotStackLimit())
 					{
 						// Slot stack size is greater than or equal to the item's max stack size. Most containers are this case.
 						if (slot.getSlotStackLimit() >= is.getMaxStackSize())
 						{
-							is.stackSize -= is.getMaxStackSize() - slotstack.stackSize;
-							slotstack.stackSize = is.getMaxStackSize();
+							is.shrink(is.getMaxStackSize() - slotstack.getMaxStackSize());
+							slotstack.setCount(is.getMaxStackSize());
 							slot.onSlotChanged();
 							merged = true;
 						}
 						// Slot stack size is smaller than the item's normal max stack size. Example: Log Piles
 						else if (slot.getSlotStackLimit() < is.getMaxStackSize())
 						{
-							is.stackSize -= slot.getSlotStackLimit() - slotstack.stackSize;
-							slotstack.stackSize = slot.getSlotStackLimit();
+							is.shrink(slot.getSlotStackLimit() - slotstack.getMaxStackSize());
+							slotstack.setCount(slot.getSlotStackLimit());
 							slot.onSlotChanged();
 							merged = true;
 						}
@@ -185,7 +185,7 @@ public class ContainerTFC extends Container
 			}
 		}
 
-		if (is.stackSize > 0)
+		if (is.getMaxStackSize() > 0)
 		{
 			if (par4)
 				slotIndex = slotFinish - 1;
@@ -196,11 +196,11 @@ public class ContainerTFC extends Container
 			{
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
-				if (slotstack == null && slot.isItemValid(is) && slot.getSlotStackLimit() < is.stackSize)
+				if (slotstack == null && slot.isItemValid(is) && slot.getSlotStackLimit() < is.getMaxStackSize())
 				{
 					ItemStack copy = is.copy();
-					copy.stackSize = slot.getSlotStackLimit();
-					is.stackSize -= slot.getSlotStackLimit();
+					copy.setCount(slot.getSlotStackLimit());
+					is.shrink(slot.getSlotStackLimit());
 					slot.putStack(copy);
 					slot.onSlotChanged();
 					merged = true;
@@ -211,7 +211,7 @@ public class ContainerTFC extends Container
 				{
 					slot.putStack(is.copy());
 					slot.onSlotChanged();
-					is.stackSize = 0;
+					is.setCount(0);
 					merged = true;
 					break;
 				}
@@ -251,7 +251,7 @@ public class ContainerTFC extends Container
 					shouldSave = true;
 
 				itemstack1 = itemstack == null ? null : itemstack.copy();
-				if(itemstack1 != null && itemstack1.stackSize == 0)
+				if(itemstack1 != null && itemstack1.getMaxStackSize() == 0)
 					itemstack1 = null;
 				this.inventoryItemStacks.set(i, itemstack1);
 
@@ -301,7 +301,7 @@ public class ContainerTFC extends Container
 
 	public static boolean isItemStackEqual(ItemStack is1, ItemStack is2)
 	{
-		return is1.stackSize == is2.stackSize && is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() &&
+		return is1.getMaxStackSize() == is2.getMaxStackSize() && is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() &&
 				(is1.hasTagCompound() || !is2.hasTagCompound()) &&
 				(!is1.hasTagCompound() || areCompoundsEqual(is1, is2));
 	}
@@ -343,7 +343,7 @@ public class ContainerTFC extends Container
 		ItemStack is = transferStackInSlotTFC(entityplayer, slotNum);
 
 		// send a packet to make sure that the item is removed; that it stays removed.
-		if ( ! slot.getHasStack() && entityplayer instanceof EntityPlayerMP && ! entityplayer.worldObj.isRemote )
+		if ( ! slot.getHasStack() && entityplayer instanceof EntityPlayerMP && ! entityplayer.world.isRemote )
 		{
 			EntityPlayerMP mp = (EntityPlayerMP) entityplayer;
 			mp.sendSlotContents( this, slot.slotNumber, slot.getStack() );

@@ -53,7 +53,7 @@ public class UICharComponent extends UIComponent
 
 	public float setupChar(char ch)
 	{
-		int i = Minecraft.getMinecraft().fontRendererObj.getCharWidth(ch) & 255;
+		int i = Minecraft.getMinecraft().fontRenderer.getCharWidth(ch) & 255;
 		renderChar = ch;
 		if (i == 0)
 		{

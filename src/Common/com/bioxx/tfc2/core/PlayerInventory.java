@@ -72,7 +72,7 @@ public class PlayerInventory
 				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 				byte byte0 = nbttagcompound1.getByte("Slot");
 				if(byte0 >= 0 && byte0 < 8)
-					containerInv.setInventorySlotContents(byte0, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+					containerInv.setInventorySlotContents(byte0, new ItemStack(nbttagcompound1));
 			}
 		}
 	}
@@ -108,7 +108,7 @@ public class PlayerInventory
 	{
 		par1Slot.slotNumber = container.inventorySlots.size();
 		container.inventorySlots.add(par1Slot);
-		container.inventoryItemStacks.add((ItemStack)null);
+		container.inventoryItemStacks.add(ItemStack.EMPTY);
 		return par1Slot;
 	}
 
@@ -120,7 +120,7 @@ public class PlayerInventory
 		int i1 = (screenHeight - (upperGuiHeight+invYSize)) / 2 + upperGuiHeight;
 		container.drawTexturedModalRect(l, i1, 0, 0, invXSize, invYSize);
 		//container.drawTexturedModalRect(l+invXSize, i1+1, 0, 87, 83, 83);
-		/*ItemStack is = getInventory(container.mc.thePlayer).extraEquipInventory[0];
+		/*ItemStack is = getInventory(container.mc.player).extraEquipInventory[0];
 		if(is != null)
 		{
 			if(is.getItem() instanceof ItemQuiver)
@@ -137,11 +137,11 @@ public class PlayerInventory
 	{
 		if(player.getEntityData().hasKey("craftingTable"))
 		{
-			player.inventoryContainer.getSlot(45).xDisplayPosition += 50000;
-			player.inventoryContainer.getSlot(46).xDisplayPosition += 50000;
-			player.inventoryContainer.getSlot(47).xDisplayPosition += 50000;
-			player.inventoryContainer.getSlot(48).xDisplayPosition += 50000;
-			player.inventoryContainer.getSlot(49).xDisplayPosition += 50000;
+			player.inventoryContainer.getSlot(45).xPos += 50000;
+			player.inventoryContainer.getSlot(46).xPos += 50000;
+			player.inventoryContainer.getSlot(47).xPos += 50000;
+			player.inventoryContainer.getSlot(48).xPos += 50000;
+			player.inventoryContainer.getSlot(49).xPos += 50000;
 		}
 	}
 

@@ -274,7 +274,7 @@ public class RoomSchematic extends Schematic
 		@Expose
 		private List<String> blockMap = new ArrayList<String>();
 
-		@SerializedName("floorY")
+		@SerializedName("floory")
 		@Expose
 		private Integer floorY = 0;
 
@@ -286,11 +286,11 @@ public class RoomSchematic extends Schematic
 		@Expose
 		private double weight = 1.0;
 
-		@SerializedName("roomType")
+		@SerializedName("roomtype")
 		@Expose
 		private String roomType = "normal";
 
-		@SerializedName("setPieceMap")
+		@SerializedName("setpiecemap")
 		@Expose
 		private List<String> setPieceMap = new ArrayList<String>();
 

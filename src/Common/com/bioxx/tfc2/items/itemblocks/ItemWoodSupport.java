@@ -71,13 +71,14 @@ public class ItemWoodSupport extends ItemWood
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos origPos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos origPos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
+		ItemStack stack = playerIn.getHeldItem(hand);
 		IBlockState iblockstate = worldIn.getBlockState(origPos);
 		Block block = iblockstate.getBlock();
 		BlockPos pos = origPos.offset(side);
 
-		if (stack.stackSize == 0)
+		if (stack.getMaxStackSize() == 0)
 		{
 			return EnumActionResult.FAIL;
 		}
@@ -85,7 +86,7 @@ public class ItemWoodSupport extends ItemWood
 		{
 			return EnumActionResult.FAIL;
 		}
-		if (worldIn.canBlockBePlaced(this.block, pos, false, side, (Entity)null, stack))
+		if (worldIn.mayPlace(this.block, pos, false, side, (Entity)null))
 		{
 			int meta = getMetadata(stack.getMetadata());
 			IBlockState scanState;
@@ -120,16 +121,16 @@ public class ItemWoodSupport extends ItemWood
 				}
 			}
 
-			if(foundRange != -1 && stack.stackSize >= foundRange)
+			if(foundRange != -1 && stack.getMaxStackSize() >= foundRange)
 			{
 				for(int i = 1; i <= foundRange; i++)
 				{
 					scanPos = origPos.offset(side, i);
-					IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, scanPos.offset(side.getOpposite()), side, hitX, hitY, hitZ, meta, playerIn);
+					IBlockState iblockstate1 = this.block.getStateForPlacement(worldIn, scanPos.offset(side.getOpposite()), side, hitX, hitY, hitZ, meta, playerIn);
 					if (placeBlockAt(stack, playerIn, worldIn, scanPos, side, hitX, hitY, hitZ, iblockstate1))
 					{
 						worldIn.playSound(scanPos.getX() + 0.5F, scanPos.getY() + 0.5F, scanPos.getZ() + 0.5F, this.block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, (this.block.getSoundType().getVolume() + 1.0F) / 2.0F, this.block.getSoundType().getPitch() * 0.8F, true);
-						stack.stackSize -= 1;
+						stack.shrink(1);
 					}
 				}
 			}

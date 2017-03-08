@@ -47,24 +47,24 @@
   "dirt.slide.short": {
     "category": "block",
     "sounds": [
-      "tfc2:fDirtS1",
-      "tfc2:fDirtS2"
+      "tfc2:fdirts1",
+      "tfc2:fdirts2"
     ]
   },
 
   "rock.slide.long": {
     "category": "block",
     "sounds": [
-      "tfc2:fRockL1",
-      "tfc2:fRockL2"
+      "tfc2:frockl1",
+      "tfc2:frockl2"
     ]
   },
 
   "rock.slide.short": {
     "category": "block",
     "sounds": [
-      "tfc2:fRockS1",
-      "tfc2:fRockS2"
+      "tfc2:frocks1",
+      "tfc2:frocks2"
     ]
   },
 
@@ -207,42 +207,42 @@
   "mob.fox.say": {
     "category": "ambient",
     "sounds": [
-      "tfc2:foxIdle1"
+      "tfc2:foxidle1"
     ]
   },
   
   "mob.fox.hurt": {
     "category": "ambient",
     "sounds": [
-      "tfc2:foxHurt1"
+      "tfc2:foxhurt1"
     ]
   },
   
   "mob.fox.death": {
     "category": "ambient",
     "sounds": [
-      "tfc2:foxDeath1"
+      "tfc2:foxdeath1"
     ]
   },
   
   "mob.lion.say": {
     "category": "ambient",
     "sounds": [
-      "tfc2:lionIdle1"
+      "tfc2:lionidle1"
     ]
   },
   
   "mob.lion.hurt": {
     "category": "ambient",
     "sounds": [
-      "tfc2:lionHurt1"
+      "tfc2:lionhurt1"
     ]
   },
   
   "mob.lion.death": {
     "category": "ambient",
     "sounds": [
-      "tfc2:lionDeath1"
+      "tfc2:liondeath1"
     ]
   },
   

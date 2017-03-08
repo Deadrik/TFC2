@@ -84,7 +84,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 				if (result != null)
 				{
 					setDecreasedStack(true); // Mark container so it won't decrease again.
-					if (!this.worldObj.isRemote && invPlayer.getCurrentItem().stackSize >= 5) // Server only to prevent it removing multiple times.
+					if (!this.worldObj.isRemote && invPlayer.getCurrentItem().getMaxStackSize() >= 5) // Server only to prevent it removing multiple times.
 						invPlayer.decrStackSize(invPlayer.currentItem, 5);
 					else // Clientside or if the player doesn't have enough clay, return before the output slot is set.
 					{
@@ -136,15 +136,15 @@ public class ContainerSpecialCrafting extends ContainerTFC
 			if (slotNum < 1 && !this.mergeItemStack(slotStack, 1, inventorySlots.size(), true))
 				return null;
 
-			if (slotStack.stackSize <= 0)
+			if (slotStack.getMaxStackSize() <= 0)
 				slot.putStack(null);
 			else
 				slot.onSlotChanged();
 
-			if (slotStack.stackSize == origStack.stackSize)
+			if (slotStack.getMaxStackSize() == origStack.getMaxStackSize())
 				return null;
 
-			slot.onPickupFromSlot(player, slotStack);
+			slot.onTake(player, slotStack);
 		}
 
 		return origStack;

@@ -37,9 +37,9 @@ public class BlockCollapsible extends BlockTerra
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
+	public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos blockIn)
 	{
-		world.scheduleUpdate(pos, this, tickRate(world));
+		((World)worldIn).scheduleUpdate(pos, this, tickRate((World)worldIn));
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class BlockCollapsible extends BlockTerra
 			world.setBlockToAir(pos);
 			EntityFallingBlockTFC entityfallingblock = new EntityFallingBlockTFC(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, stateNew);
 			((IGravityBlock)getFallBlockType(state).getBlock()).onStartFalling(entityfallingblock);
-			world.spawnEntityInWorld(entityfallingblock);
+			world.spawnEntity(entityfallingblock);
 			onCreateFallingEntity(entityfallingblock, world, pos);
 		}
 		else

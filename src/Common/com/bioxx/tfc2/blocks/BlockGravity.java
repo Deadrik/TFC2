@@ -10,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.RandomCollection;
@@ -31,9 +32,9 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
+	public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos blockIn)
 	{
-		world.scheduleUpdate(pos, this, tickRate(world));
+		((World)worldIn).scheduleUpdate(pos, this, tickRate((World)worldIn));
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 		}
 		else if(slidePos != null && (slidePos.getY() >= 0))
 		{
-			worldIn.setBlockToAir(pos);
+			((World)worldIn).setBlockToAir(pos);
 			fall(worldIn, slidePos, state);
 		}
 	}
@@ -69,12 +70,12 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 			{
 				EntityFallingBlockTFC entityfallingblock = new EntityFallingBlockTFC(worldIn, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
 				onStartFalling(entityfallingblock);
-				worldIn.spawnEntityInWorld(entityfallingblock);
+				worldIn.spawnEntity(entityfallingblock);
 			}
 		}
 		else
 		{
-			worldIn.setBlockToAir(pos);
+			((World)worldIn).setBlockToAir(pos);
 
 			BlockPos blockpos;
 			for (blockpos = pos.down(); (canFallInto(worldIn, blockpos)) && (blockpos.getY() > 0); blockpos = blockpos.down()) {}

@@ -1,21 +1,21 @@
 {
     "variants": 
     {
-        "wood=ash":  { "model": "tfc2:Wood/Planks/Ash" },
-        "wood=aspen":  { "model": "tfc2:Wood/Planks/Aspen" },
-        "wood=birch":  { "model": "tfc2:Wood/Planks/Birch" },
-        "wood=chestnut":  { "model": "tfc2:Wood/Planks/Chestnut" },
-        "wood=douglas_fir":  { "model": "tfc2:Wood/Planks/Douglas Fir" },
-        "wood=hickory":  { "model": "tfc2:Wood/Planks/Hickory" },
-        "wood=maple":  { "model": "tfc2:Wood/Planks/Maple" },
-        "wood=oak":  { "model": "tfc2:Wood/Planks/Oak" },
-        "wood=pine":  { "model": "tfc2:Wood/Planks/Pine" },
-        "wood=sequoia":  { "model": "tfc2:Wood/Planks/Sequoia" },
-        "wood=spruce":  { "model": "tfc2:Wood/Planks/Spruce" },
-        "wood=sycamore":  { "model": "tfc2:Wood/Planks/Sycamore" },
-        "wood=white_cedar":  { "model": "tfc2:Wood/Planks/White Cedar" },
-        "wood=willow":  { "model": "tfc2:Wood/Planks/Willow" },
-        "wood=kapok":  { "model": "tfc2:Wood/Planks/Kapok" },
-        "wood=acacia":  { "model": "tfc2:Wood/Planks/Acacia" }
+        "wood=ash":  { "model": "tfc2:wood/planks/ash" },
+        "wood=aspen":  { "model": "tfc2:wood/planks/aspen" },
+        "wood=birch":  { "model": "tfc2:wood/planks/birch" },
+        "wood=chestnut":  { "model": "tfc2:wood/planks/chestnut" },
+        "wood=douglas_fir":  { "model": "tfc2:wood/planks/douglas fir" },
+        "wood=hickory":  { "model": "tfc2:wood/planks/hickory" },
+        "wood=maple":  { "model": "tfc2:wood/planks/maple" },
+        "wood=oak":  { "model": "tfc2:wood/planks/oak" },
+        "wood=pine":  { "model": "tfc2:wood/planks/pine" },
+        "wood=sequoia":  { "model": "tfc2:wood/planks/sequoia" },
+        "wood=spruce":  { "model": "tfc2:wood/planks/spruce" },
+        "wood=sycamore":  { "model": "tfc2:wood/planks/sycamore" },
+        "wood=white_cedar":  { "model": "tfc2:wood/planks/white cedar" },
+        "wood=willow":  { "model": "tfc2:wood/planks/willow" },
+        "wood=kapok":  { "model": "tfc2:wood/planks/kapok" },
+        "wood=acacia":  { "model": "tfc2:wood/planks/acacia" }
     }
 }

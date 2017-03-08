@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
@@ -192,26 +191,6 @@ public class CraftingManagerTFC
 	public enum RecipeType
 	{
 		NORMAL, KNAPPING, ANVIL;
-	}
-
-	public ItemStack[] getRemainingItems(InventoryCrafting craftMatrix, World worldIn)
-	{
-		for (IRecipe irecipe : this.recipes)
-		{
-			if (irecipe.matches(craftMatrix, worldIn))
-			{
-				return irecipe.getRemainingItems(craftMatrix);
-			}
-		}
-
-		ItemStack[] aitemstack = new ItemStack[craftMatrix.getSizeInventory()];
-
-		for (int i = 0; i < aitemstack.length; ++i)
-		{
-			aitemstack[i] = craftMatrix.getStackInSlot(i);
-		}
-
-		return aitemstack;
 	}
 
 }

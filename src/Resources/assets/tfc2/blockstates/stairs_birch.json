@@ -3,9 +3,9 @@
 	"defaults": {
 		"model": "stairs",
 		"textures": {
-			"bottom": "tfc2:blocks/wood/Birch Plank",
-        	"top": "tfc2:blocks/wood/Birch Plank",
-        	"side": "tfc2:blocks/wood/Birch Plank"
+			"bottom": "tfc2:blocks/wood/birch plank",
+        	"top": "tfc2:blocks/wood/birch plank",
+        	"side": "tfc2:blocks/wood/birch plank"
 		}
 	},
 	"variants": {

@@ -54,8 +54,8 @@ public class TeleporterPaths extends Teleporter
 		}
 		else
 		{
-			int playerX = MathHelper.floor_double(entity.posX);
-			int playerZ = MathHelper.floor_double(entity.posZ);
+			int playerX = MathHelper.floor(entity.posX);
+			int playerZ = MathHelper.floor(entity.posZ);
 			IslandMap islandMap = WorldGen.getInstance().getIslandMap(playerX >> 12, playerZ >> 12);
 			Center closest = islandMap.getClosestCenter(new Point(playerX % 4096,playerZ % 4096));
 			//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
@@ -106,8 +106,8 @@ public class TeleporterPaths extends Teleporter
 	public boolean placeInExistingPortal(Entity entityIn, float rotationYaw)
 	{
 		boolean flag = true;
-		int playerX = MathHelper.floor_double(entityIn.posX);
-		int playerZ = MathHelper.floor_double(entityIn.posZ);
+		int playerX = MathHelper.floor(entityIn.posX);
+		int playerZ = MathHelper.floor(entityIn.posZ);
 		boolean shouldAddPortalPosition = true;
 		boolean foundPortal = false;
 		BlockPos object = BlockPos.ORIGIN;
@@ -169,8 +169,8 @@ public class TeleporterPaths extends Teleporter
 	@Override
 	public boolean makePortal(Entity entityIn)
 	{
-		int playerX = MathHelper.floor_double(entityIn.posX);
-		int playerZ = MathHelper.floor_double(entityIn.posZ);
+		int playerX = MathHelper.floor(entityIn.posX);
+		int playerZ = MathHelper.floor(entityIn.posZ);
 		IslandMap islandMap = WorldGen.getInstance().getIslandMap(((playerX*8) >> 12), ((playerZ*8) >> 12));
 		Center closest = islandMap.getClosestCenter(new Point((playerX*8) % 4096,(playerZ*8) % 4096));
 		//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
@@ -184,8 +184,8 @@ public class TeleporterPaths extends Teleporter
 
 	public boolean makePath(Entity entityIn)
 	{
-		int playerX = MathHelper.floor_double(entityIn.posX);
-		int playerZ = MathHelper.floor_double(entityIn.posZ);
+		int playerX = MathHelper.floor(entityIn.posX);
+		int playerZ = MathHelper.floor(entityIn.posZ);
 		int xM = ((playerX*8) >> 12);
 		int zM = ((playerZ*8) >> 12);
 		int xI = xM * 4096;

@@ -15,10 +15,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -60,7 +60,7 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, 
-			net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+			net.minecraft.util.EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		EnumFacing facing = state.getValue(BlockAnvil.FACING);
 		TileAnvil te = (TileAnvil)world.getTileEntity(pos);
@@ -113,9 +113,9 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
 	{
-		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing()));
+		return worldIn.getBlockState(pos).withProperty(FACING, placer.getHorizontalFacing());
 	}
 
 	/*******************************************************************************
@@ -194,7 +194,7 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World worldIn, BlockPos pos)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
 		if(state.getValue(FACING) == EnumFacing.NORTH || state.getValue(FACING) == EnumFacing.SOUTH)
 			return AABB_NS;

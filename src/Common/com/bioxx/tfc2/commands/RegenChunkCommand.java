@@ -14,7 +14,7 @@ import net.minecraft.world.gen.ChunkProviderServer;
 public class RegenChunkCommand extends CommandBase
 {
 	@Override
-	public String getCommandName()
+	public String getName()
 	{
 		return "regen";
 	}
@@ -69,7 +69,7 @@ public class RegenChunkCommand extends CommandBase
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender icommandsender)
+	public String getUsage(ICommandSender icommandsender)
 	{
 		return "";
 	}

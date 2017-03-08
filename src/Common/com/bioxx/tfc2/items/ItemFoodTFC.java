@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -79,11 +80,11 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
 		super.addInformation(is, player, arraylist, flag);
-		/*long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime();
+		/*long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime();
 
 		if(time <= 0)
 		{
-			arraylist.add(TextFormatting.RED+"Expired x"+Math.min(1+(time / expiration)* (-1), is.stackSize));
+			arraylist.add(TextFormatting.RED+"Expired x"+Math.min(1+(time / expiration)* (-1), is.getMaxStackSize()));
 		}
 		else
 		{
@@ -94,7 +95,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
 		//Food.getSubItems(itemIn, tab, subItems);
 	}
@@ -148,11 +149,12 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	 * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
 	 */
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
 	{
+		ItemStack itemStackIn = playerIn.getHeldItem(handIn);
 		if (playerIn.canEat(false))
 		{
-			playerIn.setActiveHand(hand);
+			playerIn.setActiveHand(handIn);
 			return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
 		}
 
@@ -173,11 +175,11 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 	@Override
 	public void inventoryUpdate(EntityPlayer player, ItemStack is) 
 	{
-		long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime();
+		long time = Food.getDecayTimer(is)-net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime();
 		if(time < 0)
 		{
-			int expiredAmt = (int)Math.min(1+(time / expiration)* (-1), is.stackSize);
-			is.stackSize-=expiredAmt;
+			int expiredAmt = (int)Math.min(1+(time / expiration)* (-1), is.getMaxStackSize());
+			is.shrink(expiredAmt);
 			Food.setDecayTimer(is, Food.getDecayTimer(is)+expiration*expiredAmt);
 		}
 	}

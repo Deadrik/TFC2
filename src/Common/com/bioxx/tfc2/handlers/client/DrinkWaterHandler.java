@@ -40,7 +40,7 @@ public class DrinkWaterHandler
 				if(state.getBlock() == Blocks.WATER && Core.isFreshWater(event.getWorld(), result.getBlockPos()))
 				{
 					Minecraft.getMinecraft().playerController.processRightClickBlock((EntityPlayerSP)event.getEntityPlayer(), 
-							(WorldClient)event.getWorld(), event.getItemStack(), blockpos, result.sideHit, result.hitVec, event.getHand());
+							(WorldClient)event.getWorld(), blockpos, result.sideHit, result.hitVec, event.getHand());
 				}
 			}
 			else if(result != null && result.typeOfHit == Type.BLOCK)
@@ -50,7 +50,7 @@ public class DrinkWaterHandler
 				if(state.getBlock() == Blocks.WATER && Core.isFreshWater(event.getWorld(), result.getBlockPos()))
 				{
 					Minecraft.getMinecraft().playerController.processRightClickBlock((EntityPlayerSP)event.getEntityPlayer(), 
-							(WorldClient)event.getWorld(), event.getItemStack(), blockpos, result.sideHit, result.hitVec, event.getHand());
+							(WorldClient)event.getWorld(), blockpos, result.sideHit, result.hitVec, event.getHand());
 				}
 			}
 		}
@@ -91,6 +91,6 @@ public class DrinkWaterHandler
 		Vec3d vec3d = player.getPositionEyes(partialTicks);
 		Vec3d vec3d1 = player.getLook(partialTicks);
 		Vec3d vec3d2 = vec3d.addVector(vec3d1.xCoord * blockReachDistance, vec3d1.yCoord * blockReachDistance, vec3d1.zCoord * blockReachDistance);
-		return player.worldObj.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+		return player.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
 	}
 }

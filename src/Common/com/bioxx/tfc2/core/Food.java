@@ -244,7 +244,7 @@ public class Food
 			}
 			else if(time <= 0)
 			{
-				arraylist.add(TextFormatting.RED+"Expired x"+Math.min(1+(time / Food.getExpirationTimer(food, is))* (-1), is.stackSize));
+				arraylist.add(TextFormatting.RED+"Expired x"+Math.min(1+(time / Food.getExpirationTimer(food, is))* (-1), is.getMaxStackSize()));
 			}
 			else
 			{
@@ -258,7 +258,7 @@ public class Food
 	public static void getSubItems(Item itemIn, CreativeTabs tab, List subItems)
 	{
 		ItemStack is = new ItemStack(itemIn, 1, 0);
-		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+ Food.getExpirationTimer(is));
+		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime()+ Food.getExpirationTimer(is));
 		subItems.add(is);
 	}
 
@@ -267,7 +267,7 @@ public class Food
 	{
 		for(ItemStack is : list)
 		{
-			Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().theWorld.getWorldTime()+Food.getExpirationTimer(is));
+			Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime()+Food.getExpirationTimer(is));
 		}
 	}
 

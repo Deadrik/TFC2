@@ -1,10 +1,8 @@
 package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -12,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -40,17 +39,17 @@ public class BlockLeaves2 extends BlockLeaves
 	 * 1. Content 
 	 *******************************************************************************/
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+	public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos blockIn)
 	{
 		if(worldIn.getBlockState(pos).getValue(META_PROPERTY) == WoodType.Palm && worldIn.getBlockState(pos.down()).getBlock() != TFCBlocks.LogNatural2)
 		{
-			worldIn.setBlockToAir(pos);
+			((World)worldIn).setBlockToAir(pos);
 		}
-		else super.neighborChanged(state, worldIn, pos, blockIn);
+		else super.onNeighborChange(worldIn, pos, blockIn);
 	}
 
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List list)
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList list)
 	{
 		for(int l = 16; l < 19; l++)
 			list.add(new ItemStack(itemIn, 1, l));

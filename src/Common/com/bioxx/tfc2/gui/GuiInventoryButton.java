@@ -83,7 +83,7 @@ public class GuiInventoryButton extends GuiButton
 	public void drawTooltip(int mx, int my, String text) {
 		/*List list = new ArrayList();
 		list.add(text);
-		FontRenderer fontrenderer = Minecraft.getMinecraft().fontRendererObj;
+		FontRenderer fontrenderer = Minecraft.getMinecraft().fontRenderer;
 		screen.drawHoveringText(list, mx, my+15, fontrenderer);
 		RenderHelper.disableStandardItemLighting();
 		GL11.glDisable(GL11.GL_LIGHTING);*/

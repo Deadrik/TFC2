@@ -36,6 +36,7 @@ public class ASMConstants
 	public static final String ITEMSTACK = "net.minecraft.item.ItemStack";
 	public static final String CREATIVETABS = "net.minecraft.creativetab.CreativeTabs";
 	public static final String NBTTAGCOMPOUND = "net.minecraft.nbt.NBTTagCompound";
+	public static final String NONNULLLIST = "net.minecraft.util.NonNullList";
 
 	//TFC
 	public static final String ENUMFOODGROUP = "com.bioxx.tfc2.api.types.EnumFoodGroup";

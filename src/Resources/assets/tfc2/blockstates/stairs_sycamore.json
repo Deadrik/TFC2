@@ -3,9 +3,9 @@
 	"defaults": {
 		"model": "stairs",
 		"textures": {
-			"bottom": "tfc2:blocks/wood/Sycamore Plank",
-        	"top": "tfc2:blocks/wood/Sycamore Plank",
-        	"side": "tfc2:blocks/wood/Sycamore Plank"
+			"bottom": "tfc2:blocks/wood/sycamore plank",
+        	"top": "tfc2:blocks/wood/sycamore plank",
+        	"side": "tfc2:blocks/wood/sycamore plank"
 		}
 	},
 	"variants": {

@@ -121,9 +121,9 @@ public class EntityBear extends EntityAnimal
 	@Override
 	protected SoundEvent getAmbientSound ()
 	{
-		if(isChild() && worldObj.rand.nextInt(100) < 5)
+		if(isChild() && world.rand.nextInt(100) < 5)
 			return TFC_Sounds.BEARCUBCRY;
-		else if(worldObj.rand.nextInt(100) < 5)
+		else if(world.rand.nextInt(100) < 5)
 			return TFC_Sounds.BEARCRY;
 
 		return isChild() ? null : TFC_Sounds.BEARSAY;

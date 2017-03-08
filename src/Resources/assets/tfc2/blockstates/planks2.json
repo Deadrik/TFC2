@@ -2,13 +2,13 @@
 "forge_marker" : 1,
 	"defaults": {
 		"model": "cube_all",
-		"textures": {"all": "tfc2:blocks/wood/Acacia Plank"}
+		"textures": {"all": "tfc2:blocks/wood/acacia plank"}
 	},
     "variants": {
     	"wood":{
-        	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/Rosewood Plank"} },
-        	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/Blackwood Plank"} },
-        	"palm":  { "textures": {"all": "tfc2:blocks/wood/Palm Plank"} }
+        	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/rosewood plank"} },
+        	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/blackwood plank"} },
+        	"palm":  { "textures": {"all": "tfc2:blocks/wood/palm plank"} }
         },
 		"inventory": [{
             "transform": "forge:default-block"

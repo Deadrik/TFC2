@@ -46,7 +46,7 @@ public class PrintImageMapCommand extends CommandBase
 		}
 	}
 	@Override
-	public String getCommandName()
+	public String getName()
 	{
 		return "pi";
 	}
@@ -514,7 +514,7 @@ public class PrintImageMapCommand extends CommandBase
 		}
 	}
 	@Override
-	public String getCommandUsage(ICommandSender icommandsender)
+	public String getUsage(ICommandSender icommandsender)
 	{
 		return "";
 	}

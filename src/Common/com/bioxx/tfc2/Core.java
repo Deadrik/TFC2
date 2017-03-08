@@ -179,7 +179,7 @@ public class Core
 	 */
 	public static float getMoistureFromChunk(ChunkCache w, BlockPos pos)
 	{
-		Chunk c = w.worldObj.getChunkFromBlockCoords(pos);
+		Chunk c = w.world.getChunkFromBlockCoords(pos);
 		byte[] moistureArray = c.getBiomeArray();
 		byte b = moistureArray[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)];
 		int s = (b & 0xFF);
@@ -261,12 +261,12 @@ public class Core
 		ei.motionX = -0.07+world.rand.nextFloat() * 0.14;
 		ei.motionY = 0.15;
 		ei.motionZ = -0.07+world.rand.nextFloat() * 0.14;
-		world.spawnEntityInWorld(ei);
+		world.spawnEntity(ei);
 	}
 
 	public static void playSoundAtEntity(Entity e, SoundEvent name, float volume, float pitch)
 	{
-		e.worldObj.playSound(e.posX, e.posY, e.posZ, name, SoundCategory.BLOCKS, volume, pitch, false);
+		e.world.playSound(e.posX, e.posY, e.posZ, name, SoundCategory.BLOCKS, volume, pitch, false);
 	}
 
 	public static boolean isCenterInRect(Center c, int x, int z, int xRange, int zRange)

@@ -1,6 +1,5 @@
 package com.bioxx.tfc2.blocks.terrain;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -41,7 +40,7 @@ public class BlockStone extends BlockCollapsible
 	 * 1. Content 
 	 *******************************************************************************/
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+	public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos blockIn)
 	{
 		IBlockState stateUp = worldIn.getBlockState(pos.up());
 		IBlockState stateDown = worldIn.getBlockState(pos.down());
@@ -53,12 +52,12 @@ public class BlockStone extends BlockCollapsible
 		if(stateUp.getBlock() != this && stateDown.getBlock() != this && stateNorth.getBlock() != this
 				&& stateSouth.getBlock() != this && stateEast.getBlock() != this && stateWest.getBlock() != this)
 		{
-			dropBlockAsItem(worldIn, pos, state, 0);
-			worldIn.setBlockToAir(pos);
+			dropBlockAsItem((World) worldIn, pos, worldIn.getBlockState(pos), 0);
+			((World)worldIn).setBlockToAir(pos);
 		}
 		else
 		{
-			super.neighborChanged(state, worldIn, pos, blockIn);
+			super.onNeighborChange(worldIn, pos, blockIn);
 		}
 	}
 

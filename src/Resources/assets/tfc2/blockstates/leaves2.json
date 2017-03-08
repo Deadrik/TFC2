@@ -1,11 +1,11 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-        "model": "tfc2:Leaves/leaves",
+        "model": "tfc2:leaves/leaves",
         "textures": {
-			"all": "tfc2:blocks/wood/trees/Acacia Leaves", 
-			"fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff",
-			"particle": "tfc2:blocks/wood/trees/Acacia Leaves"
+			"all": "tfc2:blocks/wood/trees/acacia leaves", 
+			"fluff": "tfc2:blocks/wood/trees/acacia leaves fluff",
+			"particle": "tfc2:blocks/wood/trees/acacia leaves"
 			}
      },
     "variants": 
@@ -13,13 +13,13 @@
     	"normal": [{}],
     	"fancy": 
     	{
-     		"true":{"submodel": "tfc2:Leaves/leaves_fluff"},
+     		"true":{"submodel": "tfc2:leaves/leaves_fluff"},
      		"false":{}
      	},
      	"wood":
      	{
-        	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/trees/Rosewood Leaves", "fluff": "tfc2:blocks/wood/trees/Rosewood Leaves Fluff", "particle": "tfc2:blocks/wood/trees/Rosewood Leaves"} },
-        	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/trees/Blackwood Leaves", "fluff": "tfc2:blocks/wood/trees/Blackwood Leaves Fluff", "particle": "tfc2:blocks/wood/trees/Blackwood Leaves"} },
+        	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/trees/rosewood leaves", "fluff": "tfc2:blocks/wood/trees/rosewood leaves fluff", "particle": "tfc2:blocks/wood/trees/rosewood leaves"} },
+        	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/trees/blackwood leaves", "fluff": "tfc2:blocks/wood/trees/blackwood leaves fluff", "particle": "tfc2:blocks/wood/trees/blackwood leaves"} },
     	    "palm":  {}
         }
     }

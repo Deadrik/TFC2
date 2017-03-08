@@ -62,7 +62,7 @@ public class SAnvilCraftingPacket implements IMessage
 	{
 		@Override
 		public IMessage onMessage(final SAnvilCraftingPacket message, final MessageContext ctx) {
-			final IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj; // or Minecraft.getMinecraft() on the client
+			final IThreadListener mainThread = (WorldServer) ctx.getServerHandler().player.world; // or Minecraft.getMinecraft() on the client
 			mainThread.addScheduledTask(new Runnable() 
 			{
 				@Override

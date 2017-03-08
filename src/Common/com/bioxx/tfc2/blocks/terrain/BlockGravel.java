@@ -53,7 +53,7 @@ public class BlockGravel extends BlockGravity
 		BlockPos slidePos = slideScan(worldIn, pos);
 		if(slidePos != null && (slidePos.getY() >= 0))
 		{
-			worldIn.setBlockToAir(pos);
+			((World)worldIn).setBlockToAir(pos);
 			fall(worldIn, slidePos, state);
 		}
 	}

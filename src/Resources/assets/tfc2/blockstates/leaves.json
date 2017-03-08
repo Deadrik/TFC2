@@ -1,35 +1,35 @@
 {
 	"forge_marker" : 1,
 	"defaults": {
-		"model": "tfc2:Leaves/leaves",
+		"model": "tfc2:leaves/leaves",
 		"textures": {
-			"all": "tfc2:blocks/wood/trees/Acacia Leaves", 
-			"fluff": "tfc2:blocks/wood/trees/Acacia Leaves Fluff",
-			"particle": "tfc2:blocks/wood/trees/Acacia Leaves"
+			"all": "tfc2:blocks/wood/trees/acacia leaves", 
+			"fluff": "tfc2:blocks/wood/trees/acacia leaves fluff",
+			"particle": "tfc2:blocks/wood/trees/acacia leaves"
 			}
 	},
     "variants": {
     "fancy": {
-     		"true":{"submodel": "tfc2:Leaves/leaves_fluff"},
+     		"true":{"submodel": "tfc2:leaves/leaves_fluff"},
      		"false":{}
      	},    
     "wood":{
-        	"ash":  { "textures": {"all": "tfc2:blocks/wood/trees/Ash Leaves", "fluff": "tfc2:blocks/wood/trees/Ash Leaves Fluff"} },
-        	"aspen":  { "textures": {"all": "tfc2:blocks/wood/trees/Aspen Leaves"} },
-        	"birch":  { "textures": {"all": "tfc2:blocks/wood/trees/Birch Leaves"} },
-        	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/trees/Chestnut Leaves", "fluff": "tfc2:blocks/wood/trees/Chestnut Leaves Fluff"} },
-        	"douglas_fir":  { "textures": {"all": "tfc2:blocks/wood/trees/Douglas Fir Leaves", "fluff": "tfc2:blocks/wood/trees/Douglas Fir Leaves Fluff"} },
-     	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/trees/Hickory Leaves", "fluff": "tfc2:blocks/wood/trees/Hickory Leaves Fluff"} },
-        	"maple":  { "textures": {"all": "tfc2:blocks/wood/trees/Maple Leaves"} },
-        	"oak":  { "textures": {"all": "tfc2:blocks/wood/trees/Oak Leaves"} },
-        	"pine":  { "textures": {"all": "tfc2:blocks/wood/trees/Pine Leaves", "fluff": "tfc2:blocks/wood/trees/Pine Leaves Fluff"} },
-   	     	"sequoia":  { "textures": {"all": "tfc2:blocks/wood/trees/Sequoia Leaves", "fluff": "tfc2:blocks/wood/trees/Sequoia Leaves Fluff"} },
-        	"spruce":  { "textures": {"all": "tfc2:blocks/wood/trees/Spruce Leaves", "fluff": "tfc2:blocks/wood/trees/Spruce Leaves Fluff"} },
- 	       	"sycamore":  { "textures": {"all": "tfc2:blocks/wood/trees/Sycamore Leaves"} },
-   		    "white_cedar":  { "textures": {"all": "tfc2:blocks/wood/trees/White Cedar Leaves", "fluff": "tfc2:blocks/wood/trees/White Cedar Leaves Fluff"} },
-    	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/Willow Leaves", "fluff": "tfc2:blocks/wood/trees/Willow Leaves Fluff"} },
-    	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/Kapok Leaves"} },
-    	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/Acacia Leaves"} }
+        	"ash":  { "textures": {"all": "tfc2:blocks/wood/trees/ash leaves", "fluff": "tfc2:blocks/wood/trees/ash leaves fluff"} },
+        	"aspen":  { "textures": {"all": "tfc2:blocks/wood/trees/aspen leaves"} },
+        	"birch":  { "textures": {"all": "tfc2:blocks/wood/trees/birch leaves"} },
+        	"chestnut":  { "textures": {"all": "tfc2:blocks/wood/trees/chestnut leaves", "fluff": "tfc2:blocks/wood/trees/chestnut leaves fluff"} },
+        	"douglas_fir":  { "textures": {"all": "tfc2:blocks/wood/trees/douglas fir leaves", "fluff": "tfc2:blocks/wood/trees/douglas fir leaves fluff"} },
+     	   	"hickory":  { "textures": {"all": "tfc2:blocks/wood/trees/hickory leaves", "fluff": "tfc2:blocks/wood/trees/hickory leaves fluff"} },
+        	"maple":  { "textures": {"all": "tfc2:blocks/wood/trees/maple leaves"} },
+        	"oak":  { "textures": {"all": "tfc2:blocks/wood/trees/oak leaves"} },
+        	"pine":  { "textures": {"all": "tfc2:blocks/wood/trees/pine leaves", "fluff": "tfc2:blocks/wood/trees/pine leaves fluff"} },
+   	     	"sequoia":  { "textures": {"all": "tfc2:blocks/wood/trees/sequoia leaves", "fluff": "tfc2:blocks/wood/trees/sequoia leaves fluff"} },
+        	"spruce":  { "textures": {"all": "tfc2:blocks/wood/trees/spruce leaves", "fluff": "tfc2:blocks/wood/trees/spruce leaves fluff"} },
+ 	       	"sycamore":  { "textures": {"all": "tfc2:blocks/wood/trees/sycamore leaves"} },
+   		    "white_cedar":  { "textures": {"all": "tfc2:blocks/wood/trees/white cedar leaves", "fluff": "tfc2:blocks/wood/trees/white cedar leaves fluff"} },
+    	    "willow":  { "textures": {"all": "tfc2:blocks/wood/trees/willow leaves", "fluff": "tfc2:blocks/wood/trees/willow leaves fluff"} },
+    	    "kapok":  { "textures": {"all": "tfc2:blocks/wood/trees/kapok leaves"} },
+    	    "acacia":  { "textures": {"all": "tfc2:blocks/wood/trees/acacia leaves"} }
         },
         "inventory": [{
             "transform": "forge:default-block"

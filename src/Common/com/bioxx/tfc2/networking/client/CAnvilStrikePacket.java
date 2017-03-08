@@ -57,13 +57,13 @@ public class CAnvilStrikePacket implements IMessage
 	{
 		@Override
 		public IMessage onMessage(final CAnvilStrikePacket message, MessageContext ctx) {
-			IThreadListener mainThread = net.minecraft.client.Minecraft.getMinecraft(); //(WorldServer) ctx.getServerHandler().playerEntity.worldObj; // or Minecraft.getMinecraft() on the client
+			IThreadListener mainThread = net.minecraft.client.Minecraft.getMinecraft(); //(WorldServer) ctx.getServerHandler().playerentityIn.world; // or Minecraft.getMinecraft() on the client
 			mainThread.addScheduledTask(new Runnable() 
 			{
 				@Override
 				public void run() 
 				{
-					TileEntity te = net.minecraft.client.Minecraft.getMinecraft().theWorld.getTileEntity(message.pos);
+					TileEntity te = net.minecraft.client.Minecraft.getMinecraft().world.getTileEntity(message.pos);
 					if(te != null)
 					{
 						TileAnvil anvil = (TileAnvil)te;

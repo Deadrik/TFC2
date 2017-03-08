@@ -15,6 +15,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -44,7 +45,7 @@ public class BlockLogVertical extends BlockCollapsible implements ISupportBlock
 	 * 1. Content 
 	 *******************************************************************************/
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
 	{
 		if(facing == EnumFacing.DOWN || facing == EnumFacing.UP)
 			return this.getStateFromMeta(meta);
@@ -94,7 +95,7 @@ public class BlockLogVertical extends BlockCollapsible implements ISupportBlock
 	{
 		world.setBlockToAir(pos);
 		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.STICK, 1+world.rand.nextInt(3)));
-		world.spawnEntityInWorld(ei);
+		world.spawnEntity(ei);
 	}
 	/*******************************************************************************
 	 * 2. Rendering 

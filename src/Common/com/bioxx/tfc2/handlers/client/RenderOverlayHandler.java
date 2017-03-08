@@ -1,11 +1,9 @@
 package com.bioxx.tfc2.handlers.client;
 
 import java.awt.Color;
-import java.lang.reflect.Field;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -23,7 +21,6 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import org.lwjgl.opengl.GL11;
 
@@ -52,10 +49,6 @@ public class RenderOverlayHandler
 	public static ResourceLocation tfcicons = new ResourceLocation(Reference.ModID, Reference.AssetPathGui + "icons.png");
 	private FontRenderer fontrenderer = null;
 
-	public int recordTimer;
-	private final Field _recordPlayingUpFor = ReflectionHelper.findField(GuiIngame.class, "recordPlayingUpFor", "field_73845_h");
-	private final Field _recordPlaying = ReflectionHelper.findField(GuiIngame.class, "recordPlaying", "field_73838_g");
-
 	@SubscribeEvent
 	public void render(RenderGameOverlayEvent.Pre event)
 	{
@@ -70,8 +63,8 @@ public class RenderOverlayHandler
 
 		ScaledResolution sr = event.getResolution();
 		Minecraft mc = Minecraft.getMinecraft();
-		EntityPlayer player = mc.thePlayer;
-		fontrenderer = mc.fontRendererObj;
+		EntityPlayer player = mc.player;
+		fontrenderer = mc.fontRenderer;
 
 		int healthRowHeight = sr.getScaledHeight() - 40;
 		int armorRowHeight = healthRowHeight - 10;
@@ -198,24 +191,24 @@ public class RenderOverlayHandler
 	public void renderText(RenderGameOverlayEvent.Text event)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		if(mc.theWorld.provider.getDimension() == 0 && WorldGen.getInstance() != null)
+		if(mc.world.provider.getDimension() == 0 && WorldGen.getInstance() != null)
 		{
-			int xM = ((int)(mc.thePlayer.posX) >> 12);
-			int zM = ((int)(mc.thePlayer.posZ) >> 12);
+			int xM = ((int)(mc.player.posX) >> 12);
+			int zM = ((int)(mc.player.posZ) >> 12);
 			IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
-			Point islandCoord = new Point((int)(mc.thePlayer.posX), (int)(mc.thePlayer.posZ)).toIslandCoord();
-			BlockPos pos = new BlockPos((int)(mc.thePlayer.posX), 0, (int)(mc.thePlayer.posZ));
+			Point islandCoord = new Point((int)(mc.player.posX), (int)(mc.player.posZ)).toIslandCoord();
+			BlockPos pos = new BlockPos((int)(mc.player.posX), 0, (int)(mc.player.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
-			event.getLeft().add(""+mc.theWorld.getWorldTime());
-			event.getLeft().add("Rain: "+WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ) +
-					" / "  + " / " + mc.theWorld.isRaining());
-			event.getLeft().add("Temp: " + WeatherManager.getInstance().getTemperature((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ)+"C");
+			event.getLeft().add(""+mc.world.getWorldTime());
+			event.getLeft().add("Rain: "+WeatherManager.getInstance().getPreciptitation((int)mc.player.posX, (int)mc.player.posZ) +
+					" / "  + " / " + mc.world.isRaining());
+			event.getLeft().add("Temp: " + WeatherManager.getInstance().getTemperature((int)mc.player.posX, (int)mc.player.posY, (int)mc.player.posZ)+"C");
 			event.getLeft().add("Date: " + Timekeeper.getInstance().getSeasonalPeriod() + " | Time: " + Timekeeper.getInstance().getClockTime());
 			event.getLeft().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"--------Hex--------");
 			event.getLeft().add("Index: "+hex.index);
 			event.getLeft().add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
-			Chunk c = mc.theWorld.getChunkFromBlockCoords(pos);
-			int b = mc.theWorld.getChunkFromBlockCoords(pos).getBiomeArray()[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)] & 0xFF;
+			Chunk c = mc.world.getChunkFromBlockCoords(pos);
+			int b = mc.world.getChunkFromBlockCoords(pos).getBiomeArray()[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)] & 0xFF;
 			event.getLeft().add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()) + " | " + hex.getMoistureRaw() + " | " + b + " | " + (float)b / 255F);
 			event.getLeft().add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
 			if(hex.hasAttribute(Attribute.Lake))

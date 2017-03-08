@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -77,9 +76,9 @@ public class BlockLeaves extends BlockTerra
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+	public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos blockIn)
 	{
-		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
+		((World)worldIn).scheduleUpdate(pos, this, tickRate((World)worldIn));
 	}
 
 	@Override
@@ -129,13 +128,13 @@ public class BlockLeaves extends BlockTerra
 	 *******************************************************************************/
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state)
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return false;//!this.isTransparent;
+		return false;
 	}
 
 	@Override
-	public boolean isVisuallyOpaque()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
@@ -189,7 +188,7 @@ public class BlockLeaves extends BlockTerra
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
 	{
 		return NULL_AABB;
 	}

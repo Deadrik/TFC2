@@ -74,17 +74,17 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	protected void generateStrikePoints()
 	{
 		Timekeeper time = Timekeeper.getInstance();
-		if(!worldObj.isRemote && craftingTimer > 0 && craftingTimer % 10 == 0)
+		if(!world.isRemote && craftingTimer > 0 && craftingTimer % 10 == 0)
 		{
 			AnvilStrikePoint p = new AnvilStrikePoint();
 
 			p.setBirthTime(time.getTotalTicks());
 			//Create Specials
-			if(worldObj.rand.nextFloat() < 0.25)
+			if(world.rand.nextFloat() < 0.25)
 			{
-				if(worldObj.rand.nextFloat() < 0.25)
+				if(world.rand.nextFloat() < 0.25)
 				{
-					int type = worldObj.rand.nextInt(3);
+					int type = world.rand.nextInt(3);
 					if(type == 0)
 						p.setType(AnvilStrikeType.EFF_CRIT);
 					else if(type == 1)
@@ -98,7 +98,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 				}
 				else
 				{
-					int type = worldObj.rand.nextInt(3);
+					int type = world.rand.nextInt(3);
 					if(type == 0)
 						p.setType(AnvilStrikeType.EFF_NORM);
 					else if(type == 1)
@@ -113,7 +113,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 			}
 			else
 			{
-				int type = worldObj.rand.nextInt(7);
+				int type = world.rand.nextInt(7);
 				if(type == 0)
 					p.setType(AnvilStrikeType.HIT_LIGHT);
 				else if(type == 1)
@@ -133,7 +133,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 			}
 
 
-			int xz = worldObj.rand.nextInt(availableHitPoints.size());
+			int xz = world.rand.nextInt(availableHitPoints.size());
 			int index = availableHitPoints.remove(xz);
 
 			if(this.getStrikePoint(index) == null)
@@ -207,7 +207,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 
 	public void sendSmithingPacket(int xz, AnvilStrikePoint point)
 	{
-		EntityPlayerMP player = worldObj.getMinecraftServer().getPlayerList().getPlayerByUUID(smithID);
+		EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(smithID);
 		if(player != null)
 			TFC.network.sendTo(new CAnvilStrikePacket(this.getPos(), xz, point), player);
 	}
@@ -239,7 +239,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 				else
 					z= -0.25f;
 			}
-			PropertyItem.PItem item = getAnvilItem(stack, worldObj, null, x, z);
+			PropertyItem.PItem item = getAnvilItem(stack, world, null, x, z);
 			if(item != null) {
 				toDisplay.items.add(item);
 			}
@@ -259,7 +259,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 				else
 					z = 0.25f;
 			}
-			PropertyItem.PItem item = getAnvilItem(stack, worldObj, null, x, z);
+			PropertyItem.PItem item = getAnvilItem(stack, world, null, x, z);
 			if(item != null) {
 				toDisplay.items.add(item);
 			}
@@ -296,7 +296,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 
 	public void startCrafting(UUID id)
 	{
-		if(worldObj.isRemote)
+		if(world.isRemote)
 		{
 			TFC.network.sendToServer(new SAnvilCraftingPacket(this.getPos(),this.getAnvilRecipeIndex(), true, id));
 			this.craftingTimer = 2000;
@@ -326,8 +326,8 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 
 	public EntityPlayer getSmith()
 	{
-		if(!worldObj.isRemote)
-			return worldObj.getMinecraftServer().getPlayerList().getPlayerByUUID(smithID);
+		if(!world.isRemote)
+			return world.getMinecraftServer().getPlayerList().getPlayerByUUID(smithID);
 		else return TFC.proxy.getPlayer();
 	}
 
@@ -442,7 +442,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	{
 		if(inventory[index] != null)
 		{
-			if(inventory[index].stackSize <= count)
+			if(inventory[index].getMaxStackSize() <= count)
 			{
 				ItemStack itemstack = inventory[index];
 				inventory[index] = null;
@@ -450,7 +450,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 				return itemstack;
 			}
 			ItemStack itemstack1 = inventory[index].splitStack(count);
-			if(inventory[index].stackSize == 0)
+			if(inventory[index].getMaxStackSize() == 0)
 				inventory[index] = null;
 			return itemstack1;
 		}
@@ -488,8 +488,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) 
-	{
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
 	}
 
@@ -516,7 +515,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 		if(id == 0)
 		{
 			this.setAnvilRecipeIndex(value);
-			if(worldObj.isRemote)
+			if(world.isRemote)
 			{
 				TFC.network.sendToServer(new SAnvilCraftingPacket(this.getPos(), this.getAnvilRecipeIndex(), false, this.smithID));
 			}
@@ -596,5 +595,11 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 	public enum CraftingResult
 	{
 		SUCCEED, FAILED;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

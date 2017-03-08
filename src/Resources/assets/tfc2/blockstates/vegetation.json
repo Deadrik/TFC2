@@ -3,14 +3,14 @@
 	"defaults": {
 		"textures": {
 			"cross": "blocks/tallgrass",
-			"grassside": "tfc2:blocks/GrassSide",
-			"grasstop": "tfc2:blocks/GrassTop"
+			"grassside": "tfc2:blocks/grassside",
+			"grasstop": "tfc2:blocks/grasstop"
 		},
 		"model": "tall_grass"
 	},
 	"variants": {
 		"isonstone": {
-			"true": {"submodel": "tfc2:vegBase"},
+			"true": {"submodel": "tfc2:vegbase"},
 			"false": {}
 		},
 		"veg": {

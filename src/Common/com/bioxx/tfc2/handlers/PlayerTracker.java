@@ -25,7 +25,7 @@ public class PlayerTracker
 				event.player.getName(),
 				event.player.getUniqueID()));
 
-		if(event.player.worldObj.isRemote || event.player.dimension != 0)
+		if(event.player.world.isRemote || event.player.dimension != 0)
 			return;
 		int islandX = (int)(event.player.posX) >> 12;
 		int islandZ = (int)(event.player.posZ) >> 12;

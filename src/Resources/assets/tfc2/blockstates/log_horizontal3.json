@@ -3,13 +3,13 @@
 	"defaults": {
 		"model": "cube_column",
 		"x": 90,
-		"textures": {"side": "tfc2:blocks/wood/trees/Pine Log", "end": "tfc2:blocks/wood/trees/Pine Log Top"}
+		"textures": {"side": "tfc2:blocks/wood/trees/pine log", "end": "tfc2:blocks/wood/trees/pine log top"}
 	},
     "variants": {
     	"wood":{
-        	"rosewood":  { "textures": {"side": "tfc2:blocks/wood/trees/Rosewood Log", "end": "tfc2:blocks/wood/trees/Rosewood Log Top"} },
-   	     	"blackwood":  { "textures": {"side": "tfc2:blocks/wood/trees/Blackwood Log", "end": "tfc2:blocks/wood/trees/Blackwood Log Top"} },
-    	    "palm":  { "textures": {"side": "tfc2:blocks/wood/trees/Palm Log", "end": "tfc2:blocks/wood/trees/Palm Log Top"} }
+        	"rosewood":  { "textures": {"side": "tfc2:blocks/wood/trees/rosewood log", "end": "tfc2:blocks/wood/trees/rosewood log top"} },
+   	     	"blackwood":  { "textures": {"side": "tfc2:blocks/wood/trees/blackwood log", "end": "tfc2:blocks/wood/trees/blackwood log top"} },
+    	    "palm":  { "textures": {"side": "tfc2:blocks/wood/trees/palm log", "end": "tfc2:blocks/wood/trees/palm log top"} }
         },
     	"rotation": {
     		"0":{"x": 90, "y": 90},

@@ -1,7 +1,7 @@
 {
-    "parent": "tfc2:item/DefaultItem",
+    "parent": "tfc2:item/defaultitem",
     "textures": {
-        "layer0": "tfc2:items/tools/Stone Shovel"
+        "layer0": "tfc2:items/tools/stone shovel"
     },
     "display": {
         "thirdperson": {

@@ -1,0 +1,19 @@
+{
+	"textures": {
+        "particle": "#all"
+    },
+    "elements": [
+        {   "from": [ 8, 0, 6 ],
+            "to": [ 12, 2, 10 ],
+            "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 22.5, "rescale": false },
+            "faces": {
+                "down":  { "texture": "#all", "cullface": "down" },
+                "up":    { "texture": "#all"},
+                "north": { "texture": "#all"},
+                "south": { "texture": "#all"},
+                "west":  { "texture": "#all"},
+                "east":  { "texture": "#all"}
+            }
+        }
+    ]
+}

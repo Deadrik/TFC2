@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -91,16 +92,17 @@ public class BlockTorchTFC extends BlockTorch implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, net.minecraft.util.EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		if (!worldIn.isRemote)
 		{
-			Item item = heldItem != null ? heldItem.getItem() : null;
+			ItemStack heldItem = playerIn.getHeldItem(hand);
+			Item item = heldItem.getItem() != null ? heldItem.getItem() : null;
 
 			// Making new torches. Keep meta check just in case there are some burned out torches that haven't converted yet.
 			if (item == Items.STICK)
 			{
-				heldItem.stackSize--;
+				heldItem.shrink(1);
 				EntityItem ei = playerIn.entityDropItem(new ItemStack(TFCBlocks.TorchOn), 1);
 				ei.setNoPickupDelay();
 			}
@@ -156,19 +158,6 @@ public class BlockTorchTFC extends BlockTorch implements ITileEntityProvider
 		if (this.isOn)
 		{
 			return new ItemStack(Item.getItemFromBlock(TFCBlocks.TorchOn), 1);
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	protected ItemStack createStackedBlock(IBlockState state)
-	{
-		if (this.isOn)
-		{
-			return new ItemStack(TFCBlocks.TorchOn);
 		}
 		else
 		{

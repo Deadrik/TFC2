@@ -18,7 +18,7 @@ public class KeyBindingHandler
 	@SubscribeEvent
 	public void onKeyInput(InputEvent.KeyInputEvent event)
 	{
-		EntityPlayerSP player = FMLClientHandler.instance().getClient().thePlayer;
+		EntityPlayerSP player = FMLClientHandler.instance().getClient().player;
 
 		if(FMLClientHandler.instance().getClient().inGameHasFocus &&
 				FMLClientHandler.instance().getClient().currentScreen == null)

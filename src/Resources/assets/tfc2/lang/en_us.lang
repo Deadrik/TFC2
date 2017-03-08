@@ -1,0 +1,78 @@
+#en_US
+#This is the Main language configuration file
+#
+#If you want to color code the text then I recommend you visit http://www.minecraftwiki.net/wiki/Formatting_codes#Color_codes
+#To create the § symbol which is used for assigning a color to the following text press Alt + 21 on Windows. For other OSes, view the above link.
+#This file needs to be UTF-8 encoded to work with MC 1.7+
+
+#==========
+#= Global =
+#==========
+
+global.unknown=Unknown
+
+global.granite=Granite
+global.diorite=Diorite
+global.gabbro=Gabbro
+global.shale=Shale
+global.claystone=Claystone
+global.limestone=Limestone
+global.dolomite=Dolomite
+global.chert=Chert
+global.rhyolite=Rhyolite
+global.basalt=Basalt
+global.andesite=Andesite
+global.dacite=Dacite
+global.blueschist=Blueschist
+global.schist=Schist
+global.gneiss=Gneiss
+global.marble=Marble
+
+global.ash=Ash
+global.aspen=Aspen
+global.birch=Birch
+global.chestnut=Chestnut
+global.douglas_fir=Douglas Fir
+global.hickory=Hickory
+global.maple=Maple
+global.oak=Oak
+global.pine=Pine
+global.sequoia=Sequoia
+global.spruce=Spruce
+global.sycamore=Sycamore
+global.white_cedar=White Cedar
+global.white_elm=White Elm
+global.willow=Willow
+
+#==================
+#= Terrain Blocks =
+#==================
+
+# Most of the terrain blocks have the same unlocalized name as vanilla, so they can be left out.
+tile.stone.name=Stone
+tile.rubble.name=Rubble
+tile.stonebrick.name=Stone Bricks
+tile.stonesmooth.name=Smoothed Stone
+
+#=================
+#= Wooden Blocks =
+#=================
+
+tile.planks.name=Wood Planks
+
+#=========
+#= Seeds =
+#=========
+item.seeds.seeds_corn=Seeds Corn
+item.seeds.seeds_cabbage=Seeds Cabbage
+
+#=========
+#= GUI =
+#=========
+gui.food.fruit=Fruit
+gui.food.vegetable=Vegetable
+gui.food.grain=Grain
+gui.food.protein=Protein
+gui.food.dairy=Dairy
+
+item.looserock.name=Rock

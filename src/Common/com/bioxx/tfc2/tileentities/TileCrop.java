@@ -86,7 +86,7 @@ public class TileCrop extends TileTFC implements ITickable
 				toGrow -= 0.25f;
 			nutrients -= 1;
 			growth += toGrow;
-			worldObj.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), 200, getWorld().provider.getDimension(), this.getUpdatePacket());
+			world.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), 200, getWorld().provider.getDimension(), this.getUpdatePacket());
 		}
 	}
 

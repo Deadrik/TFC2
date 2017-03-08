@@ -19,10 +19,10 @@ public class SkyRenderer extends IRenderHandler
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) 
 	{
-		/*if (mc.theWorld.provider.isSurfaceWorld())
+		/*if (mc.world.provider.isSurfaceWorld())
 		{
 			GlStateManager.disableTexture2D();
-			Vec3 vec3 = mc.theWorld.getSkyColor(mc.getRenderViewEntity(), partialTicks);
+			Vec3 vec3 = mc.world.getSkyColor(mc.getRenderViewEntity(), partialTicks);
 			float f1 = (float)vec3.xCoord;
 			float f2 = (float)vec3.yCoord;
 			float f3 = (float)vec3.zCoord;
@@ -53,7 +53,7 @@ public class SkyRenderer extends IRenderHandler
 			GlStateManager.enableBlend();
 			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 			RenderHelper.disableStandardItemLighting();
-			float[] afloat = mc.theWorld.provider.calcSunriseSunsetColors(mc.theWorld.getCelestialAngle(partialTicks), partialTicks);
+			float[] afloat = mc.world.provider.calcSunriseSunsetColors(mc.world.getCelestialAngle(partialTicks), partialTicks);
 			float f7;
 			float f8;
 			float f9;
@@ -66,7 +66,7 @@ public class SkyRenderer extends IRenderHandler
 				GlStateManager.shadeModel(7425);
 				GlStateManager.pushMatrix();
 				GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
-				GlStateManager.rotate(MathHelper.sin(mc.theWorld.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
+				GlStateManager.rotate(MathHelper.sin(mc.world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
 				GlStateManager.rotate(90.0F, 0.0F, 0.0F, 1.0F);
 				f7 = afloat[0];
 				f8 = afloat[1];
@@ -95,14 +95,14 @@ public class SkyRenderer extends IRenderHandler
 			GlStateManager.enableTexture2D();
 			GlStateManager.tryBlendFuncSeparate(770, 1, 1, 0);
 			GlStateManager.pushMatrix();
-			f7 = 1.0F - mc.theWorld.getRainStrength(partialTicks);
+			f7 = 1.0F - mc.world.getRainStrength(partialTicks);
 			f8 = 0.0F;
 			f9 = 0.0F;
 			f10 = 0.0F;
 			GlStateManager.color(1.0F, 1.0F, 1.0F, f7);
 			GlStateManager.translate(0.0F, 0.0F, 0.0F);
 			GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
-			GlStateManager.rotate(mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
+			GlStateManager.rotate(mc.world.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
 			f11 = 30.0F;
 			mc.renderEngine.bindTexture(locationSunPng);
 			worldrenderer.startDrawingQuads();
@@ -113,7 +113,7 @@ public class SkyRenderer extends IRenderHandler
 			tessellator.draw();
 			f11 = 20.0F;
 			mc.renderEngine.bindTexture(locationMoonPhasesPng);
-			int k = mc.theWorld.getMoonPhase();
+			int k = mc.world.getMoonPhase();
 			int l = k % 4;
 			int i1 = k / 4 % 2;
 			float f15 = (float)(l + 0) / 4.0F;
@@ -127,7 +127,7 @@ public class SkyRenderer extends IRenderHandler
 			worldrenderer.addVertexWithUV((double)(-f11), -100.0D, (double)(-f11), (double)f17, (double)f16);
 			tessellator.draw();
 			GlStateManager.disableTexture2D();
-			float f19 = mc.theWorld.getStarBrightness(partialTicks) * f7;
+			float f19 = mc.world.getStarBrightness(partialTicks) * f7;
 
 			if (f19 > 0.0F)
 			{
@@ -155,7 +155,7 @@ public class SkyRenderer extends IRenderHandler
 			GlStateManager.popMatrix();
 			GlStateManager.disableTexture2D();
 			GlStateManager.color(0.0F, 0.0F, 0.0F);
-			double d0 = mc.thePlayer.getPositionEyes(partialTicks).yCoord - mc.theWorld.getHorizon();
+			double d0 = mc.player.getPositionEyes(partialTicks).yCoord - mc.world.getHorizon();
 
 			if (d0 < 0.0D)
 			{
@@ -205,7 +205,7 @@ public class SkyRenderer extends IRenderHandler
 				tessellator.draw();
 			}
 
-			if (mc.theWorld.provider.isSkyColored())
+			if (mc.world.provider.isSkyColored())
 			{
 				GlStateManager.color(f1 * 0.2F + 0.04F, f2 * 0.2F + 0.04F, f3 * 0.6F + 0.1F);
 			}

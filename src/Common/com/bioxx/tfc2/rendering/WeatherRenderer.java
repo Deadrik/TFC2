@@ -42,7 +42,7 @@ public class WeatherRenderer extends IRenderHandler
 			{
 				float f = (float)(j - 16);
 				float f1 = (float)(i - 16);
-				float f2 = MathHelper.sqrt_float(f * f + f1 * f1);
+				float f2 = MathHelper.sqrt(f * f + f1 * f1);
 				this.rainXCoords[i << 5 | j] = -f1 / f2;
 				this.rainYCoords[i << 5 | j] = f / f2;
 			}
@@ -54,14 +54,14 @@ public class WeatherRenderer extends IRenderHandler
 	{
 		++this.rendererUpdateCount;
 		double rainStrength = world.getRainStrength(partialTicks);
-		rainStrength = WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+		rainStrength = WeatherManager.getInstance().getPreciptitation((int)mc.player.posX, (int)mc.player.posZ);
 		if (rainStrength > 0.0)
 		{
 			mc.entityRenderer.enableLightmap();
 			Entity entity = mc.getRenderViewEntity();
-			int entityX = MathHelper.floor_double(entity.posX);
-			int entityY = MathHelper.floor_double(entity.posY);
-			int entityZ = MathHelper.floor_double(entity.posZ);
+			int entityX = MathHelper.floor(entity.posX);
+			int entityY = MathHelper.floor(entity.posY);
+			int entityZ = MathHelper.floor(entity.posZ);
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer worldrenderer = tessellator.getBuffer();
 			GlStateManager.disableCull();
@@ -72,7 +72,7 @@ public class WeatherRenderer extends IRenderHandler
 			double partialX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
 			double partialY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
 			double partialZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
-			int l = MathHelper.floor_double(partialY);
+			int l = MathHelper.floor(partialY);
 			int precipDensity = 5;
 
 			if (mc.gameSettings.fancyGraphics)
@@ -139,7 +139,7 @@ public class WeatherRenderer extends IRenderHandler
 							double d5 = ((this.rendererUpdateCount + x * x * 3121 + x * 45238971 + z * z * 418711 + z * 13761 & 0x1F) + partialTicks) / 32.0D * (3.0D + world.rand.nextDouble());
 							double offsetX = x + 0.5F - entity.posX;
 							double offsetZ = z + 0.5F - entity.posZ;
-							float f3 = MathHelper.sqrt_double(offsetX * offsetX + offsetZ * offsetZ) / precipDensity;
+							float f3 = MathHelper.sqrt(offsetX * offsetX + offsetZ * offsetZ) / precipDensity;
 							float precipAlpha = ((1.0F - f3 * f3) * 0.5F + 0.5F) * Math.max((float)rainStrength, 0.2f);
 							mPos.setPos(x, i3, z);
 							int j3 = world.getCombinedLight(mPos, 0);
@@ -169,7 +169,7 @@ public class WeatherRenderer extends IRenderHandler
 							double d10 = world.rand.nextDouble() + f1 * (float)world.rand.nextGaussian() * 0.001D;
 							double d11 = x + 0.5F - entity.posX;
 							double d12 = z + 0.5F - entity.posZ;
-							float f6 = MathHelper.sqrt_double(d11 * d11 + d12 * d12) / precipDensity;
+							float f6 = MathHelper.sqrt(d11 * d11 + d12 * d12) / precipDensity;
 							float precipAlpha = ((1.0F - f6 * f6) * 0.3F + 0.5F) * (float)rainStrength;
 							mPos.setPos(x, i3, z);
 							int i4 = (world.getCombinedLight(mPos, 0) * 3 + 15728880) / 4;
@@ -200,11 +200,11 @@ public class WeatherRenderer extends IRenderHandler
 	public static void addRainParticles(Random random, int rendererUpdateCount)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		WorldClient worldclient = mc.theWorld;
+		WorldClient worldclient = mc.world;
 		if(worldclient.provider.getDimension() != 0)
 			return;
-		float rainStrength = (float)WeatherManager.getInstance().getPreciptitation((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
-		double tempPlayer = WeatherManager.getInstance().getTemperature((int)mc.thePlayer.posX,(int)mc.thePlayer.posY, (int)mc.thePlayer.posZ);
+		float rainStrength = (float)WeatherManager.getInstance().getPreciptitation((int)mc.player.posX, (int)mc.player.posZ);
+		double tempPlayer = WeatherManager.getInstance().getTemperature((int)mc.player.posX,(int)mc.player.posY, (int)mc.player.posZ);
 		if(tempPlayer <= 0)
 			return;
 
@@ -250,7 +250,7 @@ public class WeatherRenderer extends IRenderHandler
 
 					if (block.getMaterial(state) == Material.LAVA)
 					{
-						mc.theWorld.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double)((float)blockPos1.getX() + f1), (double)((float)blockPos1.getY() + 0.1F) - axisalignedbb.minY, (double)((float)blockPos1.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
+						mc.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double)((float)blockPos1.getX() + f1), (double)((float)blockPos1.getY() + 0.1F) - axisalignedbb.minY, (double)((float)blockPos1.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
 					}
 					else if (block.getMaterial(state) != Material.AIR)
 					{
@@ -264,7 +264,7 @@ public class WeatherRenderer extends IRenderHandler
 							d2 = (double)((float)blockpos2.getZ() + f2);
 						}
 
-						mc.theWorld.spawnParticle(EnumParticleTypes.WATER_DROP, (double)((float)blockpos2.getX() + f1), (double)((float)blockpos2.getY() + 0.1F) + axisalignedbb.maxY, (double)((float)blockpos2.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
+						mc.world.spawnParticle(EnumParticleTypes.WATER_DROP, (double)((float)blockpos2.getX() + f1), (double)((float)blockpos2.getY() + 0.1F) + axisalignedbb.maxY, (double)((float)blockpos2.getZ() + f2), 0.0D, 0.0D, 0.0D, new int[0]);
 					}
 				}
 			}
@@ -273,13 +273,13 @@ public class WeatherRenderer extends IRenderHandler
 			{
 				rainSoundCounter = 0;
 
-				if (d1 > (double)(blockpos.getY() + 1) && worldclient.getPrecipitationHeight(blockpos).getY() > MathHelper.floor_float((float)blockpos.getY()))
+				if (d1 > (double)(blockpos.getY() + 1) && worldclient.getPrecipitationHeight(blockpos).getY() > MathHelper.floor((float)blockpos.getY()))
 				{
-					mc.theWorld.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN_ABOVE, SoundCategory.WEATHER, 0.1F*rainStrength, 0.5F, false);
+					mc.world.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN_ABOVE, SoundCategory.WEATHER, 0.1F*rainStrength, 0.5F, false);
 				}
 				else
 				{
-					mc.theWorld.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN, SoundCategory.WEATHER, 0.2F*rainStrength, 1.0F, false);
+					mc.world.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN, SoundCategory.WEATHER, 0.2F*rainStrength, 1.0F, false);
 				}
 			}
 		}

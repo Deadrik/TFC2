@@ -54,6 +54,6 @@ public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
 	public void openGuiHandler(GuiOpenEvent event)
 	{
 		if(event.getGui() instanceof GuiInventory && !(event.getGui() instanceof GuiInventoryTFC))
-			event.setGui(new GuiInventoryTFC(Minecraft.getMinecraft().thePlayer));
+			event.setGui(new GuiInventoryTFC(Minecraft.getMinecraft().player));
 	}
 }

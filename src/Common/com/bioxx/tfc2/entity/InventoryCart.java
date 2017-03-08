@@ -40,7 +40,7 @@ public class InventoryCart implements IInventory
 		{
 			ItemStack itemstack;
 
-			if (this.inventoryContents[index].stackSize <= count)
+			if (this.inventoryContents[index].getMaxStackSize() <= count)
 			{
 				itemstack = this.inventoryContents[index];
 				this.inventoryContents[index] = null;
@@ -51,7 +51,7 @@ public class InventoryCart implements IInventory
 			{
 				itemstack = this.inventoryContents[index].splitStack(count);
 
-				if (this.inventoryContents[index].stackSize == 0)
+				if (this.inventoryContents[index].getMaxStackSize() == 0)
 				{
 					this.inventoryContents[index] = null;
 				}
@@ -74,9 +74,9 @@ public class InventoryCart implements IInventory
 	{
 		this.inventoryContents[index] = stack;
 
-		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
+		if (stack != null && stack.getMaxStackSize() > this.getInventoryStackLimit())
 		{
-			stack.stackSize = this.getInventoryStackLimit();
+			stack.setCount(this.getInventoryStackLimit());
 		}
 
 		this.markDirty();
@@ -132,7 +132,7 @@ public class InventoryCart implements IInventory
 	 * Do not make give this method the name canInteractWith because it clashes with Container
 	 */
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
+	public boolean isUsableByPlayer(EntityPlayer player)
 	{
 		return true;
 	}
@@ -192,6 +192,12 @@ public class InventoryCart implements IInventory
 	@Override
 	public ITextComponent getDisplayName() {
 		return null;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

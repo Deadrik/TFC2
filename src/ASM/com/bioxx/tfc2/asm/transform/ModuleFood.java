@@ -75,7 +75,7 @@ public class ModuleFood implements IClassTransformer
 		}
 		else if (transformedName.equals("net.minecraft.item.ItemFishFood"))
 		{
-			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "a", "getSubItems", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ASMConstants.LIST));
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "a", "getSubItems", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ASMConstants.NONNULLLIST));
 
 			if (methodNode != null)
 			{

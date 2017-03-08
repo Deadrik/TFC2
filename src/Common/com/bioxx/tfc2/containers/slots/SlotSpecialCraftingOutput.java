@@ -6,6 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import com.bioxx.tfc2.containers.ContainerSpecialCrafting;
@@ -33,16 +34,16 @@ public class SlotSpecialCraftingOutput extends Slot
 
 
 	@Override
-	public void onPickupFromSlot(EntityPlayer player, ItemStack itemstack)
+	public ItemStack onTake(EntityPlayer player, ItemStack itemstack)
 	{
-		itemstack.onCrafting(thePlayer.worldObj, thePlayer, slotNumber);
+		itemstack.onCrafting(player.world, thePlayer, slotNumber);
 		FMLCommonHandler.instance().firePlayerCraftingEvent(player, itemstack, player.inventory);
 
 		for (int i = 0; i < craftMatrix.getSizeInventory(); i++)
 		{
 			// Clear out everything in the crafting matrix.
 			craftMatrix.setInventorySlotContents(i, null);
-			if (player.worldObj.isRemote)
+			if (player.world.isRemote)
 			{
 				((GuiKnapping) Minecraft.getMinecraft().currentScreen).resetButton(i);
 			}
@@ -50,5 +51,6 @@ public class SlotSpecialCraftingOutput extends Slot
 
 		// Reset decreasedStack flag so another item can be created if the clay forming is reset with NEI.
 		((ContainerSpecialCrafting) container).setDecreasedStack(false);
+		return itemstack;
 	}
 }

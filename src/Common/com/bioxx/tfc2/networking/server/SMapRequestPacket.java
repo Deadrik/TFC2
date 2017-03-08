@@ -48,7 +48,7 @@ public class SMapRequestPacket implements IMessage
 	{
 		@Override
 		public IMessage onMessage(final SMapRequestPacket message, final MessageContext ctx) {
-			IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj; // or Minecraft.getMinecraft() on the client
+			IThreadListener mainThread = (WorldServer) ctx.getServerHandler().player.world; // or Minecraft.getMinecraft() on the client
 			mainThread.addScheduledTask(new Runnable() 
 			{
 				@Override
@@ -56,7 +56,7 @@ public class SMapRequestPacket implements IMessage
 				{
 					int j;
 					IslandMap map = WorldGen.getInstance().getIslandMap(message.islandX, message.islandZ);
-					TFC.network.sendTo(new CMapPacket(message.islandX, message.islandZ, map.seed), ctx.getServerHandler().playerEntity);
+					TFC.network.sendTo(new CMapPacket(message.islandX, message.islandZ, map.seed), ctx.getServerHandler().player);
 				}
 			});
 			return null; // no response in this case

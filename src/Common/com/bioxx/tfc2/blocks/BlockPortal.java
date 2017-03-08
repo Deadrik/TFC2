@@ -11,7 +11,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -23,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -50,7 +48,7 @@ public class BlockPortal extends BlockTerra
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
 	{
 		return NULL_AABB;
 	}
@@ -121,43 +119,6 @@ public class BlockPortal extends BlockTerra
 				else
 					entityIn.changeDimension(0);
 			}
-		}
-	}
-
-	private void travelToDimension(Entity entityIn, int dimensionId)
-	{
-		if (!entityIn.worldObj.isRemote && !entityIn.isDead)
-		{
-
-			MinecraftServer minecraftserver = entityIn.worldObj.getMinecraftServer();
-			int j = entityIn.dimension;
-			WorldServer worldserver = minecraftserver.worldServerForDimension(j);
-			WorldServer worldserver1 = minecraftserver.worldServerForDimension(dimensionId);
-			entityIn.dimension = dimensionId;
-
-			if (j == 2 && dimensionId == 2)
-			{
-				worldserver1 = minecraftserver.worldServerForDimension(0);
-				entityIn.dimension = 0;
-			}
-
-			entityIn.worldObj.removeEntity(entityIn);
-			entityIn.isDead = false;
-
-			minecraftserver.getPlayerList().transferEntityToWorld(entityIn, j, worldserver, worldserver1, new TeleporterPaths(worldserver1));
-
-			Entity entity = EntityList.createEntityByName(EntityList.getEntityString(entityIn), worldserver1);
-
-			if (entity != null)
-			{
-				//entity.copyDataFromOld(entityIn);
-				worldserver1.spawnEntityInWorld(entity);
-			}
-
-			entityIn.isDead = true;
-
-			worldserver.resetUpdateEntityTick();
-			worldserver1.resetUpdateEntityTick();
 		}
 	}
 

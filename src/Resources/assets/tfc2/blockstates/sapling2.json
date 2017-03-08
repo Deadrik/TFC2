@@ -5,9 +5,9 @@
 	},
     "variants": {
     "type":{
-        	"rosewood":  { "textures": {"cross": "tfc2:blocks/wood/trees/Rosewood Sapling"} },
-        	"blackwood":  { "textures": {"cross": "tfc2:blocks/wood/trees/Blackwood Sapling"} },
-    	    "palm":  { "textures": {"cross": "tfc2:blocks/wood/trees/Palm Sapling"} }
+        	"rosewood":  { "textures": {"cross": "tfc2:blocks/wood/trees/rosewood sapling"} },
+        	"blackwood":  { "textures": {"cross": "tfc2:blocks/wood/trees/blackwood sapling"} },
+    	    "palm":  { "textures": {"cross": "tfc2:blocks/wood/trees/palm sapling"} }
         }
     }
 }

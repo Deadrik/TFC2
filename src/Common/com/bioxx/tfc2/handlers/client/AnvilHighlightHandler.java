@@ -29,7 +29,7 @@ public class AnvilHighlightHandler
 		if(evt.getTarget().sideHit != EnumFacing.UP)
 			return;
 
-		World world = evt.getPlayer().worldObj;
+		World world = evt.getPlayer().world;
 
 		if(world.getBlockState(evt.getTarget().getBlockPos()).getBlock() != TFCBlocks.Anvil)
 			return;

@@ -52,7 +52,7 @@ public class AnvilTESR extends TileEntitySpecialRenderer<TileAnvil>
 		Vector2d BR;
 		Vector2d BL;
 
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer player = Minecraft.getMinecraft().player;
 		Timekeeper time = Timekeeper.getInstance();
 
 		if(player.getHorizontalFacing() == EnumFacing.WEST)
@@ -168,7 +168,7 @@ public class AnvilTESR extends TileEntitySpecialRenderer<TileAnvil>
 	{
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer buffer = tessellator.getBuffer();
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer player = Minecraft.getMinecraft().player;
 
 		double scale = 0.25;
 		double panelPosX = xPos+0.5;

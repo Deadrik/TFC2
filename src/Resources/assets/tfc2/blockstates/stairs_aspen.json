@@ -3,9 +3,9 @@
 	"defaults": {
 		"model": "stairs",
 		"textures": {
-			"bottom": "tfc2:blocks/wood/Aspen Plank",
-        	"top": "tfc2:blocks/wood/Aspen Plank",
-        	"side": "tfc2:blocks/wood/Aspen Plank"
+			"bottom": "tfc2:blocks/wood/aspen plank",
+        	"top": "tfc2:blocks/wood/aspen plank",
+        	"side": "tfc2:blocks/wood/aspen plank"
 		}
 	},
 	"variants": {

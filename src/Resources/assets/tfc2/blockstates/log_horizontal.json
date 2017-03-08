@@ -3,18 +3,18 @@
 	"defaults": {
 		"model": "cube_column",
 		"x": 90,
-		"textures": {"side": "tfc2:blocks/wood/trees/Pine Log", "end": "tfc2:blocks/wood/trees/Pine Log Top"}
+		"textures": {"side": "tfc2:blocks/wood/trees/pine log", "end": "tfc2:blocks/wood/trees/pine log top"}
 	},
     "variants": {
     	"wood":{
-        	"ash":  { "textures": {"side": "tfc2:blocks/wood/trees/Ash Log", "end": "tfc2:blocks/wood/trees/Ash Log Top"} },
-        	"aspen":  { "textures": {"side": "tfc2:blocks/wood/trees/Aspen Log", "end": "tfc2:blocks/wood/trees/Aspen Log Top"} },
-        	"birch":  { "textures": {"side": "tfc2:blocks/wood/trees/Birch Log", "end": "tfc2:blocks/wood/trees/Birch Log Top"} },
-        	"chestnut":  { "textures": {"side": "tfc2:blocks/wood/trees/Chestnut Log", "end": "tfc2:blocks/wood/trees/Chestnut Log Top"} },
-        	"douglas_fir":  { "textures": {"side": "tfc2:blocks/wood/trees/Douglas Fir Log", "end": "tfc2:blocks/wood/trees/Douglas Fir Log Top"} },
-     	   	"hickory":  { "textures": {"side": "tfc2:blocks/wood/trees/Hickory Log", "end": "tfc2:blocks/wood/trees/Hickory Log Top"} },
-        	"maple":  { "textures": {"side": "tfc2:blocks/wood/trees/Maple Log", "end": "tfc2:blocks/wood/trees/Maple Log Top"} },
-        	"oak":  { "textures": {"side": "tfc2:blocks/wood/trees/Oak Log", "end": "tfc2:blocks/wood/trees/Oak Log Top"} }
+        	"ash":  { "textures": {"side": "tfc2:blocks/wood/trees/ash log", "end": "tfc2:blocks/wood/trees/ash log top"} },
+        	"aspen":  { "textures": {"side": "tfc2:blocks/wood/trees/aspen log", "end": "tfc2:blocks/wood/trees/aspen log top"} },
+        	"birch":  { "textures": {"side": "tfc2:blocks/wood/trees/birch log", "end": "tfc2:blocks/wood/trees/birch log top"} },
+        	"chestnut":  { "textures": {"side": "tfc2:blocks/wood/trees/chestnut log", "end": "tfc2:blocks/wood/trees/chestnut log top"} },
+        	"douglas_fir":  { "textures": {"side": "tfc2:blocks/wood/trees/douglas fir log", "end": "tfc2:blocks/wood/trees/douglas fir log top"} },
+     	   	"hickory":  { "textures": {"side": "tfc2:blocks/wood/trees/hickory log", "end": "tfc2:blocks/wood/trees/hickory log top"} },
+        	"maple":  { "textures": {"side": "tfc2:blocks/wood/trees/maple log", "end": "tfc2:blocks/wood/trees/maple log top"} },
+        	"oak":  { "textures": {"side": "tfc2:blocks/wood/trees/oak log", "end": "tfc2:blocks/wood/trees/oak log top"} }
         },
     	"rotation": {
     		"0":{"x": 90, "y": 90},
