@@ -27,13 +27,7 @@ import org.lwjgl.opengl.GL11;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.Point;
-import com.bioxx.jmapgen.attributes.Attribute;
-import com.bioxx.jmapgen.attributes.CaveAttribute;
-import com.bioxx.jmapgen.attributes.OreAttribute;
-import com.bioxx.jmapgen.attributes.RiverAttribute;
 import com.bioxx.jmapgen.graph.Center;
-import com.bioxx.jmapgen.processing.CaveAttrNode;
-import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
@@ -211,7 +205,7 @@ public class RenderOverlayHandler
 			int b = mc.world.getChunkFromBlockCoords(pos).getBiomeArray()[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)] & 0xFF;
 			event.getLeft().add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()) + " | " + hex.getMoistureRaw() + " | " + b + " | " + (float)b / 255F);
 			event.getLeft().add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
-			if(hex.hasAttribute(Attribute.Lake))
+			/*if(hex.hasAttribute(Attribute.Lake))
 				event.getLeft().add("IsLake");	
 			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.River);
 			if(attrib != null)
@@ -220,6 +214,13 @@ public class RenderOverlayHandler
 				event.getLeft().add("River: " + attrib.getRiver() + " | " + (attrib.upriver != null ?  attrib.upriver.size() : 0));	
 				if(attrib.upriver != null && attrib.getDownRiver() != null)
 					event.getLeft().add("Up :" + hex.getDirection(attrib.upriver.get(0)).toString() + " | Dn :" + hex.getDirection(attrib.getDownRiver()).toString());
+			}
+
+			LakeAttribute lattrib = (LakeAttribute)hex.getAttribute(Attribute.Lake);
+			if(lattrib != null)
+			{
+				event.getLeft().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"-------Lake-------");
+				event.getLeft().add("Border: "+lattrib.getBorderDistance());
 			}
 
 			CaveAttribute cattrib = (CaveAttribute)hex.getAttribute(Attribute.Cave);
@@ -247,7 +248,7 @@ public class RenderOverlayHandler
 						event.getLeft().add(n.getOreType());	
 					}
 				}
-			}
+			}*/
 
 			event.getRight().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"--Island Parmaters--");
 			event.getRight().add("*Moisture: "+map.getParams().getIslandMoisture());

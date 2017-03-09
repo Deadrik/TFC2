@@ -1494,7 +1494,7 @@ public class IslandMap
 						LakeAttribute nAttrib = (LakeAttribute) n.getAttribute(Attribute.Lake);
 						if(nAttrib.getBorderDistance() < attrib.getBorderDistance())
 							attrib.setBorderDistance(nAttrib.getBorderDistance() + 1);
-						else if (nAttrib.getBorderDistance() > attrib.getBorderDistance())
+						else if (nAttrib.getBorderDistance() > attrib.getBorderDistance()+1)
 							nAttrib.setBorderDistance(attrib.getBorderDistance() + 1);
 					}
 					if(!n.hasMarker(Marker.Water))

@@ -168,7 +168,7 @@ public class Core
 
 	public static boolean isTerrain(IBlockState state)
 	{
-		return isSoil(state) || isSand(state) || isStone(state) || isGravel(state);
+		return isSoil(state) || isSand(state) || isStone(state) || isGravel(state)|| state.getBlock() == Blocks.STONE;
 	}
 
 	public static boolean isNaturalLog(IBlockState state)

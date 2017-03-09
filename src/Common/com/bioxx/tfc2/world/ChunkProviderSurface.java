@@ -34,10 +34,13 @@ import com.bioxx.jmapgen.processing.CaveAttrNode;
 import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.model.Segment;
+import com.bioxx.libnoise.module.combiner.Max;
 import com.bioxx.libnoise.module.modifier.Clamp;
 import com.bioxx.libnoise.module.modifier.Curve;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
+import com.bioxx.libnoise.module.source.Billow;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.libnoise.module.source.RidgedMulti;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry;
@@ -105,15 +108,52 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		 * Setup our turbulence Module
 		 */
 		Perlin pe = new Perlin();
-		pe.setSeed (seed);
+		pe.setSeed (0);
 		pe.setFrequency (1f/16f);
 		pe.setLacunarity(1.5);
-		pe.setOctaveCount(4);
+		pe.setOctaveCount(6);
 		pe.setNoiseQuality (com.bioxx.libnoise.NoiseQuality.BEST);
+
+		Billow b = new Billow();
+		b.setSeed(3);
+		b.setFrequency (1f/30f);
+		b.setLacunarity(1.5);
+		b.setOctaveCount(2);
+
+		Billow b2 = new Billow();
+		b2.setSeed(50);
+		b2.setFrequency (1f/40f);
+		b2.setOctaveCount(2);
+
+		Billow b3 = new Billow();
+		b3.setSeed(500);
+		b3.setFrequency (1f/50f);
+		b3.setOctaveCount(3);
+
+		Max m = new Max();
+		m.setSourceModule(0, b2);
+		m.setSourceModule(1, b);
+
+		Max m2 = new Max();
+		m2.setSourceModule(0, m);
+		m2.setSourceModule(1, b3);
+
+		Max m3 = new Max();
+		m3.setSourceModule(0, m2);
+		m3.setSourceModule(1, pe);
+
+		RidgedMulti r = new RidgedMulti();
+		r.setSeed(300);
+		r.setFrequency (1f/20f);
+		r.setOctaveCount(2);
+
+		Max m4 = new Max();
+		m4.setSourceModule(0, m3);
+		m4.setSourceModule(1, r);
 
 		//The scalebias makes our noise fit the range 0-1
 		ScaleBias sb2 = new ScaleBias();
-		sb2.setSourceModule(0, pe);
+		sb2.setSourceModule(0, m4);
 		//Noise is normally +-2 so we scale by 0.5 to make it +-1.0
 		//sb2.setScale(0.5);
 
@@ -184,8 +224,9 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
 		generateTerrain(chunkprimer, chunkX, chunkZ);
-		decorate(chunkprimer, chunkX, chunkZ);
 		carveRiverSpline(chunkprimer);
+		decorate(chunkprimer, chunkX, chunkZ);
+
 		carveCaves(chunkprimer);
 		placeOreSeams(chunkprimer);
 		placeOreLayers(chunkprimer);
@@ -479,7 +520,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
 						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water
-						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= closestElev-this.getTurbulence(closestCenter, p, 4)-1)
+						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= closestElev-attrib.getBorderDistance()*2-this.getTurbulence(closestCenter, p, 4)-1)
 							chunkprimer.setBlockState(x, y, z, freshwater);
 						if(getBlock(chunkprimer, x, y, z).isFullCube(getBlock(chunkprimer, x, y, z).getDefaultState()) && blockUp == freshwater)
 						{
@@ -671,8 +712,8 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 	{
 		ArrayList<BlockPos> points = new ArrayList<BlockPos>();
 		Point splinePos;
-		BlockPos pos, pos2, pos3, pos4;
-		Point iPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
+		BlockPos splineBlockPos, localBlockPos, depthBlockPos, surfaceBlockPos;
+		Point islandPoint = new Point(islandChunkX, islandChunkZ).toIslandCoord();
 		Center closest;
 		IBlockState b;
 		double wSq = 2;
@@ -693,15 +734,17 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 				//Get the closest hex to this spline point
 				closest = islandMap.getClosestCenter(splinePos);
-				splinePos = splinePos.minus(iPoint);
+				//translate splinePos from island space to local space
+				splinePos = splinePos.minus(islandPoint);
 
 				//If the spline point is outside chunk boundary than we skip it
 				if(splinePos.x < -16 || splinePos.y < -16 || splinePos.x >= 32 || splinePos.y >= 32)
 					continue;
 
-				//Setup our base position that we'll be carving around
-				pos = new BlockPos((int)Math.floor(splinePos.x), 0, (int)Math.floor(splinePos.y));
+				//Setup our base block position that we'll be carving around
+				splineBlockPos = new BlockPos((int)Math.floor(splinePos.x), 0, (int)Math.floor(splinePos.y));
 
+				//min and max are the maximum distances from the center that we will carve. This is based on river width
 				min = (int)Math.floor(-attrib.getRiver());
 				max = (int)attrib.getRiver();
 
@@ -710,10 +753,11 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				{
 					for(double z = min; z <= max; z++)
 					{
-						//Add x and z to our base point to get the local position
-						pos2 = pos.add(x, 0, z);
+						//Add x and z to our base point to get the local block position
+						localBlockPos = splineBlockPos.add(x, 0, z);
 						//If this local position is outside of the chunk, end here so we don't crash
-						if(pos2.getX() < 0 || pos2.getY() < 0 || pos2.getZ() < 0 || pos2.getX() >= 16 || pos2.getY() >= 256 || pos2.getZ() >= 16)
+						if(localBlockPos.getX() < 0 || localBlockPos.getY() < 0 || localBlockPos.getZ() < 0 || 
+								localBlockPos.getX() >= 16 || localBlockPos.getY() >= 256 || localBlockPos.getZ() >= 16)
 						{
 							continue;
 						}
@@ -726,7 +770,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						if(upCenter != null)
 							riverHeightUpDiff = convertElevation(upCenter.getElevation()) - hexElev;
 
-						terrainElev = this.elevationMap[(pos2.getZ() << 4) | pos2.getX()];
+						terrainElev = this.elevationMap[(localBlockPos.getZ() << 4) | localBlockPos.getX()];
 						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL-1);
 
 						/*if(i < 0.2 && riverHeightUpDiff > 5 || terrainElev > hexElev)
@@ -747,53 +791,50 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							waterLevel = Math.max(terrainElev-1, Global.SEALEVEL-1);
 						}*/
 
-						pos2 = pos2.add(0, waterLevel, 0);
-						pos4 = pos.add(0, waterLevel, 0);
+						localBlockPos = localBlockPos.add(0, waterLevel, 0);
+						surfaceBlockPos = splineBlockPos.add(0, waterLevel, 0);
 						int rd = -rDepth;
 						if(terrainElev != hexElev)
 						{
 							rd = (int)(-rDepth/1.5f);
 						}
+
+						if(terrainElev != hexElev)
+						{
+							rDepth++;
+						}
+
 						for(int depth = rDepth; depth >= rd; depth--)
 						{
-							pos3 = pos2.add(0, depth, 0);
+							depthBlockPos = localBlockPos.add(0, depth, 0);
 							doAir = false;
-							IBlockState s = getState(chunkprimer, pos3);
+							IBlockState s = getState(chunkprimer, depthBlockPos);
 
 
-							if(depth >= 0 && pos3.distanceSq(pos4.getX(), pos4.getY(), pos4.getZ()) < wSq)
+							if(depth >= 0 && depthBlockPos.distanceSq(surfaceBlockPos.getX(), surfaceBlockPos.getY(), surfaceBlockPos.getZ()) < wSq)
 							{
 								if(!Core.isWater(s))
 								{
-									setState(chunkprimer, pos3, Blocks.AIR.getDefaultState());
+									setState(chunkprimer, depthBlockPos, Blocks.AIR.getDefaultState());
 								}
-								//continue;
 							}
-							else if(depth < 0 && pos3.distanceSq(pos4.getX(), pos4.getY(), pos4.getZ()) <= wSq)
+							else if(depth < 0 && depthBlockPos.distanceSq(surfaceBlockPos.getX(), surfaceBlockPos.getY(), surfaceBlockPos.getZ()) <= wSq)
 							{
-								IBlockState fillState = Blocks.WATER.getDefaultState();
-
-								//If we're moving up or down a slope then don't place water
-								/*if(terrainElev != hexElev /* pos3.getY() >= waterLevel)
-								{
-									fillState = Blocks.AIR.getDefaultState();
-								}*/
-
-
+								IBlockState fillState = Blocks.FLOWING_WATER.getDefaultState();
 
 								if(!Core.isWater(s))
 								{
-									setState(chunkprimer, pos3, fillState);
-									convertRiverBank(chunkprimer, pos3.down());
+									setState(chunkprimer, depthBlockPos, fillState);
+									convertRiverBank(chunkprimer, depthBlockPos.down());
 								}
 
-								if(pos3.getY() == waterLevel || pos3.getY() == waterLevel-1)
+								if(depthBlockPos.getY() == waterLevel || depthBlockPos.getY() == waterLevel-1)
 								{
 									doAir = true;
-									convertRiverBank(chunkprimer, pos3.north(), doAir);
-									convertRiverBank(chunkprimer, pos3.south(), doAir);
-									convertRiverBank(chunkprimer, pos3.east(), doAir);
-									convertRiverBank(chunkprimer, pos3.west(), doAir);
+									convertRiverBank(chunkprimer, depthBlockPos.north(), doAir);
+									convertRiverBank(chunkprimer, depthBlockPos.south(), doAir);
+									convertRiverBank(chunkprimer, depthBlockPos.east(), doAir);
+									convertRiverBank(chunkprimer, depthBlockPos.west(), doAir);
 								}
 							}
 						}
@@ -843,7 +884,11 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						convertRiverBank(chunkprimer, pos.up(1).east(), true);
 						convertRiverBank(chunkprimer, pos.up(1).west(), true);
 					}
-					setState(chunkprimer, pos.up(1), Blocks.AIR.getDefaultState());
+					while(getState(chunkprimer, pos.up()).getBlock() == Blocks.STONE)
+					{
+						setState(chunkprimer, pos.up(), Blocks.AIR.getDefaultState());
+						pos = pos.up();
+					}
 				}
 			}
 		}
