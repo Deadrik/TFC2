@@ -108,6 +108,11 @@ public class Core
 		return new ResourceLocation(s);
 	}
 
+	public static ResourceLocation CreateRes(String modid, String s)
+	{
+		return new ResourceLocation(modid+"."+s);
+	}
+
 	public static boolean isGrass(IBlockState state)
 	{
 		if(state.getBlock() == TFCBlocks.Grass)

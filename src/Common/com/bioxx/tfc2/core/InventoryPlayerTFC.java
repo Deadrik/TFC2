@@ -16,6 +16,7 @@ public class InventoryPlayerTFC extends InventoryPlayer {
 	public InventoryPlayerTFC(EntityPlayer par1EntityPlayer) {
 		super(par1EntityPlayer);
 		this.player = par1EntityPlayer;
+		this.allInventories.add(extraEquipInventory);
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class WorldGenPortals implements IWorldGenerator
 
 					if(c.hasAttribute(Attribute.Portal))
 					{
-						BlockPos portalPos = c.point.plus(xM*4096, zM*4096).toBlockPos().add(0, 62+map.convertHeightToMC(c.elevation), 0);
+						BlockPos portalPos = c.point.plus(xM*4096, zM*4096).toBlockPos().add(0, 63+map.convertHeightToMC(c.elevation), 0);
 						BuildPortalSchem(world, c, portalPos, map, false);
 						//Once we generate the portal structure, just end this generator. 
 						//We dont want to potentially generate it 256 times

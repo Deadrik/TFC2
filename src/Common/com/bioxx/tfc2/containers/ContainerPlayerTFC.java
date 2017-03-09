@@ -129,7 +129,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 		if (craftOut != null && craftOut.getHasStack())
 		{
 			ItemStack craftResult = craftOut.getStack();
-			if (craftResult != null)
+			if (craftResult != ItemStack.EMPTY)
 			{
 				//Removed During Port
 				/*if (craftResult.getItem() instanceof ItemFoodTFC)
@@ -283,105 +283,131 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	}
 
 	@Override
-	protected boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean useEndIndex)
+	protected boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection)
 	{
-		boolean flag1 = false;
-		int k = startIndex;
+		boolean flag = false;
+		int i = startIndex;
 
-		if (useEndIndex)
+		if (reverseDirection)
 		{
-			k = endIndex - 1;
+			i = endIndex - 1;
 		}
-
-		Slot slot;
-		ItemStack itemstack1;
 
 		if (stack.isStackable())
 		{
-			while (stack.getMaxStackSize() > 0 && (!useEndIndex && k < endIndex || useEndIndex && k >= startIndex))
+			while (!stack.isEmpty())
 			{
-				slot = (Slot)this.inventorySlots.get(k);
-				itemstack1 = slot.getStack();
-
-				if (itemstack1 != null && 
-						itemstack1.getItem() == stack.getItem() && 
-						(!stack.getHasSubtypes() || stack.getMetadata() == itemstack1.getMetadata()) && 
-						ContainerTFC.areCompoundsEqual(stack, itemstack1))
+				if (reverseDirection)
 				{
-					if(stack.getItem() instanceof IFood && itemstack1.getItem() instanceof IFood)
+					if (i < startIndex)
 					{
-						long ex1 = Food.getDecayTimer(stack);
-						long ex2 = Food.getDecayTimer(itemstack1);
-						if(ex1 < ex2)
-							Food.setDecayTimer(itemstack1, ex1);
-					}
-
-					int l = itemstack1.getMaxStackSize() + stack.getMaxStackSize();
-
-					if (l <= stack.getMaxStackSize())
-					{
-						stack.setCount(0);
-						itemstack1.setCount(1);
-						slot.onSlotChanged();
-						flag1 = true;
-					}
-					else if (itemstack1.getMaxStackSize() < stack.getMaxStackSize())
-					{
-						stack.setCount(stack.getMaxStackSize() - itemstack1.getMaxStackSize());
-						itemstack1.setCount(stack.getMaxStackSize());
-						slot.onSlotChanged();
-						flag1 = true;
+						break;
 					}
 				}
-
-				if (useEndIndex)
+				else if (i >= endIndex)
 				{
-					--k;
-				}
-				else
-				{
-					++k;
-				}
-			}
-		}
-
-		if (stack.getMaxStackSize() > 0)
-		{
-			if (useEndIndex)
-			{
-				k = endIndex - 1;
-			}
-			else
-			{
-				k = startIndex;
-			}
-
-			while (!useEndIndex && k < endIndex || useEndIndex && k >= startIndex)
-			{
-				slot = (Slot)this.inventorySlots.get(k);
-				itemstack1 = slot.getStack();
-
-				if (itemstack1 == null && slot.isItemValid(stack)) // Forge: Make sure to respect isItemValid in the slot.
-				{
-					slot.putStack(stack.copy());
-					slot.onSlotChanged();
-					stack.setCount(0);
-					flag1 = true;
 					break;
 				}
 
-				if (useEndIndex)
+				Slot slot = (Slot)this.inventorySlots.get(i);
+				ItemStack itemstack = slot.getStack();
+
+				if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getMetadata() == itemstack.getMetadata()) && ItemStack.areItemStackTagsEqual(stack, itemstack))
 				{
-					--k;
+					int j = itemstack.getCount() + stack.getCount();
+					int maxSize = Math.min(slot.getSlotStackLimit(), stack.getMaxStackSize());
+
+					if(stack.getItem() instanceof IFood && itemstack.getItem() instanceof IFood)
+					{
+						long ex1 = Food.getDecayTimer(stack);
+						long ex2 = Food.getDecayTimer(itemstack);
+						if(ex1 < ex2)
+							Food.setDecayTimer(itemstack, ex1);
+					}
+
+					if (j <= maxSize)
+					{
+						stack.setCount(0);
+						itemstack.setCount(j);
+						slot.onSlotChanged();
+						flag = true;
+					}
+					else if (itemstack.getCount() < maxSize)
+					{
+						stack.shrink(maxSize - itemstack.getCount());
+						itemstack.setCount(maxSize);
+						slot.onSlotChanged();
+						flag = true;
+					}
+				}
+
+				if (reverseDirection)
+				{
+					--i;
 				}
 				else
 				{
-					++k;
+					++i;
 				}
 			}
 		}
 
-		return flag1;
+		if (!stack.isEmpty())
+		{
+			if (reverseDirection)
+			{
+				i = endIndex - 1;
+			}
+			else
+			{
+				i = startIndex;
+			}
+
+			while (true)
+			{
+				if (reverseDirection)
+				{
+					if (i < startIndex)
+					{
+						break;
+					}
+				}
+				else if (i >= endIndex)
+				{
+					break;
+				}
+
+				Slot slot1 = (Slot)this.inventorySlots.get(i);
+				ItemStack itemstack1 = slot1.getStack();
+
+				if (itemstack1.isEmpty() && slot1.isItemValid(stack))
+				{
+					if (stack.getCount() > slot1.getSlotStackLimit())
+					{
+						slot1.putStack(stack.splitStack(slot1.getSlotStackLimit()));
+					}
+					else
+					{
+						slot1.putStack(stack.splitStack(stack.getCount()));
+					}
+
+					slot1.onSlotChanged();
+					flag = true;
+					break;
+				}
+
+				if (reverseDirection)
+				{
+					--i;
+				}
+				else
+				{
+					++i;
+				}
+			}
+		}
+
+		return flag;
 	}
 
 

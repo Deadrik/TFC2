@@ -58,8 +58,8 @@ public class ModuleFood implements IClassTransformer
 			onDecayedMethod.instructions.add(new InsnNode(Opcodes.ARETURN));
 			classNode.methods.add(onDecayedMethod);
 
-			String methDesc = ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), "Ljava/util/List<"+ASMHelper.toDescriptor(ObfHelper.toObfClassName(ASMConstants.ITEMSTACK)+";>"));
-			MethodNode addSubItemsMethod = new MethodNode(Opcodes.ACC_PUBLIC,"getSubItems",ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ASMConstants.LIST),methDesc, null);
+			String methDesc = ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ObfHelper.getDescriptor(ObfHelper.toObfClassName(ASMConstants.NONNULLLIST), ObfHelper.toObfClassName(ASMConstants.ITEMSTACK)));
+			MethodNode addSubItemsMethod = new MethodNode(Opcodes.ACC_PUBLIC,"getSubItems",ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ObfHelper.toObfClassName(ASMConstants.NONNULLLIST)),methDesc, null);
 			AnnotationNode addSubAnnotation = new AnnotationNode("Lnet/minecraftforge/fml/relauncher/SideOnly;");
 			addSubAnnotation.visitEnum("value", "Lnet/minecraftforge/fml/relauncher/Side;", "CLIENT");
 			addSubItemsMethod.visibleAnnotations = new ArrayList<AnnotationNode>();
@@ -67,7 +67,7 @@ public class ModuleFood implements IClassTransformer
 			addSubItemsMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
 			addSubItemsMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 2));
 			addSubItemsMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, 3));
-			addSubItemsMethod.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","getSubItems",ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ASMConstants.LIST), false));
+			addSubItemsMethod.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","getSubItems",ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ObfHelper.toObfClassName(ASMConstants.NONNULLLIST)), false));
 			addSubItemsMethod.instructions.add(new InsnNode(Opcodes.RETURN));
 			classNode.methods.add(addSubItemsMethod);
 

@@ -10,6 +10,7 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -255,7 +256,7 @@ public class Food
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void getSubItems(Item itemIn, CreativeTabs tab, List subItems)
+	public static void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
 		ItemStack is = new ItemStack(itemIn, 1, 0);
 		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime()+ Food.getExpirationTimer(is));
