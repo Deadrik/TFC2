@@ -684,7 +684,9 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		{
 			wSq = Math.max(rDepth * rDepth*2, 1);
 
-			for(double i = 0; i < 1; i+= 0.05)
+
+
+			for(double i = 0; i < 1; i+= 0.02)
 			{
 				//Get the spline point for this iteration
 				splinePos = spline.getPoint(i);
@@ -717,8 +719,33 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						}
 						//Get the water level for this location. This is the local terrain elevation - 1
 						hexElev = convertElevation(center.getElevation());
+
+						int riverHeightDnDiff = 0, riverHeightUpDiff = 0;
+						if(dnCenter != null)
+							riverHeightDnDiff = hexElev - convertElevation(dnCenter.getElevation());
+						if(upCenter != null)
+							riverHeightUpDiff = convertElevation(upCenter.getElevation()) - hexElev;
+
 						terrainElev = this.elevationMap[(pos2.getZ() << 4) | pos2.getX()];
-						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL);
+						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL-1);
+
+						/*if(i < 0.2 && riverHeightUpDiff > 5 || terrainElev > hexElev)
+						{
+							float scale = (float)riverHeightUpDiff / 4f;
+							int depth = (int)(scale * (1-(i/0.2)));
+							depth = (int)(scale - depth);
+							waterLevel = Math.max(Math.max(terrainElev-depth, Global.SEALEVEL), terrainElev-1);
+						}
+						else if(i > 0.8 && riverHeightDnDiff > 5)
+						{
+							int depth = (int)((riverHeightDnDiff/4f)*((1-i)/0.2));
+							depth = (int)(riverHeightDnDiff/4f) - depth;
+							waterLevel = Math.max(terrainElev-(1+depth), Global.SEALEVEL);
+						}
+						else
+						{
+							waterLevel = Math.max(terrainElev-1, Global.SEALEVEL-1);
+						}*/
 
 						pos2 = pos2.add(0, waterLevel, 0);
 						pos4 = pos.add(0, waterLevel, 0);
@@ -747,10 +774,10 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 								IBlockState fillState = Blocks.WATER.getDefaultState();
 
 								//If we're moving up or down a slope then don't place water
-								if(terrainElev != hexElev /* pos3.getY() >= waterLevel*/)
+								/*if(terrainElev != hexElev /* pos3.getY() >= waterLevel)
 								{
 									fillState = Blocks.AIR.getDefaultState();
-								}
+								}*/
 
 
 
@@ -853,7 +880,12 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 	protected double getSmoothHeightHex(Center c, Point p)
 	{
 		if(this.islandMap.getParams().hasFeature(Feature.Cliffs))
-			return getSmoothHeightHex(c, p, 2);
+		{
+			if(c.hasAttribute(Attribute.River))
+				return getSmoothHeightHex(c, p, 5);
+			else if(getMaximumHeightDifferenceOfNeighbors(c) > 6)
+				return getSmoothHeightHex(c, p, 2);
+		}
 
 		if(islandMap.getParams().hasFeature(Feature.Canyons) || islandMap.getParams().hasFeature(Feature.Gorges))
 		{
@@ -886,6 +918,17 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		}
 
 		return getSmoothHeightHex(c, p, 5);
+	}
+
+	private int getMaximumHeightDifferenceOfNeighbors(Center c)
+	{
+		int max = 0;
+		int centerHeight = this.convertElevation(c.getElevation());
+		for(Center n : c.neighbors)
+		{
+			max = Math.max(Math.abs(centerHeight - this.convertElevation(n.getElevation())), max);
+		}
+		return max;
 	}
 
 	private Vector<Center> getCentersNear(Point p, int range)
