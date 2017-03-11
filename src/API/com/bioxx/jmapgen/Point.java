@@ -20,6 +20,12 @@ public class Point extends Point2D
 		y = Y;
 	}
 
+	public Point(BlockPos pos)
+	{
+		x = pos.getX();
+		y = pos.getZ();
+	}
+
 	@Override
 	public double getX() 
 	{

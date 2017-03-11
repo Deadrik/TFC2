@@ -6,7 +6,6 @@ import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
@@ -33,34 +32,41 @@ public class RegenChunkCommand extends CommandBase
 		if(params.length == 1)
 		{
 			int radius = Integer.parseInt(params[0]);
+
 			for(int i = -radius; i <= radius; i++)
 			{
 				for(int k = -radius; k <= radius; k++)
 				{
 					int x = (((int)player.posX+i*16) >> 4);
 					int z = (((int)player.posZ+k*16) >> 4);
-					BlockPos pos = new BlockPos((int)player.posX+i*16, 0, (int)player.posZ+k*16);
 
 					ChunkProviderServer cps = world.getChunkProvider();
 
 					Chunk c = cps.chunkGenerator.provideChunk(x, z);
-					c.onChunkLoad();
-					c.populateChunk(cps, cps.chunkGenerator);
 					Chunk old = world.getChunkProvider().provideChunk(x, z);
 					old.setStorageArrays(c.getBlockStorageArray());
-					old.setChunkModified();
-				}
-			}
+					c.onChunkLoad();
+					c.setChunkModified();
+					old.populateChunk(cps, cps.chunkGenerator);
+					/*Chunk old = world.getChunkProvider().provideChunk(x, z);
+					old.setStorageArrays(c.getBlockStorageArray());
+					old.setTerrainPopulated(false);
+					old.populateChunk(cps, cps.chunkGenerator);*/
 
-			for(int i = -radius; i <= radius; i++)
-			{
-				for(int k = -radius; k <= radius; k++)
-				{
-					int x = (((int)player.posX+i*16) >> 4);
-					int z = (((int)player.posZ+k*16) >> 4);
-					BlockPos pos = new BlockPos((int)player.posX+i*16, 0, (int)player.posZ+k*16);
-					ChunkProviderServer cps = ((ChunkProviderServer)world.getChunkProvider());
-					net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(x, z, world, cps.chunkGenerator, cps);
+					if (c.isTerrainPopulated())
+					{
+						if (cps.chunkGenerator.generateStructures(c, c.xPosition, c.zPosition))
+						{
+							c.setChunkModified();
+						}
+					}
+					else
+					{
+						c.checkLight();
+						cps.chunkGenerator.populate(c.xPosition, c.zPosition);
+						net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(c.xPosition, c.zPosition, world, cps.chunkGenerator, world.getChunkProvider());
+						c.setChunkModified();
+					}
 
 					player.connection.sendPacket(new SPacketChunkData(cps.provideChunk(x, z), 0xffffffff));
 				}

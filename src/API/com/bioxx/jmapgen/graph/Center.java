@@ -268,6 +268,16 @@ public class Center
 		return out;
 	}
 
+	public Vector<Center> getOnlyLowerCenters()
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : neighbors)
+			if(c.getElevation() < getElevation())
+				out.add(c);
+
+		return out;
+	}
+
 	public Corner getClosestCorner(Point p)
 	{
 		Corner closest = corners.get(0);

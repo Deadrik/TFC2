@@ -101,12 +101,14 @@ public class CommonProxy
 
 	protected void registerWorldGen()
 	{
-		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 0);
-		GameRegistry.registerWorldGenerator(new WorldGenTrees(), 10);
-		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
+		//GameRegistry.registerWorldGenerator(new WorldGenErosion(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGenStalag(), 4);
 		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 5);
 		GameRegistry.registerWorldGenerator(new WorldGenPamsGardens(), 6);
+		GameRegistry.registerWorldGenerator(new WorldGenTrees(), 10);
+		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
+
 	}
 
 	protected void registerEntities() 
