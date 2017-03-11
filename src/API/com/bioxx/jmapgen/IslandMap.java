@@ -221,14 +221,9 @@ public class IslandMap
 		caves.generate();
 		ores.generate();
 
-		//Generate Dungeons
 		if(!this.getParams().hasFeature(Feature.NoLand))
 		{
 			createPortals();
-			/*Dungeon d = new Dungeon();
-			Vector<Center> dungeonCenters = this.getCentersAbove(0.4);
-			d.generate(seed, dungeonCenters.get(this.mapRandom.nextInt(dungeonCenters.size())));
-			dungeons.add(d);*/
 		}
 
 		animalProc.generate();

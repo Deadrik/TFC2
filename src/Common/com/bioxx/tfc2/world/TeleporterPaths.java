@@ -45,11 +45,11 @@ public class TeleporterPaths extends Teleporter
 		//First check if we're teleporting back into the overworld
 		if (this.worldServerInstance.provider.getDimension() != 0)
 		{
-			if (!this.placeInExistingPortal(entity, yaw))
+			if (!this.placeInExistingPortal(entity, yaw+180))
 			{
 				this.makePortal(entity);
 				makePath(entity);
-				this.placeInExistingPortal(entity, yaw);
+				this.placeInExistingPortal(entity, yaw+180);
 			}
 		}
 		else
@@ -75,7 +75,7 @@ public class TeleporterPaths extends Teleporter
 			else if(this.checkRoomForPlayer(pos.west()))
 				pos = pos.west();
 
-			entity.setLocationAndAngles(pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, entity.rotationYaw+0.5f, entity.rotationPitch);
+			entity.setLocationAndAngles(pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, yaw+180, entity.rotationPitch);
 		}
 	}
 
@@ -152,7 +152,7 @@ public class TeleporterPaths extends Teleporter
 			else if(this.checkRoomForPlayer(pos.west()))
 				pos = pos.west();
 
-			entityIn.setLocationAndAngles(pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, entityIn.rotationYaw+0.5f, entityIn.rotationPitch);
+			entityIn.setLocationAndAngles(pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, rotationYaw+0.5f, entityIn.rotationPitch);
 			return true;
 		}
 		else
@@ -177,7 +177,7 @@ public class TeleporterPaths extends Teleporter
 		closest = this.getPortalNeighbor(closest);
 		BlockPos portalPos = new BlockPos(entityIn);
 
-		WorldGenPortals.BuildPortalSchem(worldServerInstance, closest, portalPos, islandMap, true);
+		WorldGenPortals.BuildPortalSchem(worldServerInstance, closest, portalPos, islandMap, false);
 
 		return true;
 	}
@@ -249,7 +249,7 @@ public class TeleporterPaths extends Teleporter
 			destMap.getIslandData().enablePortal(endAttr.direction);
 
 		WorldGenPortals.BuildPath(worldServerInstance, start, end, startAttr.getSpline());
-		WorldGenPortals.BuildPortalSchem(worldServerInstance, dest, end, destMap, true);
+		WorldGenPortals.BuildPortalSchem(worldServerInstance, dest, end, destMap, false);
 
 		return true;
 	}
