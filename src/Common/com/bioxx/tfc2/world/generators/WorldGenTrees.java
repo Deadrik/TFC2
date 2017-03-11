@@ -60,7 +60,7 @@ public class WorldGenTrees implements IWorldGenerator
 		//The theoretical max number of trees per chunk is 8.
 		//We mult this by whichever is lower, the hex moisture or the island moisture.
 		//This way base dry islands still feature less trees overall.
-		int baseTrees = 12;
+		int baseTrees = 100;
 		baseTrees = (int)(baseTrees * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
 		int numTrees = random.nextInt(baseTrees+1)+1;
 		//numTrees = (int)(numTrees * c.getMoisture().getMoisture());

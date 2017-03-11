@@ -139,6 +139,12 @@ public class BlockLeaves extends BlockTerra
 		return false;
 	}
 
+	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
+	}
+
 	/**
 	 * Pass true to draw this block using fancy graphics, or false for fast graphics.
 	 */
