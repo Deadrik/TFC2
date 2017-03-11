@@ -1,0 +1,759 @@
+[
+	{
+		"name": "harvestcraft:calamarirawitem",
+		"decay": 18000,
+		"foodgroup": "Protein",
+		"edible": false
+	},
+	{
+		"name": "harvestcraft:calamaricookeditem",
+		"decay": 36000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:freshmilkitem",
+		"decay": 36000,
+		"foodgroup": "Dairy"
+	},
+	{
+		"name": "harvestcraft:freshwateritem",
+		"decay": 36000000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:sunflowerseedsitem",
+		"decay": 72000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:ediblerootitem",
+		"decay": 72000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:grilledasparagusitem",
+		"decay": 72000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:bakedsweetpotatoitem",
+		"decay": 72000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:grilledeggplantitem",
+		"decay": 72000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:toastitem",
+		"decay": 72000,
+		"foodgroup": "Grain"
+	},
+	{
+		"name": "harvestcraft:cheeseitem",
+		"decay": 72000,
+		"foodgroup": "Dairy"
+	},
+	{
+		"name": "harvestcraft:icecreamitem",
+		"decay": 8000,
+		"foodgroup": "Dairy"
+	},
+	{
+		"name": "harvestcraft:grilledcheeseitem",
+		"decay": 72000,
+		"foodgroup": {
+			"Grain": "60",
+			"Dairy": "40"
+		}
+	},
+	{
+		"name": "harvestcraft:applesauce",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:pumpkinbreaditem",
+		"decay": 72000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:caramelappleitem",
+		"decay": 18000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:applepieitem",
+		"decay": 72000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:flouritem",
+		"decay": 72000,
+		"foodgroup": "Grain"
+	},
+	{
+		"name": "harvestcraft:doughitem",
+		"decay": 36000,
+		"foodgroup": "Grain"
+	},
+	{
+		"name": "harvestcraft:pastaitem",
+		"decay": 36000,
+		"foodgroup": "Grain"
+	},
+	{
+		"name": "harvestcraft:heavycreamitem",
+		"decay": 36000,
+		"foodgroup": "Dairy"
+	},
+	{
+		"name": "harvestcraft:butteritem",
+		"decay": 36000,
+		"foodgroup": "Dairy"
+	},
+	{
+		"name": "harvestcraft:pumpkinsoupitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:melonsmoothieitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:carrotsoupitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:glazedcarrotsitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:butteredpotatoitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:loadedbakedpotatoitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:mashedpotatoesitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:potatosaladitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:potatosoupitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:friesitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:grilledmushroomitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:stuffedmushroomitem",
+		"decay": 36000,
+		"foodgroup": {
+			"Grain": "30",
+			"Dairy": "30",
+			"Vegetable": "40"
+		}
+	},
+	{
+		"name": "harvestcraft:grilledmushroomitem",
+		"decay": 36000,
+		"foodgroup": {
+			"Grain": "10",
+			"Protein": "60",
+			"Vegetable": "20"
+		}
+	},
+	{
+		"name": "harvestcraft:artichokeitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:asparagusitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:bambooshootitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:barleyitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:beanitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:beetitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:bellpepperitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:blackberryitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:blueberryitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:broccoliitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:brusselsproutitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:cabbageitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:cactusfruititem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:candleberryitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:cantaloupeitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:caulifloweritem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:celeryitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:chilipepperitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:coffeeitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:cornitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:cranberryitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:cucumberitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:curryleafitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:eggplantitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:garlicitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:gingeritem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:grapeitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:kiwiitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:leekitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:lettuceitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:musturditem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:oatsitem",
+		"decay": 36000,
+		"foodgroup": "Grain"
+	},
+	{
+		"name": "harvestcraft:okraitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:onionitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:parsnipitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:peanutitem",
+		"decay": 36000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:peasitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:pineappleitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:radishitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:raspberryitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:rhubarbitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:riceitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:rutabagaitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:ryeitem",
+		"decay": 36000,
+		"foodgroup": "Grain"
+	},
+	{
+		"name": "harvestcraft:scallionitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:seaweeditem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:spiceleafitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:sesameseedsitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:soybeanitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:spinichitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:strawberryitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:sunflowerseedsitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:sweetpotatoitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:tealeafitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:tomatoitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:turnipitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:waterchestnutitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:whitemushroomitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:wintersquashitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:zucchiniitem",
+		"decay": 36000,
+		"foodgroup": "Vegetable"
+	},
+	{
+		"name": "harvestcraft:apricotitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:avocadoitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:bananaitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:cherryitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:cinnamonitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:dateitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:dragonfruititem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:durianitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:figitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:grapefruititem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:gooseberryitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:lemonitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:limeitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:mangoitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:mapleitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:nutmegitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:oliveitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:orangeitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:papayaitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:peachitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:pearitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:peppercornitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:persimmonitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:plumitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:pomegranateitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:starfruititem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:vanillaitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:almonditem",
+		"decay": 36000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:chestnutitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:cashewitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:coconutitem",
+		"decay": 36000,
+		"foodgroup": "Fruit"
+	},
+	{
+		"name": "harvestcraft:pecanitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:pistachioitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:walnutitem",
+		"decay": 36000,
+		"foodgroup": "None"
+	},
+	{
+		"name": "harvestcraft:rawturkeyitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:rawvenisonitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:rawtofickenitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:rawtofeakitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:rawtofaconitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:rawtofuttonitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:rawtofabbititem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:rawtofenisonitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:rawtofurkeyitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:rawtofishitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedturkeyitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedvenisonitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedtofickenitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedtofeakitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedtofaconitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedtofuttonitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedtofabbititem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedtofenisonitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedtofurkeyitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	},
+	{
+		"name": "harvestcraft:cookedtofishitem",
+		"decay": 18000,
+		"foodgroup": "Protein"
+	}
+]
