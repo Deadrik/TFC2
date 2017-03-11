@@ -771,7 +771,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							riverHeightUpDiff = convertElevation(upCenter.getElevation()) - hexElev;
 
 						terrainElev = this.elevationMap[(localBlockPos.getZ() << 4) | localBlockPos.getX()];
-						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL-1);
+						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL);
 
 						/*if(i < 0.2 && riverHeightUpDiff > 5 || terrainElev > hexElev)
 						{
