@@ -1,5 +1,12 @@
 package com.bioxx.tfc2.api.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -117,5 +124,22 @@ public class Helper
 				2 * (q0 * (y * q0 - (q3 * x - q1 * z)) + s * q2) - y,
 				2 * (q0 * (z * q0 - (q1 * y - q2 * x)) + s * q3) - z);
 
+	}
+
+	public static List<String> getResourceFiles( String path ) throws IOException 
+	{
+		List<String> filenames = new ArrayList<String>();
+
+		InputStream in = Helper.class.getResourceAsStream( path );
+		BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
+
+		String resource;
+
+		while( (resource = br.readLine()) != null ) {
+			filenames.add( resource );
+
+		}
+
+		return filenames;
 	}
 }

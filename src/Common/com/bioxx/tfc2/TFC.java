@@ -30,6 +30,7 @@ import com.bioxx.tfc2.api.trees.TreeSchematic;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.commands.*;
 import com.bioxx.tfc2.core.PortalSchematic;
 import com.bioxx.tfc2.core.util.FoodReader;
@@ -85,16 +86,34 @@ public class TFC
 		Core.PortalSchematic.Load();
 
 		//Read our built in food values first
-		FoodReader reader = new FoodReader("/assets/tfc2/food.json");
-		if(reader.read())
+		FoodReader reader;
+		try
 		{
-			applyFoodValues(reader);
+			for(String f : Helper.getResourceFiles("/assets/tfc2/food/"))
+			{
+				reader = new FoodReader("/assets/tfc2/food/"+f);
+				if(reader.read())
+				{
+					applyFoodValues(reader);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			TFC.log.error(e.getMessage());
 		}
 		//Now read from the user's mods folder
 		reader = new FoodReader("");
-		if(reader.read(new File(TFC.proxy.getMinecraftDir(), "/mods/tfc2/food.json")))
+		File folder = new File(TFC.proxy.getMinecraftDir(), "/mods/tfc2/food/");
+		if(folder != null && folder.listFiles() != null)
 		{
-			applyFoodValues(reader);
+			for (final File fileEntry : folder.listFiles()) 
+			{
+				if(reader.read(fileEntry))
+				{
+					applyFoodValues(reader);
+				}
+			}
 		}
 	}
 

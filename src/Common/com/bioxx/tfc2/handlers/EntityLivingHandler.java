@@ -10,6 +10,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.GameType;
@@ -27,8 +28,11 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
 import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
+import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
+import com.bioxx.tfc2.core.Food;
 import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.networking.client.CFoodPacket;
 import com.bioxx.tfc2.potion.PotionTFC;
@@ -68,18 +72,18 @@ public class EntityLivingHandler
 
 			if(!player.world.isRemote)
 			{
+				int size = player.inventory.getSizeInventory();
 				//Tick Item Updates
-				for(int i = 0; i < player.inventory.mainInventory.size(); i++)
+				for(int i = 0; i < size; i++)
 				{
-					//Need to fix due to inventory changes in 1.11
-					/*ItemStack is = player.inventory.mainInventory[i];
-					if(is != null)
+					ItemStack is = player.inventory.getStackInSlot(i);
+					if(is != ItemStack.EMPTY)
 					{
 						if(is.getItem() instanceof IUpdateInInventory)
 						{
 							((IUpdateInInventory)is.getItem()).inventoryUpdate(player, is);
 							if(is.getMaxStackSize() == 0)
-								player.inventory.mainInventory[i] = null;
+								player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
 						}
 						if(is.getItem() instanceof IFood)
 						{
@@ -92,7 +96,7 @@ public class EntityLivingHandler
 								is.shrink(expiredAmt);
 								Food.setDecayTimer(is, Food.getDecayTimer(is)+Food.getExpirationTimer(is)*expiredAmt);
 								if(is.getMaxStackSize() <= 0)
-									player.inventory.mainInventory[i] = null;
+									player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
 
 								ItemStack out = food.onDecayed(is, player.world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
 								if(out != null)
@@ -102,7 +106,7 @@ public class EntityLivingHandler
 								}
 							}
 						}
-					}*/
+					}
 				}
 
 				//Drain Nutrition

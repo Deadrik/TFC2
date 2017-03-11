@@ -21,6 +21,7 @@ import com.bioxx.tfc2.api.FoodRegistry.FoodGroupPair;
 import com.bioxx.tfc2.api.FoodRegistry.TFCFood;
 import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
+import com.bioxx.tfc2.api.types.EnumFoodGroup;
 
 public class Food 
 {
@@ -284,8 +285,11 @@ public class Food
 			{
 				FoodGroupPair pair = (FoodGroupPair) iter.next();
 				float amount = pair.amount;
-				amount = Math.min(stats.getNutritionMap().get(pair.foodGroup) + (item.getHealAmount(is) * (pair.amount / 100f)*0.25f), 20);
-				stats.getNutritionMap().put(pair.foodGroup, amount);
+				if(pair.foodGroup != EnumFoodGroup.None)
+				{
+					amount = Math.min(stats.getNutritionMap().get(pair.foodGroup) + (item.getHealAmount(is) * (pair.amount / 100f)*0.25f), 20);
+					stats.getNutritionMap().put(pair.foodGroup, amount);
+				}
 			}
 		}
 	}

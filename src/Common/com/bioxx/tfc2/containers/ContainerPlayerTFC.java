@@ -312,7 +312,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				Slot slot = (Slot)this.inventorySlots.get(i);
 				ItemStack itemstack = slot.getStack();
 
-				if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getMetadata() == itemstack.getMetadata()) && ItemStack.areItemStackTagsEqual(stack, itemstack))
+				if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getMetadata() == itemstack.getMetadata()) && ContainerTFC.areCompoundsEqual(stack, itemstack))
 				{
 					int j = itemstack.getCount() + stack.getCount();
 					int maxSize = Math.min(slot.getSlotStackLimit(), stack.getMaxStackSize());
