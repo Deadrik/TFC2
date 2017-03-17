@@ -213,6 +213,13 @@ public class ShapedOreRecipeTFC implements IRecipeTFC
 		return false;
 	}
 
+	@Override
+	public boolean matches(NonNullList<ItemStack> inv, World world)
+	{
+		//Not intending to use this with shaped recipes for now
+		return false;
+	}
+
 	@SuppressWarnings("unchecked")
 	protected boolean checkMatch(InventoryCrafting inv, int startX, int startY, boolean mirror)
 	{

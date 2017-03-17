@@ -114,10 +114,6 @@ public class ShapelessOreRecipeTFC implements IRecipeTFC
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting var1){ return output.copy(); }
 
-	/**
-	 * Used to check if a recipe matches current crafting inventory
-	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean matches(InventoryCrafting var1, World world)
 	{
@@ -126,6 +122,67 @@ public class ShapelessOreRecipeTFC implements IRecipeTFC
 		for (int x = 0; x < var1.getSizeInventory(); x++)
 		{
 			ItemStack slot = var1.getStackInSlot(x);
+
+			if (slot != null)
+			{
+				boolean inRecipe = false;
+				Iterator<Object> req = required.iterator();
+
+				while (req.hasNext())
+				{
+					boolean match = false;
+
+					Object next = req.next();
+
+					if (next instanceof ItemStack)
+					{
+						match = OreDictionary.itemMatches((ItemStack)next, slot, false);
+					}
+					else if (next instanceof List)
+					{
+						Iterator<ItemStack> itr = ((List<ItemStack>)next).iterator();
+						while (itr.hasNext() && !match)
+						{
+							match = OreDictionary.itemMatches(itr.next(), slot, false);
+						}
+					}
+
+					if (match)
+					{
+						if(!tempMatch(slot))
+						{
+							break;
+						}
+						inRecipe = true;
+						required.remove(next);
+						break;
+					}
+
+
+				}
+
+				if (!inRecipe)
+				{
+					return false;
+				}
+			}
+		}
+
+
+
+		return required.isEmpty();
+	}
+	/**
+	 * Used to check if a recipe matches current crafting inventory
+	 */
+	@Override
+	public boolean matches(NonNullList<ItemStack> var1, World world)
+	{
+		ArrayList<Object> required = new ArrayList<Object>(input);
+
+		for (int x = 0; x < var1.size()-1; x++)//We need this -1 to get rid of the default element that NonNullList stores at the end of the list.
+		{
+			ItemStack slot = var1.get(x);
 
 			if (slot != null)
 			{

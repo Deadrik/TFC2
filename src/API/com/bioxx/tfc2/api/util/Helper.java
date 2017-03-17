@@ -10,6 +10,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -52,31 +53,32 @@ public class Helper
 		return d0 * d0 + d2 * d2;
 	}
 
-	public static NBTTagList writeStackArrayToNBTList(ItemStack[] list)
+	public static NBTTagList writeStackArrayToNBTList(NonNullList<ItemStack> list)
 	{
 		NBTTagList invList = new NBTTagList();
-		for(int i = 0; i < list.length; i++)
+		for(int i = 0; i < list.size(); i++)
 		{
-			if(list[i] != null)
+			if(list.get(i) != ItemStack.EMPTY)
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setByte("Slot", (byte)i);
-				list[i].writeToNBT(tag);
+				list.get(i).writeToNBT(tag);
 				invList.appendTag(tag);
 			}
 		}
 		return invList;
 	}
 
-	public static ItemStack[] readStackArrayFromNBTList(NBTTagList list, int size)
+	public static NonNullList<ItemStack> readStackArrayFromNBTList(NBTTagList list, int size)
 	{
-		ItemStack[] out = new ItemStack[size];
+		NonNullList<ItemStack> out = NonNullList.<ItemStack>withSize(size, ItemStack.EMPTY);
+
 		for(int i = 0; i < list.tagCount(); i++)
 		{
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			byte byte0 = tag.getByte("Slot");
 			if(byte0 >= 0 && byte0 < size)
-				out[byte0] = new ItemStack(tag);
+				out.set(i, new ItemStack(tag));
 		}
 		return out;
 	}

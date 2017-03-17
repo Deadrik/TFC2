@@ -13,6 +13,7 @@ import com.bioxx.tfc2.core.PlayerManagerTFC;
 public class GuiKnappingRecipeButton extends GuiButton 
 {
 	ItemStack is;
+	public int recipeIndex = 0;
 
 	public GuiKnappingRecipeButton(int index, int xPos, int yPos, int width, int height, ItemStack i)
 	{

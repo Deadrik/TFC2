@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -313,6 +314,11 @@ public class Core
 			return true;
 
 		return false;
+	}
+
+	public static NBTTagCompound getTemperatureCompound(NBTTagCompound tag)
+	{
+		return tag.getCompoundTag("tfc2temp");
 	}
 
 }

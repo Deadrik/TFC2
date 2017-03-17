@@ -43,8 +43,8 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyItem INVENTORY = new PropertyItem();
 
-	public static final AxisAlignedBB AABB_EW = new AxisAlignedBB(0.19,0,0.0625,0.81,0.63,0.9375);
-	public static final AxisAlignedBB AABB_NS = new AxisAlignedBB(0.0625,0,0.19,0.9375,0.63,0.81);
+	public static final AxisAlignedBB AABB_EW = new AxisAlignedBB(0.19,0,0.0625,0.81,0.6925,0.9375);
+	public static final AxisAlignedBB AABB_NS = new AxisAlignedBB(0.0625,0,0.19,0.9375,0.6925,0.81);
 
 	public BlockAnvil()
 	{
@@ -115,7 +115,7 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
 	{
-		return worldIn.getBlockState(pos).withProperty(FACING, placer.getHorizontalFacing());
+		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
 	}
 
 	/*******************************************************************************

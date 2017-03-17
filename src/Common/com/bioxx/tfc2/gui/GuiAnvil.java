@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -25,6 +26,8 @@ public class GuiAnvil extends GuiContainerTFC
 
 	TileAnvil anvil;
 	private int recipeIndex = -1;
+	private ItemStack is1 = ItemStack.EMPTY;
+	private ItemStack is2 = ItemStack.EMPTY;
 
 	public GuiAnvil(InventoryPlayer inventoryplayer, TileAnvil te, World world, int x, int y, int z)
 	{
@@ -47,12 +50,16 @@ public class GuiAnvil extends GuiContainerTFC
 		buttonList.add(new GuiButton(0, guiLeft+4, guiTop+62, 42, 20, "Craft"));
 
 		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.ANVIL);
+
 		int x = 0, y = 0;
 		for (int i = 0; i < recipes.size(); i++)
 		{
 			y = i / 4;
 			x = i % 4;
-			buttonList.add(new GuiKnappingRecipeButton(1+i, 3+guiLeft+50 + (x * 18), 4+guiTop + (y * 19), 18, 18, recipes.get(i).getRecipeOutput()));
+			GuiKnappingRecipeButton button = new GuiKnappingRecipeButton(1+i, 3+guiLeft+50 + (x * 18), 4+guiTop + (y * 19), 18, 18, recipes.get(i).getRecipeOutput());
+			button.recipeIndex = i;
+			if(recipes.get(i).matches(anvil.getInventory(), anvil.getWorld()))
+				buttonList.add(button);
 		}
 	}
 
@@ -61,13 +68,29 @@ public class GuiAnvil extends GuiContainerTFC
 	{
 		super.updateScreen();
 
+		if(anvil.getStackInSlot(0) != is1)
+		{
+			initGui();
+			is1 = anvil.getStackInSlot(0);
+		}
+		if(anvil.getStackInSlot(1) != is2)
+		{
+			initGui();
+			is2 = anvil.getStackInSlot(1);
+		}
+
+		if(recipeIndex == -1)
+			buttonList.get(0).enabled = false;
+		else
+			buttonList.get(0).enabled = true;
+
 		if(recipeIndex != anvil.getField(0))
 		{
-			GuiButton button;
+			GuiKnappingRecipeButton button;
 			for(int i = 1; i < buttonList.size(); i++)
 			{
-				button = buttonList.get(i);
-				if(i-1 == anvil.getField(0))
+				button = (GuiKnappingRecipeButton) buttonList.get(i);
+				if(button.recipeIndex == anvil.getField(0))
 				{
 					button.enabled = false;
 				}
@@ -88,9 +111,12 @@ public class GuiAnvil extends GuiContainerTFC
 		if(guibutton.id == 0)
 		{
 			anvil.startCrafting(EntityPlayer.getUUID(Minecraft.getMinecraft().player.getGameProfile()));
+			Minecraft.getMinecraft().player.closeScreen();
 		}
 		else
-			anvil.setField(0, guibutton.id-1);
+		{
+			anvil.setField(0, ((GuiKnappingRecipeButton)guibutton).recipeIndex);
+		}
 
 	}
 

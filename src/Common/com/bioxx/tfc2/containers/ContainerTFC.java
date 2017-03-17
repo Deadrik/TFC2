@@ -89,7 +89,7 @@ public class ContainerTFC extends Container
 					}
 
 					slotStack.grow(l1);
-					return null;
+					return ItemStack.EMPTY;
 				}
 				else if (itemstack4.getMaxStackSize() <= sourceSlot.getItemStackLimit(itemstack4))
 				{
@@ -250,9 +250,9 @@ public class ContainerTFC extends Container
 				if(doItemSaving && i < inventoryItemStacks.size()-36 && !isLoading)
 					shouldSave = true;
 
-				itemstack1 = itemstack == null ? null : itemstack.copy();
+				itemstack1 = itemstack == ItemStack.EMPTY ? ItemStack.EMPTY : itemstack.copy();
 				if(itemstack1 != null && itemstack1.getMaxStackSize() == 0)
-					itemstack1 = null;
+					itemstack1 = ItemStack.EMPTY;
 				this.inventoryItemStacks.set(i, itemstack1);
 
 				if(shouldSave)

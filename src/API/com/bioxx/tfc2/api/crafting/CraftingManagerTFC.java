@@ -40,65 +40,6 @@ public class CraftingManagerTFC
 
 	public ShapedOreRecipeTFC addRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
 	{
-		/*String s = "";
-		int i = 0;
-		int j = 0;
-		int k = 0;
-		if (aobj[i] instanceof String[])
-		{
-			String as[] = (String[])aobj[i++];
-			for (int l = 0; l < as.length; l++)
-			{
-				String s2 = as[l];
-				k++;
-				j = s2.length();
-				s = s + s2;
-			}
-		}
-		else
-		{
-			while (aobj[i] instanceof String)
-			{
-				String s1 = (String)aobj[i++];
-				k++;
-				j = s1.length();
-				s = s + s1;
-			}
-		}
-		HashMap<Character, ItemStack> hashmap = new HashMap<Character, ItemStack>();
-		for (; i < aobj.length; i += 2)
-		{
-			Character character = (Character)aobj[i];
-			ItemStack itemstack1 = null;
-			if (aobj[i + 1] instanceof Item)
-			{
-				itemstack1 = new ItemStack((Item)aobj[i + 1]);
-			}
-			else if (aobj[i + 1] instanceof Block)
-			{
-				itemstack1 = new ItemStack((Block)aobj[i + 1], 1, -1);
-			}
-			else if (aobj[i + 1] instanceof ItemStack)
-			{
-				itemstack1 = (ItemStack)aobj[i + 1];
-			}
-			hashmap.put(character, itemstack1);
-		}
-
-		List<ItemStack> aitemstack = new ArrayList<ItemStack>(j * k);
-		for (int i1 = 0; i1 < j * k; i1++)
-		{
-			char c = s.charAt(i1);
-			if (hashmap.containsKey(Character.valueOf(c)))
-			{
-				aitemstack.add(i1, hashmap.get(Character.valueOf(c)).copy());
-			}
-			else
-			{
-				aitemstack.add(i1, null);
-			}
-		}*/
-
 		ShapedOreRecipeTFC shapedRecipesTFC = new ShapedOreRecipeTFC(itemstack, aobj);
 		if(rt == RecipeType.NORMAL)
 			recipes.add(shapedRecipesTFC);
@@ -116,31 +57,6 @@ public class CraftingManagerTFC
 
 	public ShapelessOreRecipeTFC addShapelessRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
 	{
-		/*ArrayList<ItemStack> arraylist = new ArrayList<ItemStack>();
-		Object aobj1[] = aobj;
-		int i = aobj1.length;
-		for (int j = 0; j < i; j++)
-		{
-			Object obj = aobj1[j];
-			if (obj instanceof ItemStack)
-			{
-				arraylist.add(((ItemStack)obj).copy());
-				continue;
-			}
-			if (obj instanceof Item)
-			{
-				arraylist.add(new ItemStack((Item)obj));
-				continue;
-			}
-			if (obj instanceof Block)
-			{
-				arraylist.add(new ItemStack((Block)obj));
-			}
-			else
-			{
-				throw new RuntimeException("Invalid shapeless recipe!");
-			}
-		}*/
 		ShapelessOreRecipeTFC recipesTFC = new ShapelessOreRecipeTFC(itemstack, aobj);
 		if(rt == RecipeType.NORMAL)
 			recipes.add(recipesTFC);
