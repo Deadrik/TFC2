@@ -1,9 +1,0 @@
-{
-    "parent": "block/acacia_stairs",
-    "textures": 
-    {
-		"bottom": "tfc2:blocks/wood/sequoia plank",
-        "top": "tfc2:blocks/wood/sequoia plank",
-        "side": "tfc2:blocks/wood/sequoia plank"
-	}
-}

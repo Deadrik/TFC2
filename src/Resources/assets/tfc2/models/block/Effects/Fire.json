@@ -1,6 +1,0 @@
-{
-    "parent": "tfc2:block/effects/base",
-    "textures": {
-        "top": "blocks/lava_still"
-    }
-}

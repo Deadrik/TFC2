@@ -1,9 +1,0 @@
-{
-    "parent": "tfc2:block/grass/basee",
-    "textures": {
-        "soil": "tfc2:blocks/soil/dirt gneiss",
-        "top": "tfc2:blocks/grasstop",
-        "overlay": "tfc2:blocks/grasstop",
-        "overlaypartial": "tfc2:blocks/grassside"
-    }
-}

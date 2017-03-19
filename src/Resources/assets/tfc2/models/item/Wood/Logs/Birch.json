@@ -1,7 +1,0 @@
-{
-    "parent": "tfc2:item/wood/logs/generic",
-    "textures": {
-        "side": "tfc2:blocks/wood/trees/birch log",
-        "end": "tfc2:blocks/wood/trees/birch log top"
-    }
-}

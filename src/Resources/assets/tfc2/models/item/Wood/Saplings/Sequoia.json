@@ -1,6 +1,0 @@
-{
-    "parent": "tfc2:item/wood/saplings/generic",
-    "textures": {
-        "layer0": "tfc2:blocks/wood/trees/sequoia sapling"
-    }
-}
