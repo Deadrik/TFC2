@@ -79,7 +79,7 @@ public class EntityTiger extends EntityAnimal
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);//MaxHealth
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);//MaxHealth
 	}
 
 	/**

@@ -7,14 +7,12 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-import com.bioxx.tfc2.containers.ContainerAnvil;
-import com.bioxx.tfc2.containers.ContainerCart;
-import com.bioxx.tfc2.containers.ContainerSkills;
-import com.bioxx.tfc2.containers.ContainerSpecialCrafting;
+import com.bioxx.tfc2.containers.*;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.entity.EntityCart;
 import com.bioxx.tfc2.tileentities.TileAnvil;
+import com.bioxx.tfc2.tileentities.TileFirepit;
 
 
 public class GuiHandler implements IGuiHandler
@@ -44,6 +42,14 @@ public class GuiHandler implements IGuiHandler
 			return new ContainerSkills(player);
 		case 4://Health Screen
 			return new ContainerSkills(player);
+		case 5://firepit
+		{
+			return new ContainerFirepit(player.inventory, (TileFirepit)te, world, x, y, z);
+		}
+		case 6://cooking pot
+		{
+			return new ContainerCookingPot(player.inventory, (TileFirepit)te, world, x, y, z);
+		}
 		default:
 		{
 			return null;

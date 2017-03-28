@@ -13,10 +13,7 @@ import com.bioxx.tfc2.blocks.*;
 import com.bioxx.tfc2.blocks.terrain.*;
 import com.bioxx.tfc2.blocks.vanilla.BlockTorchTFC;
 import com.bioxx.tfc2.items.itemblocks.*;
-import com.bioxx.tfc2.tileentities.TileAnvil;
-import com.bioxx.tfc2.tileentities.TileCrop;
-import com.bioxx.tfc2.tileentities.TileFarmland;
-import com.bioxx.tfc2.tileentities.TileTorch;
+import com.bioxx.tfc2.tileentities.*;
 
 public class TFCBlocks
 {
@@ -79,6 +76,7 @@ public class TFCBlocks
 	public static Block Anvil;
 	public static Block StoneStalag;
 	public static Block StoneStalac;
+	public static Block Firepit;
 
 	public static void LoadBlocks()
 	{
@@ -143,9 +141,10 @@ public class TFCBlocks
 		StairsBlackwood = new BlockStairsTFC(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Blackwood)).setUnlocalizedName("stairs_blackwood");
 		StairsPalm = new BlockStairsTFC(Planks2.getDefaultState().withProperty(BlockPlanks2.META_PROPERTY, WoodType.Palm)).setUnlocalizedName("stairs_palm");
 
-		Anvil = new BlockAnvil().setHardness(4F).setUnlocalizedName("anvil");
+		Anvil = new BlockAnvil().setHardness(20F).setUnlocalizedName("anvil");
 		StoneStalag = new BlockStoneStalag().setHardness(5F).setUnlocalizedName("stoneStalag");
 		StoneStalac = new BlockStoneStalac().setHardness(5F).setUnlocalizedName("stoneStalac");
+		Firepit = new BlockFirepit().setHardness(4F).setUnlocalizedName("firepit");
 	}
 
 	public static void RegisterBlocks()
@@ -195,6 +194,7 @@ public class TFCBlocks
 		register(Anvil, ItemBlock.class);
 		register(StoneStalag, ItemStone.class);
 		register(StoneStalac, ItemStone.class);
+		register(Firepit, ItemBlock.class);
 
 		stairsList = new ArrayList<Block>();
 		stairsList.add(register(StairsAsh, ItemBlock.class));
@@ -261,6 +261,7 @@ public class TFCBlocks
 		registerTileEntity(TileCrop.class, "crop");
 		registerTileEntity(TileFarmland.class, "farmland");
 		registerTileEntity(TileAnvil.class, "anvil");
+		registerTileEntity(TileFirepit.class, "firepit");
 	}
 
 	private static void registerTileEntity(Class<? extends TileEntity> c, String id)

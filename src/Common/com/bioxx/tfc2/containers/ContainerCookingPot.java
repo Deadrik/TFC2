@@ -4,27 +4,29 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnaceOutput;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.containers.slots.SlotForShowOnly;
 import com.bioxx.tfc2.core.PlayerInventory;
-import com.bioxx.tfc2.entity.InventoryCart;
+import com.bioxx.tfc2.tileentities.TileFirepit;
 
-public class ContainerCart extends ContainerTFC
+public class ContainerCookingPot extends ContainerTFC
 {
 	private World world;
-	private InventoryCart cart;
+	private TileFirepit firepit;
 	private EntityPlayer player;
 
-	public ContainerCart(InventoryPlayer playerinv, InventoryCart cart, World world, int x, int y, int z)
+	public ContainerCookingPot(InventoryPlayer playerinv, TileFirepit firepit, World world, int x, int y, int z)
 	{
 		this.player = playerinv.player;
 
 		this.world = world;
-		this.cart = cart;
-		cart.openInventory(player);
-		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 93, false, true);
-		layoutContainer(playerinv, cart, 0, 0);
+		this.firepit = firepit;
+		firepit.openInventory(player);
+		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 90, false, true);
+		layoutContainer(playerinv, firepit, 0, 0);
 	}
 
 	/**
@@ -35,7 +37,7 @@ public class ContainerCart extends ContainerTFC
 	{
 		super.onContainerClosed(par1EntityPlayer);
 		if(!world.isRemote)
-			cart.closeInventory(par1EntityPlayer);
+			firepit.closeInventory(par1EntityPlayer);
 	}
 
 	/**
@@ -52,10 +54,9 @@ public class ContainerCart extends ContainerTFC
 			ItemStack slotStack = slot.getStack();
 			origStack = slotStack.copy();
 
-			// From pile to inventory
 			if (slotNum < 36)
 			{
-				if (!this.mergeItemStack(slotStack, 36, inventorySlots.size(), true))
+				if (!this.mergeItemStack(slotStack, 36, inventorySlots.size()-1, false))
 					return ItemStack.EMPTY;
 			}
 			else
@@ -65,7 +66,7 @@ public class ContainerCart extends ContainerTFC
 			}
 
 			if (slotStack.getMaxStackSize() <= 0)
-				slot.putStack(null);
+				slot.putStack(ItemStack.EMPTY);
 			else
 				slot.onSlotChanged();
 
@@ -86,13 +87,17 @@ public class ContainerCart extends ContainerTFC
 
 	protected void layoutContainer(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize)
 	{
-		for(int y = 0; y < 3; y++)
-		{
-			for(int x = 0; x < 9; x++)
-			{
-				this.addSlotToContainer(new Slot(chestInventory, x+y*9, 8+x*18, 18+y*18));
-			}
-		}
+		this.addSlotToContainer(new Slot(chestInventory, 0, 13, 52));
+		this.addSlotToContainer(new SlotForShowOnly(chestInventory, 1, 53, 16));
+		this.addSlotToContainer(new Slot(chestInventory, 2, 71, 16));
+		this.addSlotToContainer(new Slot(chestInventory, 3, 89, 16));
+		this.addSlotToContainer(new Slot(chestInventory, 4, 53, 34));
+		this.addSlotToContainer(new Slot(chestInventory, 5, 71, 34));
+		this.addSlotToContainer(new Slot(chestInventory, 6, 89, 34));
+		this.addSlotToContainer(new Slot(chestInventory, 7, 53, 52));
+		this.addSlotToContainer(new Slot(chestInventory, 8, 71, 52));
+		this.addSlotToContainer(new Slot(chestInventory, 9, 89, 52));
+		this.addSlotToContainer(new SlotFurnaceOutput(firepit.getWorker(), chestInventory, 10, 146, 34));
 	}
 
 	public EntityPlayer getPlayer()

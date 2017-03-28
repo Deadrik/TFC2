@@ -180,7 +180,7 @@ public class ShapelessOreRecipeTFC implements IRecipeTFC
 	{
 		ArrayList<Object> required = new ArrayList<Object>(input);
 
-		for (int x = 0; x < var1.size()-1; x++)//We need this -1 to get rid of the default element that NonNullList stores at the end of the list.
+		for (int x = 0; x < var1.size(); x++)
 		{
 			ItemStack slot = var1.get(x);
 

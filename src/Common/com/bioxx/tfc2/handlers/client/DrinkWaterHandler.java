@@ -77,7 +77,7 @@ public class DrinkWaterHandler
 		{
 			BlockPos blockpos = event.getPos().offset(event.getFace());
 			IBlockState state = event.getWorld().getBlockState(blockpos);
-			if(state.getBlock() == Blocks.WATER && Core.isFreshWater(event.getWorld(), blockpos))
+			if((state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER) && Core.isFreshWater(event.getWorld(), blockpos))
 			{
 				IFoodStatsTFC food = (IFoodStatsTFC)event.getEntityPlayer().getFoodStats();
 				food.setWaterLevel((Math.min(food.getWaterLevel()+0.1f, 20)));

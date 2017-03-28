@@ -449,7 +449,7 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 
 	@Override
 	public int getSizeInventory() {
-		return 3;
+		return this.inventory.size();
 	}
 
 	@Override

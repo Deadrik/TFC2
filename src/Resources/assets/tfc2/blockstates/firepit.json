@@ -1,0 +1,29 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"top": "tfc2:blocks/devices/firepit off",
+			"pot": "tfc2:blocks/devices/pot",
+			"skillet": "tfc2:blocks/devices/skillet",
+			"saucepan": "tfc2:blocks/devices/saucepan"
+		},
+		"model": "tfc2:firepit"
+	},
+	"variants": {
+		"lit" : {
+			"true" : {"textures": {"top": "tfc2:blocks/devices/firepit on"}},
+			"false" : {"textures": {"top": "tfc2:blocks/devices/firepit off"}}
+		},
+		"tool" : {
+			"pot" : {"submodel": "tfc2:firepit/cookingpot"},
+			"skillet" : {"submodel": "tfc2:firepit/skillet"},
+			"saucepan" : {"submodel": "tfc2:firepit/saucepan"},
+			"none" : {}
+		},
+		"inventory": [{
+            "transform": "forge:default-block"
+        }],
+		"normal": [{}]
+		
+	}
+}
