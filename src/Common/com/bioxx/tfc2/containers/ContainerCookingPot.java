@@ -2,12 +2,17 @@ package com.bioxx.tfc2.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnaceOutput;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.bioxx.tfc2.containers.slots.SlotFirepitOutput;
 import com.bioxx.tfc2.containers.slots.SlotForShowOnly;
 import com.bioxx.tfc2.core.PlayerInventory;
 import com.bioxx.tfc2.tileentities.TileFirepit;
@@ -17,6 +22,7 @@ public class ContainerCookingPot extends ContainerTFC
 	private World world;
 	private TileFirepit firepit;
 	private EntityPlayer player;
+	private NonNullList<Integer> fields = NonNullList.withSize(4, 0);
 
 	public ContainerCookingPot(InventoryPlayer playerinv, TileFirepit firepit, World world, int x, int y, int z)
 	{
@@ -97,11 +103,55 @@ public class ContainerCookingPot extends ContainerTFC
 		this.addSlotToContainer(new Slot(chestInventory, 7, 53, 52));
 		this.addSlotToContainer(new Slot(chestInventory, 8, 71, 52));
 		this.addSlotToContainer(new Slot(chestInventory, 9, 89, 52));
-		this.addSlotToContainer(new SlotFurnaceOutput(firepit.getWorker(), chestInventory, 10, 146, 34));
+		this.addSlotToContainer(new SlotFirepitOutput(player, chestInventory, 10, 146, 34));
 	}
 
 	public EntityPlayer getPlayer()
 	{
 		return player;
+	}
+
+	@Override
+	public void addListener(IContainerListener listener)
+	{
+		super.addListener(listener);
+		listener.sendAllWindowProperties(this, this.firepit);
+	}
+
+	/**
+	 * Looks for changes made in the container, sends them to every listener.
+	 */
+	@Override
+	public void detectAndSendChanges()
+	{
+		super.detectAndSendChanges();
+
+		for (int i = 0; i < this.listeners.size(); ++i)
+		{
+			IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
+
+			for(int j = 0; j < firepit.getFieldCount(); j++)
+			{
+				if(fields.get(j) != this.firepit.getField(j))
+				{
+					icontainerlistener.sendProgressBarUpdate(this, j, this.firepit.getField(j));
+				}
+			}
+		}
+
+		for(int j = 0; j < firepit.getFieldCount(); j++)
+		{
+			if(fields.get(j) != this.firepit.getField(j))
+			{
+				fields.set(j, this.firepit.getField(j));
+			}
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void updateProgressBar(int id, int data)
+	{
+		this.firepit.setField(id, data);
 	}
 }

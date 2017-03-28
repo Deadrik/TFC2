@@ -73,6 +73,7 @@ public class BlockFirepit extends BlockTerra implements ITileEntityProvider
 			{
 				playerIn.inventory.addItemStackToInventory(te.getCookingTool());
 				te.setCookingTool(ItemStack.EMPTY);
+				te.ejectContents(false);
 			}
 			else if(heldItem.getItem() == potItem || heldItem.getItem() == skilletItem || heldItem.getItem() == saucepanItem)
 			{
@@ -113,7 +114,7 @@ public class BlockFirepit extends BlockTerra implements ITileEntityProvider
 	@Override
 	public Item getItemDropped(IBlockState paramIBlockState, Random paramRandom, int paramInt)
 	{
-		return null;
+		return null;//The firepit shouldn't drop itself as an item
 	}
 
 	/*******************************************************************************

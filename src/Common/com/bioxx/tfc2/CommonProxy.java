@@ -5,6 +5,7 @@ import java.io.File;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -35,10 +36,7 @@ import com.bioxx.tfc2.api.SkillsManager.Skill;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
-import com.bioxx.tfc2.api.types.ClimateTemp;
-import com.bioxx.tfc2.api.types.Moisture;
-import com.bioxx.tfc2.api.types.OreType;
-import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.api.types.*;
 import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.core.Recipes;
 import com.bioxx.tfc2.core.TFC_Sounds;
@@ -147,6 +145,7 @@ public class CommonProxy
 		Global.EVENT_BUS.register(new HexUpdateHandler());
 		Global.EVENT_BUS.register(new IslandUpdateHandler());
 		registerAnimals();
+		registerFuel();
 	}
 
 	protected void setupOre()
@@ -342,6 +341,29 @@ public class CommonProxy
 				return isValid;
 			}
 		}));
+	}
+
+	protected void registerFuel()
+	{
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical2, 1, WoodType.Rosewood.getMeta() % 16), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical2, 1, WoodType.Blackwood.getMeta() % 16), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical2, 1, WoodType.Palm.getMeta() % 16), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Acacia.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Ash.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Aspen.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Birch.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Chestnut.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.DouglasFir.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Hickory.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Kapok.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Maple.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Oak.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Pine.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Sequoia.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Spruce.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Sycamore.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.WhiteCedar.getMeta()), 2000);
+		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Willow.getMeta()), 2000);
 	}
 
 	public void registerGuiHandler()

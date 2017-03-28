@@ -1,12 +1,12 @@
 package com.bioxx.tfc2.tileentities;
 
-import java.util.UUID;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ITickable;
@@ -16,19 +16,35 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.BlockFirepit;
+import com.bioxx.tfc2.containers.ContainerFakeFirepit;
 import com.bioxx.tfc2.core.Timekeeper;
 
 public class TileFirepit extends TileTFC implements ITickable, IInventory
 {
-	UUID workerID;
+	public static final int FIELD_FUEL_TIMER = 0;
+	public static final int FIELD_FUELMAX_TIMER = 1;
+	public static final int FIELD_COOKING_TIMER = 2;
+	public static final int FIELD_COOKINGMAX_TIMER = 3;
+	private static final int OUTPUT_SLOT = 10;
+	private static final int FUEL_SLOT = 0;
+	private static final int TOOL_SLOT = 1;
+
 	NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(11, ItemStack.EMPTY);
 	ItemStack cookingTool = ItemStack.EMPTY;
+	InventoryCrafting craftMatrix = new InventoryCrafting(new ContainerFakeFirepit(), 3, 3);
+
+	private int cookingTimer = -1;
+	private int cookingMaxTimer = -1;
+	private int fuelTimer = 0;
+	private int fuelMaxTimer = 0;
+
 
 	public TileFirepit()
 	{
-		workerID = new UUID(0L, 0L);
+
 	}
 
 	/***********************************************************************************
@@ -37,8 +53,60 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 	@Override
 	public void update() 
 	{
+		if(world.isRemote)
+			return;
 		Timekeeper time = Timekeeper.getInstance();
 
+		if(this.hasCookingTool())
+		{
+			ItemStack output = CraftingManager.getInstance().findMatchingRecipe(craftMatrix, world);
+			if(output == ItemStack.EMPTY)
+			{
+				cookingMaxTimer = -1;
+				cookingTimer = cookingMaxTimer;
+				this.setInventorySlotContents(OUTPUT_SLOT, output);
+			}
+			else if(!ItemStack.areItemsEqual(getStackInSlot(OUTPUT_SLOT), output))
+			{
+				this.setInventorySlotContents(OUTPUT_SLOT, output);
+				cookingMaxTimer = 300;//For now we'll use a generic cooking time for all foods
+				cookingTimer = cookingMaxTimer;
+			}
+		}
+		else
+		{
+			//Handle non-cooking item heating
+		}
+
+		//If the fire is lit
+		if(fuelTimer > 0)
+		{
+			fuelTimer--;
+
+			if(cookingTimer > 0 && !this.getStackInSlot(OUTPUT_SLOT).isItemEqual(ItemStack.EMPTY))
+			{
+				cookingTimer--;
+			}
+		}
+		else
+		{
+			if(fuelTimer <= 0 && isValidFuel(getStackInSlot(FUEL_SLOT)))
+			{
+				fuelMaxTimer = Global.GetFirepitFuel(getStackInSlot(FUEL_SLOT));
+				fuelTimer = fuelMaxTimer;
+				getStackInSlot(FUEL_SLOT).shrink(1);
+			}
+
+			if(fuelTimer <= 0 && cookingTimer > 0)
+			{
+				cookingTimer = cookingMaxTimer;//reset the cooking timer if the fuel runs out
+			}
+		}
+	}
+
+	public boolean isValidFuel(ItemStack stack)
+	{
+		return Global.GetFirepitFuel(stack) > 0;
 	}
 
 	@Override
@@ -51,13 +119,17 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 	{
 		if(ejectFuel)
 		{
-			InventoryHelper.spawnItemStack(world, getPos().getX(), getPos().getY(), getPos().getZ(), this.getStackInSlot(0));
-			this.setInventorySlotContents(0, ItemStack.EMPTY);
+			InventoryHelper.spawnItemStack(world, getPos().getX(), getPos().getY(), getPos().getZ(), this.getStackInSlot(FUEL_SLOT));
+			this.setInventorySlotContents(FUEL_SLOT, ItemStack.EMPTY);
 		}
 		else
 		{
-			for(int i = 1; i < this.getSizeInventory(); i++)
+			for(int i = TOOL_SLOT; i < this.getSizeInventory(); i++)
 			{
+				if(i == OUTPUT_SLOT && cookingTimer > 0)
+				{
+					continue;
+				}
 				InventoryHelper.spawnItemStack(world, getPos().getX(), getPos().getY(), getPos().getZ(), this.getStackInSlot(i));
 				this.setInventorySlotContents(i, ItemStack.EMPTY);
 			}
@@ -69,18 +141,6 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 	 * 2. Getters and Setters
 	 ***********************************************************************************/
 
-	public void setWorkerID(EntityPlayer player)
-	{
-		workerID = EntityPlayer.getUUID(player.getGameProfile());
-	}
-
-	public EntityPlayer getWorker()
-	{
-		if(!world.isRemote)
-			return world.getMinecraftServer().getPlayerList().getPlayerByUUID(workerID);
-		else return TFC.proxy.getPlayer();
-	}
-
 	public NonNullList<ItemStack> getInventory()
 	{
 		return this.inventory;
@@ -88,23 +148,23 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 
 	public boolean hasCookingTool()
 	{
-		if(ItemStack.areItemsEqual(this.getStackInSlot(1), new ItemStack(BlockFirepit.potItem)))
+		if(ItemStack.areItemsEqual(this.getStackInSlot(TOOL_SLOT), new ItemStack(BlockFirepit.potItem)))
 			return true;
-		else if(ItemStack.areItemsEqual(this.getStackInSlot(1), new ItemStack(BlockFirepit.skilletItem)))
+		else if(ItemStack.areItemsEqual(this.getStackInSlot(TOOL_SLOT), new ItemStack(BlockFirepit.skilletItem)))
 			return true;
-		else if(ItemStack.areItemsEqual(this.getStackInSlot(1), new ItemStack(BlockFirepit.saucepanItem)))
+		else if(ItemStack.areItemsEqual(this.getStackInSlot(TOOL_SLOT), new ItemStack(BlockFirepit.saucepanItem)))
 			return true;
 		return false;
 	}
 
 	public ItemStack getCookingTool()
 	{
-		return this.getStackInSlot(1);
+		return this.getStackInSlot(TOOL_SLOT);
 	}
 
 	public void setCookingTool(ItemStack tool)
 	{
-		this.setInventorySlotContents(1, tool);
+		this.setInventorySlotContents(TOOL_SLOT, tool);
 		world.setBlockState(getPos(), this.getBlockType().getExtendedState(world.getBlockState(getPos()), world, getPos()));
 	}
 
@@ -114,28 +174,39 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 	@Override
 	public void readSyncableNBT(NBTTagCompound nbt)
 	{
-		NBTTagList invList = nbt.getTagList("inventory", 10);
-		inventory = Helper.readStackArrayFromNBTList(invList, getSizeInventory());
+
+		cookingTimer = nbt.getInteger("cookingTimer");
+		cookingMaxTimer = nbt.getInteger("cookingMaxTimer");
+		fuelTimer = nbt.getInteger("fuelTimer");
+		fuelMaxTimer = nbt.getInteger("fuelMaxTimer");
 	}
 
 	@Override
 	public void readNonSyncableNBT(NBTTagCompound nbt)
 	{
-		workerID = new UUID(nbt.getLong("workerID_least"), nbt.getLong("workerID_most"));
+		NBTTagList invList = nbt.getTagList("inventory", 10);
+		inventory = Helper.readStackArrayFromNBTList(invList, getSizeInventory());
+		for(int i = TOOL_SLOT; i < 10; i++)
+		{
+			craftMatrix.setInventorySlotContents(1, inventory.get(i));
+		}
 	}
 
 	@Override
 	public void writeSyncableNBT(NBTTagCompound nbt)
 	{
-		NBTTagList invList = Helper.writeStackArrayToNBTList(inventory);
-		nbt.setTag("inventory", invList);
+
+		nbt.setInteger("cookingTimer", cookingTimer);
+		nbt.setInteger("cookingMaxTimer", cookingMaxTimer);
+		nbt.setInteger("fuelTimer", fuelTimer);
+		nbt.setInteger("fuelMaxTimer", fuelMaxTimer);
 	}
 
 	@Override
 	public void writeNonSyncableNBT(NBTTagCompound nbt)
 	{
-		nbt.setLong("workerID_least", this.workerID.getLeastSignificantBits());
-		nbt.setLong("workerID_most", this.workerID.getMostSignificantBits());
+		NBTTagList invList = Helper.writeStackArrayToNBTList(inventory);
+		nbt.setTag("inventory", invList);
 
 	}
 
@@ -197,7 +268,7 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 		{
 			ItemStack out = inventory.get(index);
 			inventory.set(index, ItemStack.EMPTY);
-			TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getUpdatePacket());
+			//TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getUpdatePacket());
 			return out;
 		}
 		return ItemStack.EMPTY;
@@ -209,15 +280,18 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 		if(index < getSizeInventory())
 		{
 			inventory.set(index, stack);
-			TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getUpdatePacket());//Is this needed?
-			world.markBlockRangeForRenderUpdate(getPos(), getPos());
+			//TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getUpdatePacket());//Is this needed?
+			if(index == TOOL_SLOT)
+				world.markBlockRangeForRenderUpdate(getPos(), getPos().south().east());
+			if(index > 0 && index < 10)//Exclude the fuel slot (0) and the output slot (10)
+				craftMatrix.setInventorySlotContents(index-1, stack);//Slot 0 is the fuel slot so we subtract one
 		}
 	}
 
 	@Override
 	public int getInventoryStackLimit() 
 	{
-		return 1;
+		return 64;
 	}
 
 	@Override
@@ -231,7 +305,7 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 	@Override
 	public void closeInventory(EntityPlayer player) 
 	{
-		TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getUpdatePacket());
+		//TFC.proxy.sendToAllNear(getWorld(), getPos(), 200, this.getUpdatePacket());
 		player.world.markBlockRangeForRenderUpdate(getPos(), getPos().add(1, 1, 1));
 	}
 
@@ -241,29 +315,50 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 	@Override
 	public int getField(int id) 
 	{
+		switch(id)
+		{
+		case FIELD_FUEL_TIMER: return this.fuelTimer;
+		case FIELD_COOKING_TIMER: return this.cookingTimer;
+		case FIELD_FUELMAX_TIMER: return this.fuelMaxTimer;
+		case FIELD_COOKINGMAX_TIMER: return this.cookingMaxTimer;
+		}
 		return -1;
 	}
 
 	@Override
 	public void setField(int id, int value) 
 	{
-
+		switch(id)
+		{
+		case FIELD_FUEL_TIMER: this.fuelTimer = value; break;
+		case FIELD_COOKING_TIMER: this.cookingTimer = value; break;
+		case FIELD_FUELMAX_TIMER: this.fuelMaxTimer = value; break;
+		case FIELD_COOKINGMAX_TIMER: this.cookingMaxTimer = value; break;
+		}
 	}
 
 	@Override
 	public int getFieldCount() {
-		return 0;
+		return 4;
 	}
 
 	@Override
-	public void clear() {
-
+	public void clear() 
+	{
+		for(int i = 0; i < this.getSizeInventory(); i++)
+		{
+			this.setInventorySlotContents(i, ItemStack.EMPTY);
+		}
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		for(int i = 0; i < this.getSizeInventory(); i++)
+		{
+			if(this.getStackInSlot(i) != ItemStack.EMPTY)
+				return false;
+		}
+		return true;
 	}
 
 	/*********************************************************

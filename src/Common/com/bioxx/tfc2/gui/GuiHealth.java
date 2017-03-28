@@ -29,6 +29,13 @@ public class GuiHealth extends GuiContainerTFC
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
+		IFoodStatsTFC food = (IFoodStatsTFC)player.getFoodStats();
+		drawTexturedModalRect(guiLeft + 55, guiTop + 14, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Fruit) / 20 * 24), 6);
+		drawTexturedModalRect(guiLeft + 55, guiTop + 24, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Vegetable) / 20 * 24), 6);
+		drawTexturedModalRect(guiLeft + 55, guiTop + 34, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Grain) / 20 * 24), 6);
+		drawTexturedModalRect(guiLeft + 55, guiTop + 44, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Protein) / 20 * 24), 6);
+		drawTexturedModalRect(guiLeft + 55, guiTop + 54, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Dairy) / 20 * 24), 6);
+
 		fontRenderer.drawString(Core.translate("gui.food.fruit"), 5, 13, 0, false);
 		fontRenderer.drawString(Core.translate("gui.food.vegetable"), 5, 23, 0, false);
 		fontRenderer.drawString(Core.translate("gui.food.grain"), 5, 33, 0, false);
@@ -36,7 +43,6 @@ public class GuiHealth extends GuiContainerTFC
 		fontRenderer.drawString(Core.translate("gui.food.dairy"), 5, 53, 0, false);
 		if (TFCOptions.enableDebugMode)
 		{
-			IFoodStatsTFC food = (IFoodStatsTFC)player.getFoodStats();
 			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Fruit)), 85, 13, 0, false);
 			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Vegetable)), 85, 23, 0, false);
 			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Grain)), 85, 33, 0, false);
@@ -58,19 +64,6 @@ public class GuiHealth extends GuiContainerTFC
 		guiLeft = (width - xSize) / 2;
 		guiTop = (height - ySize) / 2; //Shifted 34 pixels up to match other inventory tabs
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize); //No inventory drawn, so shifted ySize is not necessary
-		drawForeground(guiLeft, guiTop);
-	}
-
-	@Override
-	protected void drawForeground(int guiLeft, int guiTop)
-	{
-		IFoodStatsTFC food = (IFoodStatsTFC)player.getFoodStats();
-
-		drawTexturedModalRect(guiLeft + 55, guiTop + 14, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Fruit) / 20 * 24), 6);
-		drawTexturedModalRect(guiLeft + 55, guiTop + 24, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Vegetable) / 20 * 24), 6);
-		drawTexturedModalRect(guiLeft + 55, guiTop + 34, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Grain) / 20 * 24), 6);
-		drawTexturedModalRect(guiLeft + 55, guiTop + 44, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Protein) / 20 * 24), 6);
-		drawTexturedModalRect(guiLeft + 55, guiTop + 54, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Dairy) / 20 * 24), 6);
 	}
 
 	@Override

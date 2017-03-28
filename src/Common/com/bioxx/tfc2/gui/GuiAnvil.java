@@ -127,7 +127,7 @@ public class GuiAnvil extends GuiContainerTFC
 	}
 
 	@Override
-	protected void drawForeground(int guiLeft, int guiTop)
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		//this.drawTexturedModalRect(this.guiLeft+175, this.guiTop, 176, 0, 80, 190);
 	}

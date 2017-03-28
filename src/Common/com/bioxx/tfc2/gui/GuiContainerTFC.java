@@ -56,7 +56,7 @@ public class GuiContainerTFC extends GuiContainer
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY)
 	{
 		drawGui(null);
 	}
@@ -72,7 +72,7 @@ public class GuiContainerTFC extends GuiContainer
 
 			drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, height);
 
-			drawForeground(guiLeft, guiTop);
+			//drawGuiContainerForegroundLayer(guiLeft, guiTop);
 		}
 		if (drawInventory)
 			PlayerInventory.drawInventory(this, width, height, this.getShiftedYSize());
@@ -82,7 +82,8 @@ public class GuiContainerTFC extends GuiContainer
 	 * Draws extra pieces on a GUI such as moving gauges and arrows.
 	 * Must be called before PlayerInventory.drawInventory() to avoid extra binding of textures.
 	 */
-	protected void drawForeground(int guiLeft, int guiTop)
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		// Intentionally blank.
 	}
