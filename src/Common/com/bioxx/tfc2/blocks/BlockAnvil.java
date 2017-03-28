@@ -52,6 +52,7 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 		this.setCreativeTab(CreativeTabs.TOOLS);
 		this.isBlockContainer = true;
 		setSoundType(SoundType.GROUND);
+		this.setBreaksWhenSuspended(true);
 	}
 
 	/*******************************************************************************
@@ -258,7 +259,7 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	@Override
 	public Item getItemDropped(IBlockState paramIBlockState, Random paramRandom, int paramInt)
 	{
-		return null;
+		return Item.getItemFromBlock(this);
 	}
 
 	@Override

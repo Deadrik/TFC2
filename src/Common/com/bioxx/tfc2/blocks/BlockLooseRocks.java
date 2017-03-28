@@ -2,6 +2,7 @@ package com.bioxx.tfc2.blocks;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -34,6 +35,7 @@ public class BlockLooseRocks extends BlockTerra
 		this.setBlockBounds(0.2f, 0, 0.2f, 0.8f, 0.1f, 0.8f);
 		setSoundType(SoundType.STONE);
 		setShowInCreative(false);
+		this.setBreaksWhenSuspended(true);
 	}
 
 	/*******************************************************************************
@@ -48,7 +50,13 @@ public class BlockLooseRocks extends BlockTerra
 		((World)worldIn).setBlockToAir(pos);
 		Core.dropItem(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, new ItemStack(getItemDropped(state, worldIn.rand, 0), 1, this.getMetaFromState(state)));
 		return true;
-	}	
+	}
+
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
+	{
+		super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
+	}
 
 	/*******************************************************************************
 	 * 2. Rendering

@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.blocks.terrain;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -37,7 +38,7 @@ public class BlockStoneStalag extends BlockTerra
 	 * 1. Content 
 	 *******************************************************************************/
 	@Override
-	public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos blockIn)
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
 	{
 		IBlockState s = worldIn.getBlockState(pos.up());
 		if(s.getBlock() != this && s.getBlock() != TFCBlocks.Stone)
@@ -46,7 +47,7 @@ public class BlockStoneStalag extends BlockTerra
 		}
 		else
 		{
-			super.onNeighborChange(worldIn, pos, blockIn);
+			super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 		}
 	}
 

@@ -1,5 +1,7 @@
 package com.bioxx.tfc2.blocks;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -7,14 +9,17 @@ import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.INeedOffset;
@@ -25,10 +30,9 @@ public abstract class BlockTerra extends Block
 	 * This is the internal Property for metadata
 	 */
 	protected PropertyHelper META_PROP;
-
 	private boolean showInCreative = true;
-
 	protected AxisAlignedBB blockAABB;
+	private boolean breaksWhenSuspended = false;
 
 	protected BlockTerra()
 	{
@@ -43,6 +47,19 @@ public abstract class BlockTerra extends Block
 		/*if (META_PROP != null)
 			this.setDefaultState(this.getBlockState().getBaseState().withProperty(META_PROP, (Comparable)META_PROP.getAllowedValues().toArray()[0]));*/
 		blockAABB = FULL_BLOCK_AABB;
+	}
+
+	public void setBreaksWhenSuspended(boolean b)
+	{
+		breaksWhenSuspended = b;
+	}
+
+	/**
+	 * @return Does this block break when there is nothing solid underneath it to hold it up?
+	 */
+	public boolean getBreaksWhenSuspended()
+	{
+		return breaksWhenSuspended;
 	}
 
 	public void setShowInCreative(boolean b)
@@ -165,5 +182,40 @@ public abstract class BlockTerra extends Block
 		}
 
 		return false;
+	}
+
+	@Override
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
+	{
+		if(this.getBreaksWhenSuspended())
+		{
+			IBlockState under = world.getBlockState(pos.down());
+			if(!under.getBlock().isSideSolid(under, world, pos.down(), EnumFacing.UP))
+			{
+				this.dropBlockAsItem(world, pos, state, 0);
+				//Break this block
+				world.setBlockToAir(pos);
+			}
+		}
+		else
+			super.neighborChanged(state, world, pos, blockIn, fromPos);
+	}
+
+	@Override
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+	{
+		List<ItemStack> ret = super.getDrops(world, pos, state, fortune);
+		if(this.isBlockContainer)
+		{
+			TileEntity te = world.getTileEntity(pos);
+			if(te instanceof IInventory)
+			{
+				for(int i = 0; i < ((IInventory)te).getSizeInventory(); i++)
+				{
+					ret.add(((IInventory)te).getStackInSlot(i));
+				}
+			}
+		}
+		return ret;
 	}
 }
