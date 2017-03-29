@@ -2,11 +2,11 @@ package com.bioxx.tfc2.asm.transform;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
-import com.bioxx.tfc2.ASMConstants;
+import com.bioxx.tfc2.asm.ASMConstants;
+import com.bioxx.tfc2.asm.ASMHelper;
+import com.bioxx.tfc2.asm.ObfHelper;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
-import squeek.asmhelper.com.bioxx.tfc2.ASMHelper;
-import squeek.asmhelper.com.bioxx.tfc2.ObfHelper;
 
 public class ModuleEntityRenderer implements IClassTransformer 
 {
@@ -14,14 +14,19 @@ public class ModuleEntityRenderer implements IClassTransformer
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) 
 	{
+		if(basicClass == null)
+		{
+			return null;
+		}
+
 		ClassNode classNode = ASMHelper.readClassFromBytes(basicClass);
 
 		if (!transformedName.equals(ASMConstants.ENTITY_RENDERER))
 		{
-			return ASMHelper.writeClassToBytes(classNode);
+			return basicClass;
 		}
 
-		MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "p", "addRainParticles", ASMHelper.toMethodDescriptor("V"));
+		MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "q", "addRainParticles", ASMHelper.toMethodDescriptor("V"));
 
 		if (methodNode != null)
 		{
@@ -29,7 +34,7 @@ public class ModuleEntityRenderer implements IClassTransformer
 			return ASMHelper.writeClassToBytes(classNode);
 		}
 		else
-			throw new RuntimeException("EntityRenderer: addRainParticles (p) method not found");
+			throw new RuntimeException("EntityRenderer: addRainParticles (q) method not found");
 	}
 
 	private void addRainParticlesHook(ClassNode classNode, MethodNode method)
@@ -39,18 +44,18 @@ public class ModuleEntityRenderer implements IClassTransformer
 		if(!ObfHelper.isObfuscated())
 		{
 			list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "random", "Ljava/util/Random;"));
+			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.toObfClassName(ASMConstants.ENTITY_RENDERER), "random", "Ljava/util/Random;"));
 			list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "rendererUpdateCount", "I"));
+			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.toObfClassName(ASMConstants.ENTITY_RENDERER), "rendererUpdateCount", "I"));
 			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/rendering/WeatherRenderer","addRainParticles","(Ljava/util/Random;I)V", false));
 			list.add(new InsnNode(Opcodes.RETURN));
 		}
 		else
 		{
 			list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			list.add(new FieldInsnNode(Opcodes.GETFIELD, "bnz", "j", "Ljava/util/Random;"));
+			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.toObfClassName(ASMConstants.ENTITY_RENDERER), "j", "Ljava/util/Random;"));
 			list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			list.add(new FieldInsnNode(Opcodes.GETFIELD, "bnz", "m", "I"));
+			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.toObfClassName(ASMConstants.ENTITY_RENDERER), "m", "I"));
 			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/rendering/WeatherRenderer","addRainParticles","(Ljava/util/Random;I)V", false));
 			list.add(new InsnNode(Opcodes.RETURN));
 		}

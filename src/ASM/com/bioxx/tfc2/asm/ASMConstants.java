@@ -1,4 +1,4 @@
-package com.bioxx.tfc2;
+package com.bioxx.tfc2.asm;
 
 public class ASMConstants 
 {

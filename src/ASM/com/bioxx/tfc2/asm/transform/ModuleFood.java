@@ -8,22 +8,24 @@ import net.minecraft.init.Blocks;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.bioxx.tfc2.ASMConstants;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
+import com.bioxx.tfc2.asm.ASMConstants;
+import com.bioxx.tfc2.asm.ASMHelper;
+import com.bioxx.tfc2.asm.ObfHelper;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
-import squeek.asmhelper.com.bioxx.tfc2.ASMHelper;
-import squeek.asmhelper.com.bioxx.tfc2.ObfHelper;
 
 public class ModuleFood implements IClassTransformer 
 {
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) 
 	{
+		if(basicClass == null)
+			return null;
 		ClassNode classNode = ASMHelper.readClassFromBytes(basicClass);
 
 		if (transformedName.equals("net.minecraft.item.Item"))
@@ -75,7 +77,8 @@ public class ModuleFood implements IClassTransformer
 		}
 		else if (transformedName.equals("net.minecraft.item.ItemFishFood"))
 		{
-			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "a", "getSubItems", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ASMConstants.NONNULLLIST));
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "a", "getSubItems", 
+					ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.ITEM), ObfHelper.toObfClassName(ASMConstants.CREATIVETABS), ObfHelper.toObfClassName(ASMConstants.NONNULLLIST)));
 
 			if (methodNode != null)
 			{

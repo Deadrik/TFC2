@@ -4,18 +4,21 @@ import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import com.bioxx.tfc2.ASMConstants;
 import com.bioxx.tfc2.ServerOverrides;
+import com.bioxx.tfc2.asm.ASMConstants;
+import com.bioxx.tfc2.asm.ASMHelper;
+import com.bioxx.tfc2.asm.ObfHelper;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
-import squeek.asmhelper.com.bioxx.tfc2.ASMHelper;
-import squeek.asmhelper.com.bioxx.tfc2.ObfHelper;
 
 public class ModuleWorldGen implements IClassTransformer 
 {
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) 
 	{
+		if(basicClass == null)
+			return null;
+
 		ClassNode classNode = ASMHelper.readClassFromBytes(basicClass);
 
 		if (transformedName.equals("com.pam.harvestcraft.blocks.blocks.BlockBaseGarden"))
@@ -108,8 +111,8 @@ public class ModuleWorldGen implements IClassTransformer
 
 		list.add(new VarInsnNode(Opcodes.ALOAD, 1));
 		list.add(new VarInsnNode(Opcodes.ALOAD, 2));
-		list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,	ObfHelper.isObfuscated() ? "cm" : ASMHelper.toInternalClassName(ASMConstants.BLOCK_POS), ObfHelper.isObfuscated() ? "c" : "down", ObfHelper.isObfuscated() ? "()Lcm;" :ASMHelper.toMethodDescriptor(ASMConstants.BLOCK_POS), false));
-		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ServerOverrides","isSoil",ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD, ASMConstants.BLOCK_POS), false));
+		list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,	ObfHelper.toObfClassName(ASMConstants.BLOCK_POS), ObfHelper.isObfuscated() ? "c" : "down", ASMHelper.toMethodDescriptor(ObfHelper.toObfClassName(ASMConstants.BLOCK_POS)), false));
+		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ServerOverrides","isSoil",ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.WORLD), ObfHelper.toObfClassName(ASMConstants.BLOCK_POS)), false));
 		list.add(new InsnNode(Opcodes.IRETURN));
 		method.instructions.insert(list);
 	}

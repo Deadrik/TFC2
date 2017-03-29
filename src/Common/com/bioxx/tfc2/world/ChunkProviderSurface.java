@@ -625,15 +625,6 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		b3.setFrequency (1f/50f);
 		b3.setOctaveCount(2);
 
-		RidgedMulti r = new RidgedMulti();
-		r.setSeed(300);
-		r.setFrequency (1f/20f);
-		r.setOctaveCount(4);
-
-		ScaleBias sb3 = new ScaleBias();
-		sb3.setSourceModule(0, r);
-		sb3.setScale(0.5);
-
 		Max m = new Max();
 		m.setSourceModule(0, b2);
 		m.setSourceModule(1, b);
@@ -641,10 +632,6 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		Max m2 = new Max();
 		m2.setSourceModule(0, m);
 		m2.setSourceModule(1, b3);
-
-		Max m3 = new Max();
-		m3.setSourceModule(0, m2);
-		m3.setSourceModule(1, sb3);
 
 		ScaleBias sb2 = new ScaleBias();
 		sb2.setSourceModule(0, m2);

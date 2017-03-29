@@ -6,12 +6,12 @@ import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
+import com.bioxx.tfc2.asm.ObfHelper;
 import com.bioxx.tfc2.asm.transform.ModuleEntityRenderer;
 import com.bioxx.tfc2.asm.transform.ModuleFood;
 import com.bioxx.tfc2.asm.transform.ModuleWorldGen;
-import squeek.asmhelper.com.bioxx.tfc2.ObfHelper;
 
-@TransformerExclusions({ "com.bioxx.tfc2.asm", "squeek" })
+@TransformerExclusions({ "com.bioxx.tfc2.asm" })
 public class TFCASMLoadingPlugin implements IFMLLoadingPlugin
 {
 	public static boolean runtimeDeobf;
