@@ -1,9 +1,6 @@
 package com.bioxx.tfc2.world;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -489,10 +486,25 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 3)
 						{
-							chunkprimer.setBlockState(x, y, z, sand);
-							chunkprimer.setBlockState(x, y-1, z, sand);
-							chunkprimer.setBlockState(x, y-2, z, sand);
+							BlockPos pos = SmoothCoast(chunkprimer, p, closestCenter, x, z, y);
+							chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), sand);
+							chunkprimer.setBlockState(pos.getX(), pos.getY()-1, pos.getZ(), sand);
+							chunkprimer.setBlockState(pos.getX(), pos.getY()-2, pos.getZ(), sand);
+
 						}
+					}
+
+					if(block == Blocks.STONE.getDefaultState() && blockUp == Blocks.WATER.getDefaultState())
+					{
+						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 3)
+						{
+							BlockPos pos = SmoothCoast(chunkprimer, p, closestCenter, x, z, y);
+							chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), sand);
+							chunkprimer.setBlockState(pos.getX(), pos.getY()-1, pos.getZ(), sand);
+							chunkprimer.setBlockState(pos.getX(), pos.getY()-2, pos.getZ(), sand);
+
+						}
+						//chunkprimer.setBlockState(x, y, z, sand);
 					}
 
 					if(chunkprimer.getBlockState(x, y, z) == Blocks.STONE.getDefaultState())
@@ -538,9 +550,106 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 					{
 						chunkprimer.setBlockState(x, y, z, sand);
 					}
+
+
 				}
 			}
 		}
+	}
+
+	private BlockPos SmoothCoast(ChunkPrimer chunkprimer, Point p, Center closestCenter, int x, int z, int y) 
+	{
+		IBlockState saltwater = Blocks.WATER.getDefaultState();//TFCBlocks.SaltWaterStatic.getDefaultState();
+		BlockPos pos = new BlockPos(x, y, z);
+		if( y > Global.SEALEVEL-4)
+		{
+			double distance = 1000;
+			Point p2 = p.plus(islandChunkX, islandChunkZ).toIslandCoord();
+			List<Center> oceanNeighbors = getOceanNeighbors(closestCenter);
+			for(Center c : oceanNeighbors)
+			{
+				double d = p2.distance(c.point);
+				if(d < distance)
+					distance = d;
+			}
+			int turb = 4;
+			float range = 25f;
+			if(oceanNeighbors.size() > 3)
+				range /=2 ;
+			if(!closestCenter.hasAttribute(Attribute.River))
+				turb += Math.max(this.getBeachTurb(closestCenter, p, 2), 0);
+			turb *= Math.min(1.5f-(distance/range), 1.0f);
+			turb = (int) Math.max(turb, 0f);
+			pos = pos.down(turb);
+			for(int i = y; i > pos.getY(); i--)
+			{
+				if(i < Global.SEALEVEL)
+				{
+					chunkprimer.setBlockState(x, i, z, saltwater);
+				}
+				else 
+					chunkprimer.setBlockState(x, i, z, Blocks.AIR.getDefaultState());
+			}
+		}
+		return pos;
+	}
+
+	private ArrayList<Center> getOceanNeighbors(Center c)
+	{
+		ArrayList<Center> list = new ArrayList<Center>();
+		for(Center n : c.neighbors)
+		{
+			if(n.biome == BiomeType.OCEAN)
+				list.add(n);
+		}
+		return list;
+	}
+
+	protected int getBeachTurb(Center c, Point p, double scale)
+	{
+		Point p2 = p.plus(islandChunkX, islandChunkZ);
+
+		Billow b = new Billow();
+		b.setSeed(30);
+		b.setFrequency (1f/15f);
+		b.setLacunarity(1.5);
+		b.setOctaveCount(2);
+
+		Billow b2 = new Billow();
+		b2.setSeed(300);
+		b2.setFrequency (1f/15f);
+		b2.setOctaveCount(2);
+
+		Billow b3 = new Billow();
+		b3.setSeed(3000);
+		b3.setFrequency (1f/50f);
+		b3.setOctaveCount(2);
+
+		RidgedMulti r = new RidgedMulti();
+		r.setSeed(300);
+		r.setFrequency (1f/20f);
+		r.setOctaveCount(4);
+
+		ScaleBias sb3 = new ScaleBias();
+		sb3.setSourceModule(0, r);
+		sb3.setScale(0.5);
+
+		Max m = new Max();
+		m.setSourceModule(0, b2);
+		m.setSourceModule(1, b);
+
+		Max m2 = new Max();
+		m2.setSourceModule(0, m);
+		m2.setSourceModule(1, b3);
+
+		Max m3 = new Max();
+		m3.setSourceModule(0, m2);
+		m3.setSourceModule(1, sb3);
+
+		ScaleBias sb2 = new ScaleBias();
+		sb2.setSourceModule(0, m2);
+
+		return (int)(sb2.GetValue(p2.x, 0, p2.y) * scale);
 	}
 
 	protected boolean isLakeBorder(Point p, Center c, double width)
@@ -625,6 +734,10 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				{
 					//hexElev = convertElevation(getSmoothHeightHex(closestCenter, p));
 					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p)) + (int)Math.ceil(turbMap.GetValue(worldX+p.x, worldZ+p.y));
+				}
+				else if(closestCenter.hasMarker(Marker.CoastWater))
+				{
+					hexElev = 62 - getBeachTurb(closestCenter, p, 2);
 				}
 				else 
 				{

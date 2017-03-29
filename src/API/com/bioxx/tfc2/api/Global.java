@@ -130,7 +130,7 @@ public class Global
 	public static float FOOD_MAX_WEIGHT = 160;
 	public static float FOOD_MIN_DROP_WEIGHT = 0.1f;
 
-	public static int SEALEVEL = 63;
+	public static int SEALEVEL = 64;
 
 	private static HashMap<ItemStack, Integer> fuelMap = new HashMap<ItemStack, Integer>();
 
