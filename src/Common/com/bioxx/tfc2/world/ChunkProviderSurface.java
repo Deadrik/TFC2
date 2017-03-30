@@ -496,7 +496,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 					if(block == Blocks.STONE.getDefaultState() && blockUp == Blocks.WATER.getDefaultState())
 					{
-						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 3)
+						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 3 && y > 10)
 						{
 							BlockPos pos = SmoothCoast(chunkprimer, p, closestCenter, x, z, y);
 							chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), sand);
@@ -958,21 +958,24 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			{
 				Center closest = islandMap.getClosestCenter(pos.add(this.islandChunkX, 0, this.islandChunkZ));
 				int elev = this.convertElevation(closest.getElevation());
-				if(elevationMap[pos.getZ() << 4 | pos.getX()] != elev)
+				if(!closest.hasAttribute(Attribute.River))
 				{
-					setState(chunkprimer, pos, TFCBlocks.Stone.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
-					if(!Core.isStone(this.getState(chunkprimer, pos.down())))
+					if(elevationMap[pos.getZ() << 4 | pos.getX()] != elev)
 					{
-						setState(chunkprimer, pos.down(), TFCBlocks.Stone.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+						setState(chunkprimer, pos, TFCBlocks.Stone.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
 						if(!Core.isStone(this.getState(chunkprimer, pos.down())))
 						{
 							setState(chunkprimer, pos.down(), TFCBlocks.Stone.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+							if(!Core.isStone(this.getState(chunkprimer, pos.down())))
+							{
+								setState(chunkprimer, pos.down(), TFCBlocks.Stone.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+							}
 						}
 					}
-				}
-				else
-				{
-					setState(chunkprimer, pos, TFCBlocks.Gravel.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+					else
+					{
+						setState(chunkprimer, pos, TFCBlocks.Gravel.getDefaultState().withProperty(BlockGravel.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+					}
 				}
 
 				if(Core.isTerrain(getState(chunkprimer, pos.up(1))))
