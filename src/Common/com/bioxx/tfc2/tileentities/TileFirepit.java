@@ -76,6 +76,10 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 		else
 		{
 			//Handle non-cooking item heating
+			if(fuelTimer > 0)
+			{
+
+			}
 		}
 
 		//If the fire is lit
@@ -95,6 +99,11 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 				fuelMaxTimer = Global.GetFirepitFuel(getStackInSlot(FUEL_SLOT));
 				fuelTimer = fuelMaxTimer;
 				getStackInSlot(FUEL_SLOT).shrink(1);
+				world.setBlockState(getPos(), world.getBlockState(getPos()).withProperty(BlockFirepit.LIT, true), 3);
+			}
+			else if(world.getBlockState(getPos()).getValue(BlockFirepit.LIT) == true)
+			{
+				world.setBlockState(getPos(), world.getBlockState(getPos()).withProperty(BlockFirepit.LIT, false), 3);
 			}
 
 			if(fuelTimer <= 0 && cookingTimer > 0)
@@ -135,6 +144,11 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 			}
 		}
 
+	}
+
+	public boolean isFireLit()
+	{
+		return this.fuelTimer > 0;
 	}
 
 	/***********************************************************************************

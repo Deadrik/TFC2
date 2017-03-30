@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -53,8 +54,9 @@ public class BlockFirepit extends BlockTerra implements ITileEntityProvider
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.isBlockContainer = true;
 		setSoundType(SoundType.GROUND);
-		this.setBlockBounds(0, 0, 0, 1, 0.1, 1);
+		this.setBlockBounds(0, 0, 0, 1, 0.3, 1);
 		this.setBreaksWhenSuspended(true);
+		this.setLightLevel(0.8f);
 	}
 
 	/*******************************************************************************
@@ -117,6 +119,16 @@ public class BlockFirepit extends BlockTerra implements ITileEntityProvider
 		return null;//The firepit shouldn't drop itself as an item
 	}
 
+	@Override
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		if(state.getValue(LIT) == true)
+		{
+			return 10;
+		}
+		return 0;
+	}
+
 	/*******************************************************************************
 	 * 2. Rendering
 	 *******************************************************************************/
@@ -125,7 +137,14 @@ public class BlockFirepit extends BlockTerra implements ITileEntityProvider
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand)
 	{
-
+		TileFirepit te = (TileFirepit)world.getTileEntity(pos);
+		if(te.getField(TileFirepit.FIELD_FUEL_TIMER) > 0)
+		{
+			double x = rand.nextDouble() * 0.7;
+			double z = rand.nextDouble() * 0.7;
+			world.spawnParticle(EnumParticleTypes.FLAME, pos.getX()+0.15+x, pos.getY()+0.4, pos.getZ()+0.15+z, 0, 0.0, 0);
+			world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX()+0.15+x, pos.getY()+0.4, pos.getZ()+0.15+z, 0, 0.02, 0);
+		}
 	}
 
 	@Override
