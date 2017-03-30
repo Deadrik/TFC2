@@ -23,7 +23,7 @@ public class ModuleWorldGen implements IClassTransformer
 
 		if (transformedName.equals("com.pam.harvestcraft.blocks.blocks.BlockBaseGarden"))
 		{
-			String desc = ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD, ASMConstants.BLOCK_POS);
+			String desc = ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD, ASMConstants.BLOCK_POS);//Note to self, don't attempt to obf the class names when overwriting a non vanilla method from another mod
 			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "checkSoilBlock", "checkSoilBlock", desc);
 
 			if (methodNode != null)
@@ -31,11 +31,11 @@ public class ModuleWorldGen implements IClassTransformer
 				addCanPlaceBlockOverride(classNode, methodNode);
 			}
 			else
-				throw new RuntimeException("BlockBaseGarden: checkSoilBlock (a) method not found");
+				throw new RuntimeException("BlockBaseGarden: checkSoilBlock(" +ObfHelper.getInternalClassName(ASMConstants.WORLD) + "," +ObfHelper.getInternalClassName(ASMConstants.BLOCK_POS) +") method not found");
 		}
 		else if (transformedName.equals("net.minecraft.block.BlockBush"))
 		{
-			String desc = ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.IBLOCKSTATE));
+			String desc = ASMHelper.toMethodDescriptor("Z",ObfHelper.getInternalClassName(ASMConstants.IBLOCKSTATE));
 			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "i", "canSustainBush", desc);
 
 			if (methodNode != null)
@@ -47,8 +47,8 @@ public class ModuleWorldGen implements IClassTransformer
 		}
 		else if (transformedName.equals("com.pam.harvestcraft.worldgen.BushWorldWorldGen"))
 		{
-			String desc = ASMHelper.toMethodDescriptor("V", ASMConstants.RANDOM,"I", "I", ASMConstants.WORLD, ASMConstants.ICHUNKGENERATOR, ASMConstants.ICHUNKPROVIDER);
-			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "func_180709_b", "generate", desc);
+			String desc = ASMHelper.toMethodDescriptor("V", ASMConstants.RANDOM,"I", "I", gi(ASMConstants.WORLD), gi(ASMConstants.ICHUNKGENERATOR), gi(ASMConstants.ICHUNKPROVIDER));
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "generate", "generate", desc);
 
 			if (methodNode != null)
 			{
@@ -88,6 +88,11 @@ public class ModuleWorldGen implements IClassTransformer
 		return ASMHelper.writeClassToBytes(classNode);
 	}
 
+	private String gi(String s)
+	{
+		return ObfHelper.getInternalClassName(s);
+	}
+
 
 	private void nullifyWorldGen(ClassNode classNode, MethodNode method)
 	{
@@ -111,7 +116,7 @@ public class ModuleWorldGen implements IClassTransformer
 
 		list.add(new VarInsnNode(Opcodes.ALOAD, 1));
 		list.add(new VarInsnNode(Opcodes.ALOAD, 2));
-		list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,	ObfHelper.toObfClassName(ASMConstants.BLOCK_POS), ObfHelper.isObfuscated() ? "c" : "down", ASMHelper.toMethodDescriptor(ObfHelper.toObfClassName(ASMConstants.BLOCK_POS)), false));
+		list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,	ObfHelper.isObfuscated() ? "co" : ObfHelper.getInternalClassName(ASMConstants.BLOCK_POS), ObfHelper.isObfuscated() ? "c" : "down", ASMHelper.toMethodDescriptor(ObfHelper.isObfuscated() ? "co" :ObfHelper.toObfClassName(ASMConstants.BLOCK_POS)), false));
 		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ServerOverrides","isSoil",ASMHelper.toMethodDescriptor("Z",ObfHelper.toObfClassName(ASMConstants.WORLD), ObfHelper.toObfClassName(ASMConstants.BLOCK_POS)), false));
 		list.add(new InsnNode(Opcodes.IRETURN));
 		method.instructions.insert(list);

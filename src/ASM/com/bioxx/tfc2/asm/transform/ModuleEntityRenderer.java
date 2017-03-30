@@ -44,18 +44,18 @@ public class ModuleEntityRenderer implements IClassTransformer
 		if(!ObfHelper.isObfuscated())
 		{
 			list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.toObfClassName(ASMConstants.ENTITY_RENDERER), "random", "Ljava/util/Random;"));
+			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.getInternalClassName(ASMConstants.ENTITY_RENDERER), "random", "Ljava/util/Random;"));
 			list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.toObfClassName(ASMConstants.ENTITY_RENDERER), "rendererUpdateCount", "I"));
+			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.getInternalClassName(ASMConstants.ENTITY_RENDERER), "rendererUpdateCount", "I"));
 			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/rendering/WeatherRenderer","addRainParticles","(Ljava/util/Random;I)V", false));
 			list.add(new InsnNode(Opcodes.RETURN));
 		}
 		else
 		{
 			list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.toObfClassName(ASMConstants.ENTITY_RENDERER), "j", "Ljava/util/Random;"));
+			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.getInternalClassName(ASMConstants.ENTITY_RENDERER), "j", "Ljava/util/Random;"));
 			list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.toObfClassName(ASMConstants.ENTITY_RENDERER), "m", "I"));
+			list.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.getInternalClassName(ASMConstants.ENTITY_RENDERER), "m", "I"));
 			list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/rendering/WeatherRenderer","addRainParticles","(Ljava/util/Random;I)V", false));
 			list.add(new InsnNode(Opcodes.RETURN));
 		}
