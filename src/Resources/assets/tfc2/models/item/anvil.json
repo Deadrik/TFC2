@@ -1,0 +1,7 @@
+{
+    "parent": "tfc2:block/anvil_inventory",
+    "textures": {
+        "side": "tfc2:blocks/devices/iron anvil",
+		"top": "tfc2:blocks/devices/iron anvil"
+    }
+}
