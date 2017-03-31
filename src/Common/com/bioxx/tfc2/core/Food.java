@@ -233,7 +233,9 @@ public class Food
 	public static void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
 		ItemStack is = new ItemStack(itemIn, 1, 0);
-		Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime()+ Food.getExpirationTimer(is));
+		long time = Food.getExpirationTimer(is);
+		if(time > 0)
+			Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime()+time);
 		subItems.add(is);
 	}
 
@@ -242,7 +244,9 @@ public class Food
 	{
 		for(ItemStack is : list)
 		{
-			Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime()+Food.getExpirationTimer(is));
+			long time = Food.getExpirationTimer(is);
+			if(time > 0)
+				Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime()+time);
 		}
 	}
 

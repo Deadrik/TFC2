@@ -142,6 +142,7 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(new ChunkLoadHandler());
 		MinecraftForge.EVENT_BUS.register(new ServerTickHandler());
 		MinecraftForge.EVENT_BUS.register(new DrinkWaterHandler());
+		MinecraftForge.EVENT_BUS.register(new BlockHarvestHandler());
 		Global.EVENT_BUS.register(new HexUpdateHandler());
 		Global.EVENT_BUS.register(new IslandUpdateHandler());
 		registerAnimals();
