@@ -61,12 +61,6 @@ tile.stonesmooth.name=Smoothed Stone
 tile.planks.name=Wood Planks
 
 #=========
-#= Seeds =
-#=========
-item.seeds.seeds_corn=Seeds Corn
-item.seeds.seeds_cabbage=Seeds Cabbage
-
-#=========
 #= GUI =
 #=========
 gui.food.fruit=Fruit
@@ -74,5 +68,27 @@ gui.food.vegetable=Vegetable
 gui.food.grain=Grain
 gui.food.protein=Protein
 gui.food.dairy=Dairy
+gui.skillpage=Skills
+gui.healthpage=Health
+gui.skill.novice=Novice
+gui.skill.adept=Adept
+gui.skill.expert=Expert
+gui.skill.master=Master
+gui.skill.woodworker=Woodworker
+gui.skill.smith=Smith
+gui.skill.toolsmith=Toolsmith
+gui.skill.weaponsmith=Weaponsmith
+gui.skill.armorsmith=Armorsmith
+gui.skill.farmer=Farmer
+gui.skill.fisherman=Fisherman
+gui.skill.butcher=Butcher
 
+
+#=================
+#======Items======
+#=================
 item.looserock.name=Rock
+item.stone_axe_head.name=Stone Axe Head
+item.stone_shovel_head.name=Stone Shovel Head
+item.stone_knife_head.name=Stone Knife Head
+item.stone_hoe_head.name=Stone Hoe Head
