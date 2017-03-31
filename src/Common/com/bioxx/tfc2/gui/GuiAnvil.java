@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -49,7 +50,7 @@ public class GuiAnvil extends GuiContainerTFC
 		buttonList.clear();
 		buttonList.add(new GuiButton(0, guiLeft+4, guiTop+62, 42, 20, "Craft"));
 
-		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.ANVIL);
+		List<IRecipe> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.ANVIL);
 
 		int x = 0, y = 0;
 		for (int i = 0; i < recipes.size(); i++)
@@ -58,7 +59,7 @@ public class GuiAnvil extends GuiContainerTFC
 			x = i % 4;
 			GuiKnappingRecipeButton button = new GuiKnappingRecipeButton(1+i, 3+guiLeft+50 + (x * 18), 4+guiTop + (y * 19), 18, 18, recipes.get(i).getRecipeOutput());
 			button.recipeIndex = i;
-			if(recipes.get(i).matches(anvil.getInventory(), anvil.getWorld()))
+			if(((IRecipeTFC)recipes.get(i)).matches(anvil.getInventory(), anvil.getWorld()))
 				buttonList.add(button);
 		}
 	}

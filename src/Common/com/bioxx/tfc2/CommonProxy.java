@@ -75,14 +75,14 @@ public class CommonProxy
 		registerCropProduce();//Must run after item setup
 		setupOre();
 
-		SkillsManager.instance.registerSkill(new Skill("Woodworker", 1.0f, 1f));
-		SkillsManager.instance.registerSkill(new Skill("Smith", 1.0f, 1f));
-		SkillsManager.instance.registerSkill(new Skill("Toolsmith", 1.0f, 10f));
-		SkillsManager.instance.registerSkill(new Skill("Weaponsmith", 1.0f, 10f));
-		SkillsManager.instance.registerSkill(new Skill("Armorsmith", 1.0f, 10f));
-		SkillsManager.instance.registerSkill(new Skill("Farmer", 1.0f, 1f));
-		SkillsManager.instance.registerSkill(new Skill("Fisherman", 1.0f, 1f));
-		SkillsManager.instance.registerSkill(new Skill("Butcher", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.woodworker", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.smith", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.toolsmith", 1.0f, 10f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.weaponsmith", 1.0f, 10f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.armorsmith", 1.0f, 10f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.farmer", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.fisherman", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.butcher", 1.0f, 1f));
 	}
 
 	public void init(FMLInitializationEvent event)
