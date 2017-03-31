@@ -958,7 +958,9 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			{
 				Center closest = islandMap.getClosestCenter(pos.add(this.islandChunkX, 0, this.islandChunkZ));
 				int elev = this.convertElevation(closest.getElevation());
-				if(!closest.hasAttribute(Attribute.River))
+
+				if(closest.hasAttribute(Attribute.River) && closest.biome == BiomeType.BEACH){}
+				else
 				{
 					if(elevationMap[pos.getZ() << 4 | pos.getX()] != elev)
 					{
