@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
 import com.bioxx.tfc2.api.interfaces.IFood;
+import com.bioxx.tfc2.containers.slots.SlotCraftingTFC;
 import com.bioxx.tfc2.core.Food;
 import com.bioxx.tfc2.core.PlayerInventory;
 
@@ -26,7 +27,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 		this.inventorySlots.clear();
 		this.inventoryItemStacks.clear();
 		this.thePlayer = player;
-		this.addSlotToContainer(new SlotCrafting(player, craftMatrix, craftResult, 0, 152, 36));
+		this.addSlotToContainer(new SlotCraftingTFC(player, craftMatrix, craftResult, 0, 152, 36));
 		int x;
 		int y;
 
@@ -122,7 +123,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			return;
 		super.onCraftMatrixChanged(iinventory);
 		ItemStack is2 = CraftingManagerTFC.getInstance().findMatchingRecipe(this.craftMatrix, this.thePlayer.world);
-		if(is2 != null)
+		if(is2 != ItemStack.EMPTY)
 			this.craftResult.setInventorySlotContents(0, is2);
 
 		Slot craftOut = (Slot) this.inventorySlots.get(0);
@@ -141,7 +142,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 		for (int i = 0; i < iinventory.getSizeInventory(); i++)
 		{
 			ItemStack is = iinventory.getStackInSlot(i);
-			if(is != null && is.getMaxStackSize() == 0)
+			if(is != ItemStack.EMPTY && is.getCount() == 0)
 			{
 				iinventory.setInventorySlotContents(i, ForgeHooks.getContainerItem(is));
 			}

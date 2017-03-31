@@ -89,6 +89,13 @@ gui.skill.butcher=Butcher
 #=================
 item.looserock.name=Rock
 item.stone_axe_head.name=Stone Axe Head
+item.stone_axe.name=Stone Axe
 item.stone_shovel_head.name=Stone Shovel Head
+item.stone_shovel.name=Stone Shovel
 item.stone_knife_head.name=Stone Knife Head
+item.stone_knife.name=Stone Knife
 item.stone_hoe_head.name=Stone Hoe Head
+item.stone_hoe.name=Stone Hoe
+
+
+

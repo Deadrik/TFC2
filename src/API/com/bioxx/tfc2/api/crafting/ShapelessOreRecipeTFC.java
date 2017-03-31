@@ -40,7 +40,7 @@ import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
 
 public class ShapelessOreRecipeTFC implements IRecipeTFC
 {
-	protected ItemStack output = null;
+	protected ItemStack output = ItemStack.EMPTY;
 	protected List<Object> input = new ArrayList<Object>();
 
 	public ShapelessOreRecipeTFC(Block result, Object... recipe){ this(new ItemStack(result), recipe); }
@@ -123,7 +123,7 @@ public class ShapelessOreRecipeTFC implements IRecipeTFC
 		{
 			ItemStack slot = var1.getStackInSlot(x);
 
-			if (slot != null)
+			if (slot != ItemStack.EMPTY)
 			{
 				boolean inRecipe = false;
 				Iterator<Object> req = required.iterator();
@@ -184,7 +184,7 @@ public class ShapelessOreRecipeTFC implements IRecipeTFC
 		{
 			ItemStack slot = var1.get(x);
 
-			if (slot != null)
+			if (slot != ItemStack.EMPTY)
 			{
 				boolean inRecipe = false;
 				Iterator<Object> req = required.iterator();

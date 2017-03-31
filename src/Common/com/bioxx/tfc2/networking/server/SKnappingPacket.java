@@ -2,6 +2,7 @@ package com.bioxx.tfc2.networking.server;
 
 import io.netty.buffer.ByteBuf;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.WorldServer;
 
@@ -53,7 +54,10 @@ public class SKnappingPacket implements IMessage
 					pi.knappingInterface[message.id] = true;
 					if(ctx.getServerHandler().player.openContainer != null && ctx.getServerHandler().player.openContainer instanceof ContainerSpecialCrafting)
 					{
-						((ContainerSpecialCrafting)ctx.getServerHandler().player.openContainer).craftMatrix.setInventorySlotContents(message.id, pi.specialCraftingTypeAlternate);
+						if(pi.specialCraftingTypeAlternate == null)
+							((ContainerSpecialCrafting)ctx.getServerHandler().player.openContainer).craftMatrix.setInventorySlotContents(message.id, ItemStack.EMPTY);
+						else
+							((ContainerSpecialCrafting)ctx.getServerHandler().player.openContainer).craftMatrix.setInventorySlotContents(message.id, pi.specialCraftingTypeAlternate);
 					}
 				}
 			});

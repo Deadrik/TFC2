@@ -42,7 +42,7 @@ public class SlotSpecialCraftingOutput extends Slot
 		for (int i = 0; i < craftMatrix.getSizeInventory(); i++)
 		{
 			// Clear out everything in the crafting matrix.
-			craftMatrix.setInventorySlotContents(i, null);
+			craftMatrix.setInventorySlotContents(i, ItemStack.EMPTY);
 			if (player.world.isRemote)
 			{
 				((GuiKnapping) Minecraft.getMinecraft().currentScreen).resetButton(i);

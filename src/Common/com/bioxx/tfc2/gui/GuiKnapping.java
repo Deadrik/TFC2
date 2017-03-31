@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
@@ -140,7 +141,7 @@ public class GuiKnapping extends GuiContainerTFC
 		{
 			int x = i % rec.getRecipeWidth();
 			int y = i / rec.getRecipeWidth();
-			if(rec.getRecipeItems().get(x+y*rec.getRecipeWidth()) != null)
+			if(rec.getRecipeItems().get(x+y*rec.getRecipeWidth()) != ItemStack.EMPTY)
 				((GuiKnappingButton) this.buttonList.get(x+y*9)).highlight(false);
 		}
 	}
@@ -153,19 +154,21 @@ public class GuiKnapping extends GuiContainerTFC
 		}
 		PlayerManagerTFC.getInstance().getClientPlayer().knappingInterface[id] = true;
 		((GuiKnappingButton) this.buttonList.get(id)).enabled = false;
-		((ContainerSpecialCrafting) this.inventorySlots).craftMatrix.setInventorySlotContents(id, null);
+		((ContainerSpecialCrafting) this.inventorySlots).craftMatrix.removeStackFromSlot(id);
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float ticks, int mouseX, int mouseY)
 	{
 		drawGui(texture);
+		Core.bindTexture(texture);
+		this.drawTexturedModalRect(this.guiLeft+175, this.guiTop, 176, 0, 80, 190);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.drawTexturedModalRect(this.guiLeft+175, this.guiTop, 176, 0, 80, 190);
+
 	}
 
 	/**

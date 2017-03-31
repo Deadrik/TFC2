@@ -6,6 +6,8 @@ import java.util.List;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
@@ -91,7 +93,7 @@ public class CraftingManagerTFC
 			}
 		}
 
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	public List<IRecipeTFC> getRecipeList(RecipeType rt)
@@ -102,6 +104,26 @@ public class CraftingManagerTFC
 			return recipes_anvil;
 
 		return recipes;
+	}
+
+	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting craftMatrix, World worldIn)
+	{
+		for (IRecipe irecipe : this.recipes)
+		{
+			if (irecipe.matches(craftMatrix, worldIn))
+			{
+				return irecipe.getRemainingItems(craftMatrix);
+			}
+		}
+
+		NonNullList<ItemStack> nonnulllist = NonNullList.<ItemStack>withSize(craftMatrix.getSizeInventory(), ItemStack.EMPTY);
+
+		for (int i = 0; i < nonnulllist.size(); ++i)
+		{
+			nonnulllist.set(i, craftMatrix.getStackInSlot(i));
+		}
+
+		return nonnulllist;
 	}
 
 	public enum RecipeType
