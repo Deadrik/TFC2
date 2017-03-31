@@ -263,7 +263,7 @@ public class ModuleFood implements IClassTransformer
 		list.add(new VarInsnNode(Opcodes.ALOAD, 2));
 		list.add(new VarInsnNode(Opcodes.ALOAD, 3));
 		list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","addInformation",ASMHelper.toMethodDescriptor("V",ASMConstants.ITEMSTACK, ASMConstants.PLAYER, ASMConstants.LIST, ASMConstants.ITEM), false));
+		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ClientOverrides","addInformation",ASMHelper.toMethodDescriptor("V",ASMConstants.ITEMSTACK, ASMConstants.PLAYER, ASMConstants.LIST, ASMConstants.ITEM), false));
 
 
 		method.instructions.insert(list);
