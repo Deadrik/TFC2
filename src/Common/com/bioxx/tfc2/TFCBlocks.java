@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
@@ -167,14 +169,14 @@ public class TFCBlocks
 		register(LooseRocks, ItemStone.class);
 		register(Sapling, ItemWood.class);
 		register(Sapling2, ItemWood.class);
-		register(LogNatural, ItemWood.class);
-		register(LogNatural2, ItemWood.class);
-		register(LogNaturalPalm, ItemWood.class);
-		register(LogVertical, ItemWood.class);
-		register(LogVertical2, ItemWood.class);
-		register(LogHorizontal, ItemWood.class);
-		register(LogHorizontal2, ItemWood.class);
-		register(LogHorizontal3, ItemWood.class);
+		register(LogNatural, ItemWood.class, "logWood");
+		register(LogNatural2, ItemWood.class, "logWood");
+		register(LogNaturalPalm, ItemWood.class, "logWood");
+		register(LogVertical, ItemWood.class, "logWood");
+		register(LogVertical2, ItemWood.class, "logWood");
+		register(LogHorizontal, ItemWood.class, "logWood");
+		register(LogHorizontal2, ItemWood.class, "logWood");
+		register(LogHorizontal3, ItemWood.class, "logWood");
 		register(Leaves, ItemWood.class);
 		register(Leaves2, ItemWood.class);
 		register(Ore, ItemOre.class);
@@ -233,6 +235,15 @@ public class TFCBlocks
 		SupportBeam2.setHarvestLevel("axe", 1);
 		SupportBeam3.setHarvestLevel("axe", 1);
 
+	}
+
+	/**
+	 * This version of register should be used to add a block to the ore dictionary
+	 */
+	private static Block register(Block b, Class<? extends ItemBlock> i, String oreDictName)
+	{
+		OreDictionary.registerOre(oreDictName, new ItemStack(b, 1, Short.MAX_VALUE));
+		return register(b, i);
 	}
 
 	private static Block register(Block b, Class<? extends ItemBlock> i)

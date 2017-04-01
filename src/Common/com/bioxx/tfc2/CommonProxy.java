@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.attributes.Attribute;
@@ -74,6 +75,7 @@ public class CommonProxy
 		TFCItems.Register();
 		registerCropProduce();//Must run after item setup
 		setupOre();
+		registerOreDictionary();
 
 		SkillsManager.instance.registerSkill(new Skill("gui.skill.woodworker", 1.0f, 1f));
 		SkillsManager.instance.registerSkill(new Skill("gui.skill.smith", 1.0f, 1f));
@@ -147,6 +149,7 @@ public class CommonProxy
 		Global.EVENT_BUS.register(new IslandUpdateHandler());
 		registerAnimals();
 		registerFuel();
+
 	}
 
 	protected void setupOre()
@@ -365,6 +368,18 @@ public class CommonProxy
 		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Sycamore.getMeta()), 2000);
 		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.WhiteCedar.getMeta()), 2000);
 		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Willow.getMeta()), 2000);
+	}
+
+	protected void registerOreDictionary()
+	{
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogVertical, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogVertical2, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogHorizontal, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogHorizontal2, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogHorizontal3, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogNatural, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogNatural2, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogNaturalPalm, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
 	public void registerGuiHandler()

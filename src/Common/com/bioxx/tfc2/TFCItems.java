@@ -22,6 +22,7 @@ public class TFCItems
 
 	public static Item Plank;
 	public static Item LooseRock;
+	public static Item Firestarter;
 
 
 	public static void Load()
@@ -41,6 +42,8 @@ public class TFCItems
 		StoneKnifeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_knife_head"));
 		StoneHoeHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_hoe_head"));
 		StoneHammerHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_hammer_head"));
+
+		Firestarter = registerItem(new ItemFirestarter().setUnlocalizedName("firestarter"));
 	}
 
 	public static void Register()

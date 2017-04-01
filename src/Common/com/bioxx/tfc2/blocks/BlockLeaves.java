@@ -15,6 +15,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -53,6 +54,12 @@ public class BlockLeaves extends BlockTerra
 	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
 	{
 		return true;
+	}
+
+	@Override
+	public net.minecraft.pathfinding.PathNodeType getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return PathNodeType.OPEN;
 	}
 
 	@Override

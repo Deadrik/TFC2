@@ -59,6 +59,11 @@ tile.stonesmooth.name=Smoothed Stone
 #=================
 
 tile.planks.name=Wood Planks
+tile.log_vertical.name=Log
+tile.log_vertical2.name=Log
+tile.wood_support.name=Wooden Support
+tile.wood_support2.name=Wooden Support
+tile.wood_support3.name=Wooden Support
 
 #=========
 #= GUI =
@@ -96,6 +101,6 @@ item.stone_knife_head.name=Stone Knife Head
 item.stone_knife.name=Stone Knife
 item.stone_hoe_head.name=Stone Hoe Head
 item.stone_hoe.name=Stone Hoe
-
+item.firestarter.name=Firestarter
 
 
