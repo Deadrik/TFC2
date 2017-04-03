@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.attributes.Attribute;
@@ -74,15 +75,16 @@ public class CommonProxy
 		TFCItems.Register();
 		registerCropProduce();//Must run after item setup
 		setupOre();
+		registerOreDictionary();
 
-		SkillsManager.instance.registerSkill(new Skill("Woodworker", 1.0f, 1f));
-		SkillsManager.instance.registerSkill(new Skill("Smith", 1.0f, 1f));
-		SkillsManager.instance.registerSkill(new Skill("Toolsmith", 1.0f, 10f));
-		SkillsManager.instance.registerSkill(new Skill("Weaponsmith", 1.0f, 10f));
-		SkillsManager.instance.registerSkill(new Skill("Armorsmith", 1.0f, 10f));
-		SkillsManager.instance.registerSkill(new Skill("Farmer", 1.0f, 1f));
-		SkillsManager.instance.registerSkill(new Skill("Fisherman", 1.0f, 1f));
-		SkillsManager.instance.registerSkill(new Skill("Butcher", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.woodworker", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.smith", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.toolsmith", 1.0f, 10f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.weaponsmith", 1.0f, 10f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.armorsmith", 1.0f, 10f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.farmer", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.fisherman", 1.0f, 1f));
+		SkillsManager.instance.registerSkill(new Skill("gui.skill.butcher", 1.0f, 1f));
 	}
 
 	public void init(FMLInitializationEvent event)
@@ -142,10 +144,12 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(new ChunkLoadHandler());
 		MinecraftForge.EVENT_BUS.register(new ServerTickHandler());
 		MinecraftForge.EVENT_BUS.register(new DrinkWaterHandler());
+		MinecraftForge.EVENT_BUS.register(new BlockHarvestHandler());
 		Global.EVENT_BUS.register(new HexUpdateHandler());
 		Global.EVENT_BUS.register(new IslandUpdateHandler());
 		registerAnimals();
 		registerFuel();
+
 	}
 
 	protected void setupOre()
@@ -364,6 +368,18 @@ public class CommonProxy
 		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Sycamore.getMeta()), 2000);
 		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.WhiteCedar.getMeta()), 2000);
 		Global.AddFirepitFuel(new ItemStack(TFCBlocks.LogVertical, 1, WoodType.Willow.getMeta()), 2000);
+	}
+
+	protected void registerOreDictionary()
+	{
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogVertical, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogVertical2, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogHorizontal, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogHorizontal2, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogHorizontal3, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogNatural, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogNatural2, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("logWood", new ItemStack(TFCBlocks.LogNaturalPalm, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
 	public void registerGuiHandler()

@@ -60,7 +60,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		if (!this.worldObj.isRemote)
 		{
 			ItemStack is = this.craftResult.getStackInSlot(0);
-			if (is != null)
+			if (is != ItemStack.EMPTY)
 				player.entityDropItem(is, 0);
 		}
 	}
@@ -110,7 +110,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 			this.craftResult.setInventorySlotContents(0, result);
 
 			// Trigger Achievements
-			if (result != null && invPlayer.player != null)
+			if (result != ItemStack.EMPTY && invPlayer.player != null)
 			{
 				Item item = result.getItem();
 
@@ -161,7 +161,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		// Knapping interface is a boolean array where the value is true if that button has been pushed.
 		for (int i = 0; i < this.craftMatrix.getSizeInventory(); i++)
 		{
-			if (this.craftMatrix.getStackInSlot(i) == null)
+			if (this.craftMatrix.getStackInSlot(i) == ItemStack.EMPTY)
 				return true;
 		}
 

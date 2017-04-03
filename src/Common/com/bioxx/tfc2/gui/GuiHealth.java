@@ -29,18 +29,21 @@ public class GuiHealth extends GuiContainerTFC
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		IFoodStatsTFC food = (IFoodStatsTFC)player.getFoodStats();
-		drawTexturedModalRect(guiLeft + 55, guiTop + 14, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Fruit) / 20 * 24), 6);
-		drawTexturedModalRect(guiLeft + 55, guiTop + 24, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Vegetable) / 20 * 24), 6);
-		drawTexturedModalRect(guiLeft + 55, guiTop + 34, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Grain) / 20 * 24), 6);
-		drawTexturedModalRect(guiLeft + 55, guiTop + 44, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Protein) / 20 * 24), 6);
-		drawTexturedModalRect(guiLeft + 55, guiTop + 54, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Dairy) / 20 * 24), 6);
+		int x = 5; int y = 14;
 
-		fontRenderer.drawString(Core.translate("gui.food.fruit"), 5, 13, 0, false);
-		fontRenderer.drawString(Core.translate("gui.food.vegetable"), 5, 23, 0, false);
-		fontRenderer.drawString(Core.translate("gui.food.grain"), 5, 33, 0, false);
-		fontRenderer.drawString(Core.translate("gui.food.protein"), 5, 43, 0, false);
-		fontRenderer.drawString(Core.translate("gui.food.dairy"), 5, 53, 0, false);
+		Core.bindTexture(texture);
+		IFoodStatsTFC food = (IFoodStatsTFC)player.getFoodStats();
+		drawTexturedModalRect(x+50, y, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Fruit) / 20 * 24), 6);
+		drawTexturedModalRect(x+50, y+10, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Vegetable) / 20 * 24), 6);
+		drawTexturedModalRect(x+50, y+20, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Grain) / 20 * 24), 6);
+		drawTexturedModalRect(x+50, y+30, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Protein) / 20 * 24), 6);
+		drawTexturedModalRect(x+50, y+40, 0, 106, (int) (food.getNutritionMap().get(EnumFoodGroup.Dairy) / 20 * 24), 6);
+
+		fontRenderer.drawString(Core.translate("gui.food.fruit"), x, y, 0, false);
+		fontRenderer.drawString(Core.translate("gui.food.vegetable"), x, y+10, 0, false);
+		fontRenderer.drawString(Core.translate("gui.food.grain"), x, y+20, 0, false);
+		fontRenderer.drawString(Core.translate("gui.food.protein"), x, y+30, 0, false);
+		fontRenderer.drawString(Core.translate("gui.food.dairy"), x, y+40, 0, false);
 		if (TFCOptions.enableDebugMode)
 		{
 			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Fruit)), 85, 13, 0, false);
@@ -49,6 +52,8 @@ public class GuiHealth extends GuiContainerTFC
 			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Protein)), 85, 43, 0, false);
 			fontRenderer.drawString(Float.toString(food.getNutritionMap().get(EnumFoodGroup.Dairy)), 85, 53, 0, false);
 		}
+
+		fontRenderer.drawString(Core.translate("gui.healthpage"), this.xSize / 2 - fontRenderer.getStringWidth(Core.translate("gui.healthpage")) / 2, 4, 4210752, false);
 	}
 
 	@Override

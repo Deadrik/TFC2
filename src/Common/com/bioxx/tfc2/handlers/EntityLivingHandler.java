@@ -1,11 +1,11 @@
 package com.bioxx.tfc2.handlers;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,7 +41,7 @@ import com.bioxx.tfc2.world.WorldGen;
 
 public class EntityLivingHandler
 {
-	public static final AttributeModifier THIRST = new AttributeModifier("Thirsty", -0.1, 2);
+	public static final AttributeModifier THIRST = new AttributeModifier(UUID.fromString("85b8dff6-3add-4aeb-89d0-b71d2fb33945"), "Thirsty", -0.5, 2);
 	@SubscribeEvent
 	public void onEntityLivingUpdate(LivingUpdateEvent event)
 	{
@@ -185,21 +185,15 @@ public class EntityLivingHandler
 
 	public void setThirsty(EntityPlayer player, boolean b)
 	{
-		//Removed on port
-		IAttributeInstance iattributeinstance = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-
-		if (iattributeinstance.hasModifier(THIRST))
-		{
-			iattributeinstance.removeModifier(THIRST);
-			player.removePotionEffect(PotionTFC.THIRST_POTION);
-		}
-
 		if (b)
 		{
-			iattributeinstance.applyModifier(THIRST);
 			player.setSprinting(false);
 			if(!player.isPotionActive(PotionTFC.THIRST_POTION))
-				player.addPotionEffect(new PotionEffect(PotionTFC.THIRST_POTION, 40, 0, false, false));
+				player.addPotionEffect(new PotionEffect(PotionTFC.THIRST_POTION, Integer.MAX_VALUE, 0, false, false));
+		}
+		else
+		{
+			player.removePotionEffect(PotionTFC.THIRST_POTION);
 		}
 	}
 

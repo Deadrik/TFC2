@@ -142,7 +142,10 @@ public class ShapedOreRecipeTFC implements IRecipeTFC
 		int x = 0;
 		for (char chr : shape.toCharArray())
 		{
-			input.add(itemMap.get(chr));
+			Object o = itemMap.get(chr);
+			if(o == null)
+				o = ItemStack.EMPTY;
+			input.add(o);
 		}
 	}
 
