@@ -3,7 +3,6 @@ package com.bioxx.tfc2;
 import java.io.File;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -241,21 +240,11 @@ public class ClientProxy extends CommonProxy
 			@Override
 			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 			{
-				if(pos == null || WorldGen.getInstance() == null)
+				if(pos == null || WorldGen.getInstance() == null || state.getBlock() != TFCBlocks.Vegetation)
 					return 0x55ff55;
-
-				BlockPos veg_pos = pos;
-				Block block = worldIn.getBlockState(veg_pos).getBlock();
-				if (block instanceof BlockAir) {  //A case of sprint-jumping over vegetation
-					veg_pos = veg_pos.down();
-					block = worldIn.getBlockState(veg_pos).getBlock();
-				}
-				if (block instanceof BlockVegetation) {  //Fixes sprint-jumping crashes
-					VegType veg = (VegType)worldIn.getBlockState(veg_pos).getValue(BlockVegetation.META_PROPERTY);
-					if(veg == VegType.DeadBush)
-						return 0xD8D8D8;
-				}
-
+				VegType veg = (VegType)state.getValue(BlockVegetation.META_PROPERTY);
+				if(veg == VegType.DeadBush)
+					return 0xD8D8D8;
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
 
