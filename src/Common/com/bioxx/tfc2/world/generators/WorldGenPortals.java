@@ -53,13 +53,13 @@ public class WorldGenPortals implements IWorldGenerator
 			Point ip = new Point(xMLocal, zMLocal);
 			Point p = new Point(chunkX, chunkZ);
 
-			for(int x = 0; x < 16; x++)
+			//for(int x = 0; x < 16; x++)
 			{
-				for(int z = 0; z < 16; z++)
+				//for(int z = 0; z < 16; z++)
 				{
-					c = map.getClosestCenter(ip.plus(x, z));
-
-					if(c.hasAttribute(Attribute.Portal))
+					//c = map.getClosestCenter(ip.plus(x, z));
+					c = getCenterInChunk(map, chunkX, chunkZ);
+					if(c!= null && c.hasAttribute(Attribute.Portal))
 					{
 						PortalAttribute attr = (PortalAttribute) c.getAttribute(Attribute.Portal);
 						BlockPos portalPos = c.point.plus(xM*4096, zM*4096).toBlockPos().add(0, Global.SEALEVEL+map.convertHeightToMC(c.elevation), 0);
@@ -140,6 +140,35 @@ public class WorldGenPortals implements IWorldGenerator
 				world.setBlockState(localPos, state);
 			}
 		}
+	}
+
+	Center getCenterInChunk(IslandMap map, int x, int z)
+	{
+		Point p = new Point(x, z).toIslandCoord();
+		Center c = map.getClosestCenter(p);
+		Point p2 = c.point.minus(p);
+		if(p2.x > 0 && p2.x < 16 && p2.y > 0 && p2.y < 16)
+			return c;
+
+		p = new Point(x+15, z).toIslandCoord();
+		c = map.getClosestCenter(p);
+		p2 = c.point.minus(p);
+		if(p2.x > 0 && p2.x < 16 && p2.y > 0 && p2.y < 16)
+			return c;
+
+		p = new Point(x, z+15).toIslandCoord();
+		c = map.getClosestCenter(p);
+		p2 = c.point.minus(p);
+		if(p2.x > 0 && p2.x < 16 && p2.y > 0 && p2.y < 16)
+			return c;
+
+		p = new Point(x+15, z+15).toIslandCoord();
+		c = map.getClosestCenter(p);
+		p2 = c.point.minus(p);
+		if(p2.x > 0 && p2.x < 16 && p2.y > 0 && p2.y < 16)
+			return c;
+
+		return null;
 	}
 
 	public static void BuildPath(World world, BlockPos start, BlockPos End, Spline3D spline)

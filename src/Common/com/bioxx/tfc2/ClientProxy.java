@@ -212,7 +212,7 @@ public class ClientProxy extends CommonProxy
 			@Override
 			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 			{
-				if(pos == null || WorldGen.getInstance() == null)
+				if(worldIn == null || pos == null || WorldGen.getInstance() == null)
 					return 0x55ff55;
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
@@ -240,7 +240,7 @@ public class ClientProxy extends CommonProxy
 			@Override
 			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 			{
-				if(pos == null || WorldGen.getInstance() == null || state.getBlock() != TFCBlocks.Vegetation)
+				if(worldIn == null ||pos == null || WorldGen.getInstance() == null || state.getBlock() != TFCBlocks.Vegetation)
 					return 0x55ff55;
 				VegType veg = (VegType)state.getValue(BlockVegetation.META_PROPERTY);
 				if(veg == VegType.DeadBush)
@@ -265,7 +265,7 @@ public class ClientProxy extends CommonProxy
 			@Override
 			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 			{
-				if(pos == null || WorldGen.getInstance() == null)
+				if(worldIn == null ||pos == null || WorldGen.getInstance() == null)
 					return 0x55ff55;
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
