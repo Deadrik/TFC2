@@ -53,7 +53,7 @@ public class WorldGenGrass implements IWorldGenerator
 			{
 				BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
 				closest = map.getClosestCenter(bp);
-				if(world.getBlockState(bp).getBlock() != Blocks.AIR)
+				if(world.getBlockState(bp).getBlock() != Blocks.AIR || closest.biome == BiomeType.BEACH)
 				{
 					continue;
 				}

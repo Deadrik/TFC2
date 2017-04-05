@@ -245,7 +245,7 @@ public class Food
 		for(ItemStack is : list)
 		{
 			long time = Food.getExpirationTimer(is);
-			if(time > 0)
+			if(time > 0 && net.minecraft.client.Minecraft.getMinecraft().world != null)
 				Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime()+time);
 		}
 	}

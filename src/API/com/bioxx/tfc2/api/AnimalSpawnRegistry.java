@@ -133,7 +133,7 @@ public class AnimalSpawnRegistry
 
 			if(m.isLessThan(minMoisture) || m.isGreaterThan(maxMoisture))
 				return false;
-			if(temp.isLessThan(minTemp) || temp.isGreaterThan(maxTemp))
+			if(temp.isCoolerThan(minTemp) || temp.isWarmerThan(maxTemp))
 				return false;
 
 			return true;

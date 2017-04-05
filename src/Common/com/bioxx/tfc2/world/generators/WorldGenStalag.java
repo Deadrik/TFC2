@@ -135,7 +135,7 @@ public class WorldGenStalag implements IWorldGenerator
 	{
 		IBlockState state = world.getBlockState(pos);
 		int height = 0;
-		while(state.getBlock().isAir(state, world, pos.up(height)))
+		while(!Core.isStone(state))
 		{
 			height++;
 			state = world.getBlockState(pos.up(height));

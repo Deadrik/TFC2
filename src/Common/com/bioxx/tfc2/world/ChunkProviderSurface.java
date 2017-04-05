@@ -425,6 +425,8 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		IBlockState dirt = TFCBlocks.Dirt.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
 		IBlockState sand = TFCBlocks.Sand.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
+		IBlockState air = Blocks.AIR.getDefaultState();
+		//sand = Blocks.SAND.getDefaultState();
 		IBlockState freshwater = Blocks.WATER.getDefaultState();//TFCBlocks.FreshWaterStatic.getDefaultState();
 		IBlockState saltwater = Blocks.WATER.getDefaultState();//TFCBlocks.SaltWaterStatic.getDefaultState();
 		IBlockState top = grass;
@@ -470,7 +472,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				{
 					IBlockState block = chunkprimer.getBlockState(x, y, z);
 					IBlockState blockUp = chunkprimer.getBlockState(x, y+1, z);
-
+					BlockPos basePos = new BlockPos(x,y,z);
 
 					if(block == Blocks.STONE.getDefaultState() && blockUp == Blocks.AIR.getDefaultState())
 					{
@@ -484,10 +486,14 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							}
 						}
 
-						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 3)
+						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 2)
 						{
 							BlockPos pos = SmoothCoast(chunkprimer, p, closestCenter, x, z, y);
-							chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), sand);
+
+							if(isAir(chunkprimer, pos.down().north()) || isAir(chunkprimer, pos.down().south()) || isAir(chunkprimer, pos.down().east()) || isAir(chunkprimer, pos.down().west()))
+								chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), air);
+							else
+								chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), sand);
 							chunkprimer.setBlockState(pos.getX(), pos.getY()-1, pos.getZ(), sand);
 							chunkprimer.setBlockState(pos.getX(), pos.getY()-2, pos.getZ(), sand);
 
@@ -496,7 +502,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 					if(block == Blocks.STONE.getDefaultState() && blockUp == Blocks.WATER.getDefaultState())
 					{
-						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 3 && y > 10)
+						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 2 && y > 10)
 						{
 							BlockPos pos = SmoothCoast(chunkprimer, p, closestCenter, x, z, y);
 							chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), sand);
@@ -1097,6 +1103,13 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 	private Block getBlock(ChunkPrimer chunkprimer, int x, int y, int z)
 	{
 		return chunkprimer.getBlockState(x, y, z).getBlock();
+	}
+
+	private boolean isAir(ChunkPrimer chunkprimer, BlockPos pos)
+	{
+		if(pos.getX() < 0 || pos.getX() > 15 || pos.getZ() < 0 || pos.getZ() > 15 || pos.getY() < 0 || pos.getY() > 255)
+			return false;
+		return chunkprimer.getBlockState(pos.getX(), pos.getY(), pos.getZ()) == Blocks.AIR.getDefaultState();
 	}
 
 	protected void carveCaves(ChunkPrimer chunkprimer)

@@ -22,6 +22,11 @@ public class ClientOverrides
 {
 	public static void addInformation(ItemStack is, EntityPlayer player, List arraylist, Item item)
 	{
+		//Do heat stuff
+		if(ItemHeat.Get(is) > 0)
+		{
+			arraylist.add("Temp: " + ItemHeat.Get(is));
+		}
 
 		//Do decay stuff
 		if(FoodRegistry.getInstance().hasKey(is.getItem(), is.getItemDamage()))
