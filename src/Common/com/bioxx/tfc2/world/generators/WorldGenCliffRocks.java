@@ -61,8 +61,15 @@ public class WorldGenCliffRocks implements IWorldGenerator
 			int posY = world.getHeight(pos).getY();			
 			pos = pos.add(0, posY, 0);
 
-			while(world.isAirBlock(pos))
+			while(!Core.isTerrain(world.getBlockState(pos)))
+			{
 				pos = pos.down();
+				if(pos.getY() <= 0)
+				{
+					pos = new BlockPos(pos.getX(), 64, pos.getZ());
+					break;
+				}
+			}
 
 
 			int size = 1+random.nextInt(2);
