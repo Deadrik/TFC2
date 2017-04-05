@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.heat.ItemHeat;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.BlockFirepit;
 import com.bioxx.tfc2.containers.ContainerFakeFirepit;
@@ -31,6 +32,8 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 	private static final int OUTPUT_SLOT = 10;
 	private static final int FUEL_SLOT = 0;
 	private static final int TOOL_SLOT = 1;
+
+	private static final float MAXHEAT = 350f;
 
 	NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(11, ItemStack.EMPTY);
 	ItemStack cookingTool = ItemStack.EMPTY;
@@ -78,7 +81,10 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 			//Handle non-cooking item heating
 			if(fuelTimer > 0)
 			{
-
+				if(this.getStackInSlot(TOOL_SLOT) != ItemStack.EMPTY)
+				{
+					ItemHeat.Increase(getStackInSlot(TOOL_SLOT), 1.0f);
+				}
 			}
 		}
 
