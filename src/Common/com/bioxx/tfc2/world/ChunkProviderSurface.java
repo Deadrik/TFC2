@@ -582,8 +582,8 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			float range = 25f;
 			if(oceanNeighbors.size() > 3)
 				range /=2 ;
-			if(!closestCenter.hasAttribute(Attribute.River))
-				turb += Math.max(this.getBeachTurb(closestCenter, p, 2), 0);
+			//if(!closestCenter.hasAttribute(Attribute.River))
+			//	turb += Math.max(this.getBeachTurb(closestCenter, p, 2), 0);
 			turb *= Math.min(1.5f-(distance/range), 1.0f);
 			turb = (int) Math.max(turb, 0f);
 			pos = pos.down(turb);

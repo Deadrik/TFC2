@@ -74,6 +74,12 @@ public class WorldProviderPaths extends WorldProvider
 		return false;
 	}
 
+	@Override
+	public boolean canRespawnHere()
+	{
+		return false;
+	}
+
 	/**
 	 * Returns a double value representing the Y value relative to the top of the map at which void fog is at its
 	 * maximum. The default factor of 0.03125 relative to 256, for example, means the void fog will be at its maximum at

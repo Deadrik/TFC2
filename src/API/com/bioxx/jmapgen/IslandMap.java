@@ -614,7 +614,7 @@ public class IslandMap
 		{
 			if(temp.point.y > 2048 && temp.point.x > 256 && temp.point.x < 2304)
 			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.SOUTH);
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()+1), EnumFacing.SOUTH);
 				temp.addAttribute(pa);
 				break;
 			}
@@ -625,7 +625,7 @@ public class IslandMap
 		{
 			if(temp.point.x > 2048 && temp.point.y > 256 && temp.point.y < 2304)
 			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.WEST);
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()+1, this.islandParams.getZCoord()), EnumFacing.EAST);
 				temp.addAttribute(pa);
 				break;
 			}
@@ -636,7 +636,7 @@ public class IslandMap
 		{
 			if(temp.point.x < 2048 && temp.point.y > 256 && temp.point.y < 2304)
 			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.WEST);
+				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()-1, this.islandParams.getZCoord()), EnumFacing.WEST);
 				temp.addAttribute(pa);
 				break;
 			}
