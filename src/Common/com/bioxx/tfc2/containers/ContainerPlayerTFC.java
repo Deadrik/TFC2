@@ -123,7 +123,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			return;
 		super.onCraftMatrixChanged(iinventory);
 		ItemStack is2 = CraftingManagerTFC.getInstance().findMatchingRecipe(this.craftMatrix, this.thePlayer.world);
-		if(is2 != ItemStack.EMPTY)
+		if(!is2.isEmpty())
 			this.craftResult.setInventorySlotContents(0, is2);
 
 		Slot craftOut = (Slot) this.inventorySlots.get(0);
@@ -160,8 +160,11 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			for (int i = 0; i < 9; ++i)
 			{
 				ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
-				if (itemstack != null)
+				if (!itemstack.isEmpty())
+				{
 					player.dropItem(itemstack, false);
+					craftMatrix.setInventorySlotContents(i, ItemStack.EMPTY);
+				}
 			}
 
 			this.craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
