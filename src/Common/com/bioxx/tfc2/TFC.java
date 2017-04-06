@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -133,6 +134,45 @@ public class TFC
 	public void modsLoaded(FMLPostInitializationEvent event)
 	{
 		ForgeModContainer.zombieBabyChance = 0;
+		if(Loader.isModLoaded("harvestcraft"))
+		{
+			try 
+			{
+				Class HCclass = Class.forName("com.pam.harvestcraft.HarvestCraft");
+				Object o = HCclass.getDeclaredField("instance").get(null);
+				Object configObj = HCclass.getDeclaredField("config").get(o);
+
+				Class configClass = Class.forName("com.pam.harvestcraft.config.ConfigHandler");
+
+				//Gardens
+				configClass.getDeclaredField("enablearidgardenGeneration").setBoolean(configObj, false);
+				configClass.getDeclaredField("enablefrostgardenGeneration").setBoolean(configObj, false);
+				configClass.getDeclaredField("enableshadedgardenGeneration").setBoolean(configObj, false);
+				configClass.getDeclaredField("enablesoggygardenGeneration").setBoolean(configObj, false);
+				configClass.getDeclaredField("enabletropicalgardenGeneration").setBoolean(configObj, false);
+				configClass.getDeclaredField("enablewindygardenGeneration").setBoolean(configObj, false);
+
+				//Fruit Trees
+				configClass.getDeclaredField("temperatefruittreeRarity").setInt(configObj, 0);
+				configClass.getDeclaredField("tropicalfruittreeRarity").setInt(configObj, 0);
+				configClass.getDeclaredField("coniferousfruittreeRarity").setInt(configObj, 0);
+
+			} catch (ClassNotFoundException e) 
+			{
+				log.warn("Unable to edit harvestcraft config class -> ClassNotFoundException");
+			} catch (NoSuchFieldException e) 
+			{
+				log.warn("Unable to edit harvestcraft config class -> NoSuchFieldException");
+			} catch (SecurityException e) 
+			{
+				log.warn("Unable to edit harvestcraft config class -> SecurityException");
+			} catch (IllegalArgumentException e) {
+				log.warn("Unable to edit harvestcraft config class -> IllegalArgumentException");
+			} catch (IllegalAccessException e) {
+				log.warn("Unable to edit harvestcraft config class -> IllegalAccessException");
+			}
+
+		}
 	}
 
 	@EventHandler
