@@ -51,10 +51,9 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	 *******************************************************************************/
 
 	@Override
-	public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos blockIn)
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
 	{
-
-		super.onNeighborChange(worldIn, pos, blockIn);
+		super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 		checkAndDropBlock((World) worldIn, pos, worldIn.getBlockState(pos));
 	}
 
