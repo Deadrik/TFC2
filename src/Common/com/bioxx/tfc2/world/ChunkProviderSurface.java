@@ -69,6 +69,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 	Plane turbMap;
 	Plane turbMap1_4;
+	Plane beachTurbMap;
 	IslandMap islandMap;
 
 	Vector<Center> centersInChunk;
@@ -101,29 +102,38 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			}
 		}
 
+		turbMap = createNormalTurbMap(seed);
+
+		turbMap1_4 = createPondTurbMap(seed);
+
+		beachTurbMap = createBeachTurbMap(seed);
+	}
+
+	private Plane createNormalTurbMap(long seed)
+	{
 		/**
 		 * Setup our turbulence Module
 		 */
 		Perlin pe = new Perlin();
-		pe.setSeed (0);
+		pe.setSeed (seed);
 		pe.setFrequency (1f/16f);
 		pe.setLacunarity(1.5);
 		pe.setOctaveCount(6);
 		pe.setNoiseQuality (com.bioxx.libnoise.NoiseQuality.BEST);
 
 		Billow b = new Billow();
-		b.setSeed(3);
+		b.setSeed(seed + 3);
 		b.setFrequency (1f/30f);
 		b.setLacunarity(1.5);
 		b.setOctaveCount(2);
 
 		Billow b2 = new Billow();
-		b2.setSeed(50);
+		b2.setSeed(seed + 50);
 		b2.setFrequency (1f/40f);
 		b2.setOctaveCount(2);
 
 		Billow b3 = new Billow();
-		b3.setSeed(500);
+		b3.setSeed(seed + 500);
 		b3.setFrequency (1f/50f);
 		b3.setOctaveCount(3);
 
@@ -140,7 +150,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		m3.setSourceModule(1, pe);
 
 		RidgedMulti r = new RidgedMulti();
-		r.setSeed(300);
+		r.setSeed(seed + 300);
 		r.setFrequency (1f/20f);
 		r.setOctaveCount(2);
 
@@ -151,12 +161,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		//The scalebias makes our noise fit the range 0-1
 		ScaleBias sb2 = new ScaleBias();
 		sb2.setSourceModule(0, m4);
-		//Noise is normally +-2 so we scale by 0.5 to make it +-1.0
-		//sb2.setScale(0.5);
-
-		turbMap = new Plane(sb2);
-
-		turbMap1_4 = createPondTurbMap(seed);
+		return new Plane(sb2);
 	}
 
 	private Plane createPondTurbMap(long seed)
@@ -174,6 +179,38 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		//Noise is normally +-2 so we scale by 0.5 to make it +-1.0
 		sb2.setBias(0.5);
 		sb2.setScale(0.25);
+		return new Plane(sb2);
+	}
+
+	private Plane createBeachTurbMap(long seed)
+	{
+		Billow b = new Billow();
+		b.setSeed(seed + 30);
+		b.setFrequency (1f/15f);
+		b.setLacunarity(1.5);
+		b.setOctaveCount(2);
+
+		Billow b2 = new Billow();
+		b2.setSeed(seed + 300);
+		b2.setFrequency (1f/15f);
+		b2.setOctaveCount(2);
+
+		Billow b3 = new Billow();
+		b3.setSeed(seed + 3000);
+		b3.setFrequency (1f/50f);
+		b3.setOctaveCount(2);
+
+		Max m = new Max();
+		m.setSourceModule(0, b2);
+		m.setSourceModule(1, b);
+
+		Max m2 = new Max();
+		m2.setSourceModule(0, m);
+		m2.setSourceModule(1, b3);
+
+		ScaleBias sb2 = new ScaleBias();
+		sb2.setSourceModule(0, m2);
+
 		return new Plane(sb2);
 	}
 
@@ -221,8 +258,9 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
 		generateTerrain(chunkprimer, chunkX, chunkZ);
-		carveRiverSpline(chunkprimer);
+
 		decorate(chunkprimer, chunkX, chunkZ);
+		carveRiverSpline(chunkprimer);
 
 		carveCaves(chunkprimer);
 		placeOreSeams(chunkprimer);
@@ -488,14 +526,19 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 2)
 						{
-							BlockPos pos = SmoothCoast(chunkprimer, p, closestCenter, x, z, y);
+							BlockPos pos = smoothCoast(chunkprimer, p, closestCenter, x, z, y);
 
+							//This should prevent most cases of doublestacked sand
 							if(isAir(chunkprimer, pos.down().north()) || isAir(chunkprimer, pos.down().south()) || isAir(chunkprimer, pos.down().east()) || isAir(chunkprimer, pos.down().west()))
+							{
 								chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), air);
+								elevationMap[z << 4 | x] = pos.getY()-1;
+							}
 							else
-								chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), sand);
-							chunkprimer.setBlockState(pos.getX(), pos.getY()-1, pos.getZ(), sand);
-							chunkprimer.setBlockState(pos.getX(), pos.getY()-2, pos.getZ(), sand);
+								setState(chunkprimer, pos, sand);
+
+							setState(chunkprimer, pos.down(1), sand);
+							setState(chunkprimer, pos.down(2), sand);
 
 						}
 					}
@@ -504,7 +547,8 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 					{
 						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 2 && y > 10)
 						{
-							BlockPos pos = SmoothCoast(chunkprimer, p, closestCenter, x, z, y);
+							BlockPos pos = smoothCoast(chunkprimer, p, closestCenter, x, z, y);
+							elevationMap[z << 4 | x] = pos.getY();
 							chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), sand);
 							chunkprimer.setBlockState(pos.getX(), pos.getY()-1, pos.getZ(), sand);
 							chunkprimer.setBlockState(pos.getX(), pos.getY()-2, pos.getZ(), sand);
@@ -563,7 +607,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		}
 	}
 
-	private BlockPos SmoothCoast(ChunkPrimer chunkprimer, Point p, Center closestCenter, int x, int z, int y) 
+	private BlockPos smoothCoast(ChunkPrimer chunkprimer, Point p, Center closestCenter, int x, int z, int y) 
 	{
 		IBlockState saltwater = Blocks.WATER.getDefaultState();//TFCBlocks.SaltWaterStatic.getDefaultState();
 		BlockPos pos = new BlockPos(x, y, z);
@@ -594,7 +638,14 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 					chunkprimer.setBlockState(x, i, z, saltwater);
 				}
 				else 
+				{
+					if(elevationMap[z << 4 | x] > i)
+					{
+						elevationMap[z << 4 | x] = i;
+					}
 					chunkprimer.setBlockState(x, i, z, Blocks.AIR.getDefaultState());
+
+				}
 			}
 		}
 		return pos;
@@ -878,27 +929,16 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 						terrainElev = this.elevationMap[(localBlockPos.getZ() << 4) | localBlockPos.getX()];
 						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL);
+						if(center.biome == BiomeType.BEACH)
+						{
+							waterLevel = Math.max(terrainElev, Global.SEALEVEL);
+						}
 
-						/*if(i < 0.2 && riverHeightUpDiff > 5 || terrainElev > hexElev)
-						{
-							float scale = (float)riverHeightUpDiff / 4f;
-							int depth = (int)(scale * (1-(i/0.2)));
-							depth = (int)(scale - depth);
-							waterLevel = Math.max(Math.max(terrainElev-depth, Global.SEALEVEL), terrainElev-1);
-						}
-						else if(i > 0.8 && riverHeightDnDiff > 5)
-						{
-							int depth = (int)((riverHeightDnDiff/4f)*((1-i)/0.2));
-							depth = (int)(riverHeightDnDiff/4f) - depth;
-							waterLevel = Math.max(terrainElev-(1+depth), Global.SEALEVEL);
-						}
-						else
-						{
-							waterLevel = Math.max(terrainElev-1, Global.SEALEVEL-1);
-						}*/
+
 
 						localBlockPos = localBlockPos.add(0, waterLevel, 0);
 						surfaceBlockPos = splineBlockPos.add(0, waterLevel, 0);
+
 						int rd = -rDepth;
 						if(terrainElev != hexElev)
 						{
@@ -927,10 +967,13 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							else if(depth < 0 && depthBlockPos.distanceSq(surfaceBlockPos.getX(), surfaceBlockPos.getY(), surfaceBlockPos.getZ()) <= wSq)
 							{
 								IBlockState fillState = Blocks.FLOWING_WATER.getDefaultState();
+								//if(i > 0.4 && i < 0.6)
+								//	fillState = Blocks.FLOWING_WATER.getDefaultState();
 
 								if(!Core.isWater(s))
 								{
-									setState(chunkprimer, depthBlockPos, fillState);
+									if(depthBlockPos.getY() <= hexElev)
+										setState(chunkprimer, depthBlockPos, fillState);
 									convertRiverBank(chunkprimer, depthBlockPos.down());
 								}
 
@@ -965,7 +1008,8 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				Center closest = islandMap.getClosestCenter(pos.add(this.islandChunkX, 0, this.islandChunkZ));
 				int elev = this.convertElevation(closest.getElevation());
 
-				if(closest.hasAttribute(Attribute.River) && closest.biome == BiomeType.BEACH){}
+				if(closest.hasAttribute(Attribute.River) && 
+						(closest.biome == BiomeType.BEACH  || closest.biome == BiomeType.MARSH)){return;}
 				else
 				{
 					if(elevationMap[pos.getZ() << 4 | pos.getX()] != elev)
@@ -995,7 +1039,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						convertRiverBank(chunkprimer, pos.up(1).east(), true);
 						convertRiverBank(chunkprimer, pos.up(1).west(), true);
 					}
-					while(getState(chunkprimer, pos.up()).getBlock() == Blocks.STONE)
+					while(Core.isTerrain(getState(chunkprimer, pos.up())))
 					{
 						setState(chunkprimer, pos.up(), Blocks.AIR.getDefaultState());
 						pos = pos.up();
