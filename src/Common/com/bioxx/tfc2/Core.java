@@ -82,7 +82,7 @@ public class Core
 
 	public static String textConvert(String s)
 	{
-		return WordUtils.capitalize(s, '_').replaceAll("_", " ");
+		return s.replaceAll("_", " ");
 	}
 
 	public static String[] capitalizeStringArray(String[] array)

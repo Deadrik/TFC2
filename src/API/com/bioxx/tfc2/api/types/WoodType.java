@@ -2,6 +2,8 @@ package com.bioxx.tfc2.api.types;
 
 import net.minecraft.util.IStringSerializable;
 
+import com.bioxx.tfc2.TFC;
+
 public enum WoodType implements IStringSerializable
 {
 	Ash("ash", 0, 12600, 5970),//Black Ash
@@ -105,6 +107,7 @@ public enum WoodType implements IStringSerializable
 			if(WoodType.values()[i].getName().equals(s))
 				return WoodType.values()[i];
 		}
+		TFC.log.info("Can't find tree: " + s);
 		return null;
 	}
 }

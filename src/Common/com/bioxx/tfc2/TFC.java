@@ -221,21 +221,26 @@ public class TFC
 		for (String s : tr.getTreeNames())
 		{
 			String tName = Core.textConvert(s);
+			TFC.log.info("Registering Tree -> "+s);
 			for(int i = 0; i < 3; i++)
 			{
-				String size = i == 0 ? "Small" : i == 1 ? "Normal" : "Large";
+				String size = i == 0 ? "small" : i == 1 ? "normal" : "large";
 				for(int j = 0; j < 99; j++)
 				{
 					String p = treePath + tName + "/"+size+"_"+String.format("%02d", j)+".schematic";
 
 					TreeSchematic schem = new TreeSchematic(p, size+"_"+String.format("%02d", j), WoodType.getTypeFromString(s));
+					//TFC.log.info(p + " | " + schem.getWoodType().getName());
 					if(schem.Load())
 					{
 						schem.PostProcess();
 						TreeRegistry.instance.RegisterSchematic(schem, s);
 					}
 					else
+					{
+						//TFC.log.info("Trouble loading "+p);
 						break;
+					}
 				}
 			}
 		}

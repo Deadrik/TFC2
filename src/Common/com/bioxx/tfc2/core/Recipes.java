@@ -20,7 +20,7 @@ public class Recipes
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneShovel), new ItemStack(TFCItems.StoneShovelHead), "stickWood");
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneHoe), new ItemStack(TFCItems.StoneHoeHead), "stickWood");
 		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCBlocks.Firepit), " Y ","YYY","XXX",'X', new ItemStack(TFCItems.LooseRock, 1, WILDCARD), 'Y', "stickWood");
-		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCBlocks.Firepit), " X ","X  ", 'X', "stickWood");
+		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.Firestarter), " X ","X  ", 'X', "stickWood");
 	}
 
 	public static void RegisterKnappingRecipes()

@@ -118,7 +118,8 @@ public class GuiKnapping extends GuiContainerTFC
 						.append("\"").append(temp[8]).append("\"");
 				StringSelection selection = new StringSelection(out.toString());
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				clipboard.setContents(selection, selection);
+				if(clipboard != null)
+					clipboard.setContents(selection, selection);
 			}
 
 		}

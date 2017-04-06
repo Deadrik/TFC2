@@ -78,7 +78,8 @@ task deobfJar(type: Jar) {
     appendix = 'src'
 }*/
 
-tasks.build.dependsOn('sourceJar', 'deobfJar')
+//Enable this if needed for modding TFC2
+//tasks.build.dependsOn('sourceJar', 'deobfJar')
 
 processResources {
 //First we just copy in the mcmod.info file

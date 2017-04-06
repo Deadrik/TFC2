@@ -43,9 +43,9 @@ public class TreeSchematic extends Schematic
 
 		int num = filename.indexOf('_');
 		String s = filename.substring(0, num);
-		if(s.equals("Large"))
+		if(s.equals("large"))
 			size = 2;
-		else if(s.equals("Normal"))
+		else if(s.equals("normal"))
 			size = 1;
 		else
 			size = 0;

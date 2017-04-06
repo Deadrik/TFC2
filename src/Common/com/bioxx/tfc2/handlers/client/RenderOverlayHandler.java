@@ -185,7 +185,7 @@ public class RenderOverlayHandler
 	public void renderText(RenderGameOverlayEvent.Text event)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		if(mc.world.provider.getDimension() == 0 && WorldGen.getInstance() != null)
+		if(mc.world.provider.getDimension() == 0 && WorldGen.getInstance() != null && !mc.playerController.gameIsSurvivalOrAdventure())
 		{
 			int xM = ((int)(mc.player.posX) >> 12);
 			int zM = ((int)(mc.player.posZ) >> 12);
