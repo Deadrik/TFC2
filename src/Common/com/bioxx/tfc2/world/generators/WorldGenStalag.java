@@ -14,6 +14,7 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.blocks.terrain.BlockStoneStalac;
 import com.bioxx.tfc2.blocks.terrain.BlockStoneStalag;
 import com.bioxx.tfc2.world.WorldGen;
@@ -88,9 +89,9 @@ public class WorldGenStalag implements IWorldGenerator
 							}
 							else if (height >= 7)
 							{
-								setStone(world, pos, stalac.withProperty(BlockStoneStalag.SIZE_PROPERTY, 0));
-								setStone(world, pos.up(1), stalac.withProperty(BlockStoneStalag.SIZE_PROPERTY, 1));
-								setStone(world, pos.up(2), stalac.withProperty(BlockStoneStalag.SIZE_PROPERTY, 2));
+								setStone(world, pos, stalac.withProperty(BlockStoneStalac.SIZE_PROPERTY, 0));
+								setStone(world, pos.up(1), stalac.withProperty(BlockStoneStalac.SIZE_PROPERTY, 1));
+								setStone(world, pos.up(2), stalac.withProperty(BlockStoneStalac.SIZE_PROPERTY, 2));
 
 								setStone(world, pos.up(height - 3), stalag.withProperty(BlockStoneStalag.SIZE_PROPERTY, 2));
 								setStone(world, pos.up(height - 2), stalag.withProperty(BlockStoneStalag.SIZE_PROPERTY, 1));
@@ -98,9 +99,9 @@ public class WorldGenStalag implements IWorldGenerator
 							}
 							else if(height == 7)
 							{
-								setStone(world, pos, stalac.withProperty(BlockStoneStalag.SIZE_PROPERTY, 0));
-								setStone(world, pos.up(1), stalac.withProperty(BlockStoneStalag.SIZE_PROPERTY, 1));
-								setStone(world, pos.up(2), stalac.withProperty(BlockStoneStalag.SIZE_PROPERTY, 2));
+								setStone(world, pos, stalac.withProperty(BlockStoneStalac.SIZE_PROPERTY, 0));
+								setStone(world, pos.up(1), stalac.withProperty(BlockStoneStalac.SIZE_PROPERTY, 1));
+								setStone(world, pos.up(2), stalac.withProperty(BlockStoneStalac.SIZE_PROPERTY, 2));
 
 								setStone(world, pos.up(4), stalag.withProperty(BlockStoneStalag.SIZE_PROPERTY, 2));
 								setStone(world, pos.up(5), stalag.withProperty(BlockStoneStalag.SIZE_PROPERTY, 1));
@@ -108,9 +109,9 @@ public class WorldGenStalag implements IWorldGenerator
 							}
 							else if(height == 8)
 							{
-								setStone(world, pos, stalac.withProperty(BlockStoneStalag.SIZE_PROPERTY, 0));
-								setStone(world, pos.up(1), stalac.withProperty(BlockStoneStalag.SIZE_PROPERTY, 1));
-								setStone(world, pos.up(2), stalac.withProperty(BlockStoneStalag.SIZE_PROPERTY, 2));
+								setStone(world, pos, stalac.withProperty(BlockStoneStalac.SIZE_PROPERTY, 0));
+								setStone(world, pos.up(1), stalac.withProperty(BlockStoneStalac.SIZE_PROPERTY, 1));
+								setStone(world, pos.up(2), stalac.withProperty(BlockStoneStalac.SIZE_PROPERTY, 2));
 
 
 								setStone(world, pos.up(5), stalag.withProperty(BlockStoneStalag.SIZE_PROPERTY, 2));
@@ -139,7 +140,7 @@ public class WorldGenStalag implements IWorldGenerator
 		{
 			height++;
 			state = world.getBlockState(pos.up(height));
-			if(height > 20)
+			if(height > 20 || (!Core.isStone(state) && !state.getBlock().isAir(state, world, pos)))
 				return 0;
 		}
 		return height;
@@ -147,7 +148,7 @@ public class WorldGenStalag implements IWorldGenerator
 
 	private int mcElev(double e)
 	{
-		return 64 + (int)(e*map.getParams().islandMaxHeight);
+		return Global.SEALEVEL + (int)(e*map.getParams().islandMaxHeight);
 	}
 
 }
