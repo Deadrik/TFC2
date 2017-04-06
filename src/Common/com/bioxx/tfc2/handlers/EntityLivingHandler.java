@@ -16,6 +16,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.GameType;
 
 import net.minecraftforge.client.event.FOVUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -347,5 +348,17 @@ public class EntityLivingHandler
 			event.drops.clear();
 			event.drops.addAll(drop);
 		}*/
+	}
+
+	@SubscribeEvent
+	public void onLivingAttack(LivingAttackEvent event)
+	{
+		if(event.getSource().getDamageType() == "player" && event.getSource().getEntity() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) event.getSource().getEntity();
+			ItemStack is = player.getHeldItemMainhand();
+			if(is.isEmpty())
+				event.setCanceled(true);
+		}
 	}
 }
