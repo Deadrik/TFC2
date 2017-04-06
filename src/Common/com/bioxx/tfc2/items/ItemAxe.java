@@ -38,7 +38,7 @@ public class ItemAxe extends ItemTerraTool
 		if(worldIn.isRemote || !playerIn.capabilities.isCreativeMode)
 			return EnumActionResult.FAIL;
 		IBlockState state = worldIn.getBlockState(pos);
-		if(state.getBlock() == TFCBlocks.Sapling)
+		if(playerIn.isCreative() && state.getBlock() == TFCBlocks.Sapling)
 			((BlockSapling)state.getBlock()).grow(worldIn, worldIn.rand, pos, state);
 
 		return EnumActionResult.SUCCESS;
@@ -55,6 +55,7 @@ public class ItemAxe extends ItemTerraTool
 
 		BlockPos scanPos;
 		IBlockState scanState;
+		int count = 0;
 		while(!queue.isEmpty())
 		{
 			scanPos = queue.pop();
@@ -63,6 +64,7 @@ public class ItemAxe extends ItemTerraTool
 			{
 				scanState.getBlock().dropBlockAsItem(worldIn, scanPos, scanState, 0);
 				worldIn.setBlockToAir(scanPos);
+				count++;
 				Iterable<BlockPos> list = BlockPos.getAllInBox(scanPos.add(-1, 0, -1), scanPos.add(1, 1, 1));
 				for(BlockPos p : list)
 				{
@@ -71,6 +73,8 @@ public class ItemAxe extends ItemTerraTool
 			}
 		}
 
+		if(count > 0)
+			stack.damageItem(count, entityLiving);
 
 		return false;
 	}
