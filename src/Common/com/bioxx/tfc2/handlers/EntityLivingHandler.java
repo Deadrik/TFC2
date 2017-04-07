@@ -29,6 +29,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
 import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.api.heat.ItemHeat;
 import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
@@ -106,6 +107,11 @@ public class EntityLivingHandler
 									player.inventory.addItemStackToInventory(out);
 								}
 							}
+						}
+
+						if(ItemHeat.Get(is) > 0)
+						{
+							ItemHeat.Decrease(is, 1);
 						}
 					}
 				}

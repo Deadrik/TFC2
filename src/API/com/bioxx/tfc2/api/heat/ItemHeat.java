@@ -49,9 +49,12 @@ public class ItemHeat
 
 		float heat = is.getTagCompound().getFloat(HEAT_TAG) - heatToSub;
 
-		if(heat < 0)
+		if(heat <= 0)
 			is.getTagCompound().removeTag(HEAT_TAG);
 		else
 			is.getTagCompound().setFloat(HEAT_TAG, heat);
+
+		if(is.getTagCompound().getSize() == 0)
+			is.setTagCompound(null);
 	}
 }
