@@ -27,8 +27,6 @@ public class ItemTerra extends Item
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
 		super.addInformation(is, player, arraylist, flag);
-
-
 	}
 
 	@Override
@@ -59,7 +57,7 @@ public class ItemTerra extends Item
 		showInCreative = b;
 	}
 
-	@Override
+	/*@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		if(!this.hasSubtypes)
@@ -68,5 +66,5 @@ public class ItemTerra extends Item
 		{
 			return super.getUnlocalizedName(stack) + "." + subTypeNames[stack.getItemDamage()];
 		}
-	}
+	}*/
 }
