@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -239,14 +240,13 @@ public class Food
 		subItems.add(is);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public static void addDecayTimerForCreative(List<ItemStack> list)
+	public static void addDecayTimerForCreative(World world, List<ItemStack> list)
 	{
 		for(ItemStack is : list)
 		{
 			long time = Food.getExpirationTimer(is);
-			if(time > 0 && net.minecraft.client.Minecraft.getMinecraft().world != null)
-				Food.setDecayTimer(is, net.minecraft.client.Minecraft.getMinecraft().world.getWorldTime()+time);
+			if(time > 0 && world != null)
+				Food.setDecayTimer(is, world.getWorldTime()+time);
 		}
 	}
 

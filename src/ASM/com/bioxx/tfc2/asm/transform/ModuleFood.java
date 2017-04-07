@@ -8,6 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
@@ -45,7 +46,7 @@ public class ModuleFood implements IClassTransformer
 				{
 					msg += m.name+"("+ m.desc +")"+", ";
 				}
-				throw new RuntimeException(msg);
+				TFC.log.warn(msg);
 			}
 
 			return ASMHelper.writeClassToBytes(classNode);
@@ -89,7 +90,7 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.insertBefore(finalNode, toInject);
 			}
 			else
-				throw new RuntimeException("ItemFishFood: getSubItems (a) method not found");
+				TFC.log.warn("ItemFishFood: getSubItems (a) method not found");
 
 			return ASMHelper.writeClassToBytes(classNode);
 		}
@@ -174,7 +175,7 @@ public class ModuleFood implements IClassTransformer
 						defaultConstructor.instructions.insertBefore(finalNode, toInject);
 					}
 					else
-						throw new RuntimeException("FoodStats: defaultConstructor()V method not found");
+						TFC.log.warn("FoodStats: defaultConstructor()V method not found");
 				}
 			}
 
@@ -190,7 +191,7 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.insert(finalNode, toInject);
 			}
 			else
-				throw new RuntimeException("FoodStats: addStats (a) method not found");
+				TFC.log.warn("FoodStats: addStats (a) method not found");
 
 			methodNode = ASMHelper.findMethodNodeOfClass(classNode, "a", "readNBT", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.NBTTAGCOMPOUND)));
 			if (methodNode != null)
@@ -204,7 +205,7 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.insert(finalNode, toInject);
 			}
 			else
-				throw new RuntimeException("FoodStats: readNBT (a) method not found");
+				TFC.log.warn("FoodStats: readNBT (a) method not found");
 
 			methodNode = ASMHelper.findMethodNodeOfClass(classNode, "b", "writeNBT", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.NBTTAGCOMPOUND)));
 			if (methodNode != null)
@@ -218,7 +219,7 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.insert(finalNode, toInject);
 			}
 			else
-				throw new RuntimeException("FoodStats: writeNBT (b) method not found");
+				TFC.log.warn("FoodStats: writeNBT (b) method not found");
 
 			return ASMHelper.writeClassToBytes(classNode);
 		}
@@ -232,7 +233,7 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.remove(finalNode);
 			}
 			else
-				throw new RuntimeException("BlockPamCrop: isSuitableSoilBlock method not found");
+				TFC.log.warn("BlockPamCrop: isSuitableSoilBlock method not found");
 		}
 		/*else if (transformedName.equals("net.minecraft.item.ItemSeedFood"))
 		{
