@@ -28,6 +28,6 @@ public class BlockHarvestHandler
 	{
 		Block block = event.getState().getBlock();
 		if(block == aridGarden || block == frostGarden || block == tropicalGarden || block == windyGarden || block == shadedGarden || block == soggyGarden)
-			Food.addDecayTimerForCreative(event.getDrops());
+			Food.addDecayTimerForCreative(event.getWorld(), event.getDrops());
 	}
 }

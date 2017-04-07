@@ -277,7 +277,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			else
 				slot.onSlotChanged();
 
-			if (slotStack.getMaxStackSize() == origStack.getMaxStackSize())
+			if (slotStack.getCount() == origStack.getCount())
 				return ItemStack.EMPTY;
 
 			slot.onTake(player, slotStack);

@@ -30,6 +30,7 @@ public class ASMConstants
 	public static final String STAT_BASE = "net.minecraft.stats.StatBase";
 	public static final String STAT_LIST = "net.minecraft.stats.StatList";
 	public static final String WORLD = "net.minecraft.world.World";
+	public static final String WORLDCLIENT = "net.minecraft.client.multiplayer.WorldClient";
 	public static final String ENTITY_RENDERER = "net.minecraft.client.renderer.EntityRenderer";
 	public static final String ICHUNKGENERATOR = "net.minecraft.world.chunk.IChunkGenerator";
 	public static final String ICHUNKPROVIDER = "net.minecraft.world.chunk.IChunkProvider";

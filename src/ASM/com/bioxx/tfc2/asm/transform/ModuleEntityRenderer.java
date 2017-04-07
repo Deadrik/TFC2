@@ -2,6 +2,7 @@ package com.bioxx.tfc2.asm.transform;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.asm.ASMConstants;
 import com.bioxx.tfc2.asm.ASMHelper;
 import com.bioxx.tfc2.asm.ObfHelper;
@@ -34,7 +35,9 @@ public class ModuleEntityRenderer implements IClassTransformer
 			return ASMHelper.writeClassToBytes(classNode);
 		}
 		else
-			throw new RuntimeException("EntityRenderer: addRainParticles (q) method not found");
+			TFC.log.warn("EntityRenderer: addRainParticles (q) method not found");
+
+		return basicClass;
 	}
 
 	private void addRainParticlesHook(ClassNode classNode, MethodNode method)

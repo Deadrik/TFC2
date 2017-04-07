@@ -148,7 +148,7 @@ public class Global
 		while(iter.hasNext())
 		{
 			ItemStack iterStack = (ItemStack) iter.next();
-			if(ItemStack.areItemStacksEqual(iterStack, is))
+			if(iterStack.isItemEqual(is))
 				return fuelMap.get(iterStack);
 		}
 		return -1;

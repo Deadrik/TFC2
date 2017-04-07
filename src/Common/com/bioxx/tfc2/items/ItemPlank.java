@@ -1,8 +1,14 @@
 package com.bioxx.tfc2.items;
 
+import java.util.List;
+
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.interfaces.IRegisterSelf;
 
 public class ItemPlank extends ItemTerra implements IRegisterSelf
@@ -16,7 +22,18 @@ public class ItemPlank extends ItemTerra implements IRegisterSelf
 				"pine","sequoia","spruce","sycamore",
 				"white cedar","willow","kapok","acacia",
 				"rosewood","blackwood","palm"});
-		this.setCreativeTab(CreativeTabs.FOOD);
+		this.setCreativeTab(CreativeTabs.MATERIALS);
+	}
+
+	@Override
+	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
+	{
+		super.addInformation(is, player, arraylist, flag);
+
+		if (is.getItemDamage() < Global.WOOD_STANDARD.length)
+			arraylist.add(TextFormatting.DARK_GRAY + Core.translate("global." + Global.WOOD_STANDARD[is.getItemDamage()]));
+		else
+			arraylist.add(TextFormatting.DARK_RED + Core.translate("global.unknown"));
 	}
 
 	@Override
@@ -28,6 +45,6 @@ public class ItemPlank extends ItemTerra implements IRegisterSelf
 	@Override
 	public String getPath()
 	{
-		return "Wood/Plank/";
+		return "wood/plank/";
 	}
 }

@@ -26,8 +26,8 @@ public class ItemTerraBlock extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack is)
 	{
-		if(MetaNames != null && is.getItemDamage() < MetaNames.length)
-			return super.getUnlocalizedName() + "." + MetaNames[is.getItemDamage()];
+		//if(MetaNames != null && is.getItemDamage() < MetaNames.length)
+		//	return super.getUnlocalizedName() + "." + MetaNames[is.getItemDamage()];
 		return super.getUnlocalizedName();
 	}
 

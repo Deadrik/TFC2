@@ -8,6 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
@@ -45,7 +46,7 @@ public class ModuleFood implements IClassTransformer
 				{
 					msg += m.name+"("+ m.desc +")"+", ";
 				}
-				throw new RuntimeException(msg);
+				TFC.log.warn(msg);
 			}
 
 			return ASMHelper.writeClassToBytes(classNode);
@@ -84,12 +85,14 @@ public class ModuleFood implements IClassTransformer
 			{
 				AbstractInsnNode finalNode = ASMHelper.findLastInstructionWithOpcode(methodNode, Opcodes.RETURN);
 				InsnList toInject = new InsnList();
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, ObfHelper.getInternalClassName(ASMConstants.MINECRAFT),ObfHelper.chooseObf("z","getMinecraft"),ASMHelper.toMethodDescriptor(ObfHelper.getInternalClassName(ASMConstants.MINECRAFT)), false));
+				toInject.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.getInternalClassName(ASMConstants.MINECRAFT), ObfHelper.chooseObf("f","world"), ASMHelper.toDescriptor(ObfHelper.getInternalClassName(ASMConstants.WORLDCLIENT))));
 				toInject.add(new VarInsnNode(Opcodes.ALOAD, 3));
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","addDecayTimerForCreative",ASMHelper.toMethodDescriptor("V",ASMConstants.LIST), false));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","addDecayTimerForCreative",ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.WORLD),ASMConstants.LIST), false));
 				methodNode.instructions.insertBefore(finalNode, toInject);
 			}
 			else
-				throw new RuntimeException("ItemFishFood: getSubItems (a) method not found");
+				TFC.log.warn("ItemFishFood: getSubItems (a) method not found");
 
 			return ASMHelper.writeClassToBytes(classNode);
 		}
@@ -174,7 +177,7 @@ public class ModuleFood implements IClassTransformer
 						defaultConstructor.instructions.insertBefore(finalNode, toInject);
 					}
 					else
-						throw new RuntimeException("FoodStats: defaultConstructor()V method not found");
+						TFC.log.warn("FoodStats: defaultConstructor()V method not found");
 				}
 			}
 
@@ -190,7 +193,7 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.insert(finalNode, toInject);
 			}
 			else
-				throw new RuntimeException("FoodStats: addStats (a) method not found");
+				TFC.log.warn("FoodStats: addStats (a) method not found");
 
 			methodNode = ASMHelper.findMethodNodeOfClass(classNode, "a", "readNBT", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.NBTTAGCOMPOUND)));
 			if (methodNode != null)
@@ -204,7 +207,7 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.insert(finalNode, toInject);
 			}
 			else
-				throw new RuntimeException("FoodStats: readNBT (a) method not found");
+				TFC.log.warn("FoodStats: readNBT (a) method not found");
 
 			methodNode = ASMHelper.findMethodNodeOfClass(classNode, "b", "writeNBT", ASMHelper.toMethodDescriptor("V",ObfHelper.toObfClassName(ASMConstants.NBTTAGCOMPOUND)));
 			if (methodNode != null)
@@ -218,7 +221,7 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.insert(finalNode, toInject);
 			}
 			else
-				throw new RuntimeException("FoodStats: writeNBT (b) method not found");
+				TFC.log.warn("FoodStats: writeNBT (b) method not found");
 
 			return ASMHelper.writeClassToBytes(classNode);
 		}
@@ -232,7 +235,7 @@ public class ModuleFood implements IClassTransformer
 				methodNode.instructions.remove(finalNode);
 			}
 			else
-				throw new RuntimeException("BlockPamCrop: isSuitableSoilBlock method not found");
+				TFC.log.warn("BlockPamCrop: isSuitableSoilBlock method not found");
 		}
 		/*else if (transformedName.equals("net.minecraft.item.ItemSeedFood"))
 		{
@@ -264,8 +267,6 @@ public class ModuleFood implements IClassTransformer
 		list.add(new VarInsnNode(Opcodes.ALOAD, 3));
 		list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ClientOverrides","addInformation",ASMHelper.toMethodDescriptor("V",ASMConstants.ITEMSTACK, ASMConstants.PLAYER, ASMConstants.LIST, ASMConstants.ITEM), false));
-
-
 		method.instructions.insert(list);
 	}
 

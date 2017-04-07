@@ -257,6 +257,9 @@ public class WorldGenTrees implements IWorldGenerator
 		int radius = Math.max(1, growthStage);
 		int count = 0;
 
+		if(!world.isAirBlock(aPos))
+			return false;
+
 		//this should validate the ground
 		for(int i = -radius; i <= radius; i++)
 		{
