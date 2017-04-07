@@ -83,9 +83,9 @@ public class TeleporterPaths extends Teleporter
 
 	private BlockPos findPortal(BlockPos pos)
 	{
-		for(int x = -30; x < 31; x++)
+		for(int x = -64; x < 65; x++)
 		{
-			for(int z = -30; z < 31; z++)
+			for(int z = -64; z < 65; z++)
 			{
 				for(int y = -20; y < 20; y++)
 				{
@@ -97,7 +97,7 @@ public class TeleporterPaths extends Teleporter
 				}
 			}
 		}
-		return BlockPos.ORIGIN;
+		return pos;
 	}
 
 	@Override
