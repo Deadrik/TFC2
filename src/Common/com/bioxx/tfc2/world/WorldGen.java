@@ -16,12 +16,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.bioxx.jmapgen.*;
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.IslandParameters.Feature.FeatureSig;
+import com.bioxx.jmapgen.RandomCollection;
 import com.bioxx.tfc2.TFC;
-import com.bioxx.tfc2.api.*;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
+import com.bioxx.tfc2.api.Crop;
+import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.events.IslandGenEvent;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
 import com.bioxx.tfc2.api.types.ClimateTemp;
@@ -179,14 +184,13 @@ public class WorldGen implements IThreadCompleteListener
 		Global.EVENT_BUS.post(preEvent);
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
 		mapgen.newIsland(preEvent.params);
-
+		mapgen.generateFull();
+		//Make sure we don't access IslandData until after generateFull because the data may become lost
 		mapgen.getIslandData().islandLevel = Math.abs(x);
 		if(x == 0)
 		{
 			mapgen.getIslandData().unlockIsland();
 		}
-
-		mapgen.generateFull();
 		IslandGenEvent.Post postEvent = new IslandGenEvent.Post(mapgen);
 		Global.EVENT_BUS.post(postEvent);
 		CachedIsland ci = new CachedIsland(postEvent.islandMap);

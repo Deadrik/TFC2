@@ -3,7 +3,6 @@ package com.bioxx.tfc2.core;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC.RecipeType;
@@ -19,8 +18,7 @@ public class Recipes
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneKnife), new ItemStack(TFCItems.StoneKnifeHead), "stickWood");
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneShovel), new ItemStack(TFCItems.StoneShovelHead), "stickWood");
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneHoe), new ItemStack(TFCItems.StoneHoeHead), "stickWood");
-		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCBlocks.Firepit), " Y ","YYY","XXX",'X', new ItemStack(TFCItems.LooseRock, 1, WILDCARD), 'Y', "stickWood");
-		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCBlocks.Firepit), " X ","X  ", 'X', "stickWood");
+		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.Firestarter), " X","X ", 'X', "stickWood");
 	}
 
 	public static void RegisterKnappingRecipes()

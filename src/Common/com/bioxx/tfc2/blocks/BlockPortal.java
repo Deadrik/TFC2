@@ -144,7 +144,7 @@ public class BlockPortal extends BlockTerra
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return getMetaForAxis((EnumFacing.Axis)state.getValue(AXIS)) + ((Boolean) state.getValue(CENTER) ? 7 : 0);
+		return getMetaForAxis((EnumFacing.Axis)state.getValue(AXIS)) + ((Boolean) state.getValue(CENTER) ? 8 : 0);
 	}
 
 	@Override

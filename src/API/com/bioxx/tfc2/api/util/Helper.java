@@ -144,4 +144,33 @@ public class Helper
 
 		return filenames;
 	}
+
+	public BlockPos Lerp(BlockPos start, BlockPos end, float percent)
+	{
+		BlockPos b = end.add(start);
+		return start.add(new BlockPos(percent*b.getX(), percent*b.getY(), percent*b.getZ()));
+	}
+
+	/**
+	 * This is a 2d equation using X and Z coordinates
+	 */
+	public static BlockPos getPerpendicularPoint(BlockPos A, BlockPos B, float distance)
+	{
+		BlockPos M = divide(A.add(B), 2);
+		BlockPos p = A.subtract(B);
+		BlockPos n = new BlockPos(-p.getZ(),p.getY(), p.getX());
+		float norm_length = (float) Math.sqrt((n.getX() * n.getX()) + (n.getZ() * n.getZ()));
+		n = divide(n, norm_length);
+		return M.add(multiply(n, distance));
+	}
+
+	public static BlockPos divide(BlockPos A, float divisor)
+	{
+		return new BlockPos(A.getX()/divisor, A.getY()/divisor, A.getZ()/divisor);
+	}
+
+	public static BlockPos multiply(BlockPos A, float mult)
+	{
+		return new BlockPos(A.getX()*mult, A.getY()*mult, A.getZ()*mult);
+	}
 }

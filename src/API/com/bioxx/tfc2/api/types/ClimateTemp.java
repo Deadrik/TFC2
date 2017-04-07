@@ -42,22 +42,22 @@ public enum ClimateTemp
 		return weatherVariance;
 	}
 
-	public boolean isLessThan(ClimateTemp m)
+	public boolean isCoolerThan(ClimateTemp m)
 	{
 		return mapTemp < m.getMapTemp();
 	}
 
-	public boolean isLessThanOrEqual(ClimateTemp m)
+	public boolean isCoolerThanOrEqual(ClimateTemp m)
 	{
 		return mapTemp <= m.getMapTemp();
 	}
 
-	public boolean isGreaterThan(ClimateTemp m)
+	public boolean isWarmerThan(ClimateTemp m)
 	{
 		return mapTemp > m.getMapTemp();
 	}
 
-	public boolean isGreaterThanOrEqual(ClimateTemp m)
+	public boolean isWarmerThanOrEqual(ClimateTemp m)
 	{
 		return mapTemp >= m.getMapTemp();
 	}

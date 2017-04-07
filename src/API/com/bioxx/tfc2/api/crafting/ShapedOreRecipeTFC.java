@@ -246,6 +246,9 @@ public class ShapedOreRecipeTFC implements IRecipeTFC
 					}
 				}
 
+				if(target == null)
+					continue;
+
 				ItemStack slot = inv.getStackInRowAndColumn(x, y);
 
 				if (target instanceof ItemStack)

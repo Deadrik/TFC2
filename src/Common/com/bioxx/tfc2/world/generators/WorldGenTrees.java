@@ -17,6 +17,7 @@ import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.Schematic;
 import com.bioxx.tfc2.api.Schematic.SchemBlock;
 import com.bioxx.tfc2.api.TFCOptions;
@@ -40,7 +41,6 @@ public class WorldGenTrees implements IWorldGenerator
 	{
 		if(world.provider.getDimension() != 0)
 			return;
-
 		chunkX *= 16;
 		chunkZ *= 16;
 
@@ -78,7 +78,6 @@ public class WorldGenTrees implements IWorldGenerator
 			}
 		}
 
-
 		for(int l = 0; l < numTrees; l++)
 		{
 			double rarity = random.nextDouble();
@@ -101,15 +100,16 @@ public class WorldGenTrees implements IWorldGenerator
 	{
 		tsm = TreeRegistry.instance.managerFromString(wood);
 		tc = TreeRegistry.instance.treeFromString(wood);
-
 		if(tsm == null || tc == null)
+		{
+			TFC.log.info("Can't locate :" + wood);
 			return new TreeReturn(TreeReturnEnum.None, 0);
+		}
 
 		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
 		treePos = world.getTopSolidOrLiquidBlock(treePos);
 		Point p = new Point(treePos.getX(), treePos.getZ()).toIslandCoord();
 		Center c = m.getClosestCenter(p);
-
 		//Obviously we arent going to gen in an ocean hex so we can speed up some generation by skipping this location
 		if(c.hasMarker(Marker.Ocean))
 		{
@@ -126,7 +126,6 @@ public class WorldGenTrees implements IWorldGenerator
 			growthStage = random.nextInt(2);
 		}
 		TreeReturnEnum grown = TreeReturnEnum.None;
-
 		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
@@ -186,7 +185,6 @@ public class WorldGenTrees implements IWorldGenerator
 		int index;
 		int id;
 		int meta;
-
 		BlockPos treePos = pos.add(1, 0, 1);
 		boolean capture = world.captureBlockSnapshots;
 		world.captureBlockSnapshots = false;

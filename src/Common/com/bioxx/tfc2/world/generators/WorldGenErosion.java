@@ -1,6 +1,5 @@
 package com.bioxx.tfc2.world.generators;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.init.Blocks;
@@ -11,7 +10,9 @@ import net.minecraft.world.chunk.IChunkProvider;
 
 import net.minecraftforge.fml.common.IWorldGenerator;
 
+import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.Spline3D;
+import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
 
 public class WorldGenErosion implements IWorldGenerator
@@ -37,50 +38,8 @@ public class WorldGenErosion implements IWorldGenerator
 			int x = random.nextInt(16);
 			int z = random.nextInt(16);
 
-			int midHeight = Core.getHeight(world, bp.getX()+x, bp.getZ()+z);
-			BlockPos localPos = bp.add(x, midHeight, z);
-			BlockPos northPos = localPos.add(0, 0, 4);
-			BlockPos southPos = localPos.add(0, 0, -4);
-			BlockPos eastPos = localPos.add(4, 0, 0);
-			BlockPos westPos = localPos.add(-4, 0, 0);
-
-			int localHeight = Core.getHeight(world, localPos.getX(), localPos.getZ());
-			if(midHeight - world.getHeight(northPos).getY() > 5)
-			{
-				ArrayList<BlockPos> list = new ArrayList<BlockPos>();
-				list.add(southPos.add(getRange(random, 5), 0, 0));
-				list.add(localPos);
-				list.add(northPos.add(getRange(random, 5), 2, 0));
-
-				carve(world, new Spline3D(list));
-			}
-			else if(midHeight - world.getHeight(southPos).getY() > 5)
-			{
-				ArrayList<BlockPos> list = new ArrayList<BlockPos>();
-				list.add(northPos.add(getRange(random, 5), 0, 0));
-				list.add(localPos);
-				list.add(southPos.add(getRange(random, 5), 2, 0));
-
-				carve(world, new Spline3D(list));
-			}
-			else if(midHeight - world.getHeight(eastPos).getY() > 5)
-			{
-				ArrayList<BlockPos> list = new ArrayList<BlockPos>();
-				list.add(westPos.add(0, 0, getRange(random, 5)));
-				list.add(localPos);
-				list.add(eastPos.add(0, 2, getRange(random, 5)));
-
-				carve(world, new Spline3D(list));
-			}
-			else if(midHeight - world.getHeight(westPos).getY() > 5)
-			{
-				ArrayList<BlockPos> list = new ArrayList<BlockPos>();
-				list.add(eastPos.add(0, 0, getRange(random, 5)));
-				list.add(localPos);
-				list.add(westPos.add(0, 2, getRange(random, 5)));
-
-				carve(world, new Spline3D(list));
-			}
+			IslandMap map = Core.getMapForWorld(world, new BlockPos(chunkX+x, 0, chunkZ+z));
+			Center c = map.getClosestCenter(new BlockPos(chunkX+x, 0, chunkZ+z));
 		}
 	}
 
@@ -125,4 +84,6 @@ public class WorldGenErosion implements IWorldGenerator
 	{
 		return a.distanceSq(b.getX(), b.getY(), b.getZ());
 	}
+
+
 }

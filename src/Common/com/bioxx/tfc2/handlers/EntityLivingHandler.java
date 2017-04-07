@@ -16,6 +16,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.GameType;
 
 import net.minecraftforge.client.event.FOVUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -28,6 +29,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
 import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.api.heat.ItemHeat;
 import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
@@ -105,6 +107,11 @@ public class EntityLivingHandler
 									player.inventory.addItemStackToInventory(out);
 								}
 							}
+						}
+
+						if(ItemHeat.Get(is) > 0)
+						{
+							ItemHeat.Decrease(is, 1);
 						}
 					}
 				}
@@ -347,5 +354,17 @@ public class EntityLivingHandler
 			event.drops.clear();
 			event.drops.addAll(drop);
 		}*/
+	}
+
+	@SubscribeEvent
+	public void onLivingAttack(LivingAttackEvent event)
+	{
+		if(event.getSource().getDamageType() == "player" && event.getSource().getEntity() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) event.getSource().getEntity();
+			ItemStack is = player.getHeldItemMainhand();
+			if(is.isEmpty())
+				event.setCanceled(true);
+		}
 	}
 }

@@ -361,6 +361,8 @@ public class PrintImageMapCommand extends CommandBase
 				{
 					poly.addPoint((int)cn.point.x, (int)cn.point.y);
 				}
+				if(c.hasAttribute(Attribute.Portal))
+					graphics.setColor(Color.ORANGE);		
 				graphics.fillPolygon(poly);
 				graphics.setColor(Color.black);	
 				graphics.drawPolygon(poly);

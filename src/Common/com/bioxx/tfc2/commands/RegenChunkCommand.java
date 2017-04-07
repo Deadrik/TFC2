@@ -29,7 +29,7 @@ public class RegenChunkCommand extends CommandBase
 		}
 		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
-		if(params.length == 1)
+		if(player.getEntityWorld().provider.getDimension() == 0 && params.length == 1)
 		{
 			int radius = Integer.parseInt(params[0]);
 
@@ -47,6 +47,24 @@ public class RegenChunkCommand extends CommandBase
 					old.setStorageArrays(c.getBlockStorageArray());
 					c.onChunkLoad();
 					c.setChunkModified();
+					//old.populateChunk(cps, cps.chunkGenerator);
+				}
+			}
+
+			for(int i = -radius; i <= radius; i++)
+			{
+				for(int k = -radius; k <= radius; k++)
+				{
+					int x = (((int)player.posX+i*16) >> 4);
+					int z = (((int)player.posZ+k*16) >> 4);
+
+					ChunkProviderServer cps = world.getChunkProvider();
+
+					Chunk c = cps.chunkGenerator.provideChunk(x, z);
+					Chunk old = world.getChunkProvider().provideChunk(x, z);
+					//old.setStorageArrays(c.getBlockStorageArray());
+					//c.onChunkLoad();
+					//c.setChunkModified();
 					old.populateChunk(cps, cps.chunkGenerator);
 					/*Chunk old = world.getChunkProvider().provideChunk(x, z);
 					old.setStorageArrays(c.getBlockStorageArray());

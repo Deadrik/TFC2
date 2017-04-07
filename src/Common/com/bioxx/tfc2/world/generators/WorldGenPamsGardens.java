@@ -33,7 +33,7 @@ public class WorldGenPamsGardens implements IWorldGenerator
 		if(world.provider.getDimension() != 0)
 			return;
 
-		if(random.nextInt(10) != 0)
+		if(random.nextInt(20) != 0)
 			return;
 
 		int numToGen = 5;
@@ -66,8 +66,8 @@ public class WorldGenPamsGardens implements IWorldGenerator
 			closest = map.getClosestCenter(pos);
 			cMoisture = closest.getMoisture();
 
-			if(!placed && map.getParams().getIslandTemp().isGreaterThan(ClimateTemp.POLAR) && 
-					map.getParams().getIslandTemp().isLessThan(ClimateTemp.TROPICAL) &&
+			if(!placed && map.getParams().getIslandTemp().isWarmerThan(ClimateTemp.POLAR) && 
+					map.getParams().getIslandTemp().isCoolerThan(ClimateTemp.TROPICAL) &&
 					iMoisture.isGreaterThan(Moisture.LOW) && shadedGarden != null)
 			{
 				if(cMoisture.isGreaterThan(Moisture.MEDIUM) && shadedGarden.canPlaceBlockAt(world, pos))
@@ -77,8 +77,8 @@ public class WorldGenPamsGardens implements IWorldGenerator
 				}
 			}
 
-			if(!placed && map.getParams().getIslandTemp().isGreaterThan(ClimateTemp.SUBPOLAR) && 
-					map.getParams().getIslandTemp().isLessThan(ClimateTemp.TROPICAL) &&
+			if(!placed && map.getParams().getIslandTemp().isWarmerThan(ClimateTemp.SUBPOLAR) && 
+					map.getParams().getIslandTemp().isCoolerThan(ClimateTemp.TROPICAL) &&
 					iMoisture.isLessThan(Moisture.HIGH) && windyGarden != null)
 			{
 				if(cMoisture.isLessThan(Moisture.MEDIUM) && windyGarden.canPlaceBlockAt(world, pos) && world.isAirBlock(pos))
@@ -88,7 +88,7 @@ public class WorldGenPamsGardens implements IWorldGenerator
 				}
 			}
 
-			if(!placed && map.getParams().getIslandTemp().isGreaterThanOrEqual(ClimateTemp.SUBTROPICAL) && 
+			if(!placed && map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.SUBTROPICAL) && 
 					iMoisture.isLessThanOrEqual(Moisture.LOW) && aridGarden != null)
 			{
 				if(cMoisture.isGreaterThan(Moisture.MEDIUM) && aridGarden.canPlaceBlockAt(world, pos))
@@ -98,7 +98,7 @@ public class WorldGenPamsGardens implements IWorldGenerator
 				}
 			}
 
-			if(!placed && map.getParams().getIslandTemp().isGreaterThanOrEqual(ClimateTemp.SUBPOLAR) && 
+			if(!placed && map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.SUBPOLAR) && 
 					closest.biome == BiomeType.MARSH && soggyGarden != null)
 			{
 				if(soggyGarden.canPlaceBlockAt(world, pos))
@@ -108,7 +108,7 @@ public class WorldGenPamsGardens implements IWorldGenerator
 				}
 			}
 
-			if(!placed && map.getParams().getIslandTemp().isGreaterThanOrEqual(ClimateTemp.TROPICAL) && 
+			if(!placed && map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.TROPICAL) && 
 					iMoisture.isGreaterThan(Moisture.MEDIUM) && tropicalGarden != null)
 			{
 				if(cMoisture.isGreaterThan(Moisture.MEDIUM) && tropicalGarden.canPlaceBlockAt(world, pos))
@@ -118,7 +118,7 @@ public class WorldGenPamsGardens implements IWorldGenerator
 				}
 			}
 
-			if(!placed && map.getParams().getIslandTemp().isLessThanOrEqual(ClimateTemp.POLAR) &&
+			if(!placed && map.getParams().getIslandTemp().isCoolerThanOrEqual(ClimateTemp.POLAR) &&
 					iMoisture.isGreaterThan(Moisture.LOW) && frostGarden != null)
 			{
 				if(cMoisture.isGreaterThan(Moisture.LOW) && frostGarden.canPlaceBlockAt(world, pos))

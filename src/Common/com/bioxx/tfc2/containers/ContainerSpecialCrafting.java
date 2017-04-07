@@ -125,24 +125,22 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	@Override
 	public ItemStack transferStackInSlotTFC(EntityPlayer player, int slotNum)
 	{
-		ItemStack origStack = null;
 		Slot slot = (Slot)this.inventorySlots.get(slotNum);
+		if (slot == null)  return ItemStack.EMPTY;
+		ItemStack origStack = slot.getStack();
 
-		if (slot != null && slot instanceof SlotSpecialCraftingOutput && slot.getHasStack())
+		if (slot instanceof SlotSpecialCraftingOutput && slot.getHasStack())
 		{
 			ItemStack slotStack = slot.getStack();
-			origStack = slotStack.copy();
+			InventoryPlayer ip = player.inventory;
 
-			if (slotNum < 1 && !this.mergeItemStack(slotStack, 1, inventorySlots.size(), true))
-				return null;
+			if (slotNum < 1 && !ip.addItemStackToInventory(slotStack))
+				return ItemStack.EMPTY;
 
 			if (slotStack.getMaxStackSize() <= 0)
-				slot.putStack(null);
+				slot.putStack(ItemStack.EMPTY);
 			else
 				slot.onSlotChanged();
-
-			if (slotStack.getMaxStackSize() == origStack.getMaxStackSize())
-				return null;
 
 			slot.onTake(player, slotStack);
 		}

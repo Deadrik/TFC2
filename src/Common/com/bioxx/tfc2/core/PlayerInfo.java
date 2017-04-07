@@ -16,7 +16,7 @@ public class PlayerInfo
 	//If we are checking the inventory of an entity then we store it here when we right click so that the gui handler has something to work with
 	public Entity entityForInventory;
 
-	public boolean isInDebug = true;
+	public boolean isInDebug = false;
 
 	//Clientside only variables
 	public boolean[] knappingInterface;
@@ -29,5 +29,7 @@ public class PlayerInfo
 		specialCraftingType = null;
 		specialCraftingTypeAlternate = null;
 		knappingInterface = new boolean[81];
+		if(name == "bioxx")
+			isInDebug = true;
 	}
 }

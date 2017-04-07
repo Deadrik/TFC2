@@ -32,6 +32,8 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 	private static final int FUEL_SLOT = 0;
 	private static final int TOOL_SLOT = 1;
 
+	private static final float MAXHEAT = 350f;
+
 	NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(11, ItemStack.EMPTY);
 	ItemStack cookingTool = ItemStack.EMPTY;
 	InventoryCrafting craftMatrix = new InventoryCrafting(new ContainerFakeFirepit(), 3, 3);
@@ -78,7 +80,10 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 			//Handle non-cooking item heating
 			if(fuelTimer > 0)
 			{
-
+				if(this.getStackInSlot(TOOL_SLOT) != ItemStack.EMPTY)
+				{
+					//ItemHeat.Increase(getStackInSlot(TOOL_SLOT), 1.0f);
+				}
 			}
 		}
 
