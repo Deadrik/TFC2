@@ -30,7 +30,8 @@ public class ItemFirestarter extends ItemTerra
 	public ItemFirestarter()
 	{
 		this.setShowInCreative(true);
-		this.setMaxDamage(20000);
+		this.setMaxDamage(10000);
+		this.setMaxStackSize(1);
 		this.setCreativeTab(CreativeTabs.TOOLS);
 	}
 
@@ -96,15 +97,16 @@ public class ItemFirestarter extends ItemTerra
 
 		if(!world.isRemote)
 		{
-			if(duration > stack.getItemDamage())
-			{
-				stack.damageItem(duration, player);
-				player.stopActiveHand();
-			}
 			if(count % 10 == 1)
 				world.playSound(null, pos, TFC_Sounds.FIRESTARTER, SoundCategory.BLOCKS, 1.0f, 1.0f);
 			if(rand < 20 && pos != null)
 				onUse(world, player, stack, pos, count);
+
+			if(stack.getItemDamage()+duration > stack.getMaxDamage())
+			{
+				stack.damageItem(duration, player);
+				player.stopActiveHand();
+			}
 		}
 		else
 		{
@@ -160,6 +162,7 @@ public class ItemFirestarter extends ItemTerra
 					{
 						needLogs -= ei.getEntityItem().getCount();
 						uselist.add(ei);
+						break;
 					}
 			}
 		}
@@ -182,7 +185,7 @@ public class ItemFirestarter extends ItemTerra
 					if(ei.getEntityItem().getCount() == 0)
 						ei.setDead();
 				}
-				else if(needSticks > 0)
+				if(needSticks > 0)
 				{
 					oreList=OreDictionary.getOres("stickWood");
 					for(ItemStack is : oreList)
@@ -195,7 +198,7 @@ public class ItemFirestarter extends ItemTerra
 								ei.setDead();
 						}
 				}
-				else if(logStack == null)
+				if(logStack == null)
 				{
 					oreList=OreDictionary.getOres("logWood");
 					for(ItemStack is : oreList)
@@ -204,6 +207,7 @@ public class ItemFirestarter extends ItemTerra
 						{
 							logStack = ei.getEntityItem().copy();
 							ei.setDead();
+							break;
 						}
 					}
 				}
