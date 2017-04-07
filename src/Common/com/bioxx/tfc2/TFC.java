@@ -3,6 +3,7 @@ package com.bioxx.tfc2;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +32,6 @@ import com.bioxx.tfc2.api.trees.TreeSchematic;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
-import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.commands.*;
 import com.bioxx.tfc2.core.PortalSchematic;
 import com.bioxx.tfc2.core.util.FoodReader;
@@ -90,9 +90,17 @@ public class TFC
 		FoodReader reader;
 		try
 		{
-			for(String f : Helper.getResourceFiles("/assets/tfc2/food/"))
+			//List<String> list = Helper.getResourceFiles("/assets/tfc2/food/");
+			//if(list.size() == 0)
+			//	TFC.log.info("Food -> No internal files found");
+			List<String> list = new ArrayList<String>();
+			list.add("harvestcraftfood.json");
+			list.add("tfc2food.json");
+
+			for(String f : list)
 			{
 				reader = new FoodReader("/assets/tfc2/food/"+f);
+				TFC.log.info("Food -> Reading " + reader.path);
 				if(reader.read())
 				{
 					applyFoodValues(reader);
