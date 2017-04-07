@@ -58,6 +58,12 @@ public class BlockLooseRocks extends BlockTerra
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 	}
 
+	@Override
+	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos)
+	{
+		return true;
+	}
+
 	/*******************************************************************************
 	 * 2. Rendering
 	 *******************************************************************************/
