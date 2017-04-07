@@ -2,7 +2,7 @@
 #This is the Main language configuration file
 #
 #If you want to color code the text then I recommend you visit http://www.minecraftwiki.net/wiki/Formatting_codes#Color_codes
-#To create the ยง symbol which is used for assigning a color to the following text press Alt + 21 on Windows. For other OSes, view the above link.
+#To create the ง symbol which is used for assigning a color to the following text press Alt + 21 on Windows. For other OSes, view the above link.
 #This file needs to be UTF-8 encoded to work with MC 1.7+
 
 #==========
@@ -28,15 +28,20 @@ global.schist=Schist
 global.gneiss=Gneiss
 global.marble=Marble
 
+global.acacia=Acacia
 global.ash=Ash
 global.aspen=Aspen
 global.birch=Birch
+global.blackwood=Blackwood
 global.chestnut=Chestnut
 global.douglas_fir=Douglas Fir
 global.hickory=Hickory
+global.kapok=Kapok
 global.maple=Maple
 global.oak=Oak
 global.pine=Pine
+global.palm=Palm
+global.rosewood=Rosewood
 global.sequoia=Sequoia
 global.spruce=Spruce
 global.sycamore=Sycamore
@@ -58,12 +63,36 @@ tile.stonesmooth.name=Smoothed Stone
 #= Wooden Blocks =
 #=================
 
+tile.sapling.name=Sapling
+tile.sapling2.name=Sapling
 tile.planks.name=Wood Planks
+tile.planks2.name=Wood Planks
 tile.log_vertical.name=Log
 tile.log_vertical2.name=Log
 tile.wood_support.name=Wooden Support
 tile.wood_support2.name=Wooden Support
 tile.wood_support3.name=Wooden Support
+item.plank.name=Plank 
+tile.stairs_acacia.name=Stairs
+tile.stairs_ash.name=Stairs
+tile.stairs_aspen.name=Stairs
+tile.stairs_birch.name=Stairs
+tile.stairs_chestnut.name=Stairs
+tile.stairs_douglasfir.name=Stairs
+tile.stairs_hickory.name=Stairs
+tile.stairs_maple.name=Stairs
+tile.stairs_oak.name=Stairs
+tile.stairs_pine.name=Stairs
+tile.stairs_sequoia.name=Stairs
+tile.stairs_spruce.name=Stairs
+tile.stairs_sycamore.name=Stairs
+tile.stairs_whitecedar.name=Stairs
+tile.stairs_willow.name=Stairs
+tile.stairs_kapok.name=Stairs
+tile.stairs_rosewood.name=Stairs
+tile.stairs_blackwood.name=Stairs
+tile.stairs_palm.name=Stairs
+
 
 #=========
 #= GUI =
@@ -88,7 +117,6 @@ gui.skill.farmer=Farmer
 gui.skill.fisherman=Fisherman
 gui.skill.butcher=Butcher
 
-
 #=================
 #======Items======
 #=================
@@ -103,4 +131,29 @@ item.stone_hoe_head.name=Stone Hoe Head
 item.stone_hoe.name=Stone Hoe
 item.firestarter.name=Firestarter
 
+#=================
+#= Entity ========
+#=================
+entity.Cart.name=Cart
+entity.Bear.name=Bear
+entity.BearPanda.name=Panda Bear
+entity.Lion.name=Lion
+entity.Tiger.name=Tiger
+entity.Rhino.name=Rhino
+entity.Elephant.name=Elephant
+entity.Mammoth.name=Mammoth
+entity.Boar.name=Boar
+entity.Bison.name=Bison
+entity.FoxRed.name=Red Fox
+entity.FoxArctic.name=Arctic Fox
+entity.FoxDesert.name=Desert Fox
+entity.Hippo.name=Hippo
+entity.BigCat.name=Big Cat
+entity.Sabertooth.name=Sabertooth
+entity.Elk.name=Elk
 
+#=================
+#= Fluid =========
+#=================
+fluid.saltwater=Saltwater
+fluid.freswater=Fresh Water
