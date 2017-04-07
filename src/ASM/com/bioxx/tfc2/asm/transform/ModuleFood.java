@@ -85,8 +85,10 @@ public class ModuleFood implements IClassTransformer
 			{
 				AbstractInsnNode finalNode = ASMHelper.findLastInstructionWithOpcode(methodNode, Opcodes.RETURN);
 				InsnList toInject = new InsnList();
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, ObfHelper.getInternalClassName(ASMConstants.MINECRAFT),ObfHelper.chooseObf("z","getMinecraft"),ASMHelper.toMethodDescriptor(ObfHelper.getInternalClassName(ASMConstants.MINECRAFT)), false));
+				toInject.add(new FieldInsnNode(Opcodes.GETFIELD, ObfHelper.getInternalClassName(ASMConstants.MINECRAFT), ObfHelper.chooseObf("f","world"), ASMHelper.toDescriptor(ObfHelper.getInternalClassName(ASMConstants.WORLDCLIENT))));
 				toInject.add(new VarInsnNode(Opcodes.ALOAD, 3));
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","addDecayTimerForCreative",ASMHelper.toMethodDescriptor("V",ASMConstants.LIST), false));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/core/Food","addDecayTimerForCreative",ASMHelper.toMethodDescriptor("V", ObfHelper.toObfClassName(ASMConstants.WORLD),ASMConstants.LIST), false));
 				methodNode.instructions.insertBefore(finalNode, toInject);
 			}
 			else
@@ -265,8 +267,6 @@ public class ModuleFood implements IClassTransformer
 		list.add(new VarInsnNode(Opcodes.ALOAD, 3));
 		list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/bioxx/tfc2/ClientOverrides","addInformation",ASMHelper.toMethodDescriptor("V",ASMConstants.ITEMSTACK, ASMConstants.PLAYER, ASMConstants.LIST, ASMConstants.ITEM), false));
-
-
 		method.instructions.insert(list);
 	}
 

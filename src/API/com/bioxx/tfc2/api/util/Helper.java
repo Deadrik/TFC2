@@ -14,6 +14,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import com.bioxx.tfc2.TFC;
+
 public class Helper 
 {
 	public static int combineCoords(int x, int y)
@@ -132,14 +134,16 @@ public class Helper
 	{
 		List<String> filenames = new ArrayList<String>();
 
-		InputStream in = Helper.class.getResourceAsStream( path );
+		InputStream in = TFC.instance.getClass().getResourceAsStream( path );
 		BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
 
-		String resource;
-
-		while( (resource = br.readLine()) != null ) {
+		String resource = br.readLine();
+		if(resource == null)
+			TFC.log.warn("Helper -> No Resources Found at " + path + " | " + in.available() + " bytes");
+		while( resource != null ) 
+		{
 			filenames.add( resource );
-
+			resource = br.readLine();
 		}
 
 		return filenames;

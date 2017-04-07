@@ -161,4 +161,11 @@ public class ObfHelper
 		else
 			return deobfDesc;
 	}
+
+	public static String chooseObf(String obf, String notObf)
+	{
+		if (isObfuscated())
+			return obf;
+		return notObf;
+	}
 }
