@@ -2,6 +2,7 @@ package com.bioxx.tfc2.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
@@ -19,7 +20,7 @@ import com.bioxx.tfc2.core.PlayerManagerTFC;
 
 public class ContainerSpecialCrafting extends ContainerTFC
 {
-	/** The crafting matrix inventory (5x5).
+	/** The crafting matrix inventory (9x9).
 	 *  Used for knapping and leather working */
 	public InventoryCrafting craftMatrix = new InventoryCrafting(this, 9, 9);
 
@@ -146,6 +147,50 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		}
 
 		return origStack;
+	}
+	
+	@Override
+	/**
+	 * Handles slot click when HotBar HotKeys 1-9 are pressed: ClickType = SWAP, dragType = HotBar slot number (0-8) 
+	 */
+	public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer player)
+	{
+		//System.out.println("*** CSC slotClick: "+slotID+" , "+dragType+" , "+clickTypeIn);  //Debug
+		if (slotID == 28 + invPlayer.currentItem || clickTypeIn == ClickType.SWAP && dragType == invPlayer.currentItem)
+			return ItemStack.EMPTY;
+		if (slotID == 0 && clickTypeIn == ClickType.SWAP && dragType >= 0 && dragType < 9)
+		{
+			Slot sourceSlot = (Slot) this.inventorySlots.get(slotID);
+			ItemStack sourceStack = sourceSlot.getStack();
+			if (sourceStack == null || sourceStack.isEmpty())  return ItemStack.EMPTY;
+			Slot targetSlot = (Slot) this.inventorySlots.get(28 + dragType);
+			ItemStack targetStack = targetSlot.getStack();
+			
+			if (canAddItemToSlot(targetSlot, sourceStack, true)) 
+			{
+				if (targetStack == null || targetStack.isEmpty())
+				{
+					targetSlot.putStack(sourceStack);
+					sourceSlot.putStack(ItemStack.EMPTY);
+				}
+				else
+				{
+					int sCnt = sourceStack.getCount(); 
+					int tCnt = targetStack.getCount();
+					int n = Math.min(targetStack.getMaxStackSize() - tCnt, sCnt);
+					if (n <= 0)  return ItemStack.EMPTY;
+					sourceStack.splitStack(n);
+					targetStack.setCount(tCnt + n);
+					if (n < sCnt)  return ItemStack.EMPTY;
+				}
+				sourceSlot.onSlotChanged();
+				sourceSlot.onTake(player, sourceStack);
+				return invPlayer.getStackInSlot(dragType);
+			}
+			else
+				return ItemStack.EMPTY;
+		}
+		return super.slotClick(slotID, dragType, clickTypeIn, player);
 	}
 
 	@Override
