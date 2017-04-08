@@ -220,8 +220,11 @@ public class TFCBlocks
 		stairsList.add(register(StairsPalm, ItemStair.class));
 
 		Stone.setHarvestLevel("pickaxe", 1);
+		StoneBrick.setHarvestLevel("pickaxe", 1);
+		StoneSmooth.setHarvestLevel("pickaxe", 1);
 		StoneStalag.setHarvestLevel("pickaxe", 1);
 		StoneStalac.setHarvestLevel("pickaxe", 1);
+		Ore.setHarvestLevel("pickaxe", 1);
 
 		LogNatural.setHarvestLevel("axe", 1);
 		LogNatural2.setHarvestLevel("axe", 1);
@@ -234,6 +237,14 @@ public class TFCBlocks
 		SupportBeam.setHarvestLevel("axe", 1);
 		SupportBeam2.setHarvestLevel("axe", 1);
 		SupportBeam3.setHarvestLevel("axe", 1);
+		Planks.setHarvestLevel("axe", 1);
+		Planks2.setHarvestLevel("axe", 1);
+
+		Dirt.setHarvestLevel("shovel", 1);
+		Grass.setHarvestLevel("shovel", 1);
+		Gravel.setHarvestLevel("shovel", 1);
+		Sand.setHarvestLevel("shovel", 1);
+		Farmland.setHarvestLevel("shovel", 1);
 
 	}
 
