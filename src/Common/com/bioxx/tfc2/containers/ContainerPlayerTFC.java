@@ -10,6 +10,8 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
 import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.containers.slots.SlotCraftingTFC;
@@ -19,8 +21,7 @@ import com.bioxx.tfc2.core.PlayerInventory;
 public class ContainerPlayerTFC extends ContainerPlayer
 {
 	private final EntityPlayer thePlayer;
-	private int firstArmorSlotNum;
-	private int armorInvSize;
+	private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
 
 	public ContainerPlayerTFC(InventoryPlayer playerInv, boolean par2, EntityPlayer player)
 	{
@@ -39,14 +40,10 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				this.addSlotToContainer(new Slot(craftMatrix, y + x * 3, 82 + y * 18, 18 + x * 18));
 		}
 
-		firstArmorSlotNum = playerInv.getSizeInventory() + InventoryPlayer.getHotbarSize() + 1;
-		armorInvSize = playerInv.armorInventory.size();
-		for (x = 0; x < armorInvSize; ++x)
+		for (int k = 0; k < 4; ++k)
 		{
-			int index = firstArmorSlotNum + x;
-			final int k = armorInvSize - x - 1;
-			final EntityEquipmentSlot ees = EntityEquipmentSlot.values()[EntityEquipmentSlot.FEET.ordinal()+k];
-			this.addSlotToContainer(new Slot(playerInv, index, 8, 8 + x * 18)
+			final EntityEquipmentSlot ees = VALID_EQUIPMENT_SLOTS[k];
+			this.addSlotToContainer(new Slot(playerInv, 36 + (3 - k), 8, 8 + k * 18)
 			{
 				private static final String __OBFID = "CL_00001755";
 				/**
@@ -67,23 +64,25 @@ public class ContainerPlayerTFC extends ContainerPlayer
 					if (stack == null) return false;
 					return stack.getItem().isValidArmor(stack, ees, thePlayer);
 				}
-				/**
-				 * Return whether this slot's stack can be taken from this slot.
-				 */
-				@Override
-				public boolean canTakeStack(EntityPlayer playerIn)
-				{
-					return true;
-				}
 				@Override
 				@SideOnly(Side.CLIENT)
 				public String getSlotTexture()
 				{
-					return ItemArmor.EMPTY_SLOT_NAMES[k];
+					return ItemArmor.EMPTY_SLOT_NAMES[ees.getIndex()];
 				}
 			});
 		}
 		PlayerInventory.buildInventoryLayout(this, playerInv, 8, 107, false, true);
+		
+		this.addSlotToContainer(new Slot(playerInv, 40, 62, 80)
+		{
+			@Nullable
+			@SideOnly(Side.CLIENT)
+			public String getSlotTexture()
+			{
+				return "minecraft:items/empty_armor_slot_shield";
+			}
+		});
 
 		//Manually built the remaining crafting slots because of an order issue. These have to be created after the default slots
 		if(player.getEntityData().hasKey("craftingTable") || !player.world.isRemote)
@@ -105,23 +104,6 @@ public class ContainerPlayerTFC extends ContainerPlayer
 		}
 		PlayerInventory.addExtraEquipables(this, playerInv, 8, 90, false);
 
-		this.addSlotToContainer(new Slot(playerInv, 40, 62, 80)
-		{
-			/**
-			 * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
-			 */
-			@Override
-			public boolean isItemValid(ItemStack stack)
-			{
-				return super.isItemValid(stack);
-			}
-			@Override
-			@SideOnly(Side.CLIENT)
-			public String getSlotTexture()
-			{
-				return "minecraft:items/empty_armor_slot_shield";
-			}
-		});
 		this.onCraftMatrixChanged(this.craftMatrix);
 	}
 
@@ -436,8 +418,8 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer p)
 	{
 		//System.out.println("*** slotClick: "+slotID+" , "+dragType+" , "+clickTypeIn);  //Debug
-		if (slotID >= 5 && slotID <=8)  //Vanilla armor slots
-				return ItemStack.EMPTY;  //Disable for now (to prevent free items exploits)
+		if (clickTypeIn == ClickType.SWAP && slotID >= 5 && slotID <=8)  //Vanilla armor slots
+			return ItemStack.EMPTY;  //Disable HotBar Keys for now (to prevent free items exploits)
 		if (slotID >= 0 && slotID < this.inventorySlots.size())
 		{
 			Slot sourceSlot = (Slot) this.inventorySlots.get(slotID);
@@ -445,7 +427,6 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			ItemStack slotStack = origStack.copy();
 			if (slotStack == null)
 				return ItemStack.EMPTY;
-			InventoryPlayer ip = p.inventory;
 
 			//--- Hotbar slots 1-9 HotKeys --- 
 			if (clickTypeIn == ClickType.SWAP && dragType >= 0 && dragType < 9)
@@ -458,7 +439,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 					{
 						sourceSlot.onSlotChange(slotStack, origStack);
 						sourceSlot.onTake(p, slotStack);
-						return ip.getStackInSlot(hbID);
+						return p.inventory.getStackInSlot(dragType);
 					}
 					else
 						return ItemStack.EMPTY;
@@ -466,9 +447,9 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			}
 			
 			//This section is for merging foods with differing expirations.
-			if(clickTypeIn == ClickType.SWAP && ip.getItemStack() != null)
+			if(clickTypeIn == ClickType.SWAP && p.inventory.getItemStack() != null)
 			{
-				ItemStack itemstack4 = ip.getItemStack();
+				ItemStack itemstack4 = p.inventory.getItemStack();
 				if (slotStack.getItem() == itemstack4.getItem() && slotStack.getMetadata() == itemstack4.getMetadata() && ContainerTFC.areCompoundsEqual(slotStack, itemstack4))
 				{
 					if(slotStack.getItem() instanceof IFood && itemstack4.getItem() instanceof IFood)
@@ -495,7 +476,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 
 					if (itemstack4.getMaxStackSize() == 0)
 					{
-						ip.setItemStack(ItemStack.EMPTY);
+						p.inventory.setItemStack(ItemStack.EMPTY);
 					}
 
 					slotStack.grow(l1);
@@ -504,7 +485,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				else if (itemstack4.getMaxStackSize() <= sourceSlot.getItemStackLimit(itemstack4))
 				{
 					sourceSlot.putStack(itemstack4);
-					ip.setItemStack(slotStack);
+					p.inventory.setItemStack(slotStack);
 				}
 			}
 
