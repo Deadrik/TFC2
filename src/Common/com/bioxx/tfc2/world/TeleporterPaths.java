@@ -51,7 +51,15 @@ public class TeleporterPaths extends Teleporter
 			{
 				this.makePortal(entity);
 				makePath(entity);
-				this.placeInExistingPortal(entity, yaw);
+				if(!this.placeInExistingPortal(entity, yaw))
+				{
+					int playerX = MathHelper.floor(entity.posX);
+					int playerZ = MathHelper.floor(entity.posZ);
+					IslandMap islandMap = WorldGen.getInstance().getIslandMap(playerX >> 12, playerZ >> 12);
+					Center closest = islandMap.getClosestCenter(new Point(playerX % 4096,playerZ % 4096));
+					BlockPos pos = new BlockPos((playerX >> 12)*4096+closest.point.x, Global.SEALEVEL+islandMap.convertHeightToMC(closest.getElevation()), (playerZ >> 12)*4096+closest.point.y);
+					entity.setLocationAndAngles(pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, yaw, entity.rotationPitch);
+				}
 			}
 		}
 		else
@@ -97,7 +105,7 @@ public class TeleporterPaths extends Teleporter
 				}
 			}
 		}
-		return pos;
+		return null;
 	}
 
 	@Override
@@ -108,7 +116,7 @@ public class TeleporterPaths extends Teleporter
 		int playerZ = MathHelper.floor(entityIn.posZ);
 		boolean shouldAddPortalPosition = true;
 		boolean foundPortal = false;
-		BlockPos object = BlockPos.ORIGIN;
+		BlockPos object = new BlockPos(entityIn);
 		long k = ChunkPos.asLong(playerX, playerZ);
 
 		IslandMap islandMap = Core.getMapForWorld(worldServerInstance, entityIn.getPosition());
@@ -123,13 +131,11 @@ public class TeleporterPaths extends Teleporter
 		}
 		else //If not then we do a simple search for the closest portal block
 		{
-			BlockPos blockpos4 = new BlockPos(entityIn);
-
-			object = this.findPortal(blockpos4);
+			object = this.findPortal(new BlockPos(entityIn));
 		}
 
 		//If we found a portal location then we need to move the player to it
-		if (object != BlockPos.ORIGIN)
+		if (object != null)
 		{
 			if (shouldAddPortalPosition)
 			{

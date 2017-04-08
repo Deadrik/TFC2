@@ -595,53 +595,64 @@ public class IslandMap
 		}
 	}
 
+	private Vector<Center> filterKeepMarkers(Vector<Center> centers, Marker... markers)
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if(c.hasAnyMarkersOf(markers))
+				out.add(c);
+		}
+		return out;
+	}
+
+	private Vector<Center> filterOutMarkers(Vector<Center> centers, Marker... markers)
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if(c.hasAnyMarkersOf(markers))
+				out.add(c);
+		}
+		return out;
+	}
+
+	private Vector<Center> filterKeepCoords(Vector<Center> centers, Point pMin, Point pMax)
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			if(c.point.x > pMin.x && c.point.y > pMin.y && c.point.x < pMax.x && c.point.y < pMax.y)
+				out.add(c);
+		}
+		return out;
+	}
+
 	private void createPortals()
 	{
-		Vector<Center> low = this.getCentersBelow(0.3, false);
-		Center temp = low.get(this.mapRandom.nextInt(low.size()));
-		while(true)
-		{
-			if(temp.point.y < 2048 && temp.point.x > 256 && temp.point.x < 2304)
-			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.NORTH);
-				temp.addAttribute(pa);
-				break;
-			}
-			temp = low.get(this.mapRandom.nextInt(low.size()));
-		}
+		Vector<Center> low = filterOutMarkers(this.getCentersBelow(0.3, false), Marker.Coast, Marker.Water, Marker.Spire);
 
-		while(true)
-		{
-			if(temp.point.y > 2048 && temp.point.x > 256 && temp.point.x < 2304)
-			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()+1), EnumFacing.SOUTH);
-				temp.addAttribute(pa);
-				break;
-			}
-			temp = low.get(this.mapRandom.nextInt(low.size()));
-		}
 
-		while(true)
-		{
-			if(temp.point.x > 2048 && temp.point.y > 256 && temp.point.y < 2304)
-			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()+1, this.islandParams.getZCoord()), EnumFacing.EAST);
-				temp.addAttribute(pa);
-				break;
-			}
-			temp = low.get(this.mapRandom.nextInt(low.size()));
-		}
+		//North
+		Vector<Center> tempC = filterKeepCoords(low, new Point(256,0), new Point(3840, 2048));
+		Center temp = tempC.get(this.mapRandom.nextInt(tempC.size()));
+		temp.addAttribute(new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.NORTH));
 
-		while(true)
-		{
-			if(temp.point.x < 2048 && temp.point.y > 256 && temp.point.y < 2304)
-			{
-				PortalAttribute pa = new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()-1, this.islandParams.getZCoord()), EnumFacing.WEST);
-				temp.addAttribute(pa);
-				break;
-			}
-			temp = low.get(this.mapRandom.nextInt(low.size()));
-		}
+		//South
+		tempC = filterKeepCoords(low, new Point(256,2048), new Point(3840, 4096));
+		temp = tempC.get(this.mapRandom.nextInt(tempC.size()));
+		temp.addAttribute(new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()+1), EnumFacing.SOUTH));
+
+		//East
+		tempC = filterKeepCoords(low, new Point(2048,256), new Point(4096, 3840));
+		temp = tempC.get(this.mapRandom.nextInt(tempC.size()));
+		temp.addAttribute(new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()+1, this.islandParams.getZCoord()), EnumFacing.EAST));
+
+		//West
+		tempC = filterKeepCoords(low, new Point(0,256), new Point(2048, 3840));
+		temp = tempC.get(this.mapRandom.nextInt(tempC.size()));
+		temp.addAttribute(new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()-1, this.islandParams.getZCoord()), EnumFacing.WEST));
+
 	}
 
 	public Center getHighestNeighbor(Center c)
