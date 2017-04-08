@@ -29,7 +29,7 @@ public class WeatherManager
 {
 	private static WeatherManager instance;
 	private static final float[] hourlyTempMod = new float[] {0.90f/*12am*/, 0.88f, 0.86f, 0.84f, 0.82f, 0.8f, 0.81f/*6am*/, 
-		0.82f, 0.84f, 0.86f, 0.88f, 0.9f, 0.92f/*12pm*/, 0.94f, 0.96f, 0.98f, 1.0f, 0.99f, 0.98f/*6pm*/, 0.97f, 0.96f, 0.95f, 0.94f, 0.92f};
+			0.82f, 0.84f, 0.86f, 0.88f, 0.9f, 0.92f/*12pm*/, 0.94f, 0.96f, 0.98f, 1.0f, 0.99f, 0.98f/*6pm*/, 0.97f, 0.96f, 0.95f, 0.94f, 0.92f};
 
 	private int rainCounter = 0;
 	public Line rainModelSpring;
@@ -68,7 +68,7 @@ public class WeatherManager
 		//We use the x value for moving the noise over time
 		//The y value is used as an offset for the island x coordinate
 		//The z value is used as an offset for the island z coordinate
-		return model.getValue(Timekeeper.getInstance().getTotalHalfHours(), x * 1000000, z * 1000000);
+		return model.getValue(Timekeeper.getInstance().getTotalHalfHours());
 	}
 
 	/**
@@ -143,13 +143,13 @@ public class WeatherManager
 	public void setupStorms(World world)
 	{
 		rainModelSummer = getSummerStorm();
-
+		rainModelSummer.attenuate = false;
 		rainModelSpring = getSpringStorm();
-
+		rainModelSpring.attenuate = false;
 		rainModelFall = getFallStorm();
-
+		rainModelFall.attenuate = false;
 		rainModelWinter = getWinterStorm();
-
+		rainModelWinter.attenuate = false;
 		Perlin p0 = new Perlin(worldObj.getSeed(), 0.003, 0.8);
 		p0.setOctaveCount(4);
 		p0.setLacunarity(1.1);

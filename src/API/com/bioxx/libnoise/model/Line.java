@@ -26,7 +26,7 @@ import com.bioxx.libnoise.module.Module;
 public class Line {
 	// A flag that specifies whether the value is to be attenuated
 	// (moved toward 0.0) as the ends of the line segment are approached.
-	boolean attenuate = false;
+	public boolean attenuate = true;
 
 	// A pointer to the noise module used to generate the output values.
 	Module module;
@@ -79,23 +79,15 @@ public class Line {
 		if (module == null)
 			throw new NoModuleException();
 
-		return module.GetValue(p, 0, 0);
+		double value = module.GetValue(p, 0, 0);
+
+		if (attenuate)
+		{
+			return p * (1.0 - p) * 4 * value;
+		}
+		else
+		{
+			return value;
+		}
 	}
-
-	/**
-	 * Returns the output value from the noise module given the one-dimensional
-	 * coordinate of the specified input value located on the line
-	 * 
-	 * @param p The distance along the line segment (ranges from 0.0 to 1.0)
-	 * @return The output value from the noise module.
-	 * 
-	 * */
-	public double getValue(double p, double yOffset, double zOffset) 
-	{
-		if (module == null)
-			throw new NoModuleException();
-
-		return module.GetValue(p, yOffset, zOffset);
-	}
-
 }
