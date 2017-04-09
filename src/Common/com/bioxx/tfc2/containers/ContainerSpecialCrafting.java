@@ -127,25 +127,31 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	public ItemStack transferStackInSlotTFC(EntityPlayer player, int slotNum)
 	{
 		Slot slot = (Slot)this.inventorySlots.get(slotNum);
-		if (slot == null)  return ItemStack.EMPTY;
+		if (slot == null || !slot.getHasStack())  return ItemStack.EMPTY;
 		ItemStack origStack = slot.getStack();
+		ItemStack slotStack = origStack.copy(); 
+		InventoryPlayer ip = player.inventory;
 
-		if (slot instanceof SlotSpecialCraftingOutput && slot.getHasStack())
+		// From Crafting Grid Output to inventory
+		if (slot instanceof SlotSpecialCraftingOutput)
 		{
-			ItemStack slotStack = slot.getStack();
-			InventoryPlayer ip = player.inventory;
-
 			if (slotNum < 1 && !ip.addItemStackToInventory(slotStack))
 				return ItemStack.EMPTY;
-
-			if (slotStack.getMaxStackSize() <= 0)
-				slot.putStack(ItemStack.EMPTY);
-			else
-				slot.onSlotChanged();
-
-			slot.onTake(player, slotStack);
 		}
+		// From inventory to Hotbar
+		else if (slotNum >= 1 && slotNum < 28 && !this.mergeItemStack(slotStack, 28, 37, false))
+			return ItemStack.EMPTY;
+		// From Hotbar to inventory
+		else if (slotNum >= 28 && slotNum < 37 && !this.mergeItemStack(slotStack, 1, 28, false))
+			return ItemStack.EMPTY;
 
+		if (slotStack.getMaxStackSize() <= 0)
+			slot.putStack(ItemStack.EMPTY);
+		else
+			slot.onSlotChanged();
+
+		slot.onTake(player, slotStack);
+		
 		return origStack;
 	}
 	
