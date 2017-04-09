@@ -266,7 +266,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 					return ItemStack.EMPTY;
 			}
 
-			if (slotStack.getMaxStackSize() <= 0)
+			if (slotStack.isEmpty())
 				slot.putStack(ItemStack.EMPTY);
 			else
 				slot.onSlotChanged();
@@ -274,7 +274,9 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			if (slotStack.getCount() == origStack.getCount())
 				return ItemStack.EMPTY;
 
-			slot.onTake(player, slotStack);
+			ItemStack itemstack2 = slot.onTake(player, slotStack);
+	        if (slotNum == 0)
+	            player.dropItem(itemstack2, false);
 		}
 
 		return origStack;
