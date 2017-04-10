@@ -425,10 +425,8 @@ public class ContainerPlayerTFC extends ContainerPlayer
 		if (slotID >= 0 && slotID < this.inventorySlots.size())
 		{
 			Slot sourceSlot = (Slot) this.inventorySlots.get(slotID);
-			ItemStack origStack = sourceSlot.getStack();
-			ItemStack slotStack = origStack.copy();
-			if (slotStack == null)
-				return ItemStack.EMPTY;
+			ItemStack slotStack = sourceSlot.getStack();
+			if (slotStack == null)  return ItemStack.EMPTY;
 
 			//--- Hotbar slots 1-9 HotKeys --- 
 			if (clickTypeIn == ClickType.SWAP && dragType >= 0 && dragType < 9)
@@ -439,9 +437,10 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				{
 					if (mergeItemStack(slotStack, hbID, hbID+1, false))
 					{
-						sourceSlot.onSlotChange(slotStack, origStack);
-						sourceSlot.onTake(p, slotStack);
-						return p.inventory.getStackInSlot(dragType);
+						sourceSlot.onSlotChanged();
+						ItemStack itemstack2 = sourceSlot.onTake(p, slotStack);
+						p.dropItem(itemstack2, false);
+						return ItemStack.EMPTY;
 					}
 					else
 						return ItemStack.EMPTY;
