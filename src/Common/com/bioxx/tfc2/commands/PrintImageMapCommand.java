@@ -63,6 +63,10 @@ public class PrintImageMapCommand extends CommandBase
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		if(!player.isCreative())
+			return;
+
 		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
 		if(params.length >= 2)
