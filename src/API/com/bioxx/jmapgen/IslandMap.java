@@ -24,6 +24,7 @@ import com.bioxx.jmapgen.pathfinding.PathFinder;
 import com.bioxx.jmapgen.processing.AnimalProcessor;
 import com.bioxx.jmapgen.processing.CaveProcessor;
 import com.bioxx.jmapgen.processing.OreProcessor;
+import com.bioxx.jmapgen.processing.PortalProcessor;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.util.Helper;
 
@@ -59,6 +60,7 @@ public class IslandMap
 	private CaveProcessor caves;
 	private OreProcessor ores;
 	private AnimalProcessor animalProc;
+	private PortalProcessor portalProc;
 
 	public IslandMap(int size, long s) 
 	{
@@ -74,6 +76,7 @@ public class IslandMap
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
 		animalProc = new AnimalProcessor(this);
+		portalProc = new PortalProcessor(this);
 		dungeons = new Vector<Dungeon>();
 	}
 
@@ -223,7 +226,7 @@ public class IslandMap
 
 		if(!this.getParams().hasFeature(Feature.NoLand))
 		{
-			createPortals();
+			portalProc.generate();
 		}
 
 		animalProc.generate();
@@ -595,7 +598,7 @@ public class IslandMap
 		}
 	}
 
-	private Vector<Center> filterKeepMarkers(Vector<Center> centers, Marker... markers)
+	public Vector<Center> filterKeepMarkers(Vector<Center> centers, Marker... markers)
 	{
 		Vector<Center> out = new Vector<Center>();
 		for(Center c : centers)
@@ -606,7 +609,7 @@ public class IslandMap
 		return out;
 	}
 
-	private Vector<Center> filterOutMarkers(Vector<Center> centers, Marker... markers)
+	public Vector<Center> filterOutMarkers(Vector<Center> centers, Marker... markers)
 	{
 		Vector<Center> out = new Vector<Center>();
 		for(Center c : centers)
@@ -617,7 +620,7 @@ public class IslandMap
 		return out;
 	}
 
-	private Vector<Center> filterKeepCoords(Vector<Center> centers, Point pMin, Point pMax)
+	public Vector<Center> filterKeepCoords(Vector<Center> centers, Point pMin, Point pMax)
 	{
 		Vector<Center> out = new Vector<Center>();
 		for(Center c : centers)
