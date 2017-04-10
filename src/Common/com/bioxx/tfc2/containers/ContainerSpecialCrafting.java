@@ -128,14 +128,14 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	{
 		Slot slot = (Slot)this.inventorySlots.get(slotNum);
 		if (slot == null || !slot.getHasStack())  return ItemStack.EMPTY;
-		ItemStack origStack = slot.getStack();
-		ItemStack slotStack = origStack.copy(); 
+		ItemStack slotStack = slot.getStack();
+		ItemStack origStack = slotStack.copy(); 
 		InventoryPlayer ip = player.inventory;
 
 		// From Crafting Grid Output to inventory
 		if (slot instanceof SlotSpecialCraftingOutput)
 		{
-			if (slotNum < 1 && !ip.addItemStackToInventory(slotStack))
+			if (slotNum == 0 && !ip.addItemStackToInventory(slotStack))
 				return ItemStack.EMPTY;
 		}
 		// From inventory to Hotbar
@@ -145,13 +145,18 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		else if (slotNum >= 28 && slotNum < 37 && !this.mergeItemStack(slotStack, 1, 28, false))
 			return ItemStack.EMPTY;
 
-		if (slotStack.getMaxStackSize() <= 0)
+		if (slotStack.isEmpty())
 			slot.putStack(ItemStack.EMPTY);
 		else
 			slot.onSlotChanged();
 
-		slot.onTake(player, slotStack);
-		
+		if (slotStack.getCount() == origStack.getCount())
+			return ItemStack.EMPTY;
+
+		ItemStack itemstack2 = slot.onTake(player, slotStack);
+		if (slotNum == 0)
+			player.dropItem(itemstack2, false);
+
 		return origStack;
 	}
 	
@@ -167,9 +172,11 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		if (slotID == 0 && clickTypeIn == ClickType.SWAP && dragType >= 0 && dragType < 9)
 		{
 			Slot sourceSlot = (Slot) this.inventorySlots.get(slotID);
+			if (sourceSlot == null)  return ItemStack.EMPTY;
 			ItemStack sourceStack = sourceSlot.getStack();
 			if (sourceStack == null || sourceStack.isEmpty())  return ItemStack.EMPTY;
 			Slot targetSlot = (Slot) this.inventorySlots.get(28 + dragType);
+			if (targetSlot == null)  return ItemStack.EMPTY;
 			ItemStack targetStack = targetSlot.getStack();
 			
 			if (canAddItemToSlot(targetSlot, sourceStack, true)) 
@@ -191,7 +198,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 				}
 				sourceSlot.onSlotChanged();
 				sourceSlot.onTake(player, sourceStack);
-				return invPlayer.getStackInSlot(dragType);
+				return ItemStack.EMPTY;
 			}
 			else
 				return ItemStack.EMPTY;
