@@ -228,7 +228,7 @@ public class ClientProxy extends CommonProxy
 
 				if(d1 < 0.25)
 				{
-					if(state.getValue(BlockLeaves.META_PROPERTY) == WoodType.Acacia)
+					if(state.getBlock() == TFCBlocks.Leaves && state.getValue(BlockLeaves.META_PROPERTY) == WoodType.Acacia)
 						d1 = 0.25;
 				}
 				return ColorizerFoliage.getFoliageColor(d0, d1);

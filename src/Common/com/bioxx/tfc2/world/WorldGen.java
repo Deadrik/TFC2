@@ -293,7 +293,7 @@ public class WorldGen implements IThreadCompleteListener
 		}
 		else if(Math.abs(z) == 1)
 		{
-			t = r.nextBoolean() ? ClimateTemp.TEMPERATE : ClimateTemp.SUBTROPICAL;
+			t = r.nextInt(100) < 25 ? ClimateTemp.TEMPERATE : ClimateTemp.SUBTROPICAL;
 		}
 		else if(Math.abs(z) == 2)
 		{
@@ -301,7 +301,7 @@ public class WorldGen implements IThreadCompleteListener
 		}
 		else if(Math.abs(z) == 3)
 		{
-			t = r.nextBoolean() ? ClimateTemp.TEMPERATE : ClimateTemp.SUBPOLAR;
+			t = r.nextInt(100) < 25 ? ClimateTemp.TEMPERATE : ClimateTemp.SUBPOLAR;
 		}
 		else if(Math.abs(z) == 4)
 		{
