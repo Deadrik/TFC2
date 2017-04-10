@@ -806,7 +806,7 @@ public class IslandMap
 			}
 
 			if(center.hasMarker(Marker.CoastWater))
-				center.elevation = -0.01 - mapRandom.nextDouble()*0.03;
+				center.elevation = -0.04/* - mapRandom.nextDouble()*0.03*/;
 			else if(center.hasMarker(Marker.Ocean))
 				center.elevation = -0.1 - mapRandom.nextDouble()*0.25;
 
