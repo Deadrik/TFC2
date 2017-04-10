@@ -106,7 +106,7 @@ public class WorldProviderSurface extends WorldProvider
 	public Biome getBiomeForCoords(BlockPos pos)
 	{
 		//TODO make this read the islandmap and output relevant biome types
-		return Biome.getBiome(1);
+		return Biome.getBiome(0);
 	}
 
 	@Override
