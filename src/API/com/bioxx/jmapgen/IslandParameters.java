@@ -21,6 +21,7 @@ import com.bioxx.tfc2.api.types.WoodType;
 public class IslandParameters 
 {
 	protected Module shapeModule;
+	protected Module edgeModule;
 	double oceanRatio = 0.5;
 	public double lakeThreshold = 0.3;
 	int SIZE = 4096;
@@ -69,7 +70,7 @@ public class IslandParameters
 		Perlin modulePerl = new Perlin();
 		modulePerl.setSeed(seed);
 		modulePerl.setFrequency(0.00058);
-		modulePerl.setPersistence(0.7);
+		modulePerl.setPersistence(0.65);
 		modulePerl.setLacunarity(2.0);
 		modulePerl.setOctaveCount(5);
 		modulePerl.setNoiseQuality(NoiseQuality.BEST);
@@ -86,13 +87,41 @@ public class IslandParameters
 		sb2.setScale(0.25);
 
 		shapeModule = sb2;
+
+
+		Perlin modulePerl2 = new Perlin();
+		modulePerl2.setSeed(seed);
+		modulePerl2.setFrequency(0.58);
+		modulePerl2.setPersistence(0.25);
+		modulePerl2.setOctaveCount(3);
+
+		edgeModule = modulePerl2;
 	}
 
 	public boolean insidePerlin(Point q)
 	{
 		Point np = new Point(2.3*(q.x/SIZE - 0.5), 2.3*(q.y/SIZE - 0.5));
 		double height = shapeModule.GetValue(q.x, 0, q.y);
+
+		double angle = getAngle(np);
+		double dist = 0.15 * edgeModule.GetValue(0, angle, 0);
+
+		if(np.distance(Point.ORIGIN) < 0.65+dist)
+			return true;
+		if(np.distance(Point.ORIGIN) > 0.95+dist)
+			return false;
+
 		return height > oceanRatio+oceanRatio*np.getLength()*np.getLength();
+	}
+
+	private double getAngle(Point p)
+	{
+		double theta = Math.toDegrees(Math.atan2(p.y, p.x));
+
+		if (theta < 0.0) {
+			theta += 360.0;
+		}
+		return theta;
 	}
 
 	public int getXCoord()

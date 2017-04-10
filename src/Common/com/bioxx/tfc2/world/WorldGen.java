@@ -179,7 +179,8 @@ public class WorldGen implements IThreadCompleteListener
 
 	private IslandMap createIsland(int x, int z)
 	{
-		long seed = world.getSeed()+Helper.combineCoords(x, z);
+		Random rand = new Random(world.getSeed()+Helper.combineCoords(x, z));
+		long seed = rand.nextLong();
 		IslandGenEvent.Pre preEvent = new IslandGenEvent.Pre(createParams(seed, x, z));
 		Global.EVENT_BUS.post(preEvent);
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
