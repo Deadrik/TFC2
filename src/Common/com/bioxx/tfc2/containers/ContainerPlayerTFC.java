@@ -13,8 +13,6 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
-
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
 import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.containers.slots.SlotCraftingTFC;
@@ -40,7 +38,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				this.addSlotToContainer(new Slot(craftMatrix, y + x * 3, 82 + y * 18, 18 + x * 18));
 		}
 
-		for (int k = 0; k < 4; ++k)
+		for (x = 0; x < playerInv.armorInventory.size(); ++x)
 		{
 			int index = 36 +(3-x);
 			final int k = x;
@@ -83,16 +81,6 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			});
 		}
 		PlayerInventory.buildInventoryLayout(this, playerInv, 8, 107, false, true);
-		
-		this.addSlotToContainer(new Slot(playerInv, 40, 62, 80)
-		{
-			@Nullable
-			@SideOnly(Side.CLIENT)
-			public String getSlotTexture()
-			{
-				return "minecraft:items/empty_armor_slot_shield";
-			}
-		});
 
 		//Manually built the remaining crafting slots because of an order issue. These have to be created after the default slots
 		if(player.getEntityData().hasKey("craftingTable") || !player.world.isRemote)
@@ -114,6 +102,23 @@ public class ContainerPlayerTFC extends ContainerPlayer
 		}
 		PlayerInventory.addExtraEquipables(this, playerInv, 8, 90, false);
 
+		this.addSlotToContainer(new Slot(playerInv, 40, 62, 80)
+		{
+			/**
+			 * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
+			 */
+			@Override
+			public boolean isItemValid(ItemStack stack)
+			{
+				return super.isItemValid(stack);
+			}
+			@Override
+			@SideOnly(Side.CLIENT)
+			public String getSlotTexture()
+			{
+				return "minecraft:items/empty_armor_slot_shield";
+			}
+		});
 		this.onCraftMatrixChanged(this.craftMatrix);
 	}
 
@@ -175,7 +180,6 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotNum)
 	{
-		//System.out.println("*** transferStackInSlot: "+slotNum);  //Debug
 		ItemStack origStack = ItemStack.EMPTY;
 		Slot slot = (Slot) this.inventorySlots.get(slotNum);
 		//Slot equipmentSlot = (Slot) this.inventorySlots.get(50);
@@ -429,7 +433,6 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	 */
 	public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer p)
 	{
-		//System.out.println("*** slotClick: "+slotID+" , "+dragType+" , "+clickTypeIn);  //Debug
 		if (clickTypeIn == ClickType.SWAP && slotID >= 5 && slotID <=8)  //Vanilla armor slots
 			return ItemStack.EMPTY;  //Disable HotBar Keys for now (to prevent free items exploits)
 		if (slotID >= 0 && slotID < this.inventorySlots.size())
