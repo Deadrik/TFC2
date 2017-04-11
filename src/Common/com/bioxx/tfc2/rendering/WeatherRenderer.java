@@ -54,7 +54,7 @@ public class WeatherRenderer extends IRenderHandler
 	{
 		++this.rendererUpdateCount;
 		double rainStrength = world.getRainStrength(partialTicks);
-		rainStrength = WeatherManager.getInstance().getPreciptitation((int)mc.player.posX, (int)mc.player.posZ);
+		rainStrength = WeatherManager.getInstance().getPrecipitation((int)mc.player.posX, (int)mc.player.posZ);
 		if (rainStrength > 0.0)
 		{
 			mc.entityRenderer.enableLightmap();
@@ -203,7 +203,7 @@ public class WeatherRenderer extends IRenderHandler
 		WorldClient worldclient = mc.world;
 		if(worldclient.provider.getDimension() != 0)
 			return;
-		float rainStrength = (float)WeatherManager.getInstance().getPreciptitation((int)mc.player.posX, (int)mc.player.posZ);
+		float rainStrength = (float)WeatherManager.getInstance().getPrecipitation((int)mc.player.posX, (int)mc.player.posZ);
 		double tempPlayer = WeatherManager.getInstance().getTemperature((int)mc.player.posX,(int)mc.player.posY, (int)mc.player.posZ);
 		if(tempPlayer <= 0)
 			return;

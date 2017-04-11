@@ -194,7 +194,7 @@ public class RenderOverlayHandler
 			BlockPos pos = new BlockPos((int)(mc.player.posX), 0, (int)(mc.player.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
 			event.getLeft().add(""+mc.world.getWorldTime());
-			event.getLeft().add("Rain: "+WeatherManager.getInstance().getPreciptitation((int)mc.player.posX, (int)mc.player.posZ) +
+			event.getLeft().add("Rain: "+WeatherManager.getInstance().getPrecipitation((int)mc.player.posX, (int)mc.player.posZ) +
 					" / "  + " / " + mc.world.isRaining());
 			event.getLeft().add("Temp: " + WeatherManager.getInstance().getTemperature((int)mc.player.posX, (int)mc.player.posY, (int)mc.player.posZ)+"C");
 			event.getLeft().add("Date: " + Timekeeper.getInstance().getSeasonalPeriod() + " | Time: " + Timekeeper.getInstance().getClockTime());

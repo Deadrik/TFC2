@@ -177,7 +177,7 @@ public class WorldProviderSurface extends WorldProvider
 					if(!player.isDead && player.dimension == 0)
 					{
 						float old = player.getEntityData().getFloat("oldPrecipitation");
-						float precip = (float)WeatherManager.getInstance().getPreciptitation((int)player.posX, (int)player.posZ);
+						float precip = (float)WeatherManager.getInstance().getPrecipitation((int)player.posX, (int)player.posZ);
 						if(precip != old)
 						{
 							player.connection.sendPacket(new SPacketChangeGameState(7, precip));

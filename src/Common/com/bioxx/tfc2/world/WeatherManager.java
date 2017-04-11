@@ -74,7 +74,7 @@ public class WeatherManager
 	/**
 	 * @return Returns an adjusted precipitation value for the island being queried
 	 */
-	public double getPreciptitation(IslandMap island, int x, int z)
+	public double getPrecipitation(IslandMap island, int x, int z)
 	{
 		Line model = getModelForClimate(island, worldObj);
 		double raw = getPrecipitationRaw(model, x >> 12, z >> 12);
@@ -84,10 +84,10 @@ public class WeatherManager
 		return rain;
 	}
 
-	public double getPreciptitation(int x, int z)
+	public double getPrecipitation(int x, int z)
 	{
 		IslandMap island = WorldGen.getInstance().getIslandMap(x >> 12, z >> 12);
-		return getPreciptitation(island, x, z);
+		return getPrecipitation(island, x, z);
 	}
 
 	public Line getModelForClimate(IslandMap map, World world)
