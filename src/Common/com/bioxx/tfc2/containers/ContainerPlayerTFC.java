@@ -1,5 +1,8 @@
 package com.bioxx.tfc2.containers;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
@@ -20,16 +23,13 @@ import com.bioxx.tfc2.core.PlayerInventory;
 
 public class ContainerPlayerTFC extends ContainerPlayer
 {
-	private final EntityPlayer thePlayer;
-	private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
 
-	public ContainerPlayerTFC(InventoryPlayer playerInv, boolean par2, EntityPlayer player)
+	public ContainerPlayerTFC(InventoryPlayer playerInv, boolean par2, EntityPlayer playerIn)
 	{
-		super(playerInv, par2, player);
+		super(playerInv, par2, playerIn);
 		this.craftMatrix = new InventoryCrafting(this, 3, 3);
 		this.inventorySlots.clear();
 		this.inventoryItemStacks.clear();
-		this.thePlayer = player;
 		this.addSlotToContainer(new SlotCraftingTFC(player, craftMatrix, craftResult, 0, 152, 36));
 		int x;
 		int y;
@@ -42,10 +42,11 @@ public class ContainerPlayerTFC extends ContainerPlayer
 
 		for (int k = 0; k < 4; ++k)
 		{
+			int index = 36 +(3-x);
+			final int k = x;
 			final EntityEquipmentSlot ees = VALID_EQUIPMENT_SLOTS[k];
-			this.addSlotToContainer(new Slot(playerInv, 36 + (3 - k), 8, 8 + k * 18)
+			this.addSlotToContainer(new Slot(playerInv, index, 8, 8 + x * 18)
 			{
-				private static final String __OBFID = "CL_00001755";
 				/**
 				 * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1
 				 * in the case of armor slots)
@@ -62,9 +63,18 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				public boolean isItemValid(ItemStack stack)
 				{
 					if (stack == null) return false;
-					return stack.getItem().isValidArmor(stack, ees, thePlayer);
+					return stack.getItem().isValidArmor(stack, ees, player);
 				}
+
 				@Override
+				public boolean canTakeStack(EntityPlayer playerIn)
+				{
+					ItemStack itemstack = this.getStack();
+					return !itemstack.isEmpty() && !playerIn.isCreative() && EnchantmentHelper.hasBindingCurse(itemstack) ? false : super.canTakeStack(playerIn);
+				}
+
+				@Override
+				@Nullable
 				@SideOnly(Side.CLIENT)
 				public String getSlotTexture()
 				{
@@ -113,10 +123,10 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	@Override
 	public void onCraftMatrixChanged(IInventory iinventory)
 	{
-		if(thePlayer == null)
+		if(player == null)
 			return;
 		super.onCraftMatrixChanged(iinventory);
-		ItemStack is2 = CraftingManagerTFC.getInstance().findMatchingRecipe(this.craftMatrix, this.thePlayer.world);
+		ItemStack is2 = CraftingManagerTFC.getInstance().findMatchingRecipe(this.craftMatrix, this.player.world);
 		if(!is2.isEmpty())
 			this.craftResult.setInventorySlotContents(0, is2);
 
@@ -528,6 +538,6 @@ public class ContainerPlayerTFC extends ContainerPlayer
 
 	public EntityPlayer getPlayer()
 	{
-		return this.thePlayer;
+		return this.player;
 	}
 }

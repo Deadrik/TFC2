@@ -179,7 +179,8 @@ public class WorldGen implements IThreadCompleteListener
 
 	private IslandMap createIsland(int x, int z)
 	{
-		long seed = world.getSeed()+Helper.combineCoords(x, z);
+		Random rand = new Random(world.getSeed()+Helper.combineCoords(x, z));
+		long seed = rand.nextLong();
 		IslandGenEvent.Pre preEvent = new IslandGenEvent.Pre(createParams(seed, x, z));
 		Global.EVENT_BUS.post(preEvent);
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
@@ -292,7 +293,7 @@ public class WorldGen implements IThreadCompleteListener
 		}
 		else if(Math.abs(z) == 1)
 		{
-			t = r.nextBoolean() ? ClimateTemp.TEMPERATE : ClimateTemp.SUBTROPICAL;
+			t = r.nextInt(100) < 25 ? ClimateTemp.TEMPERATE : ClimateTemp.SUBTROPICAL;
 		}
 		else if(Math.abs(z) == 2)
 		{
@@ -300,7 +301,7 @@ public class WorldGen implements IThreadCompleteListener
 		}
 		else if(Math.abs(z) == 3)
 		{
-			t = r.nextBoolean() ? ClimateTemp.TEMPERATE : ClimateTemp.SUBPOLAR;
+			t = r.nextInt(100) < 25 ? ClimateTemp.TEMPERATE : ClimateTemp.SUBPOLAR;
 		}
 		else if(Math.abs(z) == 4)
 		{

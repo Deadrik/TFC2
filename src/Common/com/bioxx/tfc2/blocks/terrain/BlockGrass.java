@@ -11,6 +11,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -93,6 +94,9 @@ public class BlockGrass extends BlockCollapsible
 	{
 		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
 		net.minecraftforge.common.EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
+
+		if(plant.getBlock() == Blocks.SAPLING)
+			return false;//This may break some cross mod compatability but for now its needed to prevent vanilla and some pam trees from generating
 
 		if(plantType == EnumPlantType.Plains)
 			return true;

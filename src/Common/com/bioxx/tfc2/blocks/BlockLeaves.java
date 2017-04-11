@@ -27,7 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.WoodType;
 
 public class BlockLeaves extends BlockTerra
@@ -96,6 +96,15 @@ public class BlockLeaves extends BlockTerra
 		IBlockState scanState;
 		WoodType wood = (WoodType)state.getValue(getMetaProperty());
 		BlockPos scanPos;
+
+		if(wood == WoodType.Palm)
+		{
+			scanState = world.getBlockState(pos.down());
+			if(scanState.getBlock() != TFCBlocks.LogNaturalPalm)
+				world.setBlockToAir(pos);
+			return;
+		}
+
 		if (world.isAreaLoaded(pos.add(-5, -5, -5), pos.add(5, 5, 5)))
 		{
 			for(int y = -4; y <= 4; y++)
@@ -106,15 +115,23 @@ public class BlockLeaves extends BlockTerra
 					{
 						scanPos = pos.add(x, y, z);
 						scanState = world.getBlockState(pos.add(x, y, z));
-						if(Core.isNaturalLog(scanState) && scanState.getValue(getMetaProperty()) == wood)
+						if((state.getBlock() == TFCBlocks.Leaves && scanState.getBlock() == TFCBlocks.LogNatural && scanState.getValue(BlockLogNatural.META_PROPERTY) == wood) ||
+								(state.getBlock() == TFCBlocks.Leaves2 && scanState.getBlock() == TFCBlocks.LogNatural2 && scanState.getValue(BlockLogNatural2.META_PROPERTY) == wood))
 							return;
 					}
 				}
 			}
-			world.scheduleUpdate(pos.north(), this, tickRate(world));
-			world.scheduleUpdate(pos.south(), this, tickRate(world));
-			world.scheduleUpdate(pos.east(), this, tickRate(world));
-			world.scheduleUpdate(pos.west(), this, tickRate(world));
+
+			for(int y = -1; y <= 1; y++)
+			{
+				for(int x = -1; x <= 1; x++)
+				{
+					for(int z = -1; z <= 1; z++)
+					{
+						world.scheduleUpdate(pos.add(x, y, z), this, tickRate(world));
+					}
+				}
+			}
 			world.setBlockToAir(pos);
 		}
 	}

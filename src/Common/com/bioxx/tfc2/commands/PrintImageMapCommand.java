@@ -32,7 +32,9 @@ import com.bioxx.libnoise.module.modifier.Clamp;
 import com.bioxx.libnoise.module.modifier.Curve;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.modifier.ScalePoint;
+import com.bioxx.libnoise.module.source.Billow;
 import com.bioxx.libnoise.module.source.Perlin;
+import com.bioxx.libnoise.module.source.Spheres;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class PrintImageMapCommand extends CommandBase
@@ -61,6 +63,10 @@ public class PrintImageMapCommand extends CommandBase
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		if(!player.isCreative())
+			return;
+
 		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
 		if(params.length >= 2)
@@ -226,7 +232,7 @@ public class PrintImageMapCommand extends CommandBase
 			}
 			else if(params[0].equals("test"))
 			{
-				int size = 16;
+				int size = 1024;
 				try 
 				{
 					File outFile = new File(name+".png");
@@ -240,25 +246,41 @@ public class PrintImageMapCommand extends CommandBase
 					int zM = ((int)Math.floor(player.posZ) >> 12);
 					IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
 
-					Perlin pe = new Perlin();
-					pe.setSeed(0);
-					pe.setFrequency (1f/2f);
-					pe.setLacunarity(5);
-					pe.setNoiseQuality (com.bioxx.libnoise.NoiseQuality.BEST);
+					Perlin modulePerl = new Perlin();
+					modulePerl.setSeed(map.seed);
+					modulePerl.setFrequency(0.00058);
+					modulePerl.setPersistence(0.7);
+					modulePerl.setLacunarity(2.0);
+					modulePerl.setOctaveCount(5);
+					modulePerl.setNoiseQuality(NoiseQuality.BEST);
+
+					Billow moduleBillow = new Billow();
+					moduleBillow.setSeed(map.seed);
+					moduleBillow.setFrequency(0.00058);
+					moduleBillow.setPersistence(0.7);
+					moduleBillow.setLacunarity(2.0);
+					moduleBillow.setOctaveCount(5);
+
+					Spheres cylinders = new Spheres();
+
+					ScaleBias sb = new ScaleBias();
+					sb.setSourceModule(0, cylinders);
+					sb.setBias(0.0);
+					sb.setScale(1.4);
 
 					ScaleBias sb2 = new ScaleBias();
-					sb2.setSourceModule(0, pe);
-					//Noise is normally +-2 so we scale by 0.5 to make it +-1.0
+					sb2.setSourceModule(0, sb);
 					sb2.setBias(0.5);
 					sb2.setScale(0.25);
+
 					Plane p = new Plane(sb2);
 
 					for(int y = 0; y < size; y++)
 					{
 						for(int x = 0; x < size; x++)
 						{
-							double val = p.GetValue(x, y);
-							int rain = Math.min((int)(val * 255), 255);
+							double val = p.GetValue(2.3*x, 2.3*y);
+							int rain = Math.max(Math.min((int)(val * 255), 255), 0);
 							graphics.setColor(colorMap[rain]);	
 							graphics.drawRect(x, y, x+1, y+1);
 						}

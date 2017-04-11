@@ -548,6 +548,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 2 && y > 10)
 						{
 							BlockPos pos = smoothCoast(chunkprimer, p, closestCenter, x, z, y);
+
 							elevationMap[z << 4 | x] = pos.getY();
 							chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), sand);
 							chunkprimer.setBlockState(pos.getX(), pos.getY()-1, pos.getZ(), sand);
@@ -614,6 +615,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		if( y > Global.SEALEVEL-4)
 		{
 			double distance = 1000;
+			double clElev = -1;
 			Point p2 = p.plus(islandChunkX, islandChunkZ).toIslandCoord();
 			List<Center> oceanNeighbors = getOceanNeighbors(closestCenter);
 			for(Center c : oceanNeighbors)
@@ -621,8 +623,10 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				double d = p2.distance(c.point);
 				if(d < distance)
 					distance = d;
+				clElev = Math.max(clElev, c.getElevation());
 			}
-			int turb = 4;
+			clElev = convertElevation(closestCenter.getElevation()) - convertElevation(clElev);
+			int turb = (int)clElev;
 			float range = 25f;
 			if(oceanNeighbors.size() > 3)
 				range /=2 ;
@@ -631,6 +635,10 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			turb *= Math.min(1.5f-(distance/range), 1.0f);
 			turb = (int) Math.max(turb, 0f);
 			pos = pos.down(turb);
+
+			if(pos.getY() < 60)
+				pos = new BlockPos(pos.getX(), 60 ,pos.getZ());
+
 			for(int i = y; i > pos.getY(); i--)
 			{
 				if(i < Global.SEALEVEL)
@@ -666,10 +674,11 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 	{
 		Point p2 = p.plus(islandChunkX, islandChunkZ);
 
-		Billow b = new Billow();
+		Perlin b = new Perlin();
 		b.setSeed(30);
 		b.setFrequency (1f/15f);
 		b.setLacunarity(1.5);
+		b.setPersistence(0.25);
 		b.setOctaveCount(2);
 
 		Billow b2 = new Billow();
@@ -679,8 +688,8 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 		Billow b3 = new Billow();
 		b3.setSeed(3000);
-		b3.setFrequency (1f/50f);
-		b3.setOctaveCount(2);
+		b3.setFrequency (1f/30f);
+		b3.setOctaveCount(3);
 
 		Max m = new Max();
 		m.setSourceModule(0, b2);
@@ -773,6 +782,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
 
+
 				int hexElev = 0;
 				if(!closestCenter.hasAttribute(Attribute.River) && !closestCenter.hasMarker(Marker.Coast) && !closestCenter.hasMarker(Marker.CoastWater) && !closestCenter.hasAttribute(Attribute.Lake))
 				{
@@ -781,11 +791,27 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				}
 				else if(closestCenter.hasMarker(Marker.CoastWater))
 				{
-					hexElev = 62 - getBeachTurb(closestCenter, p, 2);
+					hexElev = convertElevation(closestCenter.getElevation()) + getBeachTurb(closestCenter, p, 2);
 				}
 				else 
 				{
 					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p));
+				}
+
+				if(closestCenter.hasMarker(Marker.Ocean))
+				{
+					Vector<Center> nearCenters = getCentersNear(p, 9);
+					boolean onlyOcean = true;
+					for(Center c : nearCenters)
+					{
+						if(!c.hasMarker(Marker.Ocean))
+						{
+							onlyOcean = false;
+						}
+					}
+
+					if(onlyOcean)
+						hexElev = convertElevation(getSmoothHeightHex(closestCenter, p, 9));
 				}
 
 
@@ -931,9 +957,10 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL);
 						if(center.biome == BiomeType.BEACH)
 						{
-							waterLevel = Math.max(terrainElev, Global.SEALEVEL);
+							waterLevel = Math.max(terrainElev-1, Global.SEALEVEL);
 						}
-
+						if(upCenter != null)
+							waterLevel = Math.min(waterLevel, convertElevation(upCenter.getElevation()));
 
 
 						localBlockPos = localBlockPos.add(0, waterLevel, 0);

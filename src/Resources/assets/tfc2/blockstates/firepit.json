@@ -2,6 +2,7 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
+			"particle": "tfc2:blocks/devices/firepitbase",
 			"unlit": "tfc2:blocks/devices/firepitbase",
 			"lit": "tfc2:blocks/devices/firepitbaselit",
 			"tool": "tfc2:blocks/devices/cookingpot",

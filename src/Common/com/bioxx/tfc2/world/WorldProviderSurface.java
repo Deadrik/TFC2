@@ -50,8 +50,9 @@ public class WorldProviderSurface extends WorldProvider
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z)
 	{
-		Block b = Core.getGroundAboveSeaLevel(this.world, new BlockPos(x, 0, z));
-		return b == TFCBlocks.Sand;
+		BlockPos pos = new BlockPos(x, 0, z);
+		Block b = Core.getGroundAboveSeaLevel(this.world, pos);
+		return b == TFCBlocks.Sand && world.isAirBlock(pos.up()) && world.isAirBlock(pos.up(2));
 	}
 
 	@Override
@@ -105,7 +106,7 @@ public class WorldProviderSurface extends WorldProvider
 	public Biome getBiomeForCoords(BlockPos pos)
 	{
 		//TODO make this read the islandmap and output relevant biome types
-		return Biome.getBiome(1);
+		return Biome.getBiome(0);
 	}
 
 	@Override

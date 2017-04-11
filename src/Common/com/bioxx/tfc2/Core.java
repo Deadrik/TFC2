@@ -23,6 +23,7 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
+import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
 import com.bioxx.tfc2.core.InventoryPlayerTFC;
@@ -38,7 +39,7 @@ public class Core
 	{
 		BlockPos blockpos1;
 
-		for (blockpos1 = new BlockPos(pos.getX(), 63, pos.getZ()); !world.isAirBlock(blockpos1.up()); blockpos1 = blockpos1.up())
+		for (blockpos1 = new BlockPos(pos.getX(), Global.SEALEVEL, pos.getZ()); !world.isAirBlock(blockpos1.up()); blockpos1 = blockpos1.up())
 		{
 			;
 		}
