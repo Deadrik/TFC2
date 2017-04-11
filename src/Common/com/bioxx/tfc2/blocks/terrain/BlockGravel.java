@@ -50,12 +50,13 @@ public class BlockGravel extends BlockGravity
 	@Override
 	protected void checkFallable(World worldIn, BlockPos pos, IBlockState state)
 	{
-		BlockPos slidePos = slideScan(worldIn, pos);
+		super.checkFallable(worldIn, pos, state);
+		/*BlockPos slidePos = slideScan(worldIn, pos);
 		if(slidePos != null && (slidePos.getY() >= 0))
 		{
 			((World)worldIn).setBlockToAir(pos);
 			fall(worldIn, slidePos, state);
-		}
+		}*/
 	}
 
 	/*******************************************************************************
