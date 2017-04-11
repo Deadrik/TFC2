@@ -213,17 +213,17 @@ public class ContainerSpecialCrafting extends ContainerTFC
 
 	@Override
 	public boolean canMergeSlot(ItemStack stack, Slot slotIn)
-    {
-        if (slotIn.getSlotIndex() == invPlayer.currentItem)  return false;
-        else  return  super.canMergeSlot(stack, slotIn);
-    }
+	{
+		if (slotIn.getSlotIndex() == invPlayer.currentItem)  return false;
+		else  return super.canMergeSlot(stack, slotIn);
+	}
 	
 	@Override
-    public boolean canDragIntoSlot(Slot slotIn)
-    {
-        if (slotIn.getSlotIndex() == invPlayer.currentItem)  return false;
-        else  return super.canDragIntoSlot(slotIn);
-    }
+	public boolean canDragIntoSlot(Slot slotIn)
+	{
+		if (slotIn.getSlotIndex() == invPlayer.currentItem)  return false;
+		else  return super.canDragIntoSlot(slotIn);
+	}
 
 	public boolean hasPieceBeenRemoved(PlayerInfo pi)
 	{
