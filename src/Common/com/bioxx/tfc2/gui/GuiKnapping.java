@@ -191,6 +191,11 @@ public class GuiKnapping extends GuiContainerTFC
 	@Override
 	protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) 
 	{
+		if (mouseY > 88+guiTop || mouseX > 88+guiLeft || mouseY < 16+guiTop || mouseX < 16+guiLeft)
+		{
+			super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+			return;
+		}
 		if (clickedMouseButton == 0)
 		{
 			for (int l = 0; l < this.buttonList.size(); ++l)
@@ -218,5 +223,7 @@ public class GuiKnapping extends GuiContainerTFC
 				}
 			}
 		}
+		else
+			super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
 	}
 }
