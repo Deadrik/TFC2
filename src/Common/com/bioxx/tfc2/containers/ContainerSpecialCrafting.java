@@ -166,7 +166,6 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	 */
 	public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer player)
 	{
-		//System.out.println("*** CSC slotClick: "+slotID+" , "+dragType+" , "+clickTypeIn);  //Debug
 		if (slotID == 28 + invPlayer.currentItem || clickTypeIn == ClickType.SWAP && dragType == invPlayer.currentItem)
 			return ItemStack.EMPTY;
 		if (slotID == 0 && clickTypeIn == ClickType.SWAP && dragType >= 0 && dragType < 9)
@@ -211,6 +210,20 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	{
 		return true;
 	}
+
+	@Override
+	public boolean canMergeSlot(ItemStack stack, Slot slotIn)
+    {
+        if (slotIn.getSlotIndex() == invPlayer.currentItem)  return false;
+        else  return  super.canMergeSlot(stack, slotIn);
+    }
+	
+	@Override
+    public boolean canDragIntoSlot(Slot slotIn)
+    {
+        if (slotIn.getSlotIndex() == invPlayer.currentItem)  return false;
+        else  return super.canDragIntoSlot(slotIn);
+    }
 
 	public boolean hasPieceBeenRemoved(PlayerInfo pi)
 	{
