@@ -1,7 +1,13 @@
 package com.bioxx.tfc2.core;
 
+import java.util.List;
+
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 
 import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
@@ -19,6 +25,17 @@ public class Recipes
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneShovel), new ItemStack(TFCItems.StoneShovelHead), "stickWood");
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneHoe), new ItemStack(TFCItems.StoneHoeHead), "stickWood");
 		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.Firestarter), " X","X ", 'X', "stickWood");
+
+		List<IRecipe> list = CraftingManager.getInstance().getRecipeList();
+		for(int i = 0; i < list.size(); i++)
+		{
+			IRecipe rec = list.get(i);
+			if(rec.getRecipeOutput().getItem() == Item.getItemFromBlock(Blocks.CRAFTING_TABLE))
+			{
+				CraftingManager.getInstance().getRecipeList().remove(i);
+			}
+
+		}
 	}
 
 	public static void RegisterKnappingRecipes()
