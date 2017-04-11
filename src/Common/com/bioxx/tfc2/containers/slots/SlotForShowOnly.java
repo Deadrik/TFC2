@@ -23,4 +23,15 @@ public class SlotForShowOnly extends Slot
 	{
 		return false;
 	}
+
+	@Override
+	public int getSlotStackLimit()
+	{
+		return 0;
+	}
+	@Override
+	public int getItemStackLimit(ItemStack stack)
+	{
+		return 0;
+	}
 }
