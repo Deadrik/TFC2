@@ -13,6 +13,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
@@ -117,13 +118,16 @@ public class WorldGenTrees implements IWorldGenerator
 		}
 
 		int growthStage = 0;
-		if(c.getMoisture().isGreaterThan(Moisture.MEDIUM))
+		if(m.getParams().getIslandMoisture().isGreaterThan(Moisture.LOW) && !m.getParams().hasFeature(Feature.Desert))
 		{
-			growthStage = random.nextInt(3);
-		}
-		else if(c.getMoisture().isGreaterThan(Moisture.LOW))
-		{
-			growthStage = random.nextInt(2);
+			if(c.getMoisture().isGreaterThan(Moisture.MEDIUM) && m.getParams().getIslandMoisture().isGreaterThan(Moisture.MEDIUM))
+			{
+				growthStage = random.nextInt(3);
+			}
+			else if(c.getMoisture().isGreaterThan(Moisture.LOW))
+			{
+				growthStage = random.nextInt(2);
+			}
 		}
 		TreeReturnEnum grown = TreeReturnEnum.None;
 		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
