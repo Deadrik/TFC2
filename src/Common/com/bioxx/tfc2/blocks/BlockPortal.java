@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -26,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.world.TeleporterPaths;
 
 public class BlockPortal extends BlockTerra
@@ -104,6 +106,10 @@ public class BlockPortal extends BlockTerra
 	{
 		if (!entityIn.isRiding() && !entityIn.isBeingRidden() && !worldObj.isRemote)
 		{
+			NBTTagCompound nbt = entityIn.getEntityData().getCompoundTag("TFC2");
+			if(Timekeeper.getInstance().getTotalTicks() - nbt.getLong("lastPortalTime") < 1000)
+				return;
+
 			MinecraftServer minecraftserver = worldObj.getMinecraftServer();
 			if(worldObj.provider.getDimension() == 0)
 			{
@@ -111,6 +117,8 @@ public class BlockPortal extends BlockTerra
 					((EntityPlayerMP)entityIn).mcServer.getPlayerList().transferPlayerToDimension((EntityPlayerMP)entityIn, 2, new TeleporterPaths(minecraftserver.worldServerForDimension(2)));
 				else
 					entityIn.changeDimension(2);
+
+				nbt.setLong("lastPortalTime", Timekeeper.getInstance().getTotalTicks());
 			}
 			else if(worldObj.provider.getDimension() == 2)
 			{
@@ -118,6 +126,8 @@ public class BlockPortal extends BlockTerra
 					((EntityPlayerMP)entityIn).mcServer.getPlayerList().transferPlayerToDimension((EntityPlayerMP)entityIn, 0, new TeleporterPaths(minecraftserver.worldServerForDimension(0)));
 				else
 					entityIn.changeDimension(0);
+
+				nbt.setLong("lastPortalTime", Timekeeper.getInstance().getTotalTicks());
 			}
 		}
 	}
