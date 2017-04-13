@@ -1,0 +1,33 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"grassside": "tfc2:blocks/grassside",
+			"grasstop": "tfc2:blocks/grasstop"
+		},
+		"model": "tall_grass"
+	},
+	"variants": {
+		"isonstone": {
+			"true": {},
+			"false": {}
+		},
+		"veg": {
+			"deadbush": {"textures": {"cross": "blocks/deadbush"}},
+			"tackweed": {"model": "tfc2:tackweed","textures": {"cross": "tfc2:blocks/plants/tackweed"}},
+			"ocatillo": {},
+			"primrose": {"model": "tfc2:primrose", "textures": {"cross": "tfc2:blocks/plants/primrose"}},
+			"yucca": {"textures": {"cross": "tfc2:blocks/plants/yucca"}}
+		},
+		"isonstone=false,veg=deadbush": [],
+		"isonstone=false,veg=tackweed": [],
+		"isonstone=false,veg=ocatillo": 
+		[
+			{"model": "tfc2:ocatillo_0"},
+			{"model": "tfc2:ocatillo_1"},
+			{"model": "tfc2:ocatillo_2"}
+		],
+		"isonstone=false,veg=primrose": [],
+		"isonstone=false,veg=yucca": []
+	}
+}

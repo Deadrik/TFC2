@@ -29,19 +29,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 
-public class BlockVegetation extends BlockTerra implements IPlantable
+public class BlockVegDesert extends BlockTerra implements IPlantable
 {
-	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("veg", VegType.class);
+	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("veg", DesertVegType.class);
 	/** Whether this fence connects in the northern direction */
 	public static final PropertyBool IS_ON_STONE = PropertyBool.create("isonstone");
 
-	public BlockVegetation()
+	public BlockVegDesert()
 	{
 		super(Material.VINE, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, VegType.Grass0).withProperty(IS_ON_STONE, Boolean.valueOf(false)));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, DesertVegType.DeadBush).withProperty(IS_ON_STONE, Boolean.valueOf(false)));
 		float f = 0.35F;
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.8F, 0.5F + f);
 	}
@@ -83,24 +83,12 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 
 	protected boolean canPlaceBlockOn(IBlockState state, IBlockState soil)
 	{
-		VegType veg = (VegType)state.getValue(META_PROPERTY);
-		return Core.isSoil(soil);
+		return Core.isSand(soil);
 	}
 
 	@Override
 	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
-		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
-		EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
-
-		VegType veg = (VegType)state.getValue(META_PROPERTY);
-		if(plant.getBlock() == this)
-		{
-			if(veg == VegType.DoubleGrassBottom && plant.getValue(META_PROPERTY) == VegType.DoubleGrassTop)
-				return true;
-			if(veg == VegType.DoubleFernBottom && plant.getValue(META_PROPERTY) == VegType.DoubleFernTop)
-				return true;
-		}
 		return false;
 	}
 
@@ -147,13 +135,13 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(META_PROPERTY, VegType.getTypeFromMeta(meta));
+		return this.getDefaultState().withProperty(META_PROPERTY, DesertVegType.getTypeFromMeta(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return ((VegType)state.getValue(META_PROPERTY)).getMeta();
+		return ((DesertVegType)state.getValue(META_PROPERTY)).getMeta();
 	}
 
 	@Override
@@ -186,24 +174,18 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		return 3;
 	}
 
-	public enum VegType implements IStringSerializable
+	public enum DesertVegType implements IStringSerializable
 	{
-		Grass0("grass0", 0),
-		Grass1("grass1", 1),
-		Empty("deadbush", 2),
-		DoubleGrassBottom("doublegrassbottom", 3),
-		DoubleGrassTop("doublegrasstop", 4),
-		Fern("fern", 5),
-		DoubleFernBottom("doublefernbottom", 6),
-		DoubleFernTop("doubleferntop", 7),
-		ShortGrass("shortgrass", 8),
-		ShorterGrass("shortergrass", 9),
-		Bromeliad("bromeliad", 10);
+		Tackweed("tackweed", 0),
+		Ocatillo("ocatillo", 1),
+		Yucca("yucca", 2),
+		Primrose("primrose", 3),
+		DeadBush("deadbush", 4);
 
 		private String name;
 		private int meta;
 
-		VegType(String s, int id)
+		DesertVegType(String s, int id)
 		{
 			name = s;
 			meta = id;
@@ -219,12 +201,12 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 			return meta;
 		}
 
-		public static VegType getTypeFromMeta(int meta)
+		public static DesertVegType getTypeFromMeta(int meta)
 		{
-			for(int i = 0; i < VegType.values().length; i++)
+			for(int i = 0; i < DesertVegType.values().length; i++)
 			{
-				if(VegType.values()[i].meta == meta)
-					return VegType.values()[i];
+				if(DesertVegType.values()[i].meta == meta)
+					return DesertVegType.values()[i];
 			}
 			return null;
 		}
@@ -233,7 +215,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) 
 	{
-		return EnumPlantType.Plains;
+		return EnumPlantType.Desert;
 	}
 
 	@Override

@@ -38,6 +38,8 @@ import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.api.util.KeyBindings;
 import com.bioxx.tfc2.blocks.BlockLeaves;
 import com.bioxx.tfc2.blocks.BlockLeaves2;
+import com.bioxx.tfc2.blocks.BlockVegDesert;
+import com.bioxx.tfc2.blocks.BlockVegDesert.DesertVegType;
 import com.bioxx.tfc2.blocks.BlockVegetation;
 import com.bioxx.tfc2.blocks.BlockVegetation.VegType;
 import com.bioxx.tfc2.core.RegistryItemQueue;
@@ -243,8 +245,7 @@ public class ClientProxy extends CommonProxy
 				if(worldIn == null ||pos == null || WorldGen.getInstance() == null || state.getBlock() != TFCBlocks.Vegetation)
 					return 0x55ff55;
 				VegType veg = (VegType)state.getValue(BlockVegetation.META_PROPERTY);
-				if(veg == VegType.DeadBush)
-					return 0xD8D8D8;
+
 				int x = pos.getX() >> 12;
 				int z = pos.getZ() >> 12;
 
@@ -259,6 +260,31 @@ public class ClientProxy extends CommonProxy
 				return ColorizerGrass.getGrassColor(d0, d1);
 			}
 		}, new Block[] { TFCBlocks.Vegetation});
+
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor()
+		{
+			@Override
+			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
+			{
+				if(worldIn == null ||pos == null || WorldGen.getInstance() == null || state.getBlock() != TFCBlocks.VegDesert)
+					return 0x55ff55;
+				DesertVegType veg = (DesertVegType)state.getValue(BlockVegDesert.META_PROPERTY);
+				if(veg == DesertVegType.DeadBush)
+					return 0xD8D8D8;
+				int x = pos.getX() >> 12;
+				int z = pos.getZ() >> 12;
+
+				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
+				double d0 = m.getParams().getIslandTemp().getMapTemp();
+				double d1 = 0.5;
+
+				if(worldIn instanceof ChunkCache)
+					d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
+				if(m.getParams().hasFeature(Feature.Desert))
+					d1 *= 0.25;
+				return ColorizerGrass.getGrassColor(d0, d1);
+			}
+		}, new Block[] { TFCBlocks.VegDesert});
 
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor()
 		{

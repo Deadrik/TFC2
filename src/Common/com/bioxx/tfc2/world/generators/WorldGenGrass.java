@@ -16,10 +16,11 @@ import com.bioxx.jmapgen.BiomeType;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.graph.Center;
-import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.Moisture;
+import com.bioxx.tfc2.blocks.BlockVegDesert;
+import com.bioxx.tfc2.blocks.BlockVegDesert.DesertVegType;
 import com.bioxx.tfc2.blocks.BlockVegetation;
 import com.bioxx.tfc2.blocks.BlockVegetation.VegType;
 
@@ -105,10 +106,51 @@ public class WorldGenGrass implements IWorldGenerator
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, vt), bp, 2);
 					}
 				}
-				else if(Core.isSand(world.getBlockState(bp.down())) && !closest.hasAnyMarkersOf(Marker.Coast, Marker.CoastWater) && 
-						map.getParams().hasFeature(Feature.Desert) && random.nextInt(20) == 0)
+				else if(map.getParams().hasFeature(Feature.Desert) && closest.getMoistureRaw() < Moisture.LOW.getMoisture())//aka we're actually in the desert areas
 				{
-					world.setBlockState(bp, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DeadBush), 2);
+					IBlockState downState = world.getBlockState(bp.down());
+					if(Core.isSand(downState) && random.nextInt(20) == 0)
+					{
+						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Ocatillo), 2);
+					}
+					else if(Core.isSand(downState) && random.nextInt(50) == 0)
+					{
+						//world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Tackweed), 2);
+					}
+				}
+			}
+		}
+
+		int x = 0, y = 0, z = 0; 
+		if(map.getParams().hasFeature(Feature.Desert))
+		{
+			for(int i = 0; i < 4; i++)
+			{
+				x = random.nextInt(16); z = random.nextInt(16);
+				BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
+				closest = map.getClosestCenter(bp);
+				IBlockState downState = world.getBlockState(bp.down());
+
+				if(closest.getMoistureRaw() < Moisture.LOW.getMoisture() && Core.isSand(downState))//we're actually in the desert areas
+				{
+					world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Tackweed), 2);
+				}
+			}
+			int count = 3+random.nextInt(6);
+			if(random.nextInt(10) == 0)
+			{
+				x = random.nextInt(16); z = random.nextInt(16);
+				for(int i = 0; i < count; i++)
+				{
+					x += -4+random.nextInt(9); z += -4+random.nextInt(9);
+					BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
+					closest = map.getClosestCenter(bp);
+					IBlockState downState = world.getBlockState(bp.down());
+
+					if(closest.getMoistureRaw() < Moisture.LOW.getMoisture() && Core.isSand(downState))//we're actually in the desert areas
+					{
+						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Primrose), 2);
+					}
 				}
 			}
 		}

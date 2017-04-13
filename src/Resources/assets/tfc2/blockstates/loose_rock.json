@@ -5,7 +5,7 @@
 			"all": "tfc2:blocks/rocks/granite raw"
 		},
 		"uvlock": true,
-		"model": "tfc2:looserocks/rock1"
+		"model": "tfc2:looserocks/rock0"
 	},
 	"variants": {
 		"stone" : {
