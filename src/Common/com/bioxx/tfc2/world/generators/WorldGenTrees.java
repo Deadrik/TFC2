@@ -106,9 +106,10 @@ public class WorldGenTrees implements IWorldGenerator
 			return new TreeReturn(TreeReturnEnum.None, 0);
 		}
 
-		BlockPos treePos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
-		treePos = world.getTopSolidOrLiquidBlock(treePos);
-		Point p = new Point(treePos.getX(), treePos.getZ()).toIslandCoord();
+		BlockPos genPos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
+		BlockPos treePos;
+		genPos = world.getTopSolidOrLiquidBlock(genPos);
+		Point p = new Point(genPos.getX(), genPos.getZ()).toIslandCoord();
 		Center c = m.getClosestCenter(p);
 		//Obviously we arent going to gen in an ocean hex so we can speed up some generation by skipping this location
 		if(c.hasMarker(Marker.Ocean))
@@ -128,11 +129,12 @@ public class WorldGenTrees implements IWorldGenerator
 				growthStage = random.nextInt(2);
 			}
 		}
+
 		TreeReturnEnum grown = TreeReturnEnum.None;
 		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
-
+			treePos = genPos.add(-(schem.getCenterX()-1), 0, -(schem.getCenterZ()-1));
 			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
 				if(genTree(schem, tc, world, random, treePos))
@@ -166,6 +168,7 @@ public class WorldGenTrees implements IWorldGenerator
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
 			treePos = genPos.add(-(schem.getCenterX()-1), 0, -(schem.getCenterZ()-1));
+
 			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
 				if(genTree(schem, tc, world, random, treePos))
