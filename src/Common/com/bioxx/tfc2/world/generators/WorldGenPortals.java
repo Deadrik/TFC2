@@ -137,7 +137,7 @@ public class WorldGenPortals implements IWorldGenerator
 
 			if(state.getBlock() != Blocks.AIR)
 			{
-				world.setBlockState(localPos, state);
+				world.setBlockState(localPos, state, 2);
 			}
 		}
 	}

@@ -6,7 +6,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 
@@ -202,27 +201,20 @@ public class WorldGenTrees implements IWorldGenerator
 
 	private void Process(World world, TreeConfig tc, Schematic schem, BlockPos blockPos, IBlockState state)
 	{
-		IBlockState block = tc.wood;
-		Chunk chunk = world.getChunkFromBlockCoords(blockPos);
-		IBlockState leaves = tc.leaves;
-
 		if(state.getBlock().getMaterial(state) == Material.WOOD)
 		{
 			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
-				//chunk.setBlockState(blockPos, block);
-				world.setBlockState(blockPos, block, 2);
+				world.setBlockState(blockPos, tc.wood, 2);
 		}
 		else if(state.getBlock().getMaterial(state) == Material.LEAVES)
 		{
 			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
 			{
-				//chunk.setBlockState(blockPos, leaves);
-				world.setBlockState(blockPos, leaves, 2);
+				world.setBlockState(blockPos, tc.leaves, 2);
 			}
 		}
 		else
 		{
-			//chunk.setBlockState(blockPos, state);
 			world.setBlockState(blockPos, state, 2);
 		}
 	}

@@ -79,15 +79,15 @@ public class WorldGenCliffRocks implements IWorldGenerator
 			BlockPos pos5 = random.nextBoolean() ? pos.add(new BlockPos(0, 0, -1)) : null;
 			for(int y = -2; y <= size; y++)
 			{
-				world.setBlockState(pos.add(0,y,0), stone);
+				world.setBlockState(pos.add(0,y,0), stone, 2);
 				if(pos2 != null && y < size)
-					world.setBlockState(pos2.add(0,y,0), stone);
+					world.setBlockState(pos2.add(0,y,0), stone, 2);
 				if(pos3 != null && y < size)
-					world.setBlockState(pos3.add(0,y,0), stone);
+					world.setBlockState(pos3.add(0,y,0), stone, 2);
 				if(pos4 != null && y < size)
-					world.setBlockState(pos4.add(0,y,0), stone);
+					world.setBlockState(pos4.add(0,y,0), stone, 2);
 				if(pos5 != null && y < size)
-					world.setBlockState(pos5.add(0,y,0), stone);
+					world.setBlockState(pos5.add(0,y,0), stone, 2);
 			}
 		}
 	}
