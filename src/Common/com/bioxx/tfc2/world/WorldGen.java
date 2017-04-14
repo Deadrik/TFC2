@@ -138,8 +138,8 @@ public class WorldGen implements IThreadCompleteListener
 
 		if(ci == null)
 			return EMPTY_MAP;
-		//Should only ever be 0 if this map was created but never accessed by the game.
-		if(ci.lastAccess == 0)
+		//Should only ever be 0 if this map was created but never accessed by the game. Don't queue maps if clientside
+		if(ci.lastAccess == 0 && this != instanceClient)
 		{
 			//Add the neighbor maps to the mapQueue for generation in another thread
 			mapQueue.add(Helper.combineCoords(x+1, z));
