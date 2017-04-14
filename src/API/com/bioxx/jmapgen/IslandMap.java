@@ -218,7 +218,7 @@ public class IslandMap
 		}
 
 		assignMoisture();
-		redistributeMoisture(getLandCenters());
+		//redistributeMoisture(getLandCenters());
 		assignMoisturePostRedist();
 
 		setupBiomeInfo();
@@ -1097,7 +1097,7 @@ public class IslandMap
 		{
 			if(!inside(c.point))
 			{
-				c.setMarkers(Marker.Water);
+				c.setMarkers(Marker.Water, Marker.Ocean);
 			}
 			else if(c.hasMarker(Marker.Border))
 				numLandBorder++;
@@ -1108,6 +1108,8 @@ public class IslandMap
 				queue.add(c);
 			}
 		}
+
+		assignLakes();
 
 		/**
 		 * Next we assign the borders to have 0 elevation and all other corners to have MAX_VALUE. We also add
@@ -1149,6 +1151,59 @@ public class IslandMap
 		}
 
 		return numLandBorder;
+	}
+
+	public void assignLakes()
+	{
+		int lakeCount = 5;//Number of distinct lakes to attempt to generate
+		int lakeSize = 160;//Size of lakes to generate
+
+		Moisture m = getParams().getIslandMoisture();
+
+		if(m.equals(Moisture.LOW))
+			lakeSize = 80;
+		else if(m.isGreaterThanOrEqual(Moisture.HIGH))
+			lakeSize = 240;
+
+		for(int lc = 0; lc < lakeCount; lc++)
+		{
+			int size = 0;
+			ArrayList<Corner> lakeTiles = new ArrayList<Corner>();
+			LinkedList<Corner> queue = new LinkedList<Corner>();
+			Corner startCorner = null;
+			while(startCorner == null)
+			{
+				Corner c = corners.get(this.mapRandom.nextInt(corners.size()));
+				if (!c.hasMarker(Marker.Water))
+					startCorner = c;
+			}
+			queue.add(corners.get(this.mapRandom.nextInt(corners.size())));
+
+			while(!queue.isEmpty())
+			{
+				Corner c = queue.pop();
+
+				if(mapRandom.nextInt(100) > 15 && !c.isShoreline() && !c.hasMarker(Marker.Water))
+				{
+					lakeTiles.add(c);
+					if(size < lakeSize)
+						queue.addAll(c.adjacent);
+					size++;
+				}
+			}
+
+			if(lakeTiles.size() < lakeSize / 3)
+			{
+				lc--;
+			}
+			else
+			{
+				for(Corner c : lakeTiles)
+				{
+					c.setMarkers(Marker.Water);
+				}
+			}
+		}
 	}
 
 	private void resetMap()
@@ -1258,6 +1313,76 @@ public class IslandMap
 		}
 	}
 
+	public void assignMoisture() 
+	{
+		LinkedList<Center> queue = new LinkedList<Center>();
+		// Fresh water
+		for(Center cr : centers)
+		{
+			RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.River);
+			if ((cr.hasMarker(Marker.Water) || (attrib != null && attrib.getRiver() > 0)) && !cr.hasMarker(Marker.Ocean)) 
+			{
+				double rivermult = attrib != null ? attrib.getRiver() : 0;
+				cr.setMoistureRaw((attrib != null && attrib.getRiver() > 0) ? 1 : 1);
+				/*if(this.getParams().hasFeature(Feature.Desert))
+					cr.setMoistureRaw((Math.log10(cr.getMoistureRaw()*0.5)+2)/2);*/
+				queue.push(cr);
+			} 
+			else 
+			{
+				cr.setMoistureRaw(0.0);
+			}
+
+			if (cr.hasMarker(Marker.Ocean)) 
+			{
+				cr.setMoistureRaw(1.0);
+			}
+			if (cr.hasMarker(Marker.Coast)) 
+			{
+				cr.setMoistureRaw(Math.max(0.5, cr.getMoistureRaw()));
+			}
+		}
+		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
+		double moistureMult = 0.6+(0.2 * this.islandParams.getIslandMoisture().getMoisture());
+		double maxElev = islandParams.islandMaxHeight;
+		//if(this.getParams().hasFeature(Feature.Desert))
+		//	moistureMult = (0.3 * this.islandParams.getIslandMoisture().getMoisture());
+
+
+		while (queue.size() > 0) 
+		{
+			Center q = queue.pop();
+
+			for(Center adjacent : q.neighbors)
+			{
+				double newMoisture = q.getMoistureRaw() * moistureMult;
+				double elevDiff = this.convertHeightToMC(adjacent.getElevation()) - this.convertHeightToMC(q.getElevation());
+				if(!islandParams.hasFeature(Feature.LowLand) && elevDiff > 0)
+				{
+					newMoisture = q.getMoistureRaw() * (moistureMult * (1-(elevDiff*2/maxElev)));
+				}
+
+				if (newMoisture > adjacent.getMoistureRaw()) 
+				{
+					adjacent.setMoistureRaw(newMoisture);
+					queue.push(adjacent);
+				}
+			}
+		}
+		// Salt water
+		/*for(Center cr : centers)
+		{
+			if (cr.hasMarker(Marker.Ocean)) 
+			{
+				cr.setMoistureRaw(1.0);
+			}
+			if (cr.hasMarker(Marker.Coast)) 
+			{
+				cr.setMoistureRaw(Math.max(0.5, cr.getMoistureRaw()));
+			}
+		}*/
+	}
+
 	// Change the overall distribution of moisture to be evenly distributed.	
 	public void redistributeMoisture(Vector<Center> locations) {
 		int i;
@@ -1273,31 +1398,17 @@ public class IslandMap
 		}
 	}
 
-	public void assignMoisture() 
+	public void assignMoisturePostRedist() 
 	{
 		LinkedList<Center> queue = new LinkedList<Center>();
 		// Fresh water
 		for(Center cr : centers)
 		{
-			RiverAttribute attrib = (RiverAttribute)cr.getAttribute(Attribute.River);
-			if ((cr.hasMarker(Marker.Water) || (attrib != null && attrib.getRiver() > 0)) && !cr.hasMarker(Marker.Ocean)) 
+			if (cr.hasMarker(Marker.Coast)) 
 			{
-				double rivermult = attrib != null ? attrib.getRiver() : 0;
-				cr.setMoistureRaw((attrib != null && attrib.getRiver() > 0) ? Math.min(3.0, (0.1 * rivermult)) : 1.0);
-				/*if(this.getParams().hasFeature(Feature.Desert))
-					cr.setMoistureRaw((Math.log10(cr.getMoistureRaw()*0.5)+2)/2);*/
 				queue.push(cr);
 			} 
-			else 
-			{
-				cr.setMoistureRaw(0.0);
-			}
 		}
-		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
-		double moistureMult = (0.6 * this.islandParams.getIslandMoisture().getMoisture());
-		//if(this.getParams().hasFeature(Feature.Desert))
-		//	moistureMult = (0.3 * this.islandParams.getIslandMoisture().getMoisture());
-
 
 		while (queue.size() > 0) 
 		{
@@ -1305,24 +1416,20 @@ public class IslandMap
 
 			for(Center adjacent : q.neighbors)
 			{
-				double newMoisture = q.getMoistureRaw() * moistureMult;
-				if (newMoisture > adjacent.getMoistureRaw()) 
+				if(!adjacent.hasMarker(Marker.Ocean) && adjacent.getElevation() - q.getElevation() < 0.08)
 				{
-					adjacent.setMoistureRaw(newMoisture);
-					queue.push(adjacent);
+					double moistureMult = Math.max(1 - adjacent.getElevation() / 0.25, 0);
+					double newMoisture = q.getMoistureRaw() * moistureMult;
+					if (newMoisture > adjacent.getMoistureRaw()) 
+					{
+						adjacent.setMoistureRaw(newMoisture);
+						queue.push(adjacent);
+					}
 				}
-			}
-		}
-		// Salt water
-		for(Center cr : centers)
-		{
-			if (cr.hasMarker(Marker.Ocean)) 
-			{
-				cr.setMoistureRaw(1.0);
-			}
-			if (cr.hasMarker(Marker.Coast)) 
-			{
-				cr.setMoistureRaw(Math.max(0.5, cr.getMoistureRaw()));
+				else if(adjacent.hasMarker(Marker.Ocean))
+				{
+					adjacent.setMoistureRaw(1.0);
+				}
 			}
 		}
 	}
@@ -2086,42 +2193,6 @@ public class IslandMap
 		return i/this.islandParams.islandMaxHeight;
 	}
 
-	public void assignMoisturePostRedist() 
-	{
-		LinkedList<Center> queue = new LinkedList<Center>();
-		// Fresh water
-		for(Center cr : centers)
-		{
-			if (cr.hasMarker(Marker.Coast)) 
-			{
-				queue.push(cr);
-			} 
-		}
-
-		while (queue.size() > 0) 
-		{
-			Center q = queue.pop();
-
-			for(Center adjacent : q.neighbors)
-			{
-				if(!adjacent.hasMarker(Marker.Ocean) && adjacent.getElevation() - q.getElevation() < 0.08)
-				{
-					double moistureMult = Math.max(1 - adjacent.getElevation() / 0.25, 0);
-					double newMoisture = q.getMoistureRaw() * moistureMult;
-					if (newMoisture > adjacent.getMoistureRaw()) 
-					{
-						adjacent.setMoistureRaw(newMoisture);
-						queue.push(adjacent);
-					}
-				}
-				else if(adjacent.hasMarker(Marker.Ocean))
-				{
-					adjacent.setMoistureRaw(1.0);
-				}
-			}
-		}
-	}
-
 	/* Assign a biome type to each polygon. If it has
 	// ocean/coast/water, then that's the biome; otherwise it depends
 	// on low/high elevation and low/medium/high moisture. This is
@@ -2143,7 +2214,14 @@ public class IslandMap
 		{
 			if (p.elevation < 0.1) 
 				return BiomeType.MARSH;
-			return BiomeType.LAKE;
+			if(p.hasAttribute(Attribute.Lake))
+			{
+				for(Center n : p.neighbors)
+					if(!n.hasMarker(Marker.Water))
+						return BiomeType.LAKESHORE;
+				return BiomeType.LAKE;
+			}
+			return BiomeType.POND;
 		} 
 		else if (p.hasMarker(Marker.Coast)) 
 		{
@@ -2229,7 +2307,12 @@ public class IslandMap
 	// Determine whether a given point should be on the island or in the water.
 	public Boolean inside(Point p) 
 	{
-		return islandParams.insidePerlin(p);
+		return inside(p, true);
+	}
+
+	public Boolean inside(Point p, boolean clamp) 
+	{
+		return islandParams.insidePerlin(p, clamp);
 	}
 
 	double elevationBucket(Center p) 
