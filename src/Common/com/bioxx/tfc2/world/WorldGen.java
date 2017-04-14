@@ -72,7 +72,7 @@ public class WorldGen implements IThreadCompleteListener
 		mapQueue = new PriorityBlockingQueue<Integer>();
 		buildThreads = new ThreadBuild[TFCOptions.maxThreadsForIslandGen];
 		EMPTY_MAP = new IslandMap(ISLAND_SIZE, 0);
-		EMPTY_MAP.newIsland(createParams(0, 0, 0));
+		EMPTY_MAP.newIsland(createParams(0, -2, 0));
 		EMPTY_MAP.generateFake();
 	}
 
@@ -139,7 +139,7 @@ public class WorldGen implements IThreadCompleteListener
 		if(ci == null)
 			return EMPTY_MAP;
 		//Should only ever be 0 if this map was created but never accessed by the game. Don't queue maps if clientside
-		if(ci.lastAccess == 0 && this != instanceClient)
+		if(ci.lastAccess == 0 /*&& this != instanceClient*/)
 		{
 			//Add the neighbor maps to the mapQueue for generation in another thread
 			mapQueue.add(Helper.combineCoords(x+1, z));
@@ -153,6 +153,11 @@ public class WorldGen implements IThreadCompleteListener
 		}
 
 		return ci.getIslandMap();
+	}
+
+	public void enqueueIsland(int x, int z)
+	{
+		mapQueue.add(Helper.combineCoords(x, z));
 	}
 
 	public boolean isMapLoaded(int x, int z)
@@ -174,6 +179,13 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		Random rand = new Random(seed);
 		long seed2 = rand.nextLong();
+
+		if(islandCache.containsKey(Helper.combineCoords(x, z)))
+		{
+			if(islandCache.get(Helper.combineCoords(x, z)).getIslandMap().seed == seed2)
+				return islandCache.get(Helper.combineCoords(x, z)).getIslandMap();
+		}
+
 		IslandGenEvent.Pre preEvent = new IslandGenEvent.Pre(createParams(seed2, x, z));
 		Global.EVENT_BUS.post(preEvent);
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed2);
@@ -188,7 +200,7 @@ public class WorldGen implements IThreadCompleteListener
 		IslandGenEvent.Post postEvent = new IslandGenEvent.Post(mapgen);
 		Global.EVENT_BUS.post(postEvent);
 		CachedIsland ci = new CachedIsland(postEvent.islandMap);
-		saveMap(ci);
+		if(this != instanceClient) saveMap(ci);
 
 		if(!islandCache.containsKey(Helper.combineCoords(x, z)))
 			islandCache.put(Helper.combineCoords(x, z), ci);
@@ -202,7 +214,7 @@ public class WorldGen implements IThreadCompleteListener
 
 	private IslandParameters createParams(long seed, int x, int z)
 	{
-		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.3);
+		IslandParameters id = new IslandParameters(seed, ISLAND_SIZE, 0.5, 0.2);
 		Random r = new Random(seed);
 		id.setCoords(x, z);
 		int fcount = 2+r.nextInt(1)+r.nextInt(1);
@@ -374,11 +386,14 @@ public class WorldGen implements IThreadCompleteListener
 		int key;
 		Set<Integer> keys = islandCache.keySet();
 		CachedIsland c;
+		int timer = 20000;
+		if(this == instanceClient)
+			timer = 360000;//We'll wait longer on clients
 		for(Iterator<Integer> iter = keys.iterator(); iter.hasNext();)
 		{
 			key = iter.next();
 			c = islandCache.get(key);
-			if(c != null && now-c.lastAccess > 20000)//20 seconds of no access will trim the map
+			if(c != null && now-c.lastAccess > timer)//X seconds of no access will trim the map
 			{
 				saveMap(c);
 				islandCache.remove(key);
@@ -454,6 +469,21 @@ public class WorldGen implements IThreadCompleteListener
 		return (file1 != null && file1.exists());
 	}
 
+	public void forceBuildIsland(int x, int z, long seed)
+	{
+		for(int i = 0; i < buildThreads.length; i++)
+		{
+			if(buildThreads[i] == null)
+			{
+				buildThreads[i] = new ThreadBuild(i, "Map Build Thread: "+i, Helper.combineCoords(x, z));
+				buildThreads[i].setPriority(2);
+				buildThreads[i].addListener(this);
+				buildThreads[i].start();
+				return;
+			}
+		}
+	}
+
 	public void buildFromQueue()
 	{
 		if(mapQueue.size() == 0)
@@ -484,9 +514,9 @@ public class WorldGen implements IThreadCompleteListener
 
 	private class ThreadBuild extends Thread
 	{
-		private String threadName;
-		private Thread t;
-		private int id;
+		protected String threadName;
+		protected Thread t;
+		protected int id;
 		public final int threadID;
 
 		public ThreadBuild(int threadid, String n, int cantorizedID)
@@ -496,16 +526,16 @@ public class WorldGen implements IThreadCompleteListener
 			threadID = threadid;
 		}
 
-		private final Set<IThreadCompleteListener> listeners = new CopyOnWriteArraySet<IThreadCompleteListener>();
-		public final void addListener(final IThreadCompleteListener listener) 
+		private Set<IThreadCompleteListener> listeners = new CopyOnWriteArraySet<IThreadCompleteListener>();
+		public void addListener(final IThreadCompleteListener listener) 
 		{
 			listeners.add(listener);
 		}
-		public final void removeListener(final IThreadCompleteListener listener) 
+		public void removeListener(final IThreadCompleteListener listener) 
 		{
 			listeners.remove(listener);
 		}
-		private final void notifyListeners() 
+		private void notifyListeners() 
 		{
 			for (IThreadCompleteListener listener : listeners) 
 			{
@@ -545,6 +575,63 @@ public class WorldGen implements IThreadCompleteListener
 	public void notifyOfThreadComplete(Thread thread) 
 	{
 		buildThreads[((ThreadBuild)thread).threadID] = null;
+	}
+
+	private class ThreadBuildExact extends ThreadBuild
+	{
+		private long seed;
+
+		public ThreadBuildExact(int threadid, String n, int cantorizedID, long seed)
+		{
+			super(threadid, n, cantorizedID);
+			this.seed = seed;
+		}
+
+		private final Set<IThreadCompleteListener> listeners = new CopyOnWriteArraySet<IThreadCompleteListener>();
+		@Override
+		public void addListener(final IThreadCompleteListener listener) 
+		{
+			listeners.add(listener);
+		}
+		@Override
+		public void removeListener(final IThreadCompleteListener listener) 
+		{
+			listeners.remove(listener);
+		}
+		private void notifyListeners() 
+		{
+			for (IThreadCompleteListener listener : listeners) 
+			{
+				listener.notifyOfThreadComplete(this);
+			}
+		}
+
+		@Override
+		public void run()
+		{
+			try
+			{
+				createIsland(Helper.getXCoord(id),Helper.getYCoord(id), seed, true);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			finally 
+			{
+				notifyListeners();
+			}
+		}
+
+		@Override
+		public void start()
+		{
+			if (t == null)
+			{
+				t = new Thread (this, threadName);
+				t.start();
+			}
+		}
 	}
 
 }

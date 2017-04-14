@@ -4,7 +4,9 @@ import java.util.*;
 
 import net.minecraft.init.Blocks;
 
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.Point;
@@ -26,6 +28,8 @@ public class CreateDungeonHandler
 	@SubscribeEvent
 	public void createDungeon(IslandGenEvent.Post event)
 	{
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+			return;
 		DungeonSchemManager dsm = DungeonSchemManager.getInstance();
 		Random random = event.islandMap.mapRandom;
 

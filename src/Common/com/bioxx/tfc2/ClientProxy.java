@@ -16,7 +16,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.network.Packet;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.*;
+import net.minecraft.world.ColorizerGrass;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.model.ModelLoader;
@@ -220,20 +222,20 @@ public class ClientProxy extends CommonProxy
 				int z = pos.getZ() >> 12;
 				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
-				double d1 = 0.5;
-
-				if(worldIn instanceof ChunkCache)
-					d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
+				double d1 = m.getClosestCenter(pos).getMoistureRaw() * m.getParams().getIslandMoisture().getMoisture();
 
 				if(m.getParams().hasFeature(Feature.Desert))
+				{
 					d1 *= 0.25;
+					d0 *= 1.5;
+				}
 
 				if(d1 < 0.25)
 				{
 					if(state.getBlock() == TFCBlocks.Leaves && state.getValue(BlockLeaves.META_PROPERTY) == WoodType.Acacia)
 						d1 = 0.25;
 				}
-				return ColorizerFoliage.getFoliageColor(d0, d1);
+				return ColorizerGrass.getGrassColor(Math.min(d0, 1), Math.min(d1, 1));
 			}
 		}, new Block[] { TFCBlocks.Leaves, TFCBlocks.Leaves2});
 
@@ -251,13 +253,14 @@ public class ClientProxy extends CommonProxy
 
 				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
-				double d1 = 0.5;
+				double d1 = m.getClosestCenter(pos).getMoistureRaw() * m.getParams().getIslandMoisture().getMoisture();
 
-				if(worldIn instanceof ChunkCache)
-					d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
 				if(m.getParams().hasFeature(Feature.Desert))
+				{
 					d1 *= 0.25;
-				return ColorizerGrass.getGrassColor(d0, d1);
+					d0 *= 1.5;
+				}
+				return ColorizerGrass.getGrassColor(Math.min(d0, 1), Math.min(d1, 1));
 			}
 		}, new Block[] { TFCBlocks.Vegetation});
 
@@ -276,13 +279,10 @@ public class ClientProxy extends CommonProxy
 
 				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
-				double d1 = 0.5;
-
-				if(worldIn instanceof ChunkCache)
-					d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
-				if(m.getParams().hasFeature(Feature.Desert))
-					d1 *= 0.25;
-				return ColorizerGrass.getGrassColor(d0, d1);
+				double d1 = m.getClosestCenter(pos).getMoistureRaw() * m.getParams().getIslandMoisture().getMoisture();
+				/*if(m.getParams().hasFeature(Feature.Desert))
+					d1 *= 0.25;*/
+				return ColorizerGrass.getGrassColor(Math.min(d0, 1), Math.min(d1, 1));
 			}
 		}, new Block[] { TFCBlocks.VegDesert});
 
@@ -297,14 +297,14 @@ public class ClientProxy extends CommonProxy
 				int z = pos.getZ() >> 12;
 				IslandMap m = WorldGen.getInstance().getIslandMap(x, z);
 				double d0 = m.getParams().getIslandTemp().getMapTemp();
-				double d1 = 0.5;
+				double d1 = m.getClosestCenter(pos).getMoistureRaw() * m.getParams().getIslandMoisture().getMoisture();
 
-				if(worldIn instanceof ChunkCache)
-					d1 = Core.getMoistureFromChunk((ChunkCache)worldIn, pos);
 				if(m.getParams().hasFeature(Feature.Desert))
+				{
 					d1 *= 0.25;
-
-				return ColorizerGrass.getGrassColor(d0, d1);
+					d0 *= 1.5;
+				}
+				return ColorizerGrass.getGrassColor(Math.min(d0, 1), Math.min(d1, 1));
 			}
 		}, new Block[] { TFCBlocks.Grass});
 	}

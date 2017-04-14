@@ -15,7 +15,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -175,29 +174,6 @@ public class Core
 	public static boolean isNaturalLog(IBlockState state)
 	{
 		return state.getBlock() == TFCBlocks.LogNatural || state.getBlock() == TFCBlocks.LogNatural2 || state.getBlock() == TFCBlocks.LogNaturalPalm;
-	}
-
-	/**
-	 * 
-	 * @param w
-	 * @param pos
-	 * @return
-	 */
-	public static float getMoistureFromChunk(ChunkCache w, BlockPos pos)
-	{
-		Chunk c = w.world.getChunkFromBlockCoords(pos);
-		byte[] moistureArray = c.getBiomeArray();
-		byte b = moistureArray[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)];
-		int s = (b & 0xFF);
-		return (float)s / 255F;
-	}
-
-	public static float getMoistureFromChunk(Chunk c, BlockPos pos)
-	{
-		byte[] moistureArray = c.getBiomeArray();
-		byte b = moistureArray[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)];
-		int s = (b & 0xFF);
-		return (float)s / 255F;
 	}
 
 	public static void bindTexture(ResourceLocation texture)

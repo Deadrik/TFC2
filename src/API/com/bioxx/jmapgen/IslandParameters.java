@@ -51,7 +51,7 @@ public class IslandParameters
 
 	public IslandParameters (long seed, int size, double oceans) 
 	{
-		this(seed, size, oceans, 0.3);
+		this(seed, size, oceans, 0.8);
 	}
 
 	// The Perlin-based island combines perlin noise with the radius
@@ -99,7 +99,7 @@ public class IslandParameters
 		edgeModule = modulePerl2;
 	}
 
-	public boolean insidePerlin(Point q)
+	public boolean insidePerlin(Point q, boolean clamp)
 	{
 		Point np = new Point(2.3*(q.x/SIZE - 0.5), 2.3*(q.y/SIZE - 0.5));
 		double height = shapeModule.GetValue(q.x, 0, q.y);
@@ -107,9 +107,11 @@ public class IslandParameters
 		double angle = getAngle(np);
 		double dist = 0.15 * edgeModule.GetValue(0, angle, 0);
 
-		if(np.distance(Point.ORIGIN) < 0.65+dist)
+		double distOrigin = np.distance(Point.ORIGIN);
+
+		if(clamp && distOrigin < 0.65+dist)
 			return true;
-		if(np.distance(Point.ORIGIN) > 0.95+dist)
+		if(clamp && distOrigin > 0.95+dist)
 			return false;
 
 		return height > oceanRatio+oceanRatio*np.getLength()*np.getLength();
