@@ -526,9 +526,15 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							}
 						}
 
-						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) && y <= Global.SEALEVEL + 2)
+						if((closestCenter.biome == BiomeType.BEACH || closestCenter.biome == BiomeType.OCEAN) /*&& y <= Global.SEALEVEL + 2*/)
 						{
 							BlockPos pos = smoothCoast(chunkprimer, p, closestCenter, x, z, y);
+
+							if(pos.getY() <= Global.SEALEVEL + 2)
+							{
+								top = sand;
+								fill = sand;
+							}
 
 							//This should prevent most cases of doublestacked sand
 							if(isAir(chunkprimer, pos.down().north()) || isAir(chunkprimer, pos.down().south()) || isAir(chunkprimer, pos.down().east()) || isAir(chunkprimer, pos.down().west()))
@@ -537,10 +543,10 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 								elevationMap[z << 4 | x] = pos.getY()-1;
 							}
 							else
-								setState(chunkprimer, pos, sand);
+								setState(chunkprimer, pos, top);
 
-							setState(chunkprimer, pos.down(1), sand);
-							setState(chunkprimer, pos.down(2), sand);
+							setState(chunkprimer, pos.down(1), fill);
+							setState(chunkprimer, pos.down(2), fill);
 
 						}
 					}
