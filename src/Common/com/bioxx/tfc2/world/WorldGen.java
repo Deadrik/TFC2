@@ -43,6 +43,7 @@ public class WorldGen implements IThreadCompleteListener
 	private static WorldGen instanceClient;
 	private static boolean SHOULD_RESET_SERVER = false;
 	private static boolean SHOULD_RESET_CLIENT = false;
+	private static IslandMap EMPTY_MAP = null;
 
 	final java.util.Map<Integer, CachedIsland> islandCache;
 	public World world;
@@ -70,6 +71,9 @@ public class WorldGen implements IThreadCompleteListener
 		islandCache = Collections.synchronizedMap(new ConcurrentHashMap<Integer, CachedIsland>());
 		mapQueue = new PriorityBlockingQueue<Integer>();
 		buildThreads = new ThreadBuild[TFCOptions.maxThreadsForIslandGen];
+		EMPTY_MAP = new IslandMap(ISLAND_SIZE, 0);
+		EMPTY_MAP.newIsland(createParams(0, 0, 0));
+		EMPTY_MAP.generateFake();
 	}
 
 	public static void initialize(World world)
@@ -126,7 +130,7 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		long seed = world.getSeed()+Helper.combineCoords(x, z);
 		TFC.network.sendToServer(new SMapRequestPacket(x, z));
-		return createFakeMap(x, z, seed, false);
+		return EMPTY_MAP;
 	}
 
 	public IslandMap createFakeMap(int x, int z, long seed, boolean overwrite)
@@ -152,6 +156,9 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		int id = Helper.combineCoords(x, z);
 		CachedIsland ci = islandCache.get(id);
+
+		if(ci == null)
+			return EMPTY_MAP;
 		//Should only ever be 0 if this map was created but never accessed by the game.
 		if(ci.lastAccess == 0)
 		{
@@ -179,13 +186,18 @@ public class WorldGen implements IThreadCompleteListener
 		return islandCache.get(id) != null;
 	}
 
-	private IslandMap createIsland(int x, int z)
+	public IslandMap createIsland(int x, int z)
 	{
-		Random rand = new Random(world.getSeed()+Helper.combineCoords(x, z));
-		long seed = rand.nextLong();
-		IslandGenEvent.Pre preEvent = new IslandGenEvent.Pre(createParams(seed, x, z));
+		return createIsland(x, z, world.getSeed()+Helper.combineCoords(x, z), false);
+	}
+
+	public IslandMap createIsland(int x, int z, long seed, boolean overwrite)
+	{
+		Random rand = new Random(seed);
+		long seed2 = rand.nextLong();
+		IslandGenEvent.Pre preEvent = new IslandGenEvent.Pre(createParams(seed2, x, z));
 		Global.EVENT_BUS.post(preEvent);
-		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
+		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed2);
 		mapgen.newIsland(preEvent.params);
 		mapgen.generateFull();
 		//Make sure we don't access IslandData until after generateFull because the data may become lost
@@ -198,7 +210,14 @@ public class WorldGen implements IThreadCompleteListener
 		Global.EVENT_BUS.post(postEvent);
 		CachedIsland ci = new CachedIsland(postEvent.islandMap);
 		saveMap(ci);
-		islandCache.put(Helper.combineCoords(x, z), ci);
+
+		if(!islandCache.containsKey(Helper.combineCoords(x, z)))
+			islandCache.put(Helper.combineCoords(x, z), ci);
+		else if(overwrite && islandCache.containsKey(Helper.combineCoords(x, z)))
+		{
+			islandCache.remove(Helper.combineCoords(x, z));
+			islandCache.put(Helper.combineCoords(x, z), ci);
+		}
 		return ci.island;
 	}
 
@@ -352,6 +371,8 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			id.addCrop(suitableCrops.get(r.nextInt(suitableCrops.size())));
 		}
+
+		//id.setFeatures(Feature.Desert);
 
 		return id;
 	}

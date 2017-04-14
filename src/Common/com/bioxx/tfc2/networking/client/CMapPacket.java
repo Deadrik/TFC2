@@ -55,7 +55,7 @@ public class CMapPacket implements IMessage
 				@Override
 				public void run() 
 				{
-					IslandMap map = WorldGen.getInstance().createFakeMap(message.islandX, message.islandZ, message.seed, true);
+					IslandMap map = WorldGen.getInstance().createIsland(message.islandX, message.islandZ, message.seed, true);
 				}
 			});
 			return null; // no response in this case
