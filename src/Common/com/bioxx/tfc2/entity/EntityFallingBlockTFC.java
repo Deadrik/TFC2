@@ -32,6 +32,15 @@ public class EntityFallingBlockTFC extends EntityFallingBlock
 		if(block instanceof IGravityBlock)
 			grav = (IGravityBlock)this.fallTile.getBlock();
 
+		if(!world.isAreaLoaded(this.getPosition().add(-32, 0, -32), this.getPosition().add(32, 0, 32)))
+		{
+			BlockPos pos = this.getPosition();
+			while(world.getBlockState(pos).getBlock().isReplaceable(world, pos))
+				pos.down();
+			world.setBlockState(pos.up(), fallTile);
+			setDead();
+		}
+
 		if (block.getMaterial(fallTile) == Material.AIR)
 		{
 			setDead();
