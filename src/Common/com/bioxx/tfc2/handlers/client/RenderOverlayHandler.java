@@ -15,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.chunk.Chunk;
 
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -189,7 +188,7 @@ public class RenderOverlayHandler
 			int xM = ((int)(mc.player.posX) >> 12);
 			int zM = ((int)(mc.player.posZ) >> 12);
 			IslandMap map = WorldGen.getInstance().getIslandMap(xM, zM);
-			Point islandCoord = new Point((int)(mc.player.posX), (int)(mc.player.posZ)).toIslandCoord();
+			Point islandCoord = new Point((int)Math.floor(mc.player.posX), (int)Math.floor(mc.player.posZ)).toIslandCoord();
 			BlockPos pos = new BlockPos((int)(mc.player.posX), 0, (int)(mc.player.posZ));
 			Center hex = map.getClosestCenter(islandCoord);
 			event.getLeft().add(""+mc.world.getWorldTime());
@@ -199,10 +198,12 @@ public class RenderOverlayHandler
 			event.getLeft().add("Date: " + Timekeeper.getInstance().getSeasonalPeriod() + " | Time: " + Timekeeper.getInstance().getClockTime());
 			event.getLeft().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"--------Hex--------");
 			event.getLeft().add("Index: "+hex.index);
+			event.getLeft().add("Biome: "+hex.biome.name());
 			event.getLeft().add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
-			Chunk c = mc.world.getChunkFromBlockCoords(pos);
 			event.getLeft().add("Moisture: "+hex.getMoisture() + " | " + hex.getMoistureRaw());
 			event.getLeft().add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
+
+			//PrintImageMapCommand.drawMapImage((int)Math.floor(mc.player.posX), (int)Math.floor(mc.player.posZ), mc.world, "test2");
 			/*if(hex.hasAttribute(Attribute.Lake))
 				event.getLeft().add("IsLake");	
 			RiverAttribute attrib = (RiverAttribute)hex.getAttribute(Attribute.River);
