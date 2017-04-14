@@ -480,7 +480,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
 				closestElev = convertElevation(closestCenter.getElevation());
-				if(islandMap.getParams().hasFeature(Feature.Desert) && !closestCenter.hasAttribute(Attribute.River) && closestCenter.getMoistureRaw() < 0.25)
+				if(islandMap.getParams().hasFeature(Feature.Desert) && closestCenter.getMoistureRaw() < 0.25)
 				{
 					top = sand;
 					fill = sand;
@@ -805,6 +805,13 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				{
 					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p));
 				}
+				int scanElev = hexElev;
+
+				if(closestCenter.biome == BiomeType.LAKE || closestCenter.biome == BiomeType.LAKESHORE)
+				{
+					LakeAttribute attrib = (LakeAttribute) closestCenter.getAttribute(Attribute.Lake);
+					scanElev = convertElevation(attrib.getLakeElev());
+				}
 
 				if(closestCenter.hasMarker(Marker.Ocean))
 				{
@@ -825,14 +832,14 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 
 				elevationMap[z << 4 | x] = hexElev;
-				for(int y = Math.min(Math.max(hexElev, Global.SEALEVEL), 255); y >= 0; y--)
+				for(int y = Math.min(Math.max(scanElev, Global.SEALEVEL), 255); y >= 0; y--)
 				{
 					Block b = Blocks.AIR;
 					if(y < hexElev)
 					{
 						b = Blocks.STONE;
 					}
-					else if(y < Global.SEALEVEL)
+					else if(y < Global.SEALEVEL || y < scanElev)
 					{
 						b = Blocks.WATER;
 					}
@@ -963,9 +970,13 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 						terrainElev = this.elevationMap[(localBlockPos.getZ() << 4) | localBlockPos.getX()];
 						waterLevel = Math.max(terrainElev-1, Global.SEALEVEL);
-						if(center.biome == BiomeType.BEACH)
+						if(center.biome == BiomeType.LAKE || center.biome == BiomeType.LAKESHORE)
 						{
-							waterLevel = Math.max(terrainElev-1, Global.SEALEVEL);
+							waterLevel = Math.max(terrainElev-1, convertElevation(center.getElevation()));
+						}
+						else if(center.biome == BiomeType.RIVER && dnCenter!= null)
+						{
+							waterLevel = Math.max(terrainElev-1, convertElevation(dnCenter.getElevation()));
 						}
 						if(upCenter != null)
 							waterLevel = Math.min(waterLevel, convertElevation(upCenter.getElevation()));

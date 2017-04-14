@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.heat.ItemHeat;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.BlockFirepit;
 import com.bioxx.tfc2.containers.ContainerFakeFirepit;
@@ -82,7 +83,8 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 			{
 				if(this.getStackInSlot(TOOL_SLOT) != ItemStack.EMPTY)
 				{
-					//ItemHeat.Increase(getStackInSlot(TOOL_SLOT), 1.0f);
+					if(ItemHeat.Get(getStackInSlot(TOOL_SLOT)) < MAXHEAT)
+						ItemHeat.Increase(getStackInSlot(TOOL_SLOT), 1.0f);
 				}
 			}
 		}
