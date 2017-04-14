@@ -57,7 +57,8 @@ public class SMapRequestPacket implements IMessage
 				{
 					int j;
 					IslandMap map = WorldGen.getInstance().getIslandMap(message.islandX, message.islandZ);
-					TFC.network.sendTo(new CMapPacket(message.islandX, message.islandZ, ctx.getServerHandler().player.world.getSeed()+Helper.combineCoords(message.islandX, message.islandZ)), ctx.getServerHandler().player);
+					long seed = ctx.getServerHandler().player.world.getSeed()+Helper.combineCoords(message.islandX, message.islandZ);
+					TFC.network.sendTo(new CMapPacket(message.islandX, message.islandZ, seed), ctx.getServerHandler().player);
 				}
 			});
 			return null; // no response in this case

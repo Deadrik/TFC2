@@ -108,7 +108,6 @@ public class WorldGen implements IThreadCompleteListener
 	public IslandMap getIslandMap(int x, int z)
 	{
 		int id = Helper.combineCoords(x, z);
-
 		//First we try to load the map from disk if it exists
 		if(!islandCache.containsKey(id))
 		{
@@ -117,7 +116,7 @@ public class WorldGen implements IThreadCompleteListener
 		//If the map did not exist on disk then create it from scratch
 		if(!islandCache.containsKey(id))
 		{
-			if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+			if(this == instanceClient)
 				createFakeMap(x, z);
 			else
 				createIsland(x, z);
@@ -128,28 +127,8 @@ public class WorldGen implements IThreadCompleteListener
 
 	private IslandMap createFakeMap(int x, int z)
 	{
-		long seed = world.getSeed()+Helper.combineCoords(x, z);
 		TFC.network.sendToServer(new SMapRequestPacket(x, z));
 		return EMPTY_MAP;
-	}
-
-	public IslandMap createFakeMap(int x, int z, long seed, boolean overwrite)
-	{
-		Random rand = new Random(seed);
-		long seed2 = rand.nextLong();
-		IslandParameters id = createParams(seed2, x, z);
-		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed2);
-		mapgen.newIsland(id);
-		mapgen.generateFake();
-		CachedIsland ci = new CachedIsland(mapgen);
-		if(!islandCache.containsKey(Helper.combineCoords(x, z)))
-			islandCache.put(Helper.combineCoords(x, z), ci);
-		else if(overwrite && islandCache.containsKey(Helper.combineCoords(x, z)))
-		{
-			islandCache.remove(Helper.combineCoords(x, z));
-			islandCache.put(Helper.combineCoords(x, z), ci);
-		}
-		return mapgen;
 	}
 
 	private IslandMap getMap(int x, int z)

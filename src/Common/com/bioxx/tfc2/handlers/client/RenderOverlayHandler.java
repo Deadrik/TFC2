@@ -198,7 +198,8 @@ public class RenderOverlayHandler
 			event.getLeft().add("Date: " + Timekeeper.getInstance().getSeasonalPeriod() + " | Time: " + Timekeeper.getInstance().getClockTime());
 			event.getLeft().add(TextFormatting.BOLD+""+TextFormatting.YELLOW+"--------Hex--------");
 			event.getLeft().add("Index: "+hex.index);
-			event.getLeft().add("Biome: "+hex.biome.name());
+			if(hex.biome != null)
+				event.getLeft().add("Biome: "+hex.biome.name());
 			event.getLeft().add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
 			event.getLeft().add("Moisture: "+hex.getMoisture() + " | " + hex.getMoistureRaw());
 			event.getLeft().add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
