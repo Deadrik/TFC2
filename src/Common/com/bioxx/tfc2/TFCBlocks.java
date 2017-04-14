@@ -30,6 +30,7 @@ public class TFCBlocks
 	public static Block Planks2;
 	public static Block Effect;
 	public static Block Vegetation;
+	public static Block VegDesert;
 	public static Block LooseRocks;
 	public static Block Sapling;
 	public static Block Sapling2;
@@ -96,6 +97,7 @@ public class TFCBlocks
 		Planks2 = new BlockPlanks2().setHardness(4F).setUnlocalizedName("planks2");
 		Effect = new BlockEffect().setHardness(0.1F).setUnlocalizedName("effect");
 		Vegetation = new BlockVegetation().setHardness(0.1F).setUnlocalizedName("vegetation");
+		VegDesert = new BlockVegDesert().setHardness(0.1F).setUnlocalizedName("veg_desert");
 		LooseRocks = new BlockLooseRocks().setHardness(0.2F).setUnlocalizedName("loose_rock");
 		Sapling = new BlockSapling().setHardness(0.1F).setUnlocalizedName("sapling");
 		Sapling2 = new BlockSapling2().setHardness(0.1F).setUnlocalizedName("sapling2");
@@ -166,6 +168,7 @@ public class TFCBlocks
 		register(Planks2, ItemWood.class);
 		register(Effect, ItemOre.class);
 		register(Vegetation);
+		register(VegDesert);
 		register(LooseRocks, ItemStone.class);
 		register(Sapling, ItemWood.class);
 		register(Sapling2, ItemWood.class);

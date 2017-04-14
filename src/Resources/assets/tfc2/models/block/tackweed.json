@@ -9,7 +9,7 @@
             "to": [ 16, 0.01, 16 ],
             "shade": false,
             "faces": {
-                "up": { "uv": [ 0, 0, 16, 16 ], "texture": "#cross", "tintindex": 0 }
+                "up": { "uv": [ 0, 0, 16, 16 ], "texture": "#cross"}
             }
         }
     ]

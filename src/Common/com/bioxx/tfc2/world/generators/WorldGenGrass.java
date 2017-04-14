@@ -153,6 +153,23 @@ public class WorldGenGrass implements IWorldGenerator
 					}
 				}
 			}
+
+			if(random.nextInt(20) == 0)
+			{
+				x = random.nextInt(16); z = random.nextInt(16);
+				for(int i = 0; i < count; i++)
+				{
+					x += -4+random.nextInt(9); z += -4+random.nextInt(9);
+					BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
+					closest = map.getClosestCenter(bp);
+					IBlockState downState = world.getBlockState(bp.down());
+
+					if(closest.getMoistureRaw() < Moisture.LOW.getMoisture() && Core.isSand(downState))//we're actually in the desert areas
+					{
+						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Yucca), 2);
+					}
+				}
+			}
 		}
 
 	}

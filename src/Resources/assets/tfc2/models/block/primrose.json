@@ -2,7 +2,7 @@
     "ambientocclusion": false,
     "textures": {
    		"cross":"tfc2:blocks/plants/primrose",
-        "particle": "#cross"
+        "particle":"tfc2:blocks/plants/primrose"
     },
     "elements": [
         {   "from": [ 0, 0, 8 ],
