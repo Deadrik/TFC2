@@ -131,8 +131,10 @@ public class WorldGen implements IThreadCompleteListener
 
 	public IslandMap createFakeMap(int x, int z, long seed, boolean overwrite)
 	{
-		IslandParameters id = createParams(seed, x, z);
-		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed);
+		Random rand = new Random(seed);
+		long seed2 = rand.nextLong();
+		IslandParameters id = createParams(seed2, x, z);
+		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed2);
 		mapgen.newIsland(id);
 		mapgen.generateFake();
 		CachedIsland ci = new CachedIsland(mapgen);

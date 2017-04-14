@@ -2,6 +2,7 @@ package com.bioxx.jmapgen;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -159,6 +160,19 @@ public class IslandParameters
 		return features.contains(feat);
 	}
 
+	public String featuresToString()
+	{
+		String s = "[";
+		Iterator<Feature> iter = features.iterator();
+		while(iter.hasNext())
+		{
+			Feature f = iter.next();
+			s += f.name() + ", ";
+		}
+		s+= "]";
+		return s;
+	}
+
 	public void setCoords(int x, int z) 
 	{
 		this.xCoord = x;
@@ -238,6 +252,8 @@ public class IslandParameters
 			return cropList.add(c);
 		return false;
 	}
+
+
 
 	public void readFromNBT(NBTTagCompound nbt)
 	{
