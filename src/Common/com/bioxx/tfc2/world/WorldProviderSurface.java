@@ -8,7 +8,6 @@ import net.minecraft.network.play.server.SPacketChangeGameState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkGenerator;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -102,12 +101,12 @@ public class WorldProviderSurface extends WorldProvider
 		return 258;
 	}
 
-	@Override
+	/*@Override
 	public Biome getBiomeForCoords(BlockPos pos)
 	{
 		//TODO make this read the islandmap and output relevant biome types
 		return Biome.getBiome(0);
-	}
+	}*/
 
 	@Override
 	public void updateWeather()

@@ -280,10 +280,12 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		{
 			for (int z = 0; z < 16; z++) 
 			{
-				biomeArray[z << 4 | x] = (byte)(getHex(p.plus(x, z)).getMoistureRaw() * 255f);
+				Center c = getHex(p.plus(x, z));
+
+				biomeArray[z << 4 | x] = (byte) Biome.getIdForBiome(c.biome.biome);
 			}
 		}
-
+		chunk.setBiomeArray(biomeArray);
 		chunk.generateSkylightMap();
 		return chunk;  
 	}

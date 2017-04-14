@@ -26,6 +26,8 @@ import com.bioxx.jmapgen.processing.CaveProcessor;
 import com.bioxx.jmapgen.processing.OreProcessor;
 import com.bioxx.jmapgen.processing.PortalProcessor;
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.util.Helper;
 
 public class IslandMap 
@@ -1282,8 +1284,8 @@ public class IslandMap
 			{
 				double rivermult = attrib != null ? attrib.getRiver() : 0;
 				cr.setMoistureRaw((attrib != null && attrib.getRiver() > 0) ? Math.min(3.0, (0.1 * rivermult)) : 1.0);
-				if(this.getParams().hasFeature(Feature.Desert))
-					cr.setMoistureRaw((Math.log10(cr.getMoistureRaw()*0.5)+2)/2);
+				/*if(this.getParams().hasFeature(Feature.Desert))
+					cr.setMoistureRaw((Math.log10(cr.getMoistureRaw()*0.5)+2)/2);*/
 				queue.push(cr);
 			} 
 			else 
@@ -1293,8 +1295,8 @@ public class IslandMap
 		}
 		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
 		double moistureMult = (0.6 * this.islandParams.getIslandMoisture().getMoisture());
-		/*if(this.getParams().hasFeature(Feature.Desert))
-			moistureMult = (float) ((Math.log10(1)+1)/1);*/
+		//if(this.getParams().hasFeature(Feature.Desert))
+		//	moistureMult = (0.3 * this.islandParams.getIslandMoisture().getMoisture());
 
 
 		while (queue.size() > 0) 
@@ -2112,6 +2114,10 @@ public class IslandMap
 						queue.push(adjacent);
 					}
 				}
+				else if(adjacent.hasMarker(Marker.Ocean))
+				{
+					adjacent.setMoistureRaw(1.0);
+				}
 			}
 		}
 	}
@@ -2123,36 +2129,79 @@ public class IslandMap
 	// needs of the island map generator.*/
 	public BiomeType getBiome(Center p) 
 	{
+		ClimateTemp temp = getParams().getIslandTemp();
 		float m = p.getMoistureRaw();
 		m *= this.getParams().getIslandMoisture().getMoisture();
-		if (p.hasMarker(Marker.Ocean)) {
-			return BiomeType.OCEAN;
-		} else if (p.hasMarker(Marker.Water)) {
-			if (p.elevation < 0.1) return BiomeType.MARSH;
-			//if (p.elevation > 0.8) return BiomeType.ICE;
+		if (p.hasMarker(Marker.Ocean)) 
+		{
+			if(p.hasMarker(Marker.CoastWater))
+				return BiomeType.OCEAN;
+			else 
+				return BiomeType.DEEP_OCEAN;
+		} 
+		else if (p.hasMarker(Marker.Water)) 
+		{
+			if (p.elevation < 0.1) 
+				return BiomeType.MARSH;
 			return BiomeType.LAKE;
-		} else if (p.hasMarker(Marker.Coast)) {
+		} 
+		else if (p.hasMarker(Marker.Coast)) 
+		{
 			return BiomeType.BEACH;
-		} else if (p.elevation > 0.8) {
-			if (m > 0.50) return BiomeType.SNOW;
-			else if (m > 0.33) return BiomeType.TUNDRA;
-			else if (m > 0.16) return BiomeType.BARE;
-			else return BiomeType.SCORCHED;
-		} else if (p.elevation > 0.6) {
-			if (m > 0.66) return BiomeType.TAIGA;
-			else if (m > 0.33) return BiomeType.SHRUBLAND;
-			else return BiomeType.TEMPERATE_DESERT;
-		} else if (p.elevation > 0.3) {
-			if (m > 0.83) return BiomeType.TEMPERATE_RAIN_FOREST;
-			else if (m > 0.50) return BiomeType.TEMPERATE_DECIDUOUS_FOREST;
-			else if (m > 0.16) return BiomeType.GRASSLAND;
-			else return BiomeType.TEMPERATE_DESERT;
-		} else {
-			if (m > 0.66) return BiomeType.TROPICAL_RAIN_FOREST;
-			else if (m > 0.33) return BiomeType.TROPICAL_SEASONAL_FOREST;
-			else if (m > 0.16) return BiomeType.GRASSLAND;
-			else return BiomeType.SUBTROPICAL_DESERT;
+		} 
+		else if(p.hasAttribute(Attribute.River))
+		{
+			return BiomeType.RIVER;
 		}
+		else if(getParams().hasFeature(Feature.Desert))
+		{
+			if(temp.equals(ClimateTemp.TEMPERATE))
+				return BiomeType.TEMPERATE_DESERT;
+			else if(temp.equals(ClimateTemp.SUBTROPICAL))
+				return BiomeType.SUBTROPICAL_DESERT;
+			else if(temp.equals(ClimateTemp.TROPICAL))
+				return BiomeType.TROPICAL_DESERT;
+			else if(temp.isCoolerThanOrEqual(ClimateTemp.SUBPOLAR))
+				return BiomeType.POLAR_DESERT;
+		}
+		else if(temp.equals(ClimateTemp.POLAR))
+		{
+			if(p.getMoisture().isGreaterThanOrEqual(Moisture.VERYHIGH))
+				return BiomeType.TAIGA;
+			else if(p.getMoisture().isGreaterThanOrEqual(Moisture.MEDIUM))
+				return BiomeType.TUNDRA;
+			else return BiomeType.BARE;
+		}
+		else if(temp.equals(ClimateTemp.SUBPOLAR))
+		{
+			if(p.getMoisture().isGreaterThanOrEqual(Moisture.MEDIUM))
+				return BiomeType.TAIGA;
+			else if(p.getMoisture().isGreaterThanOrEqual(Moisture.LOW))
+				return BiomeType.TUNDRA;
+			else return BiomeType.BARE;
+		}
+		else if(temp.equals(ClimateTemp.TEMPERATE))
+		{
+			if(p.getMoisture().isGreaterThanOrEqual(Moisture.MEDIUM))
+				return BiomeType.DECIDUOUS_FOREST;
+			else if(p.getMoisture().isGreaterThanOrEqual(Moisture.LOW))
+				return BiomeType.SHRUBLAND;
+			else return BiomeType.GRASSLAND;
+		}
+		else if(temp.equals(ClimateTemp.SUBTROPICAL))
+		{
+			if(p.getMoisture().isGreaterThanOrEqual(Moisture.MEDIUM))
+				return BiomeType.RAIN_FOREST;
+			else return BiomeType.GRASSLAND;
+		}
+		else if(temp.equals(ClimateTemp.TROPICAL))
+		{
+			if(p.getMoisture().isGreaterThanOrEqual(Moisture.MEDIUM))
+				return BiomeType.RAIN_FOREST;
+			else return BiomeType.GRASSLAND;
+		}
+
+		return BiomeType.GRASSLAND;
 	}
 
 	// Look up a Voronoi Edge object given two adjacent Voronoi

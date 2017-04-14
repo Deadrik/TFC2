@@ -31,7 +31,6 @@ import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
-import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.core.Timekeeper;
@@ -202,8 +201,7 @@ public class RenderOverlayHandler
 			event.getLeft().add("Index: "+hex.index);
 			event.getLeft().add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
 			Chunk c = mc.world.getChunkFromBlockCoords(pos);
-			int b = mc.world.getChunkFromBlockCoords(pos).getBiomeArray()[(pos.getZ() & 0xF) << 4 | (pos.getX() & 0xF)] & 0xFF;
-			event.getLeft().add("Moisture: "+Moisture.fromVal(hex.getMoistureRaw()) + " | " + hex.getMoistureRaw() + " | " + b + " | " + (float)b / 255F);
+			event.getLeft().add("Moisture: "+hex.getMoisture() + " | " + hex.getMoistureRaw());
 			event.getLeft().add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
 			/*if(hex.hasAttribute(Attribute.Lake))
 				event.getLeft().add("IsLake");	

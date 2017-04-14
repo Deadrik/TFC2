@@ -377,7 +377,14 @@ public class PrintImageMapCommand extends CommandBase
 			for(Center c : map.centers)
 			{
 				count++;
-				graphics.setColor(c.biome.color);		
+				double mult = Math.min(Math.max(c.getElevation()/2.5+0.6, 0), 1);
+				if(c.getElevation() < 0)
+					mult = 1;
+				int r = (int)(c.biome.color.getRed() * mult);
+				int g = (int)(c.biome.color.getGreen() * mult);
+				int b = (int)(c.biome.color.getBlue() * mult);
+				int RGB = (r << 16) + (g<<8) + (b);
+				graphics.setColor(Color.getColor("", RGB));		
 				poly = new Polygon();
 				for(Corner cn : c.corners)
 				{
