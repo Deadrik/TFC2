@@ -166,8 +166,12 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	 */
 	public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer player)
 	{
+		// 1. Freeze current slot (Main Hand held item)
 		if (slotID == 28 + invPlayer.currentItem || clickTypeIn == ClickType.SWAP && dragType == invPlayer.currentItem)
 			return ItemStack.EMPTY;
+		// 2. Take items from crafting output slot & put them into HotBar slot 1-9. 
+		//    - Works better than vanilla: merges crafted items with identical items in HotBar slot.
+		//    - Correctly handles multiple items (in case knapping will ever output more than 1 item per stack).
 		if (slotID == 0 && clickTypeIn == ClickType.SWAP && dragType >= 0 && dragType < 9)
 		{
 			Slot sourceSlot = (Slot) this.inventorySlots.get(slotID);
@@ -189,11 +193,11 @@ public class ContainerSpecialCrafting extends ContainerTFC
 				{
 					int sCnt = sourceStack.getCount(); 
 					int tCnt = targetStack.getCount();
-					int n = Math.min(targetStack.getMaxStackSize() - tCnt, sCnt);
-					if (n <= 0)  return ItemStack.EMPTY;
-					sourceStack.splitStack(n);
-					targetStack.setCount(tCnt + n);
-					if (n < sCnt)  return ItemStack.EMPTY;
+					int xferCnt = Math.min(targetStack.getMaxStackSize() - tCnt, sCnt);
+					if (xferCnt <= 0)  return ItemStack.EMPTY;
+					sourceStack.splitStack(xferCnt);
+					targetStack.setCount(tCnt + xferCnt);
+					if (xferCnt < sCnt)  return ItemStack.EMPTY;
 				}
 				sourceSlot.onSlotChanged();
 				sourceSlot.onTake(player, sourceStack);
@@ -211,6 +215,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		return true;
 	}
 
+	// Freeze current slot - disable double-click merging 
 	@Override
 	public boolean canMergeSlot(ItemStack stack, Slot slotIn)
 	{
@@ -218,6 +223,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		else  return super.canMergeSlot(stack, slotIn);
 	}
 	
+	// Freeze current slot - disable dragging  
 	@Override
 	public boolean canDragIntoSlot(Slot slotIn)
 	{
