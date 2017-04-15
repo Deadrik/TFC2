@@ -133,6 +133,9 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 		if(world.rand.nextFloat() < 1 - getSlideChance())
 			return null;
 
+		if(!world.isAirBlock(pos.up()) || !world.getBlockState(pos.up()).getBlock().isReplaceable(world, pos.up()))
+			return null;
+
 		if(getSlideHeight() == -1)
 			return null;
 		else
