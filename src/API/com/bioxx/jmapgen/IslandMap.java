@@ -28,7 +28,6 @@ import com.bioxx.jmapgen.processing.PortalProcessor;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
-import com.bioxx.tfc2.api.util.Helper;
 
 public class IslandMap 
 {
@@ -631,33 +630,6 @@ public class IslandMap
 				out.add(c);
 		}
 		return out;
-	}
-
-	private void createPortals()
-	{
-		Vector<Center> low = filterOutMarkers(this.getCentersBelow(0.3, false), Marker.Coast, Marker.Water, Marker.Spire);
-
-
-		//North
-		Vector<Center> tempC = filterKeepCoords(low, new Point(256,0), new Point(3840, 2048));
-		Center temp = tempC.get(this.mapRandom.nextInt(tempC.size()));
-		temp.addAttribute(new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()-1), EnumFacing.NORTH));
-
-		//South
-		tempC = filterKeepCoords(low, new Point(256,2048), new Point(3840, 4096));
-		temp = tempC.get(this.mapRandom.nextInt(tempC.size()));
-		temp.addAttribute(new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord(), this.islandParams.getZCoord()+1), EnumFacing.SOUTH));
-
-		//East
-		tempC = filterKeepCoords(low, new Point(2048,256), new Point(4096, 3840));
-		temp = tempC.get(this.mapRandom.nextInt(tempC.size()));
-		temp.addAttribute(new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()+1, this.islandParams.getZCoord()), EnumFacing.EAST));
-
-		//West
-		tempC = filterKeepCoords(low, new Point(0,256), new Point(2048, 3840));
-		temp = tempC.get(this.mapRandom.nextInt(tempC.size()));
-		temp.addAttribute(new PortalAttribute(Helper.combineCoords(this.islandParams.getXCoord()-1, this.islandParams.getZCoord()), EnumFacing.WEST));
-
 	}
 
 	public Center getHighestNeighbor(Center c)
@@ -1343,10 +1315,12 @@ public class IslandMap
 			}
 		}
 		//This controls how far the moisture level spreads from the moisture source. Lower values cause less overall island moisture.
-		double moistureMult = 0.6+(0.2 * this.islandParams.getIslandMoisture().getMoisture());
+		double moistureMult =  0.6+(0.2 * this.islandParams.getIslandMoisture().getMoisture());
 		double maxElev = islandParams.islandMaxHeight;
-		//if(this.getParams().hasFeature(Feature.Desert))
-		//	moistureMult = (0.3 * this.islandParams.getIslandMoisture().getMoisture());
+
+
+		if(this.getParams().hasFeature(Feature.Desert))
+			moistureMult = (0.8 * moistureMult);
 
 
 		while (queue.size() > 0) 
@@ -1915,7 +1889,17 @@ public class IslandMap
 			if(c.hasMarker(Marker.Valley))
 				continue;
 
-			possibleStarts.add(c);
+			boolean nextToWater = false;
+			for(Center n : c.neighbors)
+			{
+				if(n.hasMarker(Marker.Water))
+				{
+					nextToWater=true;
+					possibleStarts.add(n);
+				}
+			}
+			if(!nextToWater)
+				possibleStarts.add(c);
 		}
 
 
@@ -1936,11 +1920,15 @@ public class IslandMap
 
 		for (int i = 0; i < lakes.size(); i++) 
 		{
-			possibleStarts.add(lakes.get(i).lowestCenter);
-			for(Center cen : lakes.get(i).lowestCenter.neighbors)
+			Center lowest = lakes.get(i).lowestCenter;
+
+			for(Center cen : lowest.neighbors)
 			{
-				if(cen.hasMarker(Marker.Water) && mapRandom.nextBoolean())
-					possibleStarts.add(cen);
+				if(!cen.hasMarker(Marker.Water))
+				{
+					possibleStarts.add(lowest);
+					break;
+				}
 			}
 		}
 
@@ -2034,7 +2022,7 @@ public class IslandMap
 								break;
 							}
 						}
-						r.riverStart.center.setMarkers(Marker.Pond);
+						r.riverStart.center.setMarkers(Marker.Pond, Marker.Water);
 					}
 					else
 					{
@@ -2231,7 +2219,7 @@ public class IslandMap
 		{
 			return BiomeType.RIVER;
 		}
-		else if(getParams().hasFeature(Feature.Desert))
+		else if(getParams().hasFeature(Feature.Desert) && p.getMoisture().isLessThanOrEqual(Moisture.MEDIUM))
 		{
 			if(temp.equals(ClimateTemp.TEMPERATE))
 				return BiomeType.TEMPERATE_DESERT;
@@ -2241,6 +2229,10 @@ public class IslandMap
 				return BiomeType.TROPICAL_DESERT;
 			else if(temp.isCoolerThanOrEqual(ClimateTemp.SUBPOLAR))
 				return BiomeType.POLAR_DESERT;
+		}
+		else if(getParams().hasFeature(Feature.Desert))
+		{
+			return BiomeType.DRY_FOREST;
 		}
 		else if(temp.equals(ClimateTemp.POLAR))
 		{

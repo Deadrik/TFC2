@@ -24,7 +24,6 @@ import com.bioxx.jmapgen.RandomCollection;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
-import com.bioxx.tfc2.api.Crop;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.events.IslandGenEvent;
@@ -354,16 +353,18 @@ public class WorldGen implements IThreadCompleteListener
 		/**
 		 * Crops
 		 */
-		ArrayList<Crop> suitableCrops = Crop.getCropsForTemp(t);
+		/*ArrayList<Crop> suitableCrops = Crop.getCropsForTemp(t);
 		int numCrops = 1 + (id.hasFeature(Feature.DiverseCrops) ? 1+r.nextInt(2) : 0);
 		numCrops = Math.min(numCrops, suitableCrops.size());
 
 		for(int i = 0; i < numCrops; i++)
 		{
 			id.addCrop(suitableCrops.get(r.nextInt(suitableCrops.size())));
-		}
+		}*/
 
 		//id.setFeatures(Feature.Desert);
+		if(id.hasFeature(Feature.Desert))
+			id.setIslandMoisture(Moisture.LOW);
 
 		return id;
 	}

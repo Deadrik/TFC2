@@ -104,6 +104,9 @@ public class BlockGrass extends BlockCollapsible
 
 		if(plantType == EnumPlantType.Plains)
 			return true;
+
+		if(plant.getBlock() == TFCBlocks.VegDesert)
+			return true;
 		return false;
 	}
 

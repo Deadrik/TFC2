@@ -133,7 +133,7 @@ public class BlockStone extends BlockCollapsible
 		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
 		EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
 
-		if(plantable == TFCBlocks.Vegetation && (VegType)plant.getValue(BlockVegetation.META_PROPERTY) == VegType.Grass1)
+		if(plantable == TFCBlocks.Vegetation && (VegType)plant.getValue(BlockVegetation.META_PROPERTY) == VegType.Grass)
 			return true;
 		return false;
 	}

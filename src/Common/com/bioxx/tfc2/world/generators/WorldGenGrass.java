@@ -61,7 +61,7 @@ public class WorldGenGrass implements IWorldGenerator
 
 				if(!map.getParams().hasFeature(Feature.Desert) && Core.isStone(world.getBlockState(bp.down())) && random.nextInt(3) == 0)
 				{
-					Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.Grass1), bp, 2);
+					Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.Grass), bp, 2);
 				}
 				else if(Core.isGrass(world.getBlockState(bp.down())))
 				{
@@ -75,12 +75,16 @@ public class WorldGenGrass implements IWorldGenerator
 						cMoisture = closest.getMoisture();
 						rand = random.nextFloat();
 
-						VegType vt = VegType.Grass0;
+						VegType vt = VegType.Grass;
+						DesertVegType dvt = DesertVegType.GrassSparse;
 						if(iMoisture == Moisture.LOW)
 						{
-							if(random.nextFloat() < 0.5)
-								vt = VegType.ShortGrass;
-							else vt = VegType.ShorterGrass;
+							if(closest.getMoisture().isLessThanOrEqual(Moisture.MEDIUM))
+							{
+								if(random.nextFloat() < 0.5)
+									dvt = DesertVegType.ShortGrassSparse;
+								else dvt = DesertVegType.ShorterGrassSparse;
+							}
 						}
 						else if(iMoisture == Moisture.MEDIUM)
 						{
@@ -97,25 +101,37 @@ public class WorldGenGrass implements IWorldGenerator
 							else if(rand < 0.35) vt = VegType.ShorterGrass;
 						}
 
-						if((iMoisture.isGreaterThan(Moisture.MEDIUM) && rand > cMoisture.getInverse()*2))
+						boolean tall = rand > cMoisture.getInverse()*2;
+						if(iMoisture.isGreaterThanOrEqual(Moisture.VERYHIGH) && tall)
+						{
+							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottomLush), bp, 2);
+							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTopLush), bp.up(), 2);
+						}
+						else if(iMoisture.isGreaterThan(Moisture.MEDIUM) && tall)
 						{
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottom), bp, 2);
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTop), bp.up(), 2);
 						}
+						else if(iMoisture.isGreaterThanOrEqual(Moisture.LOW) && tall)
+						{
+							Core.setBlock(world, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.DoubleGrassBottomSparse), bp, 2);
+							Core.setBlock(world, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.DoubleGrassTopSparse), bp.up(), 2);
+						}
 						else
-							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, vt), bp, 2);
+						{
+							if(iMoisture == Moisture.LOW)
+								Core.setBlock(world, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, dvt), bp, 2);
+							else
+								Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, vt), bp, 2);
+						}
 					}
 				}
-				else if(map.getParams().hasFeature(Feature.Desert) && closest.getMoistureRaw() < Moisture.LOW.getMoisture())//aka we're actually in the desert areas
+				else if(map.getParams().hasFeature(Feature.Desert) && closest.getMoisture().isLessThanOrEqual(Moisture.MEDIUM))//aka we're actually in the desert areas
 				{
 					IBlockState downState = world.getBlockState(bp.down());
 					if(Core.isSand(downState) && random.nextInt(20) == 0)
 					{
 						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Ocatillo), 2);
-					}
-					else if(Core.isSand(downState) && random.nextInt(50) == 0)
-					{
-						//world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Tackweed), 2);
 					}
 				}
 			}
@@ -131,7 +147,7 @@ public class WorldGenGrass implements IWorldGenerator
 				closest = map.getClosestCenter(bp);
 				IBlockState downState = world.getBlockState(bp.down());
 
-				if(closest.getMoistureRaw() < Moisture.LOW.getMoisture() && Core.isSand(downState))//we're actually in the desert areas
+				if(closest.getMoisture().isLessThanOrEqual(Moisture.MEDIUM) && Core.isSand(downState))//we're actually in the desert areas
 				{
 					world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Tackweed), 2);
 				}

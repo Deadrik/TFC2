@@ -48,6 +48,7 @@ import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
+import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.terrain.BlockDirt;
 import com.bioxx.tfc2.blocks.terrain.BlockGrass;
@@ -480,10 +481,15 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				p = new Point(x, z);
 				closestCenter = this.getHex(p);
 				closestElev = convertElevation(closestCenter.getElevation());
-				if(islandMap.getParams().hasFeature(Feature.Desert) && closestCenter.getMoistureRaw() < 0.25)
+				if(islandMap.getParams().hasFeature(Feature.Desert) && closestCenter.getMoisture().isLessThanOrEqual(Moisture.MEDIUM))
 				{
 					top = sand;
 					fill = sand;
+					if(closestCenter.getMoisture().equals(Moisture.MEDIUM) && rand.nextBoolean())
+					{
+						top = grass;
+						fill = dirt;
+					}
 				}
 				else
 				{
@@ -587,7 +593,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						}
 					}
 
-					if(closestCenter.biome == BiomeType.LAKE && closestCenter.hasAttribute(Attribute.Lake))
+					if((closestCenter.biome == BiomeType.LAKE || closestCenter.biome == BiomeType.LAKESHORE) && closestCenter.hasAttribute(Attribute.Lake))
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
 						//Not a border area, elev less than the water height, elev greater than the ground height beneath the water

@@ -41,7 +41,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, VegType.Grass0).withProperty(IS_ON_STONE, Boolean.valueOf(false)));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, VegType.Grass).withProperty(IS_ON_STONE, Boolean.valueOf(false)));
 		float f = 0.35F;
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.8F, 0.5F + f);
 	}
@@ -98,7 +98,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		{
 			if(veg == VegType.DoubleGrassBottom && plant.getValue(META_PROPERTY) == VegType.DoubleGrassTop)
 				return true;
-			if(veg == VegType.DoubleFernBottom && plant.getValue(META_PROPERTY) == VegType.DoubleFernTop)
+			if(veg == VegType.DoubleGrassBottomLush && plant.getValue(META_PROPERTY) == VegType.DoubleGrassTopLush)
 				return true;
 		}
 		return false;
@@ -159,7 +159,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
-		return new AxisAlignedBB(0.2, 0, 0.2, 0.8, 0.75, 0.8);
+		return new AxisAlignedBB(0.1, 0, 0.1, 0.9, 0.75, 0.9);
 	}
 
 	@Override
@@ -188,9 +188,9 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 
 	public enum VegType implements IStringSerializable
 	{
-		Grass0("grass0", 0),
-		Grass1("grass1", 1),
-		Empty("deadbush", 2),
+		Grass("grass", 0),
+		GrassLush("grass_lush", 1),
+		Bromeliad("bromeliad", 2),
 		DoubleGrassBottom("doublegrassbottom", 3),
 		DoubleGrassTop("doublegrasstop", 4),
 		Fern("fern", 5),
@@ -198,7 +198,10 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		DoubleFernTop("doubleferntop", 7),
 		ShortGrass("shortgrass", 8),
 		ShorterGrass("shortergrass", 9),
-		Bromeliad("bromeliad", 10);
+		ShortGrassLush("shortgrasslush", 10),
+		ShorterGrassLush("shortergrasslush", 11),
+		DoubleGrassBottomLush("doublegrassbottomlush", 12),
+		DoubleGrassTopLush("doublegrasstoplush", 13);
 
 		private String name;
 		private int meta;

@@ -11,6 +11,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 
 import net.minecraftforge.fml.common.IWorldGenerator;
 
+import com.bioxx.jmapgen.BiomeType;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.Point;
@@ -62,6 +63,10 @@ public class WorldGenTrees implements IWorldGenerator
 		//This way base dry islands still feature less trees overall.
 		int baseTrees = 100;
 		baseTrees = (int)(baseTrees * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
+
+		if(c.biome == BiomeType.DRY_FOREST)
+			baseTrees /= 2;
+
 		int numTrees = random.nextInt(baseTrees+1)+1;
 		//numTrees = (int)(numTrees * c.getMoisture().getMoisture());
 

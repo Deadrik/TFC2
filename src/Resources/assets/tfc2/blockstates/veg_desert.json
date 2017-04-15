@@ -8,18 +8,19 @@
 		"model": "tall_grass"
 	},
 	"variants": {
-		"isonstone": {
-			"true": {},
-			"false": {}
-		},
 		"veg": {
 			"deadbush": {"textures": {"cross": "blocks/deadbush"}},
 			"tackweed": {"model": "tfc2:tackweed"},
 			"ocatillo": {},
 			"primrose": {"model": "tfc2:primrose"},
-			"yucca": {"model": "tfc2:yucca"}
+			"yucca": {"model": "tfc2:yucca"},
+			"grass_sparse": {"textures": {"cross": "tfc2:blocks/plants/tallgrass_sparse"}},
+			"shortgrass_sparse": {"textures": {"cross": "tfc2:blocks/plants/shortgrass_sparse"}},
+			"shortergrass_sparse": {"textures": {"cross": "tfc2:blocks/plants/shortergrass_sparse"}},
+			"doublegrassbottomsparse": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_bottom_sparse"}},
+			"doublegrasstopsparse": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_top_sparse"}}
 		},
-		"isonstone=false,veg=ocatillo": 
+		"veg=ocatillo": 
 		[
 			{"model": "tfc2:ocatillo_0"},
 			{"model": "tfc2:ocatillo_1"},

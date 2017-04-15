@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -27,13 +26,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.TFCBlocks;
 
 public class BlockVegDesert extends BlockTerra implements IPlantable
 {
 	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("veg", DesertVegType.class);
-	/** Whether this fence connects in the northern direction */
-	public static final PropertyBool IS_ON_STONE = PropertyBool.create("isonstone");
 
 	public BlockVegDesert()
 	{
@@ -41,7 +37,7 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, DesertVegType.DeadBush).withProperty(IS_ON_STONE, Boolean.valueOf(false)));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, DesertVegType.DeadBush));
 		float f = 0.35F;
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.8F, 0.5F + f);
 	}
@@ -89,6 +85,15 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 	@Override
 	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
+		IBlockState plant = plantable.getPlant(world, pos.offset(direction));
+		EnumPlantType plantType = plantable.getPlantType(world, pos.offset(direction));
+
+		DesertVegType veg = (DesertVegType)state.getValue(META_PROPERTY);
+		if(plant.getBlock() == this)
+		{
+			if(veg == DesertVegType.DoubleGrassBottomSparse && plant.getValue(META_PROPERTY) == DesertVegType.DoubleGrassTopSparse)
+				return true;
+		}
 		return false;
 	}
 
@@ -129,7 +134,7 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return state.withProperty(IS_ON_STONE, world.getBlockState(pos.down()).getBlock() == TFCBlocks.Stone);
+		return state;
 	}
 
 	@Override
@@ -147,7 +152,7 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
-		return new AxisAlignedBB(0.2, 0, 0.2, 0.8, 0.75, 0.8);
+		return new AxisAlignedBB(0.1, 0, 0.1, 0.9, 0.75, 0.9);
 	}
 
 	@Override
@@ -159,7 +164,7 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] { META_PROPERTY, IS_ON_STONE});
+		return new BlockStateContainer(this, new IProperty[] { META_PROPERTY});
 	}
 
 	@Override
@@ -180,7 +185,12 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 		Ocatillo("ocatillo", 1),
 		Yucca("yucca", 2),
 		Primrose("primrose", 3),
-		DeadBush("deadbush", 4);
+		DeadBush("deadbush", 4),
+		DoubleGrassBottomSparse("doublegrassbottomsparse", 5),
+		DoubleGrassTopSparse("doublegrasstopsparse", 6),
+		GrassSparse("grass_sparse", 7),
+		ShortGrassSparse("shortgrass_sparse", 8),
+		ShorterGrassSparse("shortergrass_sparse", 9);
 
 		private String name;
 		private int meta;
