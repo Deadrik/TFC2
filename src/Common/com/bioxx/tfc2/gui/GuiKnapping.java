@@ -191,6 +191,8 @@ public class GuiKnapping extends GuiContainerTFC
 	@Override
 	protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) 
 	{
+		// 1-st Check if the click falls inside the Knapping Grid boundaries. 
+		// (Doing so reduces the lag & allows for super methods to run when inventory slots are clicked.)
 		if (mouseY > 88+guiTop || mouseX > 88+guiLeft || mouseY < 16+guiTop || mouseX < 16+guiLeft)
 		{
 			super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
