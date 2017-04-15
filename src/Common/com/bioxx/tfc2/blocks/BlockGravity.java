@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.RandomCollection;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.interfaces.IGravityBlock;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
@@ -141,13 +142,26 @@ public class BlockGravity extends BlockTerra implements IGravityBlock
 		else
 		{
 			RandomCollection<BlockPos> pot = new RandomCollection<BlockPos>();
-			if(!world.isSideSolid(pos.east(), EnumFacing.WEST) && depthScan(world, pos.east()) >= getSlideHeight())
+			int slideheightE = getSlideHeight();
+			int slideheightW = getSlideHeight();
+			int slideheightN = getSlideHeight();
+			int slideheightS = getSlideHeight();
+
+			boolean underWater = Core.isWater(world.getBlockState(pos.up()));
+
+			if(Core.isWater(world.getBlockState(pos.east()))) slideheightE = slideheightE * (underWater ? 3 : 2);
+			if(Core.isWater(world.getBlockState(pos.west()))) slideheightW  = slideheightW * (underWater ? 3 : 2);
+			if(Core.isWater(world.getBlockState(pos.north()))) slideheightN = slideheightN * (underWater ? 3 : 2);
+			if(Core.isWater(world.getBlockState(pos.south()))) slideheightS = slideheightS * (underWater ? 3 : 2);
+
+
+			if(!world.isSideSolid(pos.east(), EnumFacing.WEST) && depthScan(world, pos.east()) >= slideheightE)
 				pot.add(1.0, pos.east());
-			if(!world.isSideSolid(pos.west(), EnumFacing.EAST) && depthScan(world, pos.west()) >= getSlideHeight())
+			if(!world.isSideSolid(pos.west(), EnumFacing.EAST) && depthScan(world, pos.west()) >= slideheightW)
 				pot.add(1.0, pos.west());
-			if(!world.isSideSolid(pos.north(), EnumFacing.SOUTH) && depthScan(world, pos.north()) >= getSlideHeight())
+			if(!world.isSideSolid(pos.north(), EnumFacing.SOUTH) && depthScan(world, pos.north()) >= slideheightN)
 				pot.add(1.0, pos.north());
-			if(!world.isSideSolid(pos.south(), EnumFacing.NORTH) && depthScan(world, pos.south()) >= getSlideHeight())
+			if(!world.isSideSolid(pos.south(), EnumFacing.NORTH) && depthScan(world, pos.south()) >= slideheightS)
 				pot.add(1.0, pos.south());
 
 			if(pot.size() > 0)
