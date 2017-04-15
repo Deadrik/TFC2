@@ -158,6 +158,42 @@
     ]
   },
 
+  "mob.bison.say": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:bison1",
+      "tfc2:bison2",
+      "tfc2:bison3",
+      "tfc2:bison4",
+      "tfc2:bison5",
+      "tfc2:bison6",
+      "tfc2:bison7",
+      "tfc2:bison8"
+    ]
+  },
+
+  "mob.bison.cry": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:bisoncry1",
+      "tfc2:bisoncry2"
+    ]
+  },
+
+  "mob.bison.hurt": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:bisonhurt1"
+    ]
+  },
+
+  "mob.bison.death": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:bisondeath1"
+    ]
+  },
+
   "mob.pheasant.say": {
     "category": "ambient",
     "sounds": [

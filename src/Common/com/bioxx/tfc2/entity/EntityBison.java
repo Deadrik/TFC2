@@ -115,11 +115,11 @@ public class EntityBison extends EntityAnimal
 	protected SoundEvent getAmbientSound ()
 	{
 		if(isChild() && world.rand.nextInt(100) < 5)
-			return TFC_Sounds.BEARCUBCRY;
+			return null; //TFC_Sounds.BISONCUBCRY;
 		else if(world.rand.nextInt(100) < 5)
-			return TFC_Sounds.BEARCRY;
+			return TFC_Sounds.BISONCRY;
 
-		return isChild() ? null : TFC_Sounds.BEARSAY;
+		return isChild() ? null : TFC_Sounds.BISONSAY;
 	}
 
 	/**
@@ -129,9 +129,9 @@ public class EntityBison extends EntityAnimal
 	protected SoundEvent getHurtSound()
 	{
 		if(!isChild())
-			return TFC_Sounds.BEARHURT;
+			return TFC_Sounds.BISONHURT;
 		else
-			return TFC_Sounds.BEARCUBCRY;
+			return null; //TFC_Sounds.BISONCUBCRY;
 	}
 
 	/**
@@ -141,9 +141,9 @@ public class EntityBison extends EntityAnimal
 	protected SoundEvent getDeathSound()
 	{
 		if(!isChild())
-			return TFC_Sounds.BEARDEATH;
+			return TFC_Sounds.BISONDEATH;
 		else
-			return TFC_Sounds.BEARCUBCRY;
+			return null; //TFC_Sounds.BISONCUBCRY;
 	}
 
 	/**
