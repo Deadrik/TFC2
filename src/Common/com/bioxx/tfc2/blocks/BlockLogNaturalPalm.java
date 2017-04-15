@@ -12,6 +12,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
+import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.WoodType;
 
 public class BlockLogNaturalPalm extends BlockTerra
@@ -49,7 +50,7 @@ public class BlockLogNaturalPalm extends BlockTerra
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return null;
+		return Item.getItemFromBlock(TFCBlocks.LogVertical2);
 	}
 
 	@Override

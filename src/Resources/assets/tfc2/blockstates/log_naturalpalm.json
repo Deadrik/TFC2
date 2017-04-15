@@ -2,7 +2,7 @@
 	"forge_marker" : 1,
 	"defaults": {
 		"model": "cube_all",
-		"textures": {"all": "tfc2:blocks/wood/trees/palm log"}
+		"textures": {"all": "tfc2:blocks/wood/trees/palm log", "particle": "tfc2:blocks/wood/trees/palm log"}
 	},
     "variants": {
     "wood":{
