@@ -24,8 +24,11 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.world.WorldGen;
 
 public class BlockGrass extends BlockCollapsible
 {
@@ -34,6 +37,7 @@ public class BlockGrass extends BlockCollapsible
 	public static final PropertyBool EAST = PropertyBool.create("east");
 	public static final PropertyBool SOUTH = PropertyBool.create("south");
 	public static final PropertyBool WEST = PropertyBool.create("west");
+	public static final PropertyBool SPARSE = PropertyBool.create("sparse");
 
 	public BlockGrass()
 	{
@@ -41,7 +45,7 @@ public class BlockGrass extends BlockCollapsible
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)).withProperty(SPARSE, false));
 		this.collapseType = CollapsibleType.Nature;
 		this.setShowInCreative(false);
 	}
@@ -145,17 +149,22 @@ public class BlockGrass extends BlockCollapsible
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] { META_PROPERTY, NORTH, SOUTH, EAST, WEST });
+		return new BlockStateContainer(this, new IProperty[] { META_PROPERTY, NORTH, SOUTH, EAST, WEST, SPARSE });
 	}
 
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		Block block = world.getBlockState(pos.up()).getBlock();
-		return state.withProperty(NORTH, world.getBlockState(pos.north().down()).getBlock() == TFCBlocks.Grass).withProperty(
+		IBlockState out = state.withProperty(NORTH, world.getBlockState(pos.north().down()).getBlock() == TFCBlocks.Grass).withProperty(
 				SOUTH, world.getBlockState(pos.south().down()).getBlock() == TFCBlocks.Grass).withProperty(
 						EAST, world.getBlockState(pos.east().down()).getBlock() == TFCBlocks.Grass).withProperty(
 								WEST, world.getBlockState(pos.west().down()).getBlock() == TFCBlocks.Grass);
+		IslandMap map = WorldGen.getInstance().getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
+		if(map.getParams().getIslandMoisture().equals(Moisture.LOW) &&
+				!map.getClosestCenter(pos).getMoisture().equals(Moisture.MAX))
+			out = out.withProperty(SPARSE, true);
+		return out;
 	}
 
 	@Override
