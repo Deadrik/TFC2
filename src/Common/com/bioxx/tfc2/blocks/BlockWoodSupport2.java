@@ -41,11 +41,22 @@ public class BlockWoodSupport2 extends BlockWoodSupport implements INeedOffset
 	/*******************************************************************************
 	 * 1. Content 
 	 *******************************************************************************/
+	@Override
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos, IBlockState myState)
+	{
+		return ((WoodType)myState.getValue(META_PROPERTY)).getSupportRange();
+	}
 
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return Item.getItemFromBlock(TFCBlocks.SupportBeam2);
+	}
+
+	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return ((WoodType)state.getValue(META_PROPERTY)).getMeta();
 	}
 
 	@Override

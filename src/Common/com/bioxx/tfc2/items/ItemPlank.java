@@ -16,7 +16,7 @@ public class ItemPlank extends ItemTerra implements IRegisterSelf
 	public ItemPlank()
 	{
 		this.hasSubtypes = true;
-		this.maxSubTypeMeta = 17;
+		this.maxSubTypeMeta = 18;
 		this.subTypeNames = Core.capitalizeStringArray(new String[] {"ash","aspen","birch","chestnut",
 				"douglas fir","hickory","maple","oak",
 				"pine","sequoia","spruce","sycamore",

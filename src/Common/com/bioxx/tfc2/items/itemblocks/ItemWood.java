@@ -24,12 +24,7 @@ public class ItemWood extends ItemTerraBlock
 		super.addInformation(is, player, arraylist, flag);
 
 		if (is.getItemDamage() < Global.WOOD_STANDARD.length)
-		{
-			int meta = is.getItemDamage();
-			/*if(block instanceof INeedOffset)
-				meta = ((INeedOffset)block).convertMetaToItem(meta);*/
-			arraylist.add(TextFormatting.DARK_GRAY + Core.translate("global." + Global.WOOD_STANDARD[meta]));
-		}
+			arraylist.add(TextFormatting.DARK_GRAY + Core.translate("global." + Global.WOOD_STANDARD[is.getItemDamage()]));
 		else
 			arraylist.add(TextFormatting.DARK_RED + Core.translate("global.unknown"));
 	}

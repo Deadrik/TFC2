@@ -47,7 +47,7 @@ public class BlockLogHorizontal3 extends BlockLogHorizontal
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(TFCBlocks.LogVertical);
+		return Item.getItemFromBlock(TFCBlocks.LogVertical2);
 	}
 
 	@Override

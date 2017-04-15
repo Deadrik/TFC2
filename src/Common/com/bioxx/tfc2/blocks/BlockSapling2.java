@@ -1,11 +1,14 @@
 package com.bioxx.tfc2.blocks;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.interfaces.INeedOffset;
 import com.bioxx.tfc2.api.types.WoodType;
@@ -52,5 +55,12 @@ public class BlockSapling2 extends BlockSapling implements INeedOffset
 	public int convertMetaToItem(int meta) 
 	{
 		return meta + 16;
+	}
+
+	@Override
+	public void grow(World world, Random rand, BlockPos pos, IBlockState state)
+	{
+		WoodType wood = (WoodType)state.getValue(META_PROPERTY);
+		this.grow_do(world, rand, pos, state, wood);
 	}
 }

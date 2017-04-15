@@ -11,7 +11,8 @@
     	},
    	 	"wood":{
         	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/sheets/rosewood"} },
-   	     	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/sheets/blackwood"} }
+   	     	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/sheets/blackwood"} },
+   	     	"palm":  { "textures": {"all": "tfc2:blocks/wood/sheets/palm"} }
         },
         "north":{
     		"true":{"submodel": "tfc2:wood/supportnorth"},

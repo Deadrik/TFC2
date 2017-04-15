@@ -2,7 +2,7 @@
 #This is the Main language configuration file
 #
 #If you want to color code the text then I recommend you visit http://www.minecraftwiki.net/wiki/Formatting_codes#Color_codes
-#To create the ง symbol which is used for assigning a color to the following text press Alt + 21 on Windows. For other OSes, view the above link.
+#To create the ยง symbol which is used for assigning a color to the following text press Alt + 21 on Windows. For other OSes, view the above link.
 #This file needs to be UTF-8 encoded to work with MC 1.7+
 
 #==========
@@ -129,6 +129,8 @@ item.stone_knife_head.name=Stone Knife Head
 item.stone_knife.name=Stone Knife
 item.stone_hoe_head.name=Stone Hoe Head
 item.stone_hoe.name=Stone Hoe
+item.stone_hammer_head.name=Stone Hammer Head
+item.stone_hammer.name=Stone Hammer
 item.firestarter.name=Firestarter
 
 #=================

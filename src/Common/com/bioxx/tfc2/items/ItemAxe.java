@@ -18,11 +18,12 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.blocks.BlockSapling;
+import com.bioxx.tfc2.blocks.BlockSapling2;
 import com.google.common.collect.Sets;
 
 public class ItemAxe extends ItemTerraTool 
 {
-	private static final Set EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER, TFCBlocks.LogNatural, TFCBlocks.LogNatural2, TFCBlocks.LogNaturalPalm});
+	private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER, TFCBlocks.LogNatural, TFCBlocks.LogNatural2, TFCBlocks.LogNaturalPalm});
 
 	public ItemAxe(ToolMaterial mat)
 	{
@@ -34,12 +35,14 @@ public class ItemAxe extends ItemTerraTool
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		ItemStack stack = playerIn.getHeldItem(hand);
+		//ItemStack stack = playerIn.getHeldItem(hand);
 		if(worldIn.isRemote || !playerIn.capabilities.isCreativeMode)
 			return EnumActionResult.FAIL;
 		IBlockState state = worldIn.getBlockState(pos);
 		if(playerIn.isCreative() && state.getBlock() == TFCBlocks.Sapling)
 			((BlockSapling)state.getBlock()).grow(worldIn, worldIn.rand, pos, state);
+		if(playerIn.isCreative() && state.getBlock() == TFCBlocks.Sapling2)
+			((BlockSapling2)state.getBlock()).grow(worldIn, worldIn.rand, pos, state);
 
 		return EnumActionResult.SUCCESS;
 	}
@@ -60,7 +63,7 @@ public class ItemAxe extends ItemTerraTool
 		{
 			scanPos = queue.pop();
 			scanState = worldIn.getBlockState(scanPos);
-			if(Core.isNaturalLog(scanState))
+			if(Core.isNaturalLog(scanState) || scanState.getBlock() == TFCBlocks.Leaves2) //Leaves2 is needed for the palm top (maybe there is a better way to do this?)
 			{
 				scanState.getBlock().dropBlockAsItem(worldIn, scanPos, scanState, 0);
 				worldIn.setBlockToAir(scanPos);

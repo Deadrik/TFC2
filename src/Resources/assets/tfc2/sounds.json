@@ -249,9 +249,9 @@
   "knapping": {
     "category": "master",
     "sounds": [
-      {name="tfc2:stone_knapping", pitch = 1.0},
-      {name="tfc2:stone_knapping", pitch = 0.8},
-      {name="tfc2:stone_knapping", pitch = 1.2}
+      {"name": "tfc2:stone_knapping", "pitch": 1.0},
+      {"name": "tfc2:stone_knapping", "pitch": 0.8},
+      {"name": "tfc2:stone_knapping", "pitch": 1.2}
     ]
   },
 

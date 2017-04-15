@@ -74,4 +74,10 @@ public class BlockLogVertical2 extends BlockLogVertical implements INeedOffset
 	{
 		return meta + 16;
 	}
+
+	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return getMetaFromState(state) + 16;
+	}
 }
