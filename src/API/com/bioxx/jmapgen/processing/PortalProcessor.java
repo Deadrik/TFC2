@@ -49,7 +49,7 @@ public class PortalProcessor
 				c = map.getClosestCenter(new Point(c.point.getX()-100+map.mapRandom.nextInt(200), c.point.getY()-100+map.mapRandom.nextInt(200)));
 
 			indexList.add(c.index);
-			if(c.elevation < 0.3 && !c.hasAnyMarkersOf(Marker.Water, Marker.Spire))
+			if(c.elevation < 0.3 && !c.hasAnyMarkersOf(Marker.Water, Marker.Spire, Marker.Coast) && c.biome != BiomeType.RIVER)
 				centerList.add(c);
 
 			if(c.hasAnyMarkersOf(Marker.Coast))
