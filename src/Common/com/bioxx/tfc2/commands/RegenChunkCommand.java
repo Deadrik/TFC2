@@ -27,6 +27,10 @@ public class RegenChunkCommand extends CommandBase
 		} catch (PlayerNotFoundException e) {
 			return;
 		}
+
+		if(!player.isCreative())
+			return;
+
 		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
 		if(player.getEntityWorld().provider.getDimension() == 0 && params.length == 1)

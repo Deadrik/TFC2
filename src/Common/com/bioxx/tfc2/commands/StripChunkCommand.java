@@ -38,6 +38,9 @@ public class StripChunkCommand extends CommandBase
 			return;
 		}*/
 
+		if(!player.isCreative())
+			return;
+
 		if(params.length == 0)
 		{
 

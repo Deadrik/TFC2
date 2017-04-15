@@ -28,6 +28,8 @@ public class RemoveAreaCommand extends CommandBase
 		}
 		if(player == null)
 			return;
+		if(!player.isCreative())
+			return;
 
 		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 

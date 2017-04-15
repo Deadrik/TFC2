@@ -33,6 +33,9 @@ public class TeleportInIslandCommand extends CommandBase
 		}
 		WorldServer world = server.worldServerForDimension(player.getEntityWorld().provider.getDimension());
 
+		if(!player.isCreative())
+			return;
+
 		if(params.length == 3)
 		{
 			int x = (int)Math.floor(player.posX);

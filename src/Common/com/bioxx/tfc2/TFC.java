@@ -191,6 +191,7 @@ public class TFC
 		evt.registerServerCommand(new RemoveAreaCommand());
 		evt.registerServerCommand(new StripChunkCommand());
 		evt.registerServerCommand(new RegenChunkCommand());
+		evt.registerServerCommand(new DebugCommand());
 	}
 
 	@EventHandler
