@@ -37,7 +37,7 @@ public class ItemSeeds extends ItemTerra implements IRegisterSelf
 		IBlockState soil = worldIn.getBlockState(pos);
 		if(facing == EnumFacing.UP && soil.getBlock() == TFCBlocks.Farmland && worldIn.isAirBlock(pos.up()))
 		{
-			worldIn.setBlockState(pos.up(), TFCBlocks.Crop.getDefaultState());
+			//worldIn.setBlockState(pos.up(), TFCBlocks.Crop.getDefaultState());
 			TileCrop tc = (TileCrop) worldIn.getTileEntity(pos.up());
 			tc.setCropType(cropToPlant[stack.getItemDamage()]);
 			tc.setFarmerID(playerIn);

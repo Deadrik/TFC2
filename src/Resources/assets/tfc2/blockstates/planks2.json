@@ -8,7 +8,7 @@
     	"wood":{
         	"rosewood":  { "textures": {"all": "tfc2:blocks/wood/rosewood plank"} },
         	"blackwood":  { "textures": {"all": "tfc2:blocks/wood/blackwood plank"} },
-        	"palm":  { "textures": {"all": "tfc2:blocks/wood/palm plank"} }
+        	"palm":  { "model": "tfc2:wood/planks/palm", "textures": {"all": "tfc2:blocks/wood/palm plank"} }
         },
 		"inventory": [{
             "transform": "forge:default-block"

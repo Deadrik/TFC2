@@ -1,6 +1,5 @@
 {
-    "parent": "block/cube_all",
-    "textures": {"all": "tfc2:blocks/wood/palm plank"},
+    "parent": "tfc2:block/wood/planks/palm",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

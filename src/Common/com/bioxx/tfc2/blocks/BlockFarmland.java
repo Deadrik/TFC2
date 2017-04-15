@@ -45,7 +45,7 @@ public class BlockFarmland extends BlockTerra
 		if(world.isRemote)
 			return;
 
-		if(world.getBlockState(pos.up()).getBlock() != TFCBlocks.Crop)
+		if(!(world.getBlockState(pos.up()).getBlock() instanceof IPlantable))
 		{
 			if(!isFertile(world, pos) && rand.nextInt(100) == 0)
 			{

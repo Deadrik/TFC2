@@ -390,7 +390,7 @@ public class ClientProxy extends CommonProxy
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Sapling), "Wood/Saplings/", WoodType.getNamesArray(), 0, 16);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.LogVertical), "Wood/Logs/", WoodType.getNamesArray(), 0, 16);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Leaves), "Wood/Leaves/", WoodType.getNamesArray(), 0, 16);
-		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Planks2), "Wood/Planks/", WoodType.getNamesArray(), 16, 18);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Planks2), "Wood/Planks/", WoodType.getNamesArray(), 16, 19);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Sapling2), "Wood/Saplings/", WoodType.getNamesArray(), 16, 19);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.LogVertical2), "Wood/Logs/", WoodType.getNamesArray(), 16, 19);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.Leaves2), "Wood/Leaves/", WoodType.getNamesArray(), 16, 18);
@@ -400,7 +400,7 @@ public class ClientProxy extends CommonProxy
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.StoneSmooth), "StoneSmooth/", Global.STONE_ALL, 0, 16);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam), "Wood/SupportBeams/", WoodType.getNamesArray(), 0, 8);
 		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam2), "Wood/SupportBeams/", WoodType.getNamesArray(), 8, 16);
-		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam3), "Wood/SupportBeams/", WoodType.getNamesArray(), 16, 18);
+		registerVariantModel(Item.getItemFromBlock(TFCBlocks.SupportBeam3), "Wood/SupportBeams/", WoodType.getNamesArray(), 16, 19);
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.TorchOn),0,new ModelResourceLocation(Reference.ModID + ":torch_on", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.TorchOff),0,new ModelResourceLocation(Reference.ModID + ":torch_off", "inventory"));
 		for(Block b : TFCBlocks.stairsList)
