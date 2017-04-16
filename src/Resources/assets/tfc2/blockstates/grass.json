@@ -26,7 +26,7 @@
 			"basalt": {"textures": {"soil": "tfc2:blocks/soil/dirt basalt"}},
 			"andesite": {"textures": {"soil": "tfc2:blocks/soil/dirt andesite"}},
 			"dacite": {"textures": {"soil": "tfc2:blocks/soil/dirt dacite"}},
-			"blueschist": {"textures": {"soil": "tfc2:soil/rocks/dirt blueschist"}},
+			"blueschist": {"textures": {"soil": "tfc2:blocks/soil/dirt blueschist"}},
 			"schist": {"textures": {"soil": "tfc2:blocks/soil/dirt schist"}},
 			"gneiss": {"textures": {"soil": "tfc2:blocks/soil/dirt gneiss"}},
 			"marble": {"textures": {"soil": "tfc2:blocks/soil/dirt marble"}}
