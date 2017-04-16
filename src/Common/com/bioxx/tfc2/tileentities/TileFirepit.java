@@ -101,7 +101,7 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 		}
 		else
 		{
-			if(fuelTimer <= 0 && isValidFuel(getStackInSlot(FUEL_SLOT)))
+			if(fuelTimer <= 0 && isValidFuel(getStackInSlot(FUEL_SLOT)) && world.getBlockState(getPos()).getValue(BlockFirepit.LIT) == true)
 			{
 				fuelMaxTimer = Global.GetFirepitFuel(getStackInSlot(FUEL_SLOT));
 				fuelTimer = fuelMaxTimer;
@@ -120,6 +120,11 @@ public class TileFirepit extends TileTFC implements ITickable, IInventory
 		}
 	}
 
+	public void light()
+	{
+		if(isValidFuel(getStackInSlot(FUEL_SLOT)))
+			world.setBlockState(getPos(), world.getBlockState(getPos()).withProperty(BlockFirepit.LIT, true), 3);
+	}
 	public boolean isValidFuel(ItemStack stack)
 	{
 		return Global.GetFirepitFuel(stack) > 0;

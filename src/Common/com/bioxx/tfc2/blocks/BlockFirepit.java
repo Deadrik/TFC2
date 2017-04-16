@@ -31,6 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.tileentities.TileFirepit;
 
 public class BlockFirepit extends BlockTerra implements ITileEntityProvider
@@ -66,9 +67,10 @@ public class BlockFirepit extends BlockTerra implements ITileEntityProvider
 			net.minecraft.util.EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		TileFirepit te = (TileFirepit)world.getTileEntity(pos);
+		ItemStack heldItem = playerIn.getHeldItem(hand);
 		if(!world.isRemote)
 		{
-			ItemStack heldItem = playerIn.getHeldItem(hand);
+
 			if(playerIn.isSneaking() && heldItem == ItemStack.EMPTY && te.hasCookingTool())
 			{
 				playerIn.inventory.addItemStackToInventory(te.getCookingTool());
@@ -83,10 +85,20 @@ public class BlockFirepit extends BlockTerra implements ITileEntityProvider
 					playerIn.setHeldItem(hand, ItemStack.EMPTY);
 				}
 			}
+			else if(heldItem.getItem() == TFCItems.Firestarter)
+			{
+				return false;
+			}
 			else if(te.hasCookingTool())
 				playerIn.openGui(TFC.instance, 6, world, pos.getX(), pos.getY(), pos.getZ());
 			else
 				playerIn.openGui(TFC.instance, 5, world, pos.getX(), pos.getY(), pos.getZ());
+		}
+
+		//This should occur clientside
+		if(heldItem.getItem() == TFCItems.Firestarter)
+		{
+			return false;
 		}
 		return true;
 	}

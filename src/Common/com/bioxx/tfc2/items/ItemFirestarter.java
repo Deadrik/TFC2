@@ -83,6 +83,8 @@ public class ItemFirestarter extends ItemTerra
 	{
 		World world = player.world;
 
+
+
 		int duration = getMaxItemUseDuration(stack) - count;
 		int chance = getMaxItemUseDuration(stack) - duration;
 		int rand = world.rand.nextInt(chance);
@@ -97,6 +99,9 @@ public class ItemFirestarter extends ItemTerra
 
 		if(!world.isRemote)
 		{
+			if(count < 200)
+				return;
+
 			if(count % 10 == 1)
 				world.playSound(null, pos, TFC_Sounds.FIRESTARTER, SoundCategory.BLOCKS, 1.0f, 1.0f);
 			if(rand < 20 && pos != null)
@@ -134,6 +139,13 @@ public class ItemFirestarter extends ItemTerra
 		NonNullList<ItemStack> oreList=null;
 
 		stack.damageItem(count, player);
+
+		if(world.getBlockState(pos).getBlock() == TFCBlocks.Firepit)
+		{
+			TileFirepit te = (TileFirepit)world.getTileEntity(pos);
+			te.light();
+			return;
+		}
 
 		for(EntityItem ei : list)
 		{
