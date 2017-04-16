@@ -18,6 +18,7 @@ import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.blocks.BlockVegDesert;
 import com.bioxx.tfc2.blocks.BlockVegDesert.DesertVegType;
@@ -61,7 +62,7 @@ public class WorldGenGrass implements IWorldGenerator
 
 				if(!map.getParams().hasFeature(Feature.Desert) && Core.isStone(world.getBlockState(bp.down())) && random.nextInt(3) == 0)
 				{
-					Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.Grass), bp, 2);
+					Core.setBlock(world, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.ShortGrassSparse), bp, 2);
 				}
 				else if(Core.isGrass(world.getBlockState(bp.down())))
 				{
@@ -95,21 +96,23 @@ public class WorldGenGrass implements IWorldGenerator
 							else if(rand < 0.35) vt = VegType.ShorterGrass;
 						}
 
+						if(map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.SUBTROPICAL))
+						{
+							if(vt == VegType.Grass) vt = VegType.GrassLush;
+							else if(vt == VegType.ShortGrass) vt = VegType.ShortGrassLush;
+							else if(vt == VegType.ShorterGrass) vt = VegType.ShorterGrassLush;
+						}
+
 						boolean tall = rand > cMoisture.getInverse()*2;
 						if(iMoisture.isGreaterThanOrEqual(Moisture.VERYHIGH) && tall)
 						{
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottomLush), bp, 2);
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTopLush), bp.up(), 2);
 						}
-						else if(iMoisture.isGreaterThan(Moisture.MEDIUM) && tall)
+						else if(iMoisture.isGreaterThanOrEqual(Moisture.MEDIUM) && tall)
 						{
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottom), bp, 2);
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTop), bp.up(), 2);
-						}
-						else if(iMoisture.isGreaterThanOrEqual(Moisture.LOW) && tall)
-						{
-							Core.setBlock(world, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.DoubleGrassBottomSparse), bp, 2);
-							Core.setBlock(world, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.DoubleGrassTopSparse), bp.up(), 2);
 						}
 						else
 						{

@@ -2,8 +2,8 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"grassside": "tfc2:blocks/grassside",
-			"grasstop": "tfc2:blocks/grasstop"
+			"grassside": "tfc2:blocks/grasssidesparse",
+			"grasstop": "tfc2:blocks/grasssparseoverlay"
 		},
 		"model": "tall_grass"
 	},
@@ -20,7 +20,11 @@
 			"doublegrassbottomsparse": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_bottom_sparse"}},
 			"doublegrasstopsparse": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_top_sparse"}}
 		},
-		"veg=ocatillo": 
+		"isonstone" : {
+			"true":{"submodel": "tfc2:plants/vegbase"},
+			"false":{}
+		},
+		"isonstone=false,veg=ocatillo": 
 		[
 			{"model": "tfc2:plants/ocatillo_0"},
 			{"model": "tfc2:plants/ocatillo_1"},

@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -30,14 +31,14 @@ import com.bioxx.tfc2.Core;
 public class BlockVegDesert extends BlockTerra implements IPlantable
 {
 	public static final PropertyEnum META_PROPERTY = PropertyEnum.create("veg", DesertVegType.class);
-
+	public static final PropertyBool IS_ON_STONE = PropertyBool.create("isonstone");
 	public BlockVegDesert()
 	{
 		super(Material.VINE, META_PROPERTY);
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, DesertVegType.DeadBush));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, DesertVegType.DeadBush).withProperty(IS_ON_STONE, false));
 		float f = 0.35F;
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.8F, 0.5F + f);
 	}
@@ -134,7 +135,7 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return state;
+		return state.withProperty(IS_ON_STONE, Core.isStone(world.getBlockState(pos.down())));
 	}
 
 	@Override
@@ -164,7 +165,7 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] { META_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[] { META_PROPERTY, IS_ON_STONE});
 	}
 
 	@Override

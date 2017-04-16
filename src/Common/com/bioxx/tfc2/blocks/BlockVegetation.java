@@ -27,7 +27,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.TFCBlocks;
 
 public class BlockVegetation extends BlockTerra implements IPlantable
 {
@@ -141,7 +140,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return state.withProperty(IS_ON_STONE, world.getBlockState(pos.down()).getBlock() == TFCBlocks.Stone);
+		return state.withProperty(IS_ON_STONE, Core.isStone(world.getBlockState(pos.down())));
 	}
 
 	@Override
