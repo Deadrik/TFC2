@@ -76,15 +76,9 @@ public class WorldGenGrass implements IWorldGenerator
 						rand = random.nextFloat();
 
 						VegType vt = VegType.Grass;
-						DesertVegType dvt = DesertVegType.GrassSparse;
 						if(iMoisture == Moisture.LOW)
 						{
-							if(closest.getMoisture().isLessThanOrEqual(Moisture.MEDIUM))
-							{
-								if(random.nextFloat() < 0.5)
-									dvt = DesertVegType.ShortGrassSparse;
-								else dvt = DesertVegType.ShorterGrassSparse;
-							}
+							continue;
 						}
 						else if(iMoisture == Moisture.MEDIUM)
 						{
@@ -119,74 +113,11 @@ public class WorldGenGrass implements IWorldGenerator
 						}
 						else
 						{
-							if(iMoisture == Moisture.LOW)
-								Core.setBlock(world, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, dvt), bp, 2);
-							else
-								Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, vt), bp, 2);
+							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, vt), bp, 2);
 						}
 					}
 				}
-				else if(map.getParams().hasFeature(Feature.Desert) && closest.getMoisture().isLessThanOrEqual(Moisture.MEDIUM))//aka we're actually in the desert areas
-				{
-					IBlockState downState = world.getBlockState(bp.down());
-					if(Core.isSand(downState) && random.nextInt(20) == 0)
-					{
-						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Ocatillo), 2);
-					}
-				}
 			}
 		}
-
-		int x = 0, y = 0, z = 0; 
-		if(map.getParams().hasFeature(Feature.Desert))
-		{
-			for(int i = 0; i < 4; i++)
-			{
-				x = random.nextInt(16); z = random.nextInt(16);
-				BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
-				closest = map.getClosestCenter(bp);
-				IBlockState downState = world.getBlockState(bp.down());
-
-				if(closest.getMoisture().isLessThanOrEqual(Moisture.MEDIUM) && Core.isSand(downState))//we're actually in the desert areas
-				{
-					world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Tackweed), 2);
-				}
-			}
-			int count = 3+random.nextInt(6);
-			if(random.nextInt(10) == 0)
-			{
-				x = random.nextInt(16); z = random.nextInt(16);
-				for(int i = 0; i < count; i++)
-				{
-					x += -4+random.nextInt(9); z += -4+random.nextInt(9);
-					BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
-					closest = map.getClosestCenter(bp);
-					IBlockState downState = world.getBlockState(bp.down());
-
-					if(closest.getMoistureRaw() < Moisture.LOW.getMoisture() && Core.isSand(downState))//we're actually in the desert areas
-					{
-						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Primrose), 2);
-					}
-				}
-			}
-
-			if(random.nextInt(20) == 0)
-			{
-				x = random.nextInt(16); z = random.nextInt(16);
-				for(int i = 0; i < count; i++)
-				{
-					x += -4+random.nextInt(9); z += -4+random.nextInt(9);
-					BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
-					closest = map.getClosestCenter(bp);
-					IBlockState downState = world.getBlockState(bp.down());
-
-					if(closest.getMoistureRaw() < Moisture.LOW.getMoisture() && Core.isSand(downState))//we're actually in the desert areas
-					{
-						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Yucca), 2);
-					}
-				}
-			}
-		}
-
 	}
 }

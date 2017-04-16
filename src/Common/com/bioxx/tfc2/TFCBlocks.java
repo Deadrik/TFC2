@@ -80,6 +80,7 @@ public class TFCBlocks
 	public static Block StoneStalag;
 	public static Block StoneStalac;
 	public static Block Firepit;
+	public static Block Cactus;
 
 	public static void LoadBlocks()
 	{
@@ -149,6 +150,8 @@ public class TFCBlocks
 		StoneStalag = new BlockStoneStalag().setHardness(5F).setUnlocalizedName("stoneStalag");
 		StoneStalac = new BlockStoneStalac().setHardness(5F).setUnlocalizedName("stoneStalac");
 		Firepit = new BlockFirepit().setHardness(4F).setUnlocalizedName("firepit");
+		Cactus = new BlockCactus().setHardness(4F).setUnlocalizedName("cactus");
+
 	}
 
 	public static void RegisterBlocks()
@@ -190,7 +193,7 @@ public class TFCBlocks
 		register(PortalStone);
 		register(TorchOn, ItemBlock.class);
 		register(TorchOff, ItemBlock.class);
-		//register(Crop);
+		register(Cactus);
 		register(Farmland);
 		register(SupportBeam, ItemWoodSupport.class);
 		register(SupportBeam2, ItemWoodSupport.class);

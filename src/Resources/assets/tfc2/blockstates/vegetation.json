@@ -10,7 +10,7 @@
 	},
 	"variants": {
 		"isonstone": {
-			"true": {"submodel": "tfc2:vegbase"},
+			"true": {"submodel": "tfc2:plants/vegbase"},
 			"false": {}
 		},
 		"veg": {

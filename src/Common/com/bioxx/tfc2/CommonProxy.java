@@ -109,6 +109,7 @@ public class CommonProxy
 		GameRegistry.registerWorldGenerator(new WorldGenPamsGardens(), 25);
 		GameRegistry.registerWorldGenerator(new WorldGenTrees(), 10);
 		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
+		GameRegistry.registerWorldGenerator(new WorldGenGrassDry(), 100);
 
 	}
 

@@ -1,0 +1,18 @@
+{
+	"forge_marker" : 1,
+	"defaults": {
+		"model": "tfc2:plants/cactus_barrel"
+	},
+    "variants": {
+    	"cactus":{
+        	"barrel":  { 
+        			"model": "tfc2:plants/cactus_barrel"
+        	}
+        },
+        "bloom":{
+        	"true": {},
+        	"false": {}
+        },
+        "bloom=true,cactus=barrel": [{"weight": 1}, {"submodel":"tfc2:plants/cactus_barrel_flowers", "weight": 3}]
+    }
+}

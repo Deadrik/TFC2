@@ -350,19 +350,6 @@ public class WorldGen implements IThreadCompleteListener
 			spawnGroups.remove(group);
 		}
 
-		/**
-		 * Crops
-		 */
-		/*ArrayList<Crop> suitableCrops = Crop.getCropsForTemp(t);
-		int numCrops = 1 + (id.hasFeature(Feature.DiverseCrops) ? 1+r.nextInt(2) : 0);
-		numCrops = Math.min(numCrops, suitableCrops.size());
-
-		for(int i = 0; i < numCrops; i++)
-		{
-			id.addCrop(suitableCrops.get(r.nextInt(suitableCrops.size())));
-		}*/
-
-		//id.setFeatures(Feature.Desert);
 		if(id.hasFeature(Feature.Desert))
 			id.setIslandMoisture(Moisture.LOW);
 
