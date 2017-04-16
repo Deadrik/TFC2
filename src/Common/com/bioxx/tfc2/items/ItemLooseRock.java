@@ -2,7 +2,6 @@ package com.bioxx.tfc2.items;
 
 import java.util.List;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -17,6 +16,7 @@ import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.interfaces.IRegisterSelf;
 import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class ItemLooseRock extends ItemTerra implements IRegisterSelf
 {
@@ -25,7 +25,7 @@ public class ItemLooseRock extends ItemTerra implements IRegisterSelf
 		this.setShowInCreative(true);
 		this.setHasSubtypes(true);
 		this.maxSubTypeMeta = 15;
-		this.setCreativeTab(CreativeTabs.MATERIALS);
+		this.setCreativeTab(TFCTabs.TFCMaterials);
 		this.subTypeNames = Core.capitalizeStringArray(Global.STONE_ALL);
 	}
 

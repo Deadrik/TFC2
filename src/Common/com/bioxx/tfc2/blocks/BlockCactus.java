@@ -10,7 +10,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -30,6 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.types.Season;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.core.Timekeeper;
 
 public class BlockCactus extends BlockTerra implements IPlantable
@@ -40,7 +40,7 @@ public class BlockCactus extends BlockTerra implements IPlantable
 	public BlockCactus()
 	{
 		super(Material.VINE, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, DesertCactusType.Barrel).withProperty(BLOOM, false));

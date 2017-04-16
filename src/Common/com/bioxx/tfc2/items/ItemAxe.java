@@ -19,6 +19,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.blocks.BlockSapling;
 import com.bioxx.tfc2.blocks.BlockSapling2;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.google.common.collect.Sets;
 
 public class ItemAxe extends ItemTerraTool 
@@ -30,6 +31,7 @@ public class ItemAxe extends ItemTerraTool
 		super(mat, EFFECTIVE_ON);
 		this.damageVsEntity = 1;
 		this.attackSpeed = -3.2f;
+		this.setCreativeTab(TFCTabs.TFCTools);
 	}
 
 	@Override

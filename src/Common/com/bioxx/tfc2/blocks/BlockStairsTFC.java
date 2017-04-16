@@ -14,7 +14,6 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,6 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.google.common.collect.Lists;
 
 public class BlockStairsTFC extends BlockCollapsible
@@ -74,7 +74,7 @@ public class BlockStairsTFC extends BlockCollapsible
 		//setResistance(this.modelBlock.blockResistance / 3.0F);
 		this.setSoundType(SoundType.WOOD);
 		setLightOpacity(255);
-		setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 	}
 
 	@Override

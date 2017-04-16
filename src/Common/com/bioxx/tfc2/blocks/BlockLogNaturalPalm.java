@@ -9,11 +9,11 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockLogNaturalPalm extends BlockTerra
 {
@@ -22,7 +22,7 @@ public class BlockLogNaturalPalm extends BlockTerra
 	public BlockLogNaturalPalm()
 	{
 		super(Material.GROUND, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		this.setBlockBounds(0.125f, 0, 0.125f, 0.875f, 1f, 0.875f);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, WoodType.Palm));
 		this.setShowInCreative(false);

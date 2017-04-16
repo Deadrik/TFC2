@@ -9,7 +9,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.world.TeleporterPaths;
 
@@ -39,7 +39,7 @@ public class BlockPortal extends BlockTerra
 	public BlockPortal()
 	{
 		super(Material.GROUND, null);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		setSoundType(SoundType.STONE);
 	}
 

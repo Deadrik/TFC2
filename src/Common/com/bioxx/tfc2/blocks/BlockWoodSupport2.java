@@ -9,7 +9,6 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -25,7 +24,6 @@ public class BlockWoodSupport2 extends BlockWoodSupport implements INeedOffset
 	public BlockWoodSupport2() 
 	{
 		super(Material.WOOD, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, WoodType.Pine).
 				withProperty(SPAN, Boolean.valueOf(true)).
 				withProperty(NORTH_CONNECTION, Boolean.valueOf(false)).

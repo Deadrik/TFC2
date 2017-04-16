@@ -10,7 +10,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockRenderLayer;
@@ -27,6 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockVegDesert extends BlockTerra implements IPlantable
 {
@@ -35,7 +35,7 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 	public BlockVegDesert()
 	{
 		super(Material.VINE, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, DesertVegType.DeadBush).withProperty(IS_ON_STONE, false));

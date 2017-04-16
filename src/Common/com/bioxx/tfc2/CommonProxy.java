@@ -72,6 +72,7 @@ public class CommonProxy
 		TFCBlocks.RegisterBlocks();
 		TFCBlocks.RegisterTileEntites();
 		TFCItems.Load();
+		TFCItems.SetupCreativeTabs();
 		TFCItems.Register();
 		registerCropProduce();//Must run after item setup
 		setupOre();

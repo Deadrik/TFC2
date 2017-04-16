@@ -6,7 +6,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -21,6 +20,7 @@ import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.blocks.BlockVegetation;
 import com.bioxx.tfc2.blocks.BlockVegetation.VegType;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
 public class BlockStone extends BlockCollapsible
@@ -30,7 +30,7 @@ public class BlockStone extends BlockCollapsible
 	public BlockStone()
 	{
 		super(Material.ROCK, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		this.setSoundType(SoundType.STONE);
 		scanDepth = 10;
 		collapseType = CollapsibleType.Nature;

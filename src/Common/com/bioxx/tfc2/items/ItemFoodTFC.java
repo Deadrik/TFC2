@@ -23,6 +23,7 @@ import com.bioxx.tfc2.api.interfaces.ICookableFood;
 import com.bioxx.tfc2.api.interfaces.IUpdateInInventory;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 import com.bioxx.tfc2.core.Food;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInInventory
 {
@@ -41,7 +42,7 @@ public class ItemFoodTFC extends ItemTerra implements ICookableFood, IUpdateInIn
 		nourishment = 20;
 		filling = f;
 		//FoodRegistry.getInstance().registerFood(fg, this);
-		this.setCreativeTab(CreativeTabs.FOOD);
+		this.setCreativeTab(TFCTabs.TFCFoods);
 		nutritionMap.put(EnumFoodGroup.Grain, 20f);
 	}
 

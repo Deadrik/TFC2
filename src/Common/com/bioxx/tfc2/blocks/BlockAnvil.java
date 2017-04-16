@@ -33,6 +33,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.properties.PropertyItem;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.rendering.particles.ParticleAnvil;
 import com.bioxx.tfc2.tileentities.TileAnvil;
 
@@ -47,7 +48,7 @@ public class BlockAnvil extends BlockTerra implements ITileEntityProvider
 	public BlockAnvil()
 	{
 		super(Material.GRASS, FACING);
-		this.setCreativeTab(CreativeTabs.TOOLS);
+		this.setCreativeTab(TFCTabs.TFCDevices);
 		this.isBlockContainer = true;
 		setSoundType(SoundType.GROUND);
 		this.setBreaksWhenSuspended(true);

@@ -3,7 +3,6 @@ package com.bioxx.tfc2.items;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +21,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.blocks.BlockFirepit;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.tileentities.TileFirepit;
 
@@ -32,7 +32,7 @@ public class ItemFirestarter extends ItemTerra
 		this.setShowInCreative(true);
 		this.setMaxDamage(10000);
 		this.setMaxStackSize(1);
-		this.setCreativeTab(CreativeTabs.TOOLS);
+		this.setCreativeTab(TFCTabs.TFCTools);
 	}
 
 	@Override

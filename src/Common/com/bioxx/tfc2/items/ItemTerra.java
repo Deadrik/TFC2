@@ -2,6 +2,8 @@ package com.bioxx.tfc2.items;
 
 import java.util.List;
 
+import com.bioxx.tfc2.core.TFCTabs;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,7 +22,7 @@ public class ItemTerra extends Item
 
 	public ItemTerra()
 	{
-		this.setCreativeTab(CreativeTabs.MISC);
+		this.setCreativeTab(TFCTabs.TFCMisc);
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 
 import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.blocks.BlockTerra;
@@ -18,7 +17,7 @@ public class BlockOre extends BlockTerra
 	public BlockOre()
 	{
 		super(Material.ROCK, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(null);
 		setSoundType(SoundType.STONE);
 	}
 

@@ -11,7 +11,6 @@ import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -25,6 +24,7 @@ import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockLogHorizontal extends BlockCollapsible implements ISupportBlock
 {
@@ -40,7 +40,7 @@ public class BlockLogHorizontal extends BlockCollapsible implements ISupportBloc
 	{
 		super(material, meta);
 		setSoundType(SoundType.WOOD);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		this.setShowInCreative(false);
 	}
 

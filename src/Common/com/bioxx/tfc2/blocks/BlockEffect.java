@@ -5,11 +5,11 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 import com.bioxx.tfc2.api.types.EffectType;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockEffect extends BlockTerra
 {
@@ -18,7 +18,7 @@ public class BlockEffect extends BlockTerra
 	public BlockEffect()
 	{
 		super(Material.FIRE, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		this.setBlockBounds(0, 0, 0, 1, 0.001f, 1);
 		this.fullBlock = false;
 		this.setShowInCreative(false);

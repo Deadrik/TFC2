@@ -1,9 +1,13 @@
 package com.bioxx.tfc2;
 
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
 
 import com.bioxx.tfc2.core.RegistryItemQueue;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.items.*;
 
 public class TFCItems 
@@ -46,6 +50,20 @@ public class TFCItems
 		Firestarter = registerItem(new ItemFirestarter().setUnlocalizedName("firestarter"));
 	}
 
+	public static void SetupCreativeTabs()
+	{
+		((TFCTabs) TFCTabs.TFCBuilding).setTabIconItemStack(new ItemStack(TFCBlocks.StoneBrick));
+		((TFCTabs) TFCTabs.TFCDecoration).setTabIconItemStack(new ItemStack(TFCBlocks.StairsAsh));
+		((TFCTabs) TFCTabs.TFCDevices).setTabIconItemStack(new ItemStack(TFCBlocks.Anvil));
+		((TFCTabs) TFCTabs.TFCPottery).setTabIconItemStack(new ItemStack(Items.FLOWER_POT));
+		((TFCTabs) TFCTabs.TFCMisc).setTabIconItemStack(new ItemStack(LooseRock));
+		((TFCTabs) TFCTabs.TFCFoods).setTabIconItemStack(new ItemStack(Items.COOKED_CHICKEN));
+		((TFCTabs) TFCTabs.TFCTools).setTabIconItemStack(new ItemStack(StoneAxe));
+		((TFCTabs) TFCTabs.TFCWeapons).setTabIconItemStack(new ItemStack(Items.DIAMOND_SWORD));
+		((TFCTabs) TFCTabs.TFCArmor).setTabIconItemStack(new ItemStack(Items.DIAMOND_CHESTPLATE));
+		((TFCTabs) TFCTabs.TFCMaterials).setTabIconItemStack(new ItemStack(Items.REDSTONE));
+		
+	}
 	public static void Register()
 	{
 		TFC.log.info(new StringBuilder().append("[TFC2] Registering Items").toString());

@@ -9,7 +9,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,6 +22,7 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockLooseRocks extends BlockTerra
 {
@@ -31,7 +31,7 @@ public class BlockLooseRocks extends BlockTerra
 	public BlockLooseRocks()
 	{
 		super(Material.GROUND, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		this.setBlockBounds(0.2f, 0, 0.2f, 0.8f, 0.1f, 0.8f);
 		setSoundType(SoundType.STONE);
 		setShowInCreative(false);

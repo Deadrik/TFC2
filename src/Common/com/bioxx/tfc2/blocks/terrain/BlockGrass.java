@@ -10,7 +10,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockRenderLayer;
@@ -28,6 +27,7 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class BlockGrass extends BlockCollapsible
@@ -42,7 +42,7 @@ public class BlockGrass extends BlockCollapsible
 	public BlockGrass()
 	{
 		super(Material.GROUND, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		setSoundType(SoundType.GROUND);
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(META_PROPERTY, StoneType.Granite).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)).withProperty(SPARSE, false));

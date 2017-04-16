@@ -11,7 +11,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -50,7 +49,7 @@ public class BlockFirepit extends BlockTerra implements ITileEntityProvider
 	public BlockFirepit()
 	{
 		super(Material.GRASS, LIT);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(null);
 		this.isBlockContainer = true;
 		setSoundType(SoundType.GROUND);
 		this.setBlockBounds(0, 0, 0, 1, 0.3, 1);

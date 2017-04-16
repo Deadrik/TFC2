@@ -15,6 +15,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.blocks.BlockFarmland;
 import com.bioxx.tfc2.blocks.terrain.BlockDirt;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.google.common.collect.Sets;
 
 public class ItemHoe extends ItemTerraTool 
@@ -24,6 +25,7 @@ public class ItemHoe extends ItemTerraTool
 	public ItemHoe(ToolMaterial mat)
 	{
 		super(mat, EFFECTIVE_ON);
+		this.setCreativeTab(TFCTabs.TFCTools);
 	}
 
 	@Override

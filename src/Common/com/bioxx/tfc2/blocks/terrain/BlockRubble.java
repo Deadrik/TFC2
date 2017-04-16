@@ -6,7 +6,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -14,6 +13,7 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.blocks.BlockGravity;
 import com.bioxx.tfc2.blocks.BlockWoodSupport;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
@@ -24,7 +24,7 @@ public class BlockRubble extends BlockGravity
 	public BlockRubble()
 	{
 		super(Material.ROCK, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		setSoundType(SoundType.STONE);
 	}
 

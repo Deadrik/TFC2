@@ -12,7 +12,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -38,6 +37,7 @@ import com.bioxx.tfc2.api.events.CropEvent;
 import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.properties.PropertyClass;
 import com.bioxx.tfc2.core.Food;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.tileentities.TileCrop;
 
 public class BlockCrop extends BlockTerra implements ITileEntityProvider
@@ -49,7 +49,7 @@ public class BlockCrop extends BlockTerra implements ITileEntityProvider
 	public BlockCrop()
 	{
 		super(Material.GRASS, GROWTH);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		this.isBlockContainer = true;
 		setSoundType(SoundType.GROUND);
 	}

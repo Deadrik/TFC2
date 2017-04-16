@@ -24,6 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.core.Timekeeper;
 import com.bioxx.tfc2.tileentities.TileTorch;
 
@@ -34,6 +35,7 @@ public class BlockTorchTFC extends BlockTorch implements ITileEntityProvider
 	public BlockTorchTFC(boolean isOn)
 	{
 		super();
+		this.setCreativeTab(TFCTabs.TFCDecoration);
 		this.setTickRandomly(true);
 		this.isOn = isOn;
 

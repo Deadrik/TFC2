@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.Crop;
 import com.bioxx.tfc2.api.interfaces.IRegisterSelf;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.tileentities.TileCrop;
 
 public class ItemSeeds extends ItemTerra implements IRegisterSelf
@@ -25,6 +26,7 @@ public class ItemSeeds extends ItemTerra implements IRegisterSelf
 		this.subTypeNames = new String[] {"seeds_corn", "seeds_cabbage", "seeds_tomato", "seeds_wheat", "seeds_barley", "seeds_rye", 
 				"seeds_oat", "seeds_rice", "seeds_potato", "seeds_onion", "seeds_garlic", "seeds_carrot", "seeds_sugarcane", "seeds_yellowbellpepper", 
 				"seeds_redbellpepper", "seeds_soybean", "seeds_greenbean", "seeds_squash"};
+		this.setCreativeTab(TFCTabs.TFCDecoration);
 	}
 
 	@Override

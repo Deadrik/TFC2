@@ -8,7 +8,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -22,6 +21,7 @@ import com.bioxx.jmapgen.attributes.PortalAttribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.PortalEnumType;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class BlockPortalStone extends BlockTerra
@@ -31,7 +31,7 @@ public class BlockPortalStone extends BlockTerra
 	public BlockPortalStone()
 	{
 		super(Material.GROUND, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		this.setTickRandomly(true);
 		setSoundType(SoundType.STONE);
 	}

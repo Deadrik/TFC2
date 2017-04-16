@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.core.TFCTabs;
 import com.google.common.collect.Sets;
 
 public class ItemShovel extends ItemTerraTool 
@@ -16,6 +17,7 @@ public class ItemShovel extends ItemTerraTool
 	public ItemShovel(ToolMaterial mat)
 	{
 		super(mat, EFFECTIVE_ON);
+		this.setCreativeTab(TFCTabs.TFCTools);
 	}
 
 }

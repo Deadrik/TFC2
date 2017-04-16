@@ -6,7 +6,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
@@ -16,6 +15,7 @@ import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
 import com.bioxx.tfc2.blocks.terrain.BlockRubble;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockStoneSmooth extends BlockCollapsible implements ISupportBlock
 {
@@ -24,7 +24,7 @@ public class BlockStoneSmooth extends BlockCollapsible implements ISupportBlock
 	public BlockStoneSmooth()
 	{
 		super(Material.GROUND, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		setSoundType(SoundType.STONE);
 	}
 

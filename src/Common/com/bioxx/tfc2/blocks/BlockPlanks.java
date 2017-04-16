@@ -9,7 +9,6 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -22,6 +21,7 @@ import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockPlanks extends BlockCollapsible implements ISupportBlock
 {
@@ -29,14 +29,13 @@ public class BlockPlanks extends BlockCollapsible implements ISupportBlock
 
 	public BlockPlanks()
 	{
-		super(Material.GROUND, META_PROPERTY);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
-		setSoundType(SoundType.WOOD);
+		this(Material.GROUND, META_PROPERTY);
 	}
 
 	public BlockPlanks(Material m, PropertyHelper p)
 	{
 		super(m, p);
+		this.setCreativeTab(TFCTabs.TFCBuilding);
 		setSoundType(SoundType.WOOD);
 	}
 

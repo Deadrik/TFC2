@@ -5,6 +5,7 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 
+import com.bioxx.tfc2.core.TFCTabs;
 import com.google.common.collect.Sets;
 
 public class ItemPickaxe extends ItemTerraTool 
@@ -17,6 +18,7 @@ public class ItemPickaxe extends ItemTerraTool
 	public ItemPickaxe(ToolMaterial mat)
 	{
 		super(mat, EFFECTIVE_ON);
+		this.setCreativeTab(TFCTabs.TFCTools);
 	}
 
 }

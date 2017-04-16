@@ -14,10 +14,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -39,7 +41,7 @@ public class BlockLeaves extends BlockTerra
 	public BlockLeaves()
 	{
 		super(Material.LEAVES, null);
-		this.setCreativeTab(CreativeTabs.DECORATIONS);
+		this.setCreativeTab(null);
 		this.setHardness(0.2F);
 		this.setLightOpacity(1);
 		this.META_PROP = META_PROPERTY;
@@ -50,6 +52,13 @@ public class BlockLeaves extends BlockTerra
 	/*******************************************************************************
 	 * 1. Content 
 	 *******************************************************************************/
+	@Override
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList list)
+	{
+		for(int l = 0; l < 16; l++)
+			list.add(new ItemStack(itemIn, 1, l));
+	}
+
 	@Override
 	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
 	{
