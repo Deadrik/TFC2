@@ -168,12 +168,9 @@ public class ContainerPlayerTFC extends ContainerPlayer
 
 			for (int i = 0; i < 9; ++i)
 			{
-				ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
+				ItemStack itemstack = this.craftMatrix.removeStackFromSlot(i);
 				if (!itemstack.isEmpty())
-				{
 					player.dropItem(itemstack, false);
-					craftMatrix.setInventorySlotContents(i, ItemStack.EMPTY);
-				}
 			}
 
 			this.craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
@@ -191,8 +188,9 @@ public class ContainerPlayerTFC extends ContainerPlayer
 		{
 			ItemStack slotStack = slot.getStack(); 
 			origStack = slotStack.copy();
+			InventoryPlayer ip = player.inventory;
 
-			// Crafting Grid Output
+			// Crafting Grid Output to inventory
 			if (slotNum == 0)
 			{
 				//Removed During Port
@@ -209,6 +207,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			{
 				if (!this.mergeItemStack(slotStack, 9, 45, true))
 					return ItemStack.EMPTY;
+				onCraftMatrixChanged(ip);
 			}
 			// From armor or equipment slot to inventory
 			else if (slotNum >= 5 && slotNum < 9 || slotNum == 50)
@@ -281,7 +280,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 					return ItemStack.EMPTY;
 			}
 
-			if (slotStack.getMaxStackSize() <= 0)
+			if (slotStack.isEmpty())
 				slot.putStack(ItemStack.EMPTY);
 			else
 				slot.onSlotChanged();
@@ -289,7 +288,9 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			if (slotStack.getCount() == origStack.getCount())
 				return ItemStack.EMPTY;
 
-			slot.onTake(player, slotStack);
+			ItemStack itemstack2 = slot.onTake(player, slotStack);
+			if (slotNum == 0)
+				player.dropItem(itemstack2, false);
 		}
 
 		return origStack;
@@ -432,13 +433,35 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	 */
 	public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer p)
 	{
+		if (clickTypeIn == ClickType.SWAP && slotID >= 5 && slotID <=8)  //Vanilla armor slots
+			return ItemStack.EMPTY;  //Disable HotBar Keys for now (to prevent free items exploits)
 		if (slotID >= 0 && slotID < this.inventorySlots.size())
 		{
 			Slot sourceSlot = (Slot) this.inventorySlots.get(slotID);
 			ItemStack slotStack = sourceSlot.getStack();
+			if (slotStack == null)  return ItemStack.EMPTY;
 
+			//--- Hotbar slots 1-9 HotKeys --- 
+			if (clickTypeIn == ClickType.SWAP && dragType >= 0 && dragType < 9)
+			{
+				int hbID = 36 + dragType;
+
+				if (slotID == 0)  //Crafting output slot
+				{
+					if (mergeItemStack(slotStack, hbID, hbID+1, false))
+					{
+						sourceSlot.onSlotChanged();
+						ItemStack itemstack2 = sourceSlot.onTake(p, slotStack);
+						p.dropItem(itemstack2, false);
+						return ItemStack.EMPTY;
+					}
+					else
+						return ItemStack.EMPTY;
+				}
+			}
+			
 			//This section is for merging foods with differing expirations.
-			if(clickTypeIn == ClickType.SWAP && slotStack != null && p.inventory.getItemStack() != null)
+			if(clickTypeIn == ClickType.SWAP && p.inventory.getItemStack() != null)
 			{
 				ItemStack itemstack4 = p.inventory.getItemStack();
 				if (slotStack.getItem() == itemstack4.getItem() && slotStack.getMetadata() == itemstack4.getMetadata() && ContainerTFC.areCompoundsEqual(slotStack, itemstack4))
@@ -481,7 +504,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			}
 
 			// Hotbar press to remove from crafting output
-			if (clickTypeIn == ClickType.QUICK_CRAFT && slotID == 0 && slotStack != null)
+			if (clickTypeIn == ClickType.QUICK_CRAFT && slotID == 0)
 			{
 				//Removed During Port
 				//CraftingHandler.preCraft(p, slotStack, craftMatrix);
@@ -489,7 +512,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 			// S and D hotkeys for trimming/combining food
 
 			// Couldn't figure out what was causing the food dupe with a full inventory, so we're just going to block shift clicking for that case.
-			/*else if (mode == 1 && slotID == 0 && isInventoryFull() && slotStack != null && slotStack.getItem() instanceof IFood)
+			/*else if (mode == 1 && slotID == 0 && isInventoryFull() && slotStack.getItem() instanceof IFood)
 				return null;*/
 		}
 		return super.slotClick(slotID, dragType, clickTypeIn, p);

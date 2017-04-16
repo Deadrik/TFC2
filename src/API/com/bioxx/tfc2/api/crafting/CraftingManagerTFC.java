@@ -118,10 +118,10 @@ public class CraftingManagerTFC
 
 		NonNullList<ItemStack> nonnulllist = NonNullList.<ItemStack>withSize(craftMatrix.getSizeInventory(), ItemStack.EMPTY);
 
-		for (int i = 0; i < nonnulllist.size(); ++i)
+		/*for (int i = 0; i < nonnulllist.size(); ++i)
 		{
 			nonnulllist.set(i, craftMatrix.getStackInSlot(i));
-		}
+		}*/
 
 		return nonnulllist;
 	}
