@@ -845,7 +845,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 					{
 						b = Blocks.STONE;
 					}
-					else if(y < Global.SEALEVEL || y < scanElev)
+					else if(y < Global.SEALEVEL || (closestCenter.hasAttribute(Attribute.Lake) && y < scanElev))
 					{
 						b = Blocks.WATER;
 					}
