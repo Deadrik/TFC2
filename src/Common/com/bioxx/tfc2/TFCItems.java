@@ -1,6 +1,5 @@
 package com.bioxx.tfc2;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,6 +26,7 @@ public class TFCItems
 	public static Item Plank;
 	public static Item LooseRock;
 	public static Item Firestarter;
+	public static Item Straw;
 
 
 	public static void Load()
@@ -48,6 +48,7 @@ public class TFCItems
 		StoneHammerHead = registerItem(new ItemToolHead().setUnlocalizedName("stone_hammer_head"));
 
 		Firestarter = registerItem(new ItemFirestarter().setUnlocalizedName("firestarter"));
+		Straw = registerItem(new ItemTerra().setUnlocalizedName("straw").setCreativeTab(TFCTabs.TFCMaterials));
 	}
 
 	public static void SetupCreativeTabs()

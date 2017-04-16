@@ -3,6 +3,7 @@ package com.bioxx.tfc2;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -81,6 +82,7 @@ public class TFCBlocks
 	public static Block StoneStalac;
 	public static Block Firepit;
 	public static Block Cactus;
+	public static Block Thatch;
 
 	public static void LoadBlocks()
 	{
@@ -151,7 +153,7 @@ public class TFCBlocks
 		StoneStalac = new BlockStoneStalac().setHardness(5F).setUnlocalizedName("stoneStalac");
 		Firepit = new BlockFirepit().setHardness(4F).setUnlocalizedName("firepit");
 		Cactus = new BlockCactus().setHardness(4F).setUnlocalizedName("cactus");
-
+		Thatch = new BlockThatch().setHardness(4F).setUnlocalizedName("thatch");
 	}
 
 	public static void RegisterBlocks()
@@ -194,6 +196,7 @@ public class TFCBlocks
 		register(TorchOn, ItemBlock.class);
 		register(TorchOff, ItemBlock.class);
 		register(Cactus);
+		register(Thatch, ItemThatch.class);
 		register(Farmland);
 		register(SupportBeam, ItemWoodSupport.class);
 		register(SupportBeam2, ItemWoodSupport.class);
@@ -245,12 +248,38 @@ public class TFCBlocks
 		SupportBeam3.setHarvestLevel("axe", 1);
 		Planks.setHarvestLevel("axe", 1);
 		Planks2.setHarvestLevel("axe", 1);
+		Thatch.setHarvestLevel("axe", 1);
 
 		Dirt.setHarvestLevel("shovel", 1);
 		Grass.setHarvestLevel("shovel", 1);
 		Gravel.setHarvestLevel("shovel", 1);
 		Sand.setHarvestLevel("shovel", 1);
 		Farmland.setHarvestLevel("shovel", 1);
+
+
+		/*************************************
+		       Set Block Flammability
+		*************************************/
+		for(Block b : stairsList)
+			Blocks.FIRE.setFireInfo(b, 5, 20);
+		Blocks.FIRE.setFireInfo(LogNatural, 5, 5);
+		Blocks.FIRE.setFireInfo(LogNatural2, 5, 5);
+		Blocks.FIRE.setFireInfo(LogNaturalPalm, 5, 5);
+		Blocks.FIRE.setFireInfo(LogVertical, 5, 5);
+		Blocks.FIRE.setFireInfo(LogVertical2, 5, 5);
+		Blocks.FIRE.setFireInfo(LogHorizontal, 5, 5);
+		Blocks.FIRE.setFireInfo(LogHorizontal2, 5, 5);
+		Blocks.FIRE.setFireInfo(LogHorizontal3, 5, 5);
+		Blocks.FIRE.setFireInfo(SupportBeam, 5, 20);
+		Blocks.FIRE.setFireInfo(SupportBeam2, 5, 20);
+		Blocks.FIRE.setFireInfo(SupportBeam3, 5, 20);
+		Blocks.FIRE.setFireInfo(Planks, 5, 20);
+		Blocks.FIRE.setFireInfo(Planks2, 5, 20);
+		Blocks.FIRE.setFireInfo(Thatch, 60, 20);
+		Blocks.FIRE.setFireInfo(Leaves, 30, 60);
+		Blocks.FIRE.setFireInfo(Leaves2, 30, 60);
+		Blocks.FIRE.setFireInfo(Sapling, 60, 100);
+		Blocks.FIRE.setFireInfo(Sapling2, 60, 100);
 
 	}
 

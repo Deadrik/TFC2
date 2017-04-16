@@ -408,6 +408,7 @@ public class ClientProxy extends CommonProxy
 			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(b),0,new ModelResourceLocation(Reference.ModID + ":Wood/Stairs/"+Core.getUnlocalized(b.getUnlocalizedName()), "inventory"));
 		}
 		RegistryItemQueue.getInstance().registerMeshes();
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(TFCBlocks.Thatch), 0, new ModelResourceLocation(Reference.ModID + ":thatch", "inventory"));
 	}
 
 	private void registerVariantModel(Item item, String path, String[] variantNames, int metaStart, int metaEnd)

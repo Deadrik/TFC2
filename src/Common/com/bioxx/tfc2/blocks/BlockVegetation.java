@@ -2,6 +2,10 @@ package com.bioxx.tfc2.blocks;
 
 import java.util.Random;
 
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFCItems;
+import com.bioxx.tfc2.core.TFCTabs;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -10,8 +14,12 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -19,15 +27,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockVegetation extends BlockTerra implements IPlantable
 {
@@ -55,6 +58,22 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	{
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 		checkAndDropBlock((World) worldIn, pos, worldIn.getBlockState(pos));
+	}
+
+	@Override
+	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
+	{
+		if(!worldIn.isRemote && player.getHeldItemMainhand().getItem() == TFCItems.StoneKnife)
+		{
+			EntityItem ei = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(TFCItems.Straw, 1));
+			EntityItem ei2 = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(TFCItems.Straw, 2));
+			VegType veg = (VegType)state.getValue(META_PROPERTY);
+
+			if(veg == VegType.Grass)
+				worldIn.spawnEntity(ei);
+			else if(veg == VegType.DoubleGrassBottom)
+				worldIn.spawnEntity(ei2);
+		}
 	}
 
 	@Override

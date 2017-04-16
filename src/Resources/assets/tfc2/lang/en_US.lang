@@ -72,6 +72,7 @@ tile.stonebrick.name=Stone Bricks
 tile.stonesmooth.name=Smoothed Stone
 tile.torch_on.name=Burning Torch
 tile.torch_off.name=Burnt out Torch
+tile.thatch.name=Thatch
 
 #=================
 #= Wooden Blocks =
@@ -146,6 +147,7 @@ item.stone_hoe.name=Stone Hoe
 item.stone_hammer_head.name=Stone Hammer Head
 item.stone_hammer.name=Stone Hammer
 item.firestarter.name=Firestarter
+item.straw.name=Straw
 
 #=================
 #= Entity ========

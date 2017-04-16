@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 
+import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC.RecipeType;
@@ -25,6 +26,8 @@ public class Recipes
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneShovel), new ItemStack(TFCItems.StoneShovelHead), "stickWood");
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.StoneHoe), new ItemStack(TFCItems.StoneHoeHead), "stickWood");
 		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.Firestarter), " X","X ", 'X', "stickWood");
+		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCBlocks.Thatch), new Object[]{"XX", "XX", Character.valueOf('X'), new ItemStack(TFCItems.Straw, 1)});
+		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.Straw, 4), new Object[]{new ItemStack(TFCBlocks.Thatch, 1)});
 
 		List<IRecipe> list = CraftingManager.getInstance().getRecipeList();
 		for(int i = 0; i < list.size(); i++)
