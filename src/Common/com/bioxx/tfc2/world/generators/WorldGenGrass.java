@@ -96,14 +96,24 @@ public class WorldGenGrass implements IWorldGenerator
 							else if(rand < 0.35) vt = VegType.ShorterGrass;
 						}
 
-						if(map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.SUBTROPICAL))
+						boolean tall = rand > cMoisture.getInverse()*2;
+
+						if(map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.SUBTROPICAL) && iMoisture.isGreaterThanOrEqual(Moisture.VERYHIGH))
 						{
 							if(vt == VegType.Grass) vt = VegType.GrassLush;
 							else if(vt == VegType.ShortGrass) vt = VegType.ShortGrassLush;
 							else if(vt == VegType.ShorterGrass) vt = VegType.ShorterGrassLush;
+
+							if(cMoisture.isGreaterThanOrEqual(Moisture.HIGH))
+							{
+								if(random.nextFloat() < cMoisture.getMoisture())
+								{
+									tall = false;
+									vt = VegType.Toquilla;
+								}
+							}
 						}
 
-						boolean tall = rand > cMoisture.getInverse()*2;
 						if(iMoisture.isGreaterThanOrEqual(Moisture.VERYHIGH) && tall)
 						{
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottomLush), bp, 2);

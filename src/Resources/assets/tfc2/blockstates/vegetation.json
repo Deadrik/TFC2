@@ -16,7 +16,6 @@
 		"veg": {
 			"grass": {"textures": {"cross": "blocks/tallgrass"}},
 			"bromeliad": {"textures": {"cross": "tfc2:blocks/plants/bromeliad"}},
-			"grass_sparse": {"textures": {"cross": "tfc2:blocks/plants/tallgrass_sparse"}},
 			"grass_lush": {"textures": {"cross": "tfc2:blocks/plants/tallgrass_lush"}},
 			"doublegrassbottom": {"textures": {"cross": "blocks/double_plant_grass_bottom"}},
 			"doublegrasstop": {"textures": {"cross": "blocks/double_plant_grass_top"}},
@@ -28,10 +27,12 @@
 			"doublegrassbottomlush": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_bottom_lush"}},
 			"doublegrasstoplush": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_top_lush"}},
 			"shortgrasslush": {"textures": {"cross": "tfc2:blocks/plants/shortgrass_lush"}},
-			"shortergrasslush": {"textures": {"cross": "tfc2:blocks/plants/shortergrass_lush"}}
+			"shortergrasslush": {"textures": {"cross": "tfc2:blocks/plants/shortergrass_lush"}},
+			"toquilla": {"model": "tfc2:plants/toquilla_palm"}
 		},
 		"inventory": [{
             "transform": "forge:default-block"
-        }]
+        }],
+        "isonstone=false,veg=toquilla":[{"y":0},{"y":90},{"y":180},{"y":270},{"y":0, "submodel":"tfc2:plants/toquilla_palm_flower"},{"y":90, "submodel":"tfc2:plants/toquilla_palm_flower"},{"y":180, "submodel":"tfc2:plants/toquilla_palm_flower"},{"y":270, "submodel":"tfc2:plants/toquilla_palm_flower"}]
 	}
 }

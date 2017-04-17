@@ -2,10 +2,6 @@ package com.bioxx.tfc2.blocks;
 
 import java.util.Random;
 
-import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.TFCItems;
-import com.bioxx.tfc2.core.TFCTabs;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -27,10 +23,15 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFCItems;
+import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockVegetation extends BlockTerra implements IPlantable
 {
@@ -220,7 +221,9 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		ShortGrassLush("shortgrasslush", 10),
 		ShorterGrassLush("shortergrasslush", 11),
 		DoubleGrassBottomLush("doublegrassbottomlush", 12),
-		DoubleGrassTopLush("doublegrasstoplush", 13);
+		DoubleGrassTopLush("doublegrasstoplush", 13),
+		Toquilla("toquilla", 14);
+
 
 		private String name;
 		private int meta;
