@@ -7,6 +7,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
+import com.bioxx.tfc2.items.pottery.ItemPotteryJug;
 import com.bioxx.tfc2.networking.client.CFoodPacket;
 
 public class DrinkWaterHandler 
@@ -79,9 +81,16 @@ public class DrinkWaterHandler
 			IBlockState state = event.getWorld().getBlockState(blockpos);
 			if((state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER) && Core.isFreshWater(event.getWorld(), blockpos))
 			{
-				IFoodStatsTFC food = (IFoodStatsTFC)event.getEntityPlayer().getFoodStats();
-				food.setWaterLevel((Math.min(food.getWaterLevel()+0.1f, 20)));
-				TFC.network.sendTo(new CFoodPacket(food), (EntityPlayerMP) event.getEntityPlayer());
+				if(event.getEntityPlayer().getHeldItem(event.getHand()) == ItemStack.EMPTY)
+				{
+					IFoodStatsTFC food = (IFoodStatsTFC)event.getEntityPlayer().getFoodStats();
+					food.setWaterLevel((Math.min(food.getWaterLevel()+0.1f, 20)));
+					TFC.network.sendTo(new CFoodPacket(food), (EntityPlayerMP) event.getEntityPlayer());
+				}
+				else if(ItemPotteryJug.IsCeramicJug(event.getEntityPlayer().getHeldItem(event.getHand())))
+				{
+					event.getEntityPlayer().getHeldItem(event.getHand()).setItemDamage(2);
+				}
 			}
 		}
 	}

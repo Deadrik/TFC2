@@ -183,4 +183,4 @@ entity.Elk.name=Elk
 #= Fluid =========
 #=================
 fluid.saltwater=Saltwater
-fluid.freswater=Fresh Water
+fluid.freshwater=Fresh Water
