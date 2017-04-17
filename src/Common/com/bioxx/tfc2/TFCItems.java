@@ -8,9 +8,14 @@ import net.minecraft.item.Item.ToolMaterial;
 import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.items.*;
+import com.bioxx.tfc2.items.pottery.ItemPotteryBowl;
+import com.bioxx.tfc2.items.pottery.ItemPotteryFireBrick;
 import com.bioxx.tfc2.items.pottery.ItemPotteryJug;
+import com.bioxx.tfc2.items.pottery.ItemPotteryMold;
+import com.bioxx.tfc2.items.pottery.ItemPotteryPot;
+import com.bioxx.tfc2.items.pottery.ItemPotteryVessel;
 
-public class TFCItems 
+public class TFCItems
 {
 	public static Item StoneAxe;
 	public static Item StoneShovel;
@@ -30,7 +35,11 @@ public class TFCItems
 	public static Item Straw;
 
 	public static Item PotteryJug;
-
+	public static Item PotteryPot;
+	public static Item PotteryVessel;
+	public static Item PotteryMold;
+	public static Item PotteryBowl;
+	public static Item PotteryFireBrick;
 
 	public static void Load()
 	{
@@ -54,6 +63,11 @@ public class TFCItems
 		Straw = registerItem(new ItemTerra().setUnlocalizedName("straw").setCreativeTab(TFCTabs.TFCMaterials));
 
 		PotteryJug = registerItemOnly(new ItemPotteryJug().setUnlocalizedName("jug"));
+		PotteryPot = registerItemOnly(new ItemPotteryPot().setUnlocalizedName("pot"));
+		PotteryVessel = registerItemOnly(new ItemPotteryVessel().setUnlocalizedName("vessel"));
+		PotteryMold = registerItemOnly(new ItemPotteryMold().setUnlocalizedName("mold"));
+		PotteryBowl = registerItemOnly(new ItemPotteryBowl().setUnlocalizedName("bowl"));
+		PotteryFireBrick = registerItemOnly(new ItemPotteryFireBrick().setUnlocalizedName("fire_brick"));
 	}
 
 	public static void SetupCreativeTabs()

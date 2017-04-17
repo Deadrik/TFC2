@@ -152,6 +152,11 @@ item.stone_hammer.name=Stone Hammer
 item.firestarter.name=Firestarter
 item.straw.name=Straw
 item.jug.name=Jug
+item.pot.name=Pot
+item.vessel.name=Vessel
+item.bowl.name=Bowl
+item.mold.name=Mold
+item.fire_brick.name=Fire Brick
 
 #=================
 #= Entity ========
