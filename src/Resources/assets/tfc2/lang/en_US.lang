@@ -139,15 +139,10 @@ gui.skill.butcher=Butcher
 #======Items======
 #=================
 item.looserock.name=Rock
-item.stone_axe_head.name=Stone Axe Head
 item.stone_axe.name=Stone Axe
-item.stone_shovel_head.name=Stone Shovel Head
 item.stone_shovel.name=Stone Shovel
-item.stone_knife_head.name=Stone Knife Head
 item.stone_knife.name=Stone Knife
-item.stone_hoe_head.name=Stone Hoe Head
 item.stone_hoe.name=Stone Hoe
-item.stone_hammer_head.name=Stone Hammer Head
 item.stone_hammer.name=Stone Hammer
 item.firestarter.name=Firestarter
 item.straw.name=Straw
@@ -251,6 +246,144 @@ ceramic_mold_javelin_copper=Javelin Head Mold (Copper)
 ceramic_mold_javelin_bronze=Javelin Head Mold (Bronze)
 ceramic_mold_javelin_bismuth_bronze=Javelin Head Mold (Black Bronze)
 ceramic_mold_javelin_black_bronze=Javelin Head Mold (Bismuth Bronze)
+
+#=================
+#  Tool Heads
+#=================
+item.tool_head.name=Tool Head
+
+stone_axe_head=Stone Axe Head
+stone_shovel_head=Stone Shovel Head
+stone_knife_blade=Stone Knife Head
+stone_hoe_head=Stone Hoe Head
+stone_hammer_head=Stone Hammer Head
+stone_javelin_head=Stone Javelin Head
+
+copper_axe_head=Copper Axe Head
+copper_shovel_head=Copper Shovel Head
+copper_knife_blade=Copper knife Blade
+copper_hoe_head=Copper Hoe Head
+copper_hammer_head=Copper Hammer Head
+copper_chisel_head=Copper Chisel Head
+copper_javelin_head=Copper Javelin Head
+copper_mace_head=Copper Mace Head
+copper_pick_head=Copper Pick Head
+copper_propick_head=Copper Prospector's Pick Head
+copper_saw_blade=Copper Saw Blade
+copper_scythe_blade=Copper Scythe Blade
+copper_sword_blade=Copper Sward Blade
+
+bronze_axe_head=Bronze Axe Head
+bronze_shovel_head=Bronze Shovel Head
+bronze_knife_blade=Bronze Knife Blade
+bronze_hoe_head=Bronze Hoe Head
+bronze_hammer_head=Bronze Hammer Head
+bronze_chisel_head=Bronze Chisel Head
+bronze_javelin_head=Bronze Javelin Head
+bronze_mace_head=Bronze Mace Head
+bronze_pick_head=Bronze Pick Head
+bronze_propick_head=Bronze Prospector's Pick Head
+bronze_saw_blade=Bronze Saw Blade
+bronze_scythe_blade=Bronze Scythe Blade
+bronze_sword_blade=Bronze Sword Blade
+
+bismuth_bronze_axe_head=Bismuth Bronze Axe Head
+bismuth_bronze_shovel_head=Bismuth Bronze Shovel Head
+bismuth_bronze_knife_blade=Bismuth Bronze Knife Blade
+bismuth_bronze_hoe_head=Bismuth Bronze Hoe Head
+bismuth_bronze_hammer_head=Bismuth Bronze Hammer Head
+bismuth_bronze_chisel_head=Bismuth Bronze Chisel Head
+bismuth_bronze_javelin_head=Bismuth Bronze Javelin Head
+bismuth_bronze_mace_head=Bismuth Bronze Mace Head
+bismuth_bronze_pick_head=Bismuth Bronze Pick Head
+bismuth_bronze_propick_head=Bismuth Bronze Prospector's Pick Head
+bismuth_bronze_saw_blade=Bismuth Bronze Saw Blade
+bismuth_bronze_scythe_blade=Bismuth Bronze Scythe Blade
+bismuth_bronze_sword_blade=Bismuth Bronze Sword Blade
+
+black_bronze_axe_head=Black Bronze Axe Head
+black_bronze_shovel_head=Black Bronze Shovel Head
+black_bronze_knife_blade=Black Bronze Knife Blade
+black_bronze_hoe_head=Black Bronze Hoe Head
+black_bronze_hammer_head=Black Bronze Hammer Head
+black_bronze_chisel_head=Black Bronze Chisel Head
+black_bronze_javelin_head=Black Bronze Javelin Head
+black_bronze_mace_head=Black Bronze Mace Head
+black_bronze_pick_head=Black Bronze Pick Head
+black_bronze_propick_head=Black Bronze Prospector's Pick Head
+black_bronze_saw_blade=Black Bronze Saw Blade
+black_bronze_scythe_blade=Black Bronze Scythe Blade
+black_bronze_sword_blade=Black Bronze Sword Blade
+
+wrought_iron_axe_head=Wrought Iron Axe Head
+wrought_iron_shovel_head=Wrought Iron Shovel Head
+wrought_iron_knife_blade=Wrought Iron Knife Blade
+wrought_iron_hoe_head=Wrought Iron Hoe Head
+wrought_iron_hammer_head=Wrought Iron Hammer Head
+wrought_iron_chisel_head=Wrought Iron Chisel Head
+wrought_iron_javelin_head=Wrought Iron Javelin Head
+wrought_iron_mace_head=Wrought Iron Mace Head
+wrought_iron_pick_head=Wrought Iron Pick Head
+wrought_iron_propick_head=Wrought Iron Prospector's Pick Head
+wrought_iron_saw_blade=Wrought Iron Saw Blade
+wrought_iron_scythe_blade=Wrought Iron Scythe Blade
+wrought_iron_sword_blade=Wrought Iron Sword Blade
+
+steel_axe_head=Steel Axe Head
+steel_shovel_head=Steel Shovel Head
+steel_knife_blade=Steel Knife Blade
+steel_hoe_head=Steel Hoe Head
+steel_hammer_head=Steel Hammer Head
+steel_chisel_head=Steel Chisel Head
+steel_javelin_head=Steel Javelin Head
+steel_mace_head=Steel Mace Head
+steel_pick_head=Steel Pick Head
+steel_propick_head=Steel Prospector's Pick Head
+steel_saw_blade=Steel Saw Blade
+steel_scythe_blade=Steel Scythe Blade
+steel_sword_blade=Steel Sword Blade
+
+black_steel_axe_head=Black Steel Axe Head
+black_steel_shovel_head=Black Steel Shovel Head
+black_steel_knife_blade=Black Steel Knife Blade
+black_steel_hoe_head=Black Steel Hoe Head
+black_steel_hammer_head=Black Steel Hammer Head
+black_steel_chisel_head=Black Steel Chisel Head
+black_steel_javelin_head=Black Steel Javelin Head
+black_steel_mace_head=Black Steel Mace Head
+black_steel_pick_head=Black Steel Pick Head
+black_steel_propick_head=Black Steel Prospector's Pick Head
+black_steel_saw_blade=Black Steel Saw Blade
+black_steel_scythe_blade=Black Steel Scythe Blade
+black_steel_sword_blade=Black Steel Sword Blade
+
+blue_steel_axe_head=Blue Steel Axe Head
+blue_steel_shovel_head=Blue Steel Shovel Head
+blue_steel_knife_blade=Blue Steel Knife Blade
+blue_steel_hoe_head=Blue Steel Hoe Head
+blue_steel_hammer_head=Blue Steel Hammer Head
+blue_steel_chisel_head=Blue Steel Chisel Head
+blue_steel_javelin_head=Blue Steel Javelin Head
+blue_steel_mace_head=Blue Steel Mace Head
+blue_steel_pick_head=Blue Steel Pick Head
+blue_steel_propick_head=Blue Steel Prospector's Pick Head
+blue_steel_saw_blade=Blue Steel Saw Blade
+blue_steel_scythe_blade=Blue Steel Scythe Blade
+blue_steel_sword_blade=Blue Steel Sword Blade
+
+red_steel_axe_head=Red Steel Axe Head
+red_steel_shovel_head=Red Steel Shovel Head
+red_steel_knife_blade=Red Steel Knife Blade
+red_steel_hoe_head=Red Steel Hoe Head
+red_steel_hammer_head=Red Steel Hammer Head
+red_steel_chisel_head=Red Steel Chisel Head
+red_steel_javelin_head=Red Steel Javelin Head
+red_steel_mace_head=Red Steel Mace Head
+red_steel_pick_head=Red Steel Pick Head
+red_steel_propick_head=Red Steel Prospector's Pick Head
+red_steel_saw_blade=Red Steel Saw Blade
+red_steel_scythe_blade=Red Steel Scythe Blade
+red_steel_sword_blade=Red Steel Sword Blade
 
 #=================
 #= Entity ========

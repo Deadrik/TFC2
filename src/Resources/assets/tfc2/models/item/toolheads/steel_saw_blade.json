@@ -1,0 +1,6 @@
+{
+    "parent": "tfc2:item/defaultitem",
+    "textures": {
+        "layer0": "tfc2:items/toolheads/steel saw blade"
+    }
+}
