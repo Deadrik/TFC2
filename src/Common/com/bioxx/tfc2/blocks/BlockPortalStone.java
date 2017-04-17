@@ -97,7 +97,7 @@ public class BlockPortalStone extends BlockTerra
 			}
 		}
 
-		if(map != null)
+		if(map != null && pa != null)
 		{
 			PortalEnumType pState = map.getIslandData().getPortalState(pa.direction);
 			if(toggleGate(worldIn, pos.down(), pState))
@@ -105,21 +105,26 @@ public class BlockPortalStone extends BlockTerra
 				toggleGate(worldIn, pos.down(2), pState);
 				toggleGate(worldIn, pos.down(3), pState);
 
-				toggleGate(worldIn, pos.north().down(1), pState);
-				toggleGate(worldIn, pos.north().down(2), pState);
-				toggleGate(worldIn, pos.north().down(3), pState);
+				if(pa.direction == EnumFacing.EAST || pa.direction == EnumFacing.WEST)
+				{
+					toggleGate(worldIn, pos.north().down(1), pState);
+					toggleGate(worldIn, pos.north().down(2), pState);
+					toggleGate(worldIn, pos.north().down(3), pState);
 
-				toggleGate(worldIn, pos.south().down(1), pState);
-				toggleGate(worldIn, pos.south().down(2), pState);
-				toggleGate(worldIn, pos.south().down(3), pState);
+					toggleGate(worldIn, pos.south().down(1), pState);
+					toggleGate(worldIn, pos.south().down(2), pState);
+					toggleGate(worldIn, pos.south().down(3), pState);
+				}
+				if(pa.direction == EnumFacing.NORTH || pa.direction == EnumFacing.SOUTH)
+				{
+					toggleGate(worldIn, pos.east().down(1), pState);
+					toggleGate(worldIn, pos.east().down(2), pState);
+					toggleGate(worldIn, pos.east().down(3), pState);
 
-				toggleGate(worldIn, pos.east().down(1), pState);
-				toggleGate(worldIn, pos.east().down(2), pState);
-				toggleGate(worldIn, pos.east().down(3), pState);
-
-				toggleGate(worldIn, pos.west().down(1), pState);
-				toggleGate(worldIn, pos.west().down(2), pState);
-				toggleGate(worldIn, pos.west().down(3), pState);
+					toggleGate(worldIn, pos.west().down(1), pState);
+					toggleGate(worldIn, pos.west().down(2), pState);
+					toggleGate(worldIn, pos.west().down(3), pState);
+				}
 			}
 		}
 	}

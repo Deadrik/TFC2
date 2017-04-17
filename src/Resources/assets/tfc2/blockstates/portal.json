@@ -2,7 +2,7 @@
 	"forge_marker": 1,
 	"defaults": {
 		"model": "cube_all",
-		"textures": {"all": "tfc2:blocks/wood/trees/acacia leaves"}
+		"textures": {"portal": "tfc2:blocks/portal_no_ripple"}
 	},
     "variants": {
         "axis=z,center=false": { "model": "portal_ew" },
