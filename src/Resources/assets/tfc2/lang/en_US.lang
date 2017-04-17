@@ -49,6 +49,9 @@ global.white_cedar=White Cedar
 global.white_elm=White Elm
 global.willow=Willow
 
+global.clay=Clay
+global.ceramic=Ceramic
+
 #== Creative Tabs ==
 itemGroup.TFCArmor=(TFC) Armor
 itemGroup.TFCMaterials=(TFC) Materials
@@ -148,6 +151,7 @@ item.stone_hammer_head.name=Stone Hammer Head
 item.stone_hammer.name=Stone Hammer
 item.firestarter.name=Firestarter
 item.straw.name=Straw
+item.jug.name=Jug
 
 #=================
 #= Entity ========

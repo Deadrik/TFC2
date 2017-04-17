@@ -8,6 +8,7 @@ import net.minecraft.item.Item.ToolMaterial;
 import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.items.*;
+import com.bioxx.tfc2.items.pottery.ItemPotteryJug;
 
 public class TFCItems 
 {
@@ -27,6 +28,8 @@ public class TFCItems
 	public static Item LooseRock;
 	public static Item Firestarter;
 	public static Item Straw;
+
+	public static Item PotteryJug;
 
 
 	public static void Load()
@@ -49,6 +52,8 @@ public class TFCItems
 
 		Firestarter = registerItem(new ItemFirestarter().setUnlocalizedName("firestarter"));
 		Straw = registerItem(new ItemTerra().setUnlocalizedName("straw").setCreativeTab(TFCTabs.TFCMaterials));
+
+		PotteryJug = registerItemOnly(new ItemPotteryJug().setUnlocalizedName("jug"));
 	}
 
 	public static void SetupCreativeTabs()

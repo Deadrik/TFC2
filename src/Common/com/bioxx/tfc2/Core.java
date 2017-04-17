@@ -25,6 +25,7 @@ import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
+import com.bioxx.tfc2.core.FoodStatsTFC;
 import com.bioxx.tfc2.core.InventoryPlayerTFC;
 import com.bioxx.tfc2.core.PlayerSkillData;
 import com.bioxx.tfc2.core.PortalSchematic;
@@ -268,6 +269,13 @@ public class Core
 	public static void setPlayerSkillData(EntityPlayer player, PlayerSkillData data)
 	{
 		data.writeNBT(player.getEntityData());
+	}
+
+	public static FoodStatsTFC getPlayerFoodStats(EntityPlayer player)
+	{
+		FoodStatsTFC fs = new FoodStatsTFC(player);
+		fs.readNBT(player.getEntityData());
+		return fs;
 	}
 
 	public static boolean isFreshWater( World world, BlockPos pos)
