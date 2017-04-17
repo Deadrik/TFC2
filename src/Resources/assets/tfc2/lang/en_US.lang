@@ -158,6 +158,100 @@ item.bowl.name=Bowl
 item.mold.name=Mold
 item.fire_brick.name=Fire Brick
 
+#===========
+#   MOLDS
+#===========
+clay_mold_axe=Clay Axe Mold
+ceramic_mold_axe=Axe Mold
+ceramic_mold_axe_copper=Axe Mold (Copper)
+ceramic_mold_axe_bronze=Axe Mold (Bronze)
+ceramic_mold_axe_bismuth_bronze=Axe Mold (Black Bronze)
+ceramic_mold_axe_black_bronze=Axe Mold (Bismuth Bronze)
+
+clay_mold_chisel=Clay Chisel Mold
+ceramic_mold_chisel=Chisel Mold
+ceramic_mold_chisel_copper=Chisel Mold (Copper)
+ceramic_mold_chisel_bronze=Chisel Mold (Bronze)
+ceramic_mold_chisel_bismuth_bronze=Chisel Mold (Black Bronze)
+ceramic_mold_chisel_black_bronze=Chisel Mold (Bismuth Bronze)
+
+clay_mold_hammer=Clay Hammer Mold
+ceramic_mold_hammer=Hammer Mold
+ceramic_mold_hammer_copper=Hammer Mold (Copper)
+ceramic_mold_hammer_bronze=Hammer Mold (Bronze)
+ceramic_mold_hammer_bismuth_bronze=Hammer Mold (Black Bronze)
+ceramic_mold_hammer_black_bronze=Hammer Mold (Bismuth Bronze)
+
+clay_mold_hoe=Clay Hoe Mold
+ceramic_mold_hoe=Hoe Mold
+ceramic_mold_hoe_copper=Hoe Mold (Copper)
+ceramic_mold_hoe_bronze=Hoe Mold (Bronze)
+ceramic_mold_hoe_bismuth_bronze=Hoe Mold (Black Bronze)
+ceramic_mold_hoe_black_bronze=Hoe Mold (Bismuth Bronze)
+
+clay_mold_knife=Clay Knife Mold
+ceramic_mold_knife=Knife Mold
+ceramic_mold_knife_copper=Knife Mold (Copper)
+ceramic_mold_knife_bronze=Knife Mold (Bronze)
+ceramic_mold_knife_bismuth_bronze=Knife Mold (Black Bronze)
+ceramic_mold_knife_black_bronze=Knife Mold (Bismuth Bronze)
+
+clay_mold_mace=Clay Mace Mold
+ceramic_mold_mace=Mace Mold
+ceramic_mold_mace_copper=Mace Mold (Copper)
+ceramic_mold_mace_bronze=Mace Mold (Bronze)
+ceramic_mold_mace_bismuth_bronze=Mace Mold (Black Bronze)
+ceramic_mold_mace_black_bronze=Mace Mold (Bismuth Bronze)
+
+clay_mold_pick=Clay Pick Mold
+ceramic_mold_pick=Pick Mold
+ceramic_mold_pick_copper=Pick Mold (Copper)
+ceramic_mold_pick_bronze=Pick Mold (Bronze)
+ceramic_mold_pick_bismuth_bronze=Pick Mold (Black Bronze)
+ceramic_mold_pick_black_bronze=Pick Mold (Bismuth Bronze)
+
+clay_mold_propick=Clay ProPick Mold
+ceramic_mold_propick=ProPick Mold
+ceramic_mold_propick_copper=ProPick Mold (Copper)
+ceramic_mold_propick_bronze=ProPick Mold (Bronze)
+ceramic_mold_propick_bismuth_bronze=ProPick Mold (Black Bronze)
+ceramic_mold_propick_black_bronze=ProPick Mold (Bismuth Bronze)
+
+clay_mold_saw=Clay Saw Mold
+ceramic_mold_saw=Saw Mold
+ceramic_mold_saw_copper=Saw Mold (Copper)
+ceramic_mold_saw_bronze=Saw Mold (Bronze)
+ceramic_mold_saw_bismuth_bronze=Saw Mold (Black Bronze)
+ceramic_mold_saw_black_bronze=Saw Mold (Bismuth Bronze)
+
+clay_mold_scythe=Clay Scythe Mold
+ceramic_mold_scythe=Scythe Mold
+ceramic_mold_scythe_copper=Scythe Mold (Copper)
+ceramic_mold_scythe_bronze=Scythe Mold (Bronze)
+ceramic_mold_scythe_bismuth_bronze=Scythe Mold (Black Bronze)
+ceramic_mold_scythe_black_bronze=Scythe Mold (Bismuth Bronze)
+
+clay_mold_shovel=Clay Shovel Mold
+ceramic_mold_shovel=Shovel Mold
+ceramic_mold_shovel_copper=Shovel Mold (Copper)
+ceramic_mold_shovel_bronze=Shovel Mold (Bronze)
+ceramic_mold_shovel_bismuth_bronze=Shovel Mold (Black Bronze)
+ceramic_mold_shovel_black_bronze=Shovel Mold (Bismuth Bronze)
+
+clay_mold_sword=Clay Sword Mold
+ceramic_mold_sword=Sword Mold
+ceramic_mold_sword_copper=Sword Mold (Copper)
+ceramic_mold_sword_bronze=Sword Mold (Bronze)
+ceramic_mold_sword_bismuth_bronze=Sword Mold (Black Bronze)
+ceramic_mold_sword_black_bronze=Sword Mold (Bismuth Bronze)
+
+clay_mold_javelin=Clay Javelin Head Mold
+ceramic_mold_javelin=Javelin Head Mold
+ceramic_mold_javelin_copper=Javelin Head Mold (Copper)
+ceramic_mold_javelin_bronze=Javelin Head Mold (Bronze)
+ceramic_mold_javelin_bismuth_bronze=Javelin Head Mold (Black Bronze)
+ceramic_mold_javelin_black_bronze=Javelin Head Mold (Bismuth Bronze)
+
 #=================
 #= Entity ========
 #=================
