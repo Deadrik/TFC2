@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.blocks;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -67,13 +68,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		if(!worldIn.isRemote && player.getHeldItemMainhand().getItem() == TFCItems.StoneKnife)
 		{
 			EntityItem ei = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(TFCItems.Straw, 1));
-			EntityItem ei2 = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(TFCItems.Straw, 2));
-			VegType veg = (VegType)state.getValue(META_PROPERTY);
-
-			if(veg == VegType.Grass)
-				worldIn.spawnEntity(ei);
-			else if(veg == VegType.DoubleGrassBottom)
-				worldIn.spawnEntity(ei2);
+			worldIn.spawnEntity(ei);
 		}
 	}
 
@@ -90,6 +85,12 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 			dropBlockAsItem(worldIn, pos, state, 0);
 			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 		}
+	}
+
+	@Override
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+	{
+		return super.getDrops(world, pos, state, fortune);
 	}
 
 	public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)

@@ -135,6 +135,7 @@ public class ItemFirestarter extends ItemTerra
 		List<EntityItem> uselist = new ArrayList<EntityItem>();
 		int needStones = 4;
 		int needSticks = 4;
+		int needStraw = 4;
 		int needLogs= 1;
 		NonNullList<ItemStack> oreList=null;
 
@@ -166,6 +167,16 @@ public class ItemFirestarter extends ItemTerra
 						uselist.add(ei);
 					}
 			}
+
+			if(needStraw > 0)
+			{
+				if(needStraw > 0 && ei.getEntityItem().getItem() == TFCItems.Straw)
+				{
+					needStraw -= ei.getEntityItem().getCount();
+					uselist.add(ei);
+				}
+			}
+
 			if(needLogs > 0)
 			{
 				oreList=OreDictionary.getOres("logWood");
@@ -181,10 +192,11 @@ public class ItemFirestarter extends ItemTerra
 
 		ItemStack logStack = null;
 
-		if(needStones <= 0 && needSticks <= 0 && needLogs <= 0)
+		if(needStones <= 0 && needSticks <= 0 && needLogs <= 0 && needStraw <= 0)
 		{
 			needStones = 4;
 			needSticks = 4;
+			needStraw = 4;
 			needLogs= 1;
 
 			for(EntityItem ei : uselist)
@@ -209,6 +221,18 @@ public class ItemFirestarter extends ItemTerra
 							if(ei.getEntityItem().getCount() == 0)
 								ei.setDead();
 						}
+				}
+				if(needStraw > 0)
+				{
+					if(needStraw > 0 && ei.getEntityItem().getItem() == TFCItems.Straw)
+					{
+						int remove = Math.min(ei.getEntityItem().getCount(), needStraw);
+						needStraw -= remove;
+						needStraw -= ei.getEntityItem().getCount();
+						ei.getEntityItem().shrink(remove);
+						if(ei.getEntityItem().getCount() == 0)
+							ei.setDead();
+					}
 				}
 				if(logStack == null)
 				{
