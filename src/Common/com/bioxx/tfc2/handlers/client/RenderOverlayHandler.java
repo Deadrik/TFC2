@@ -27,6 +27,7 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
@@ -202,7 +203,16 @@ public class RenderOverlayHandler
 				event.getLeft().add("Biome: "+hex.biome.name());
 			event.getLeft().add("Elevation: "+hex.getElevation()+" ("+map.convertHeightToMC(hex.getElevation())+")");
 			event.getLeft().add("Moisture: "+hex.getMoisture() + " | " + hex.getMoistureRaw());
-			event.getLeft().add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());	
+			event.getLeft().add("Island Coord: "+islandCoord.getX() + "," + islandCoord.getY());
+			event.getLeft().add("Markers: ");
+			for(Marker m : Marker.values())
+			{
+				if(hex.hasMarker(m))
+				{
+					event.getLeft().add("  *"+m.name());
+				}
+			}
+
 
 			//PrintImageMapCommand.drawMapImage((int)Math.floor(mc.player.posX), (int)Math.floor(mc.player.posZ), mc.world, "test2");
 			/*if(hex.hasAttribute(Attribute.Lake))

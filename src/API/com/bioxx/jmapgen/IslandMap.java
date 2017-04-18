@@ -480,13 +480,14 @@ public class IslandMap
 				if(valleyFinal.size() <= minSize || mapRandom.nextInt(1+valleyFinal.size()-minSize) == 0 )
 				{
 					//If we hit a lake center, then we just drop the entire lake into the valley.
-					if(c.hasMarker(Marker.Water) && !c.hasMarker(Marker.Ocean))
+					if(c.hasMarker(Marker.Water) && !c.hasAnyMarkersOf(Marker.Ocean, Marker.Pond))
 					{
 						Lake l = centerInExistingLake(c);
 						if(l != null && !lakesToDrop.contains(l))
 						{
 							lakesToDrop.add(l);
 						}
+						continue;
 					}
 					else if(c.hasMarker(Marker.Ocean)) continue;
 
@@ -506,14 +507,14 @@ public class IslandMap
 				//System.out.println("Valley: X" + mid.point.x + " Z"+ mid.point.y);
 				for(Center n : valleyFinal)
 				{
-					n.elevation = minElevation*0.8 + (-convertMCToHeight(2) + mapRandom.nextDouble()*convertMCToHeight(5));//Math.max(minElevation, n.elevation*0.8);
+					n.elevation = minElevation/**0.8*/ + (-convertMCToHeight(2) + mapRandom.nextDouble()*convertMCToHeight(5));//Math.max(minElevation, n.elevation*0.8);
 					n.setMarkers(Marker.Valley);
 				}
 				for(Lake l : lakesToDrop)
 				{
 					for(Center c : l.centers)
 					{
-						c.elevation = minElevation*0.79;
+						c.elevation = minElevation/**0.79*/;
 					}
 				}
 			}
