@@ -1,0 +1,15 @@
+{
+	"textures": {
+		"all": "#all",
+        "particle": "#all"
+    },
+    "elements": [
+        {   
+        	"from": [ 0, 0, 0 ],
+            "to": [ 16, 0, 16 ],
+            "faces": {
+                "down":  {"texture": "#all"}
+            }
+        }
+    ]
+}

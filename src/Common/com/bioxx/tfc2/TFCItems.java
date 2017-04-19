@@ -2,18 +2,13 @@ package com.bioxx.tfc2;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemStack;
 
 import com.bioxx.tfc2.core.RegistryItemQueue;
 import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.items.*;
-import com.bioxx.tfc2.items.pottery.ItemPotteryBowl;
-import com.bioxx.tfc2.items.pottery.ItemPotteryFireBrick;
-import com.bioxx.tfc2.items.pottery.ItemPotteryJug;
-import com.bioxx.tfc2.items.pottery.ItemPotteryMold;
-import com.bioxx.tfc2.items.pottery.ItemPotteryPot;
-import com.bioxx.tfc2.items.pottery.ItemPotteryVessel;
+import com.bioxx.tfc2.items.pottery.*;
 
 public class TFCItems
 {
@@ -74,7 +69,7 @@ public class TFCItems
 		((TFCTabs) TFCTabs.TFCWeapons).setTabIconItemStack(new ItemStack(Items.DIAMOND_SWORD));
 		((TFCTabs) TFCTabs.TFCArmor).setTabIconItemStack(new ItemStack(Items.DIAMOND_CHESTPLATE));
 		((TFCTabs) TFCTabs.TFCMaterials).setTabIconItemStack(new ItemStack(Items.REDSTONE));
-		
+
 	}
 	public static void Register()
 	{
@@ -108,5 +103,7 @@ public class TFCItems
 	private static void SetupHarvestLevels()
 	{
 		StoneAxe.setHarvestLevel("axe", 1);
+		StoneShovel.setHarvestLevel("shovel", 1);
+		StoneHoe.setHarvestLevel("hoe", 1);
 	}
 }

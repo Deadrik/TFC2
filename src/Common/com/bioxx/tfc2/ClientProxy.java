@@ -429,7 +429,9 @@ public class ClientProxy extends CommonProxy
 	 */
 	public void sendToAllNear(World world, BlockPos pos, int range, Packet<?> packet)
 	{
-
+		if(world.isRemote)
+			return;
+		super.sendToAllNear(world, pos, range, packet);
 	}
 
 	@Override

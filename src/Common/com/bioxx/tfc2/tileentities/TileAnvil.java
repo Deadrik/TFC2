@@ -556,7 +556,10 @@ public class TileAnvil extends TileTFC implements ITickable, IInventory
 
 	@Override
 	public void clear() {
-
+		for(int i = 0; i < this.getSizeInventory(); i++)
+		{
+			this.setInventorySlotContents(i, ItemStack.EMPTY);
+		}
 	}
 
 	/*********************************************************

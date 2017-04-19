@@ -177,6 +177,12 @@ public class Core
 		return state.getBlock() == TFCBlocks.LogNatural || state.getBlock() == TFCBlocks.LogNatural2 || state.getBlock() == TFCBlocks.LogNaturalPalm;
 	}
 
+	public static boolean isPlacedLog(IBlockState state)
+	{
+		return state.getBlock() == TFCBlocks.LogVertical || state.getBlock() == TFCBlocks.LogVertical2 || 
+				state.getBlock() == TFCBlocks.LogHorizontal || state.getBlock() == TFCBlocks.LogHorizontal2 || state.getBlock() == TFCBlocks.LogHorizontal3;
+	}
+
 	public static void bindTexture(ResourceLocation texture)
 	{
 		net.minecraft.client.Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -232,6 +238,14 @@ public class Core
 			return WorldGen.getInstance().getIslandMap(pos.getX() >> 9, pos.getZ() >> 9);
 		}
 		return WorldGen.getInstance().getIslandMap(pos.getX() >> 12, pos.getZ() >> 12);
+	}
+
+	public static void giveItem(World world, EntityPlayer player, BlockPos pos, ItemStack is)
+	{
+		if(!player.inventory.addItemStackToInventory(is))
+		{
+			dropItem(world, pos, is);
+		}
 	}
 
 	public static void dropItem(World world, BlockPos pos, ItemStack is)

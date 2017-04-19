@@ -3,6 +3,7 @@ package com.bioxx.tfc2.items;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,9 +22,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.blocks.BlockFirepit;
+import com.bioxx.tfc2.blocks.BlockPitKiln;
+import com.bioxx.tfc2.blocks.BlockPitKiln.FillType;
 import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.tileentities.TileFirepit;
+import com.bioxx.tfc2.tileentities.TilePitKiln;
 
 public class ItemFirestarter extends ItemTerra
 {
@@ -131,129 +135,139 @@ public class ItemFirestarter extends ItemTerra
 	protected void onUse(World world, EntityLivingBase player, ItemStack stack, BlockPos pos, int count)
 	{
 		int duration = getMaxItemUseDuration(stack) - count;
-		List<EntityItem> list = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.up(), pos.up().add(1, 1, 1)));
-		List<EntityItem> uselist = new ArrayList<EntityItem>();
-		int needStones = 4;
-		int needSticks = 4;
-		int needStraw = 4;
-		int needLogs= 1;
-		NonNullList<ItemStack> oreList=null;
+		IBlockState state = world.getBlockState(pos);
 
-		stack.damageItem(count, player);
-
-		if(world.getBlockState(pos).getBlock() == TFCBlocks.Firepit)
+		if(state.getBlock() == TFCBlocks.PitKiln && state.getValue(BlockPitKiln.FILLTYPE) == FillType.Straw && state.getValue(BlockPitKiln.FILL) == 4)
 		{
-			TileFirepit te = (TileFirepit)world.getTileEntity(pos);
-			te.light();
-			return;
+			TilePitKiln te = (TilePitKiln) world.getTileEntity(pos);
+			te.startCrafting();
 		}
-
-		for(EntityItem ei : list)
+		else
 		{
-			Item i = ei.getEntityItem().getItem();
-			if(needStones > 0 && i == TFCItems.LooseRock)
+			List<EntityItem> list = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.up(), pos.up().add(1, 1, 1)));
+			List<EntityItem> uselist = new ArrayList<EntityItem>();
+			int needStones = 4;
+			int needSticks = 4;
+			int needStraw = 4;
+			int needLogs= 1;
+			NonNullList<ItemStack> oreList=null;
+
+			stack.damageItem(count, player);
+
+			if(world.getBlockState(pos).getBlock() == TFCBlocks.Firepit)
 			{
-				needStones -= ei.getEntityItem().getCount();
-				uselist.add(ei);
+				TileFirepit te = (TileFirepit)world.getTileEntity(pos);
+				te.light();
+				return;
 			}
 
-			if(needSticks > 0)
+			for(EntityItem ei : list)
 			{
-				oreList=OreDictionary.getOres("stickWood");
-				for(ItemStack is : oreList)
-					if(needSticks > 0 && OreDictionary.itemMatches(is, ei.getEntityItem(), false))
-					{
-						needSticks -= ei.getEntityItem().getCount();
-						uselist.add(ei);
-					}
-			}
-
-			if(needStraw > 0)
-			{
-				if(needStraw > 0 && ei.getEntityItem().getItem() == TFCItems.Straw)
+				Item i = ei.getEntityItem().getItem();
+				if(needStones > 0 && i == TFCItems.LooseRock)
 				{
-					needStraw -= ei.getEntityItem().getCount();
+					needStones -= ei.getEntityItem().getCount();
 					uselist.add(ei);
 				}
-			}
 
-			if(needLogs > 0)
-			{
-				oreList=OreDictionary.getOres("logWood");
-				for(ItemStack is : oreList)
-					if(needLogs > 0 && OreDictionary.itemMatches(is, ei.getEntityItem(), false))
-					{
-						needLogs -= ei.getEntityItem().getCount();
-						uselist.add(ei);
-						break;
-					}
-			}
-		}
-
-		ItemStack logStack = null;
-
-		if(needStones <= 0 && needSticks <= 0 && needLogs <= 0 && needStraw <= 0)
-		{
-			needStones = 4;
-			needSticks = 4;
-			needStraw = 4;
-			needLogs= 1;
-
-			for(EntityItem ei : uselist)
-			{
-				if(needStones > 0 && ei.getEntityItem().getItem() == TFCItems.LooseRock)
-				{
-					int remove = Math.min(ei.getEntityItem().getCount(), needStones);
-					needStones -= remove;
-					ei.getEntityItem().shrink(remove);
-					if(ei.getEntityItem().getCount() == 0)
-						ei.setDead();
-				}
 				if(needSticks > 0)
 				{
 					oreList=OreDictionary.getOres("stickWood");
 					for(ItemStack is : oreList)
 						if(needSticks > 0 && OreDictionary.itemMatches(is, ei.getEntityItem(), false))
 						{
-							int remove = Math.min(ei.getEntityItem().getCount(), needSticks);
-							needSticks -= remove;
-							ei.getEntityItem().shrink(remove);
-							if(ei.getEntityItem().getCount() == 0)
-								ei.setDead();
+							needSticks -= ei.getEntityItem().getCount();
+							uselist.add(ei);
 						}
 				}
+
 				if(needStraw > 0)
 				{
 					if(needStraw > 0 && ei.getEntityItem().getItem() == TFCItems.Straw)
 					{
-						int remove = Math.min(ei.getEntityItem().getCount(), needStraw);
-						needStraw -= remove;
 						needStraw -= ei.getEntityItem().getCount();
+						uselist.add(ei);
+					}
+				}
+
+				if(needLogs > 0)
+				{
+					oreList=OreDictionary.getOres("logWood");
+					for(ItemStack is : oreList)
+						if(needLogs > 0 && OreDictionary.itemMatches(is, ei.getEntityItem(), false))
+						{
+							needLogs -= ei.getEntityItem().getCount();
+							uselist.add(ei);
+							break;
+						}
+				}
+			}
+
+			ItemStack logStack = null;
+
+			if(needStones <= 0 && needSticks <= 0 && needLogs <= 0 && needStraw <= 0)
+			{
+				needStones = 4;
+				needSticks = 4;
+				needStraw = 4;
+				needLogs= 1;
+
+				for(EntityItem ei : uselist)
+				{
+					if(needStones > 0 && ei.getEntityItem().getItem() == TFCItems.LooseRock)
+					{
+						int remove = Math.min(ei.getEntityItem().getCount(), needStones);
+						needStones -= remove;
 						ei.getEntityItem().shrink(remove);
 						if(ei.getEntityItem().getCount() == 0)
 							ei.setDead();
 					}
-				}
-				if(logStack == null)
-				{
-					oreList=OreDictionary.getOres("logWood");
-					for(ItemStack is : oreList)
+					if(needSticks > 0)
 					{
-						if(OreDictionary.itemMatches(is, ei.getEntityItem(), false))
+						oreList=OreDictionary.getOres("stickWood");
+						for(ItemStack is : oreList)
+							if(needSticks > 0 && OreDictionary.itemMatches(is, ei.getEntityItem(), false))
+							{
+								int remove = Math.min(ei.getEntityItem().getCount(), needSticks);
+								needSticks -= remove;
+								ei.getEntityItem().shrink(remove);
+								if(ei.getEntityItem().getCount() == 0)
+									ei.setDead();
+							}
+					}
+					if(needStraw > 0)
+					{
+						if(needStraw > 0 && ei.getEntityItem().getItem() == TFCItems.Straw)
 						{
-							logStack = ei.getEntityItem().copy();
-							ei.setDead();
-							break;
+							int remove = Math.min(ei.getEntityItem().getCount(), needStraw);
+							needStraw -= remove;
+							needStraw -= ei.getEntityItem().getCount();
+							ei.getEntityItem().shrink(remove);
+							if(ei.getEntityItem().getCount() == 0)
+								ei.setDead();
+						}
+					}
+					if(logStack == null)
+					{
+						oreList=OreDictionary.getOres("logWood");
+						for(ItemStack is : oreList)
+						{
+							if(OreDictionary.itemMatches(is, ei.getEntityItem(), false))
+							{
+								logStack = ei.getEntityItem().copy();
+								ei.setDead();
+								break;
+							}
 						}
 					}
 				}
-			}
 
-			if(logStack != null)
-			{
-				world.setBlockState(pos.up(), TFCBlocks.Firepit.getDefaultState().withProperty(BlockFirepit.LIT, true));
-				TileFirepit te = (TileFirepit)world.getTileEntity(pos.up());
-				te.setInventorySlotContents(0, logStack);
+				if(logStack != null)
+				{
+					world.setBlockState(pos.up(), TFCBlocks.Firepit.getDefaultState().withProperty(BlockFirepit.LIT, true));
+					TileFirepit te = (TileFirepit)world.getTileEntity(pos.up());
+					te.setInventorySlotContents(0, logStack);
+				}
 			}
 		}
 		player.stopActiveHand();

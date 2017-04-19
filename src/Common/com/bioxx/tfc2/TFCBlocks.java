@@ -83,6 +83,7 @@ public class TFCBlocks
 	public static Block Firepit;
 	public static Block Cactus;
 	public static Block Thatch;
+	public static Block PitKiln;
 
 	public static void LoadBlocks()
 	{
@@ -154,6 +155,7 @@ public class TFCBlocks
 		Firepit = new BlockFirepit().setHardness(4F).setUnlocalizedName("firepit");
 		Cactus = new BlockCactus().setHardness(4F).setUnlocalizedName("cactus");
 		Thatch = new BlockThatch().setHardness(4F).setUnlocalizedName("thatch");
+		PitKiln = new BlockPitKiln().setHardness(4F).setUnlocalizedName("pitkiln");
 	}
 
 	public static void RegisterBlocks()
@@ -206,6 +208,7 @@ public class TFCBlocks
 		register(StoneStalag, ItemStone.class);
 		register(StoneStalac, ItemStone.class);
 		register(Firepit, ItemBlock.class);
+		register(PitKiln);
 
 		stairsList = new ArrayList<Block>();
 		stairsList.add(register(StairsAsh, ItemStair.class));
@@ -255,11 +258,12 @@ public class TFCBlocks
 		Gravel.setHarvestLevel("shovel", 1);
 		Sand.setHarvestLevel("shovel", 1);
 		Farmland.setHarvestLevel("shovel", 1);
+		PitKiln.setHarvestLevel("shovel", 1);
 
 
 		/*************************************
 		       Set Block Flammability
-		*************************************/
+		 *************************************/
 		for(Block b : stairsList)
 			Blocks.FIRE.setFireInfo(b, 5, 20);
 		Blocks.FIRE.setFireInfo(LogNatural, 5, 5);
@@ -319,6 +323,7 @@ public class TFCBlocks
 		registerTileEntity(TileFarmland.class, "farmland");
 		registerTileEntity(TileAnvil.class, "anvil");
 		registerTileEntity(TileFirepit.class, "firepit");
+		registerTileEntity(TilePitKiln.class, "pitkiln");
 	}
 
 	private static void registerTileEntity(Class<? extends TileEntity> c, String id)
