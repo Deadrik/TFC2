@@ -27,7 +27,9 @@ public class ModuleVanillaReplacement implements IClassTransformer
 			if (methodNode != null)
 			{
 				InsnList list = new InsnList();
-				AbstractInsnNode node0 = getLineNumber(methodNode.instructions, 1566).getNext().getNext().getNext();
+				AbstractInsnNode node0 = getLineNumber(methodNode.instructions, 1566);
+				node0 = ASMHelper.find(methodNode.instructions, new IntInsnNode(Opcodes.SIPUSH, 337));
+				node0 = node0.getNext().getNext();
 				AbstractInsnNode newNode = new TypeInsnNode(Opcodes.NEW, gi("com/bioxx/tfc2/items/ItemClayBall"));
 				methodNode.instructions.insert(node0, newNode);
 				methodNode.instructions.remove(node0);

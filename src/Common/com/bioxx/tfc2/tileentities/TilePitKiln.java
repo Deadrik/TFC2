@@ -38,7 +38,7 @@ public class TilePitKiln extends TileTFC implements ITickable, IInventory
 {
 	UUID potterID;
 	NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(1, ItemStack.EMPTY);
-	private int kilnCookTime = 1000;
+	private int kilnCookTime = 8000;
 	private long lastScanTime = 0;
 	public CraftResult recentCraftResult = new CraftResult();
 
