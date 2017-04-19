@@ -157,6 +157,8 @@ public class EntityLivingHandler
 	public void updateThirst(NBTTagCompound tfcData, IFoodStatsTFC food, EntityPlayer player)
 	{
 		double temp = WeatherManager.getInstance().getTemperature(player.getPosition());
+		if(player.isCreative())
+			return;
 		float thirst = 0.28f;
 		if(temp > 20)
 		{
