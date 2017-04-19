@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -15,8 +16,11 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.TFCItems;
+import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.core.TFC_Sounds;
+import com.bioxx.tfc2.networking.client.CFoodPacket;
 
 public class ItemPotteryJug extends ItemPotteryBase
 {
@@ -34,8 +38,13 @@ public class ItemPotteryJug extends ItemPotteryBase
 		if(!worldIn.isRemote)
 		{
 			EntityPlayer player = (EntityPlayer) entityLiving;
+
 			if(IsWaterJug(stack))
-				Core.getPlayerFoodStats(player).restoreWater(player, 100);
+			{
+				IFoodStatsTFC food = (IFoodStatsTFC)player.getFoodStats();
+				food.setWaterLevel(20);
+				TFC.network.sendTo(new CFoodPacket(food), (EntityPlayerMP) player);
+			}
 
 			if(IsWaterJug(stack) && !((EntityPlayer)entityLiving).capabilities.isCreativeMode)
 			{

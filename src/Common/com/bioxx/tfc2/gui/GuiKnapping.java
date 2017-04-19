@@ -1,8 +1,5 @@
 package com.bioxx.tfc2.gui;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
@@ -23,7 +20,6 @@ import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC.RecipeType;
 import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
 import com.bioxx.tfc2.containers.ContainerSpecialCrafting;
-import com.bioxx.tfc2.core.PlayerInfo;
 import com.bioxx.tfc2.core.PlayerManagerTFC;
 import com.bioxx.tfc2.networking.server.SKnappingPacket;
 
@@ -104,7 +100,7 @@ public class GuiKnapping extends GuiContainerTFC
 			resetButton(guibutton.id);
 			TFC.network.sendToServer(new SKnappingPacket(guibutton.id));
 
-			//if(PlayerManagerTFC.getInstance().getClientPlayer().isInDebug)
+			/*if(PlayerManagerTFC.getInstance().getClientPlayer().isInDebug)
 			{
 				PlayerInfo pi = PlayerManagerTFC.getInstance().getClientPlayer();
 				StringBuilder out = new StringBuilder("");
@@ -124,7 +120,7 @@ public class GuiKnapping extends GuiContainerTFC
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 				if(clipboard != null)
 					clipboard.setContents(selection, selection);
-			}
+			}*/
 
 		}
 		else
