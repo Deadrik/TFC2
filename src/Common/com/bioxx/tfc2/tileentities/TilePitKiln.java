@@ -26,6 +26,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.crafting.KilnManager;
+import com.bioxx.tfc2.api.crafting.KilnManager.KilnEntry;
 import com.bioxx.tfc2.api.properties.PropertyItem;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.BlockPitKiln;
@@ -120,6 +122,10 @@ public class TilePitKiln extends TileTFC implements ITickable, IInventory
 			if(recentCraftResult.result == ProcessEnum.WORKING)
 			{
 				//Create the final item
+				KilnEntry entry = KilnManager.getInstance().matches(this.getStackInSlot(0));
+				if(entry != null)
+					this.setInventorySlotContents(0, entry.outStack.copy());
+
 				//this.setInventorySlotContents(1, ItemStack.EMPTY);
 				world.setBlockState(getPos(), world.getBlockState(getPos()).withProperty(BlockPitKiln.FILLTYPE, FillType.Charcoal).withProperty(BlockPitKiln.FILL, 2));
 				world.setBlockToAir(getPos().up());
@@ -147,6 +153,7 @@ public class TilePitKiln extends TileTFC implements ITickable, IInventory
 					((TilePitKiln) world.getTileEntity(getPos().west())).endCrafting(ProcessEnum.FAILED);
 				}
 			}
+			recentCraftResult.result = ProcessEnum.FAILED;
 			break;
 
 		}

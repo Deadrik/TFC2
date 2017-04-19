@@ -13,7 +13,9 @@ import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC.RecipeType;
+import com.bioxx.tfc2.api.crafting.KilnManager;
 import com.bioxx.tfc2.items.ToolHeadType;
+import com.bioxx.tfc2.items.pottery.ClayMoldType;
 
 public class Recipes 
 {
@@ -50,6 +52,29 @@ public class Recipes
 		manager.addRecipe(RecipeType.KNAPPING, new ItemStack(TFCItems.ToolHead, 1, ToolHeadType.STONE_KNIFE.ordinal()) ,"XX       ","XXX      ","XXXX     "," XXXX    ","  XXXX   ","   X XX  ","      XX ","       XX","        X", 'X', new ItemStack(TFCItems.LooseRock, 1, WILDCARD));
 		manager.addRecipe(RecipeType.KNAPPING, new ItemStack(TFCItems.ToolHead, 1, ToolHeadType.STONE_HOE.ordinal()) ,"         ","XXX      ","  XX     ","   XX    ","    XX   ","    XXX  ","    XXX  ","         ","         ", 'X', new ItemStack(TFCItems.LooseRock, 1, WILDCARD));
 
+		manager.addRecipe(RecipeType.POTTERY, new ItemStack(TFCItems.PotteryJug) ,"XX  XXXXX","XX     XX","X    X XX","       XX","      XXX","      XXX","      XXX","      XXX","X    XXXX", 'X', new ItemStack(Items.CLAY_BALL, 1, WILDCARD));
+
 		manager.addShapelessRecipe(RecipeType.ANVIL, new ItemStack(Items.GOLD_INGOT, 1 , 0), new ItemStack(Items.IRON_INGOT, 1), new ItemStack(Items.IRON_INGOT, 1));
+	}
+
+	public static void RegisterKilnRecipes()
+	{
+		KilnManager manager = KilnManager.getInstance();
+
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryJug, 1, 0), new ItemStack(TFCItems.PotteryJug, 1, 1));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryBowl, 1, 0), new ItemStack(TFCItems.PotteryBowl, 1, 1));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryVessel, 1, 0), new ItemStack(TFCItems.PotteryVessel, 1, 1));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryPot, 1, 0), new ItemStack(TFCItems.PotteryPot, 1, 1));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_AXE_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_AXE.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_SHOVEL_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_SHOVEL.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_HAMMER_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_HAMMER.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_SWORD_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_SWORD.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_JAVELIN_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_JAVELIN.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_PICK_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_PICK.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_MACE_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_MACE.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_SCYTHE_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_SCYTHE.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_SAW_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_SAW.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_KNIFE_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_KNIFE.getMeta()));
+		manager.registerRecipe(new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_HOE_CLAY.getMeta()), new ItemStack(TFCItems.PotteryMold, 1, ClayMoldType.MOLD_HOE.getMeta()));
 	}
 }

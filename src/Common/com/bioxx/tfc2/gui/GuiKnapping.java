@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC;
 import com.bioxx.tfc2.api.crafting.CraftingManagerTFC.RecipeType;
 import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
@@ -81,6 +83,8 @@ public class GuiKnapping extends GuiContainerTFC
 		}
 
 		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.KNAPPING);
+		if(PlayerManagerTFC.getInstance().getClientPlayer().specialCraftingType.getItem() == Items.CLAY_BALL)
+			recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.POTTERY);
 		int x = 0, y = 0;
 		for (int i = 0; i < recipes.size(); i++)
 		{
@@ -100,7 +104,7 @@ public class GuiKnapping extends GuiContainerTFC
 			resetButton(guibutton.id);
 			TFC.network.sendToServer(new SKnappingPacket(guibutton.id));
 
-			if(PlayerManagerTFC.getInstance().getClientPlayer().isInDebug)
+			//if(PlayerManagerTFC.getInstance().getClientPlayer().isInDebug)
 			{
 				PlayerInfo pi = PlayerManagerTFC.getInstance().getClientPlayer();
 				StringBuilder out = new StringBuilder("");
@@ -137,13 +141,23 @@ public class GuiKnapping extends GuiContainerTFC
 			((GuiKnappingButton) this.buttonList.get(i)).highlight(true);
 		}
 		List<IRecipeTFC> recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.KNAPPING);
+		if(PlayerManagerTFC.getInstance().getClientPlayer().specialCraftingType.getItem() == Items.CLAY_BALL)
+			recipes = CraftingManagerTFC.getInstance().getRecipeList(RecipeType.POTTERY);
 		IRecipeTFC rec = recipes.get(id - 81);
 		for(int i = 0; i < rec.getRecipeSize(); i++)
 		{
 			int x = i % rec.getRecipeWidth();
 			int y = i / rec.getRecipeWidth();
-			if(rec.getRecipeItems().get(x+y*rec.getRecipeWidth()) != ItemStack.EMPTY)
-				((GuiKnappingButton) this.buttonList.get(x+y*9)).highlight(false);
+			if(PlayerManagerTFC.getInstance().getClientPlayer().specialCraftingType.getItem() == TFCItems.LooseRock)
+			{
+				if(rec.getRecipeItems().get(x+y*rec.getRecipeWidth()) != ItemStack.EMPTY)
+					((GuiKnappingButton) this.buttonList.get(x+y*9)).highlight(false);
+			}
+			else
+			{
+				if(((ItemStack)(rec.getRecipeItems().get(x+y*rec.getRecipeWidth()))) == ItemStack.EMPTY)
+					((GuiKnappingButton) this.buttonList.get(x+y*9)).highlight(false);
+			}
 		}
 	}
 

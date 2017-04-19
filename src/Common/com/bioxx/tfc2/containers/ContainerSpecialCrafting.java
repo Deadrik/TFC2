@@ -2,11 +2,8 @@ package com.bioxx.tfc2.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -72,12 +69,16 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	@Override
 	public void onCraftMatrixChanged(IInventory ii)
 	{
-		ItemStack result = CraftingManagerTFC.getInstance().findMatchingRecipe(RecipeType.KNAPPING, this.craftMatrix, worldObj);
+		RecipeType rt = RecipeType.KNAPPING;
+		PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(invPlayer.player);
+		if(pi.specialCraftingType.getItem() == Items.CLAY_BALL)
+			rt = RecipeType.POTTERY;
+
+		ItemStack result = CraftingManagerTFC.getInstance().findMatchingRecipe(rt, this.craftMatrix, worldObj);
 
 		// Handle decreasing the stack of the held item used to open the interface.
 		if (!decreasedStack && !isConstructing)
 		{
-			PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(invPlayer.player);
 
 			// A valid clay recipe has been formed.
 			/*if (pi.specialCraftingType.getItem() == TFCItems.flatClay)
@@ -159,7 +160,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 
 		return origStack;
 	}
-	
+
 	@Override
 	/**
 	 * Handles slot click when HotBar HotKeys 1-9 are pressed: ClickType = SWAP, dragType = HotBar slot number (0-8) 
@@ -181,7 +182,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 			Slot targetSlot = (Slot) this.inventorySlots.get(28 + dragType);
 			if (targetSlot == null)  return ItemStack.EMPTY;
 			ItemStack targetStack = targetSlot.getStack();
-			
+
 			if (canAddItemToSlot(targetSlot, sourceStack, true)) 
 			{
 				if (targetStack == null || targetStack.isEmpty())
@@ -222,7 +223,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		if (slotIn.getSlotIndex() == invPlayer.currentItem)  return false;
 		else  return super.canMergeSlot(stack, slotIn);
 	}
-	
+
 	// Freeze current slot - disable dragging  
 	@Override
 	public boolean canDragIntoSlot(Slot slotIn)

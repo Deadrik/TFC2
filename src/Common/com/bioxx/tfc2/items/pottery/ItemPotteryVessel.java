@@ -1,5 +1,7 @@
 package com.bioxx.tfc2.items.pottery;
 
+import net.minecraft.item.ItemStack;
+
 public class ItemPotteryVessel extends ItemPotteryBase
 {
 	public ItemPotteryVessel()
@@ -14,5 +16,11 @@ public class ItemPotteryVessel extends ItemPotteryBase
 	public String[] getSubTypeNames()
 	{
 		return this.subTypeNames;
+	}
+
+	@Override
+	public boolean isClay(ItemStack stack)
+	{
+		return stack.getItemDamage() == 0;
 	}
 }

@@ -112,4 +112,10 @@ public class ItemPotteryJug extends ItemPotteryBase
 		return false;
 	}
 
+	@Override
+	public boolean isClay(ItemStack stack)
+	{
+		return stack.getItemDamage() == 0;
+	}
+
 }

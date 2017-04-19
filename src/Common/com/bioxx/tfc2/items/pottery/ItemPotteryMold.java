@@ -2,11 +2,11 @@ package com.bioxx.tfc2.items.pottery;
 
 import java.util.List;
 
-import com.bioxx.tfc2.Core;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+
+import com.bioxx.tfc2.Core;
 
 public class ItemPotteryMold extends ItemPotteryBase
 {
@@ -33,5 +33,11 @@ public class ItemPotteryMold extends ItemPotteryBase
 	public String[] getSubTypeNames()
 	{
 		return this.subTypeNames;
+	}
+
+	@Override
+	public boolean isClay(ItemStack stack)
+	{
+		return subTypeNames[stack.getItemDamage()].contains("clay");
 	}
 }

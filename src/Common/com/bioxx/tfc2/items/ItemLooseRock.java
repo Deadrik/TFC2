@@ -58,6 +58,7 @@ public class ItemLooseRock extends ItemTerra implements IRegisterSelf
 
 		PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(playerIn);
 		pi.specialCraftingType = itemStackIn;
+		pi.specialCraftingTypeAlternate = null;
 		if(!worldIn.isRemote)
 			playerIn.openGui(TFC.instance, 0, worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ());
 		return new ActionResult(EnumActionResult.PASS, itemStackIn);

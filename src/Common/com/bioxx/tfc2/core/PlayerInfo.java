@@ -29,7 +29,5 @@ public class PlayerInfo
 		specialCraftingType = null;
 		specialCraftingTypeAlternate = null;
 		knappingInterface = new boolean[81];
-		if(name == "bioxx")
-			isInDebug = true;
 	}
 }

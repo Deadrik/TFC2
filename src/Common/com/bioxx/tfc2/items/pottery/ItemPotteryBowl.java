@@ -1,5 +1,7 @@
 package com.bioxx.tfc2.items.pottery;
 
+import net.minecraft.item.ItemStack;
+
 public class ItemPotteryBowl extends ItemPotteryBase
 {
 	public ItemPotteryBowl()
@@ -13,5 +15,11 @@ public class ItemPotteryBowl extends ItemPotteryBase
 	public String[] getSubTypeNames()
 	{
 		return this.subTypeNames;
+	}
+
+	@Override
+	public boolean isClay(ItemStack stack)
+	{
+		return stack.getItemDamage() == 0;
 	}
 }

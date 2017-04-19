@@ -141,6 +141,7 @@ public class CommonProxy
 	{
 		Recipes.RegisterNormalRecipes();
 		Recipes.RegisterKnappingRecipes();
+		Recipes.RegisterKilnRecipes();
 		MinecraftForge.EVENT_BUS.register(new CreateSpawnHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldLoadHandler());
 		MinecraftForge.EVENT_BUS.register(new EntityLivingHandler());

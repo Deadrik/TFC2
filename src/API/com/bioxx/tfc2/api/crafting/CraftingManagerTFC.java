@@ -23,16 +23,19 @@ public class CraftingManagerTFC
 	private List<IRecipeTFC> recipes;
 	private List<IRecipeTFC> recipes_knapping;
 	private List<IRecipeTFC> recipes_anvil;
+	private List<IRecipeTFC> recipes_pottery;
 
 	private CraftingManagerTFC()
 	{
 		recipes = new ArrayList<IRecipeTFC>();
 		recipes_knapping = new ArrayList<IRecipeTFC>();
 		recipes_anvil = new ArrayList<IRecipeTFC>();
+		recipes_pottery = new ArrayList<IRecipeTFC>();
 
 		Collections.sort(recipes, new RecipeSorterTFC(this));
 		Collections.sort(recipes_knapping, new RecipeSorterTFC(this));
 		Collections.sort(recipes_anvil, new RecipeSorterTFC(this));
+		Collections.sort(recipes_pottery, new RecipeSorterTFC(this));
 	}
 
 	public ShapedOreRecipeTFC addRecipe(ItemStack itemstack, Object... aobj)
@@ -49,6 +52,8 @@ public class CraftingManagerTFC
 			recipes_knapping.add(shapedRecipesTFC);
 		else if(rt == RecipeType.ANVIL)
 			recipes_anvil.add(shapedRecipesTFC);
+		else if(rt == RecipeType.POTTERY)
+			recipes_pottery.add(shapedRecipesTFC);
 		return shapedRecipesTFC;
 	}
 
@@ -66,6 +71,8 @@ public class CraftingManagerTFC
 			recipes_knapping.add(recipesTFC);
 		else if(rt == RecipeType.ANVIL)
 			recipes_anvil.add(recipesTFC);
+		else if(rt == RecipeType.POTTERY)
+			recipes_pottery.add(recipesTFC);
 		return recipesTFC;
 	}
 
@@ -83,6 +90,8 @@ public class CraftingManagerTFC
 			rec = recipes_knapping;
 		else if(rt == RecipeType.ANVIL)
 			rec = recipes_anvil;
+		else if(rt == RecipeType.POTTERY)
+			rec = recipes_pottery;
 
 		for (int k = 0; k < rec.size(); k++)
 		{
@@ -102,7 +111,8 @@ public class CraftingManagerTFC
 			return recipes_knapping;
 		else if(rt == RecipeType.ANVIL)
 			return recipes_anvil;
-
+		else if(rt == RecipeType.POTTERY)
+			return recipes_pottery;
 		return recipes;
 	}
 
@@ -128,7 +138,7 @@ public class CraftingManagerTFC
 
 	public enum RecipeType
 	{
-		NORMAL, KNAPPING, ANVIL;
+		NORMAL, KNAPPING, ANVIL, POTTERY;
 	}
 
 }
