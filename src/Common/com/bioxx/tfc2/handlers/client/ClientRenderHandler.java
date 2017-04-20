@@ -36,12 +36,16 @@ public class ClientRenderHandler
 			if(ClientRenderHandler.IsGeneratingFirstIsland)
 			{
 				Minecraft.getMinecraft().skipRenderWorld = true;
+				skipRender = true;
+			}
+			else
+			{
 				skipRender = false;
 			}
 		}
 		if(event.phase == Phase.END)
 		{
-			if(!skipRender && ClientRenderHandler.IsGeneratingFirstIsland)
+			if(skipRender && ClientRenderHandler.IsGeneratingFirstIsland)
 			{
 				String gen = "Generating Map Please Wait";
 				FontRenderer renderer = Minecraft.getMinecraft().fontRenderer;
@@ -52,7 +56,7 @@ public class ClientRenderHandler
 				renderer.drawString(gen, sizeX/2 - (renderer.getStringWidth(gen) / 2)+1, sizeY/2+1, Color.black.getRGB());
 				renderer.drawString(gen, sizeX/2 - (renderer.getStringWidth(gen) / 2), sizeY/2, Color.red.getRGB());
 				Minecraft.getMinecraft().skipRenderWorld = false;
-				skipRender = true;
+				skipRender = false;
 			}
 		}
 	}
