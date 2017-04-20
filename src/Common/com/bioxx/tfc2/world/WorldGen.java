@@ -481,11 +481,21 @@ public class WorldGen implements IThreadCompleteListener
 	{
 		File file1 = world.getSaveHandler().getMapFileFromName("Map " + x + "," + z);
 
+		if(this == instanceClient)
+		{
+			file1 = new File(".//mods//TFC2//cache//"+ worldSeed +"//Map " + x + "," + z + ".dat");
+		}
+
 		return (file1 != null && file1.exists());
 	}
 
 	public void forceBuildIsland(int x, int z, long seed)
 	{
+		if(doesMapExist(x, z))
+		{
+			ClientRenderHandler.IsGeneratingFirstIsland  = false;
+			return;
+		}
 		for(int i = 0; i < buildThreads.length; i++)
 		{
 			if(buildThreads[i] == null)
