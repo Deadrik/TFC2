@@ -54,6 +54,9 @@ public class WorldGen implements IThreadCompleteListener
 	private Queue<Integer> mapQueue;
 	private ThreadBuild[] buildThreads;
 
+	//We keep this list so that we dont spam the server with map request packets from things like grass blocks.
+	private ArrayList<Integer> recentlyRequestedMaps = new ArrayList<Integer>();
+
 	public static WorldGen getInstance()
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
@@ -113,6 +116,8 @@ public class WorldGen implements IThreadCompleteListener
 	public IslandMap getIslandMap(int x, int z)
 	{
 		int id = Helper.combineCoords(x, z);
+		if(recentlyRequestedMaps.contains(id))
+			return EMPTY_MAP;
 		//First we try to load the map from disk if it exists
 		if(!islandCache.containsKey(id))
 		{
@@ -132,7 +137,12 @@ public class WorldGen implements IThreadCompleteListener
 
 	private IslandMap createFakeMap(int x, int z)
 	{
+		if(recentlyRequestedMaps.contains(Helper.combineCoords(x, z)))
+		{
+			return EMPTY_MAP;
+		}
 		TFC.network.sendToServer(new SMapRequestPacket(x, z));
+		recentlyRequestedMaps.add(Helper.combineCoords(x, z));
 		return EMPTY_MAP;
 	}
 
@@ -441,7 +451,7 @@ public class WorldGen implements IThreadCompleteListener
 
 			if(file1 == null && this == instanceClient)
 			{
-				file1 = new File(".//mods//TFC2//cache//"+ worldSeed +"//Map " + x + "," + z + ".dat");
+				file1 = new File(".//mods//tfc2//cache//"+ worldSeed +"//Map " + x + "," + z + ".dat");
 			}
 
 			if (file1 != null && file1.exists())
@@ -449,10 +459,12 @@ public class WorldGen implements IThreadCompleteListener
 				FileInputStream input = new FileInputStream(file1);
 				NBTTagCompound nbt = CompressedStreamTools.readCompressed(input);
 				input.close();
-
 				if(this == instanceClient)
 					if(!nbt.getString("TFC2 Version").equals(Reference.ModVersion))
+					{
+						file1.delete();
 						return null;
+					}
 				IslandParameters ip = new IslandParameters();
 				ip.readFromNBT(nbt);
 				long seed = world.getSeed()+Helper.combineCoords(x, z);
@@ -483,7 +495,7 @@ public class WorldGen implements IThreadCompleteListener
 
 		if(this == instanceClient)
 		{
-			file1 = new File(".//mods//TFC2//cache//"+ worldSeed +"//Map " + x + "," + z + ".dat");
+			file1 = new File(".//mods//tfc2//cache//"+ worldSeed +"//Map " + x + "," + z + ".dat");
 		}
 
 		return (file1 != null && file1.exists());
@@ -491,11 +503,7 @@ public class WorldGen implements IThreadCompleteListener
 
 	public void forceBuildIsland(int x, int z, long seed)
 	{
-		if(doesMapExist(x, z))
-		{
-			ClientRenderHandler.IsGeneratingFirstIsland  = false;
-			return;
-		}
+
 		for(int i = 0; i < buildThreads.length; i++)
 		{
 			if(buildThreads[i] == null)
@@ -636,7 +644,15 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			try
 			{
-				createIsland(Helper.getXCoord(id),Helper.getYCoord(id), seed, true);
+				if(doesMapExist(Helper.getXCoord(id),Helper.getYCoord(id)))
+				{
+					if(loadMap(Helper.getXCoord(id),Helper.getYCoord(id)) == null)
+						createIsland(Helper.getXCoord(id),Helper.getYCoord(id), seed, true);
+				}
+				else
+				{
+					createIsland(Helper.getXCoord(id),Helper.getYCoord(id), seed, true);
+				}
 			}
 			catch(Exception e)
 			{
@@ -644,6 +660,15 @@ public class WorldGen implements IThreadCompleteListener
 			}
 			finally 
 			{
+				int size = recentlyRequestedMaps.size();
+				for(int i = 0; i < size; i++)
+				{
+					if(recentlyRequestedMaps.get(i) == id)
+					{
+						recentlyRequestedMaps.remove(i);
+					}
+				}
+				ClientRenderHandler.IsGeneratingFirstIsland  = false;
 				notifyListeners();
 			}
 
