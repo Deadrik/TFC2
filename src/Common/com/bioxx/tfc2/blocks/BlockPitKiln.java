@@ -152,6 +152,10 @@ public class BlockPitKiln extends BlockTerra implements ITileEntityProvider
 		this.onBlockHarvested(world, pos, state, player);
 		if(state.getValue(FILLTYPE) == FillType.Straw || state.getValue(FILL) > 0)
 			return false;
+		else if(state.getValue(FILL) == 0)
+		{
+			return false;
+		}
 		return world.setBlockState(pos, net.minecraft.init.Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
 	}
 
