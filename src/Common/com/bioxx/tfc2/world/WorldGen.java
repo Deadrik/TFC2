@@ -21,6 +21,7 @@ import com.bioxx.jmapgen.IslandParameters;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.IslandParameters.Feature.FeatureSig;
 import com.bioxx.jmapgen.RandomCollection;
+import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
@@ -46,6 +47,7 @@ public class WorldGen implements IThreadCompleteListener
 
 	final java.util.Map<Integer, CachedIsland> islandCache;
 	public World world;
+	public long worldSeed = Long.MIN_VALUE;
 	public static final int ISLAND_SIZE = 4096;
 
 	private Queue<Integer> mapQueue;
@@ -375,8 +377,6 @@ public class WorldGen implements IThreadCompleteListener
 		Set<Integer> keys = islandCache.keySet();
 		CachedIsland c;
 		int timer = 20000;
-		if(this == instanceClient)
-			timer = 360000;//We'll wait longer on clients
 		for(Iterator<Integer> iter = keys.iterator(); iter.hasNext();)
 		{
 			key = iter.next();
@@ -395,6 +395,17 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			File file1 = world.getSaveHandler().getMapFileFromName("Map " + island.island.getParams().getXCoord() + "," + 
 					island.island.getParams().getZCoord());
+
+			if(file1 == null && this == instanceClient)
+			{
+				File file = new File(".//mods//TFC2//cache//"+worldSeed+"//");
+				if(!file.exists())
+					file.mkdirs();
+				file1 = new File(".//mods//TFC2//cache//"+ worldSeed +"//Map " + island.island.getParams().getXCoord() + "," + 
+						island.island.getParams().getZCoord()+ ".dat");
+
+			}
+
 			if (file1 != null)
 			{
 				NBTTagCompound islandNBT = new NBTTagCompound();
@@ -405,6 +416,7 @@ public class WorldGen implements IThreadCompleteListener
 				island.island.getParams().writeToNBT(finalNBT);
 
 				finalNBT.setLong("lastAccess", island.lastAccess);
+				finalNBT.setString("TFC2 Version", Reference.ModVersion);
 
 				FileOutputStream fileoutputstream = new FileOutputStream(file1);
 				CompressedStreamTools.writeCompressed(finalNBT, fileoutputstream);
@@ -423,14 +435,25 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			File file1 = world.getSaveHandler().getMapFileFromName("Map " + x + "," + z);
 
+			if(file1 == null && this == instanceClient)
+			{
+				file1 = new File(".//mods//TFC2//cache//"+ worldSeed +"//Map " + x + "," + z + ".dat");
+			}
+
 			if (file1 != null && file1.exists())
 			{
 				FileInputStream input = new FileInputStream(file1);
 				NBTTagCompound nbt = CompressedStreamTools.readCompressed(input);
 				input.close();
+
+				if(this == instanceClient)
+					if(!nbt.getString("TFC2 Version").equals(Reference.ModVersion))
+						return null;
 				IslandParameters ip = new IslandParameters();
 				ip.readFromNBT(nbt);
 				long seed = world.getSeed()+Helper.combineCoords(x, z);
+				if(this == instanceClient)
+					seed = this.worldSeed + Helper.combineCoords(x, z);
 				IslandMap m = new IslandMap(ISLAND_SIZE, seed);
 				m.newIsland(ip);
 				m.readFromNBT(nbt.getCompoundTag("mapdata"));

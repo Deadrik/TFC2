@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.world.WorldGen;
 
 public class CMapPacket implements IMessage
@@ -55,7 +56,10 @@ public class CMapPacket implements IMessage
 				@Override
 				public void run() 
 				{
-					//WorldGen.getInstance().forceBuildIsland(message.islandX, message.islandZ, message.seed);
+					if(WorldGen.getInstance().worldSeed == Long.MIN_VALUE)
+					{
+						WorldGen.getInstance().worldSeed = message.seed - Helper.combineCoords(message.islandX, message.islandZ);
+					}
 					IslandMap map = WorldGen.getInstance().createIsland(message.islandX, message.islandZ, message.seed, true);
 				}
 			});
