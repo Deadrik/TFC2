@@ -34,6 +34,7 @@ import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.api.util.IThreadCompleteListener;
+import com.bioxx.tfc2.handlers.client.ClientRenderHandler;
 import com.bioxx.tfc2.networking.server.SMapRequestPacket;
 
 
@@ -73,7 +74,10 @@ public class WorldGen implements IThreadCompleteListener
 		mapQueue = new PriorityBlockingQueue<Integer>();
 		buildThreads = new ThreadBuild[TFCOptions.maxThreadsForIslandGen];
 		EMPTY_MAP = new IslandMap(ISLAND_SIZE, 0);
-		EMPTY_MAP.newIsland(createParams(0, -2, 0));
+		IslandParameters ip = createParams(0, -2, 0);
+		ip.setIslandTemp(ClimateTemp.TEMPERATE);
+		ip.setIslandMoisture(Moisture.HIGH);
+		EMPTY_MAP.newIsland(ip);
 		EMPTY_MAP.generateFake();
 	}
 
@@ -486,7 +490,7 @@ public class WorldGen implements IThreadCompleteListener
 		{
 			if(buildThreads[i] == null)
 			{
-				buildThreads[i] = new ThreadBuild(i, "Map Build Thread: "+i, Helper.combineCoords(x, z));
+				buildThreads[i] = new ThreadBuildExact(i, "Map Build Thread: "+i, Helper.combineCoords(x, z), seed);
 				buildThreads[i].setPriority(2);
 				buildThreads[i].addListener(this);
 				buildThreads[i].start();
@@ -632,6 +636,8 @@ public class WorldGen implements IThreadCompleteListener
 			{
 				notifyListeners();
 			}
+
+			ClientRenderHandler.IsGeneratingFirstIsland  = false;
 		}
 
 		@Override

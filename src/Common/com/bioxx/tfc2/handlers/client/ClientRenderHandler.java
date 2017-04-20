@@ -1,6 +1,10 @@
 package com.bioxx.tfc2.handlers.client;
 
+import java.awt.Color;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.world.World;
 
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -14,10 +18,43 @@ import com.bioxx.tfc2.world.WorldGen;
 
 public class ClientRenderHandler
 {
+	public static boolean IsGeneratingFirstIsland = false;
+	static boolean skipRender = false;
+
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event)
 	{
 		((BlockLeaves)TFCBlocks.Leaves).setGraphicsLevel(Minecraft.getMinecraft().gameSettings.fancyGraphics);
+	}
+
+	@SubscribeEvent
+	public void onRenderTick(TickEvent.RenderTickEvent event)
+	{
+
+		if(event.phase == Phase.START)
+		{
+			if(ClientRenderHandler.IsGeneratingFirstIsland)
+			{
+				Minecraft.getMinecraft().skipRenderWorld = true;
+				skipRender = false;
+			}
+		}
+		if(event.phase == Phase.END)
+		{
+			if(!skipRender && ClientRenderHandler.IsGeneratingFirstIsland)
+			{
+				String gen = "Generating Map Please Wait";
+				FontRenderer renderer = Minecraft.getMinecraft().fontRenderer;
+				ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+				int sizeX = Minecraft.getMinecraft().displayWidth/2;
+				int sizeY = Minecraft.getMinecraft().displayHeight/2;
+
+				renderer.drawString(gen, sizeX/2 - (renderer.getStringWidth(gen) / 2)+1, sizeY/2+1, Color.black.getRGB());
+				renderer.drawString(gen, sizeX/2 - (renderer.getStringWidth(gen) / 2), sizeY/2, Color.red.getRGB());
+				Minecraft.getMinecraft().skipRenderWorld = false;
+				skipRender = true;
+			}
+		}
 	}
 
 	@SubscribeEvent
