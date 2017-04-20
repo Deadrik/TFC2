@@ -67,7 +67,12 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	{
 		if(!worldIn.isRemote && player.getHeldItemMainhand().getItem() == TFCItems.StoneKnife)
 		{
-			EntityItem ei = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(TFCItems.Straw, 1));
+			int count = 1;
+			if(worldIn.getBlockState(pos.up()).getBlock() == this)
+			{
+				count = 2;
+			}
+			EntityItem ei = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(TFCItems.Straw, count));
 			worldIn.spawnEntity(ei);
 		}
 	}

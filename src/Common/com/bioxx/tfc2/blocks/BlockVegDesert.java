@@ -10,8 +10,12 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -26,6 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFCItems;
 import com.bioxx.tfc2.core.TFCTabs;
 
 public class BlockVegDesert extends BlockTerra implements IPlantable
@@ -52,6 +57,21 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 	{
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 		checkAndDropBlock((World) worldIn, pos, worldIn.getBlockState(pos));
+	}
+
+	@Override
+	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
+	{
+		if(!worldIn.isRemote && player.getHeldItemMainhand().getItem() == TFCItems.StoneKnife)
+		{
+			int count = 1;
+			if(worldIn.getBlockState(pos.up()).getBlock() == this)
+			{
+				count = 2;
+			}
+			EntityItem ei = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(TFCItems.Straw, count));
+			worldIn.spawnEntity(ei);
+		}
 	}
 
 	@Override
