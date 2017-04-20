@@ -52,6 +52,8 @@ global.willow=Willow
 global.clay=Clay
 global.ceramic=Ceramic
 
+gui.generatingmapmessage=Generating Island Map Please Wait...
+
 #== Creative Tabs ==
 itemGroup.TFCArmor=(TFC) Armor
 itemGroup.TFCMaterials=(TFC) Materials

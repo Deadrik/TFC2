@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.blocks.BlockLeaves;
 import com.bioxx.tfc2.world.WorldGen;
@@ -47,14 +48,14 @@ public class ClientRenderHandler
 		{
 			if(skipRender && ClientRenderHandler.IsGeneratingFirstIsland)
 			{
-				String gen = "Generating Map Please Wait";
+				String gen = Core.translate("gui.generatingmapmessage");
 				FontRenderer renderer = Minecraft.getMinecraft().fontRenderer;
 				ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
 				int sizeX = Minecraft.getMinecraft().displayWidth/2;
 				int sizeY = Minecraft.getMinecraft().displayHeight/2;
 
 				renderer.drawString(gen, sizeX/2 - (renderer.getStringWidth(gen) / 2)+1, sizeY/2+1, Color.black.getRGB());
-				renderer.drawString(gen, sizeX/2 - (renderer.getStringWidth(gen) / 2), sizeY/2, Color.red.getRGB());
+				renderer.drawString(gen, sizeX/2 - (renderer.getStringWidth(gen) / 2), sizeY/2, Color.white.getRGB());
 				Minecraft.getMinecraft().skipRenderWorld = false;
 				skipRender = false;
 			}
