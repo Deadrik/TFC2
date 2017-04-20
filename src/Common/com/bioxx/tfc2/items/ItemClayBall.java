@@ -19,19 +19,17 @@ public class ItemClayBall extends ItemTerra
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
 	{
 		ItemStack itemStackIn = playerIn.getHeldItem(handIn);
-		if(!worldIn.isRemote)
-		{
-			if(itemStackIn.getCount() < 5)
-			{
-				return new ActionResult(EnumActionResult.FAIL, itemStackIn);
-			}
 
-			PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(playerIn);
-			pi.specialCraftingType = new ItemStack(itemStackIn.getItem());
-			pi.specialCraftingTypeAlternate = new ItemStack(itemStackIn.getItem());
-			if(!worldIn.isRemote)
-				playerIn.openGui(TFC.instance, 0, worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ());
+		if(itemStackIn.getCount() < 5)
+		{
+			return new ActionResult(EnumActionResult.FAIL, itemStackIn);
 		}
+
+		PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(playerIn);
+		pi.specialCraftingType = new ItemStack(itemStackIn.getItem());
+		pi.specialCraftingTypeAlternate = new ItemStack(itemStackIn.getItem());
+		if(!worldIn.isRemote)
+			playerIn.openGui(TFC.instance, 0, worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ());
 
 		return new ActionResult(EnumActionResult.PASS, itemStackIn);
 	}

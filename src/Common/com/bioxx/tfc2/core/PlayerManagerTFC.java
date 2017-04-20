@@ -22,12 +22,19 @@ public class PlayerManagerTFC
 	}
 
 	public PlayerInfo getPlayerInfoFromPlayer(EntityPlayer player)
-	{
+	{		
 		for(PlayerInfo pi : players)
 		{
 			if (pi.playerUUID.equals(player.getUniqueID()))
 				return pi;
 		}
+
+		if(player.world.isRemote && players.size() == 0)
+		{
+			players.add(new PlayerInfo(player.getName(), player.getUniqueID()));
+			return getClientPlayer();
+		}
+
 		return null;
 	}
 

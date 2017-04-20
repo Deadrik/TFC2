@@ -71,7 +71,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 	{
 		RecipeType rt = RecipeType.KNAPPING;
 		PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(invPlayer.player);
-		if(pi.specialCraftingType.getItem() == Items.CLAY_BALL)
+		if(pi.specialCraftingType != null && pi.specialCraftingType.getItem() == Items.CLAY_BALL)
 			rt = RecipeType.POTTERY;
 
 		ItemStack result = CraftingManagerTFC.getInstance().findMatchingRecipe(rt, this.craftMatrix, worldObj);
