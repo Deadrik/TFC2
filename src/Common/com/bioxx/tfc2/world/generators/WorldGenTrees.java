@@ -19,6 +19,7 @@ import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.Schematic;
 import com.bioxx.tfc2.api.Schematic.SchemBlock;
 import com.bioxx.tfc2.api.TFCOptions;
@@ -159,7 +160,7 @@ public class WorldGenTrees implements IWorldGenerator
 
 		BlockPos genPos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
 		BlockPos treePos;
-		genPos = genPos.add(0, world.getHorizon(), 0);
+		genPos = genPos.add(0, Global.SEALEVEL, 0);
 		Center c = m.getClosestCenter(new Point(genPos.getX() % 4096, genPos.getZ() % 4096));
 
 		if(c.hasMarker(Marker.Ocean))
