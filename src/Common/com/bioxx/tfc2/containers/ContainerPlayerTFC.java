@@ -428,8 +428,6 @@ public class ContainerPlayerTFC extends ContainerPlayer
 	@Override
 	/**
 	 * Handles slot click.
-	 *  
-	 * @param mode 0 = basic click, 1 = shift click, 2 = hotbar, 3 = pick block, 4 = drop, 5 = ?, 6 = double click
 	 */
 	public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer p)
 	{
@@ -459,47 +457,47 @@ public class ContainerPlayerTFC extends ContainerPlayer
 						return ItemStack.EMPTY;
 				}
 			}
-			
-			//This section is for merging foods with differing expirations.
-			if(clickTypeIn == ClickType.SWAP && p.inventory.getItemStack() != null)
+
+			if(clickTypeIn == ClickType.PICKUP && !p.inventory.getItemStack().isEmpty())
 			{
-				ItemStack itemstack4 = p.inventory.getItemStack();
-				if (slotStack.getItem() == itemstack4.getItem() && slotStack.getMetadata() == itemstack4.getMetadata() && ContainerTFC.areCompoundsEqual(slotStack, itemstack4))
+				ItemStack mouseStack = p.inventory.getItemStack();
+				if (slotStack.getItem() == mouseStack.getItem() && slotStack.getMetadata() == mouseStack.getMetadata() && ContainerTFC.areCompoundsEqual(slotStack, mouseStack))
 				{
-					if(slotStack.getItem() instanceof IFood && itemstack4.getItem() instanceof IFood)
+					if(slotStack.getItem() instanceof IFood && mouseStack.getItem() instanceof IFood)
 					{
 						long ex1 = Food.getDecayTimer(slotStack);
-						long ex2 = Food.getDecayTimer(itemstack4);
+						long ex2 = Food.getDecayTimer(mouseStack);
 						if(ex2 < ex1)
 							Food.setDecayTimer(slotStack, ex2);
 					}
 
-					int l1 = itemstack4.getMaxStackSize();
+					int mouseStackSize = mouseStack.getCount();
 
-					if (l1 > sourceSlot.getItemStackLimit(itemstack4) - slotStack.getMaxStackSize())
+					if (mouseStackSize > sourceSlot.getItemStackLimit(mouseStack) - slotStack.getCount())
 					{
-						l1 = sourceSlot.getItemStackLimit(itemstack4) - slotStack.getMaxStackSize();
+						mouseStackSize = sourceSlot.getItemStackLimit(mouseStack) - slotStack.getCount();
 					}
 
-					if (l1 > itemstack4.getMaxStackSize() - slotStack.getMaxStackSize())
+					if (mouseStackSize > mouseStack.getMaxStackSize() - slotStack.getCount())
 					{
-						l1 = itemstack4.getMaxStackSize() - slotStack.getMaxStackSize();
+						mouseStackSize = mouseStack.getMaxStackSize() - slotStack.getCount();
 					}
 
-					itemstack4.splitStack(l1);
+					mouseStack.splitStack(mouseStackSize);
 
-					if (itemstack4.getMaxStackSize() == 0)
+					if (mouseStack.getCount() == 0)
 					{
 						p.inventory.setItemStack(ItemStack.EMPTY);
 					}
 
-					slotStack.grow(l1);
+					slotStack.grow(mouseStackSize);
 					return ItemStack.EMPTY;
 				}
-				else if (itemstack4.getMaxStackSize() <= sourceSlot.getItemStackLimit(itemstack4))
+				else if (mouseStack.getMaxStackSize() <= sourceSlot.getItemStackLimit(mouseStack))
 				{
-					sourceSlot.putStack(itemstack4);
+					sourceSlot.putStack(mouseStack);
 					p.inventory.setItemStack(slotStack);
+					return ItemStack.EMPTY;
 				}
 			}
 
