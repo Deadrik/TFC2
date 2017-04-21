@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 import com.google.common.eventbus.EventBus;
 
-@MCVersion(value = "1.10.2")
+@MCVersion(value = "1.11.2")
 public class TFC2Core extends DummyModContainer
 {
 	@Instance("tfc2_coremod")

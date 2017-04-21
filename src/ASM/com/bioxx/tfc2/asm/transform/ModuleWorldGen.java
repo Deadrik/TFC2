@@ -21,19 +21,8 @@ public class ModuleWorldGen implements IClassTransformer
 
 		ClassNode classNode = ASMHelper.readClassFromBytes(basicClass);
 
-		if (transformedName.equals("com.pam.harvestcraft.blocks.blocks.BlockBaseGarden"))
-		{
-			String desc = ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD, ASMConstants.BLOCK_POS);//Note to self, don't attempt to obf the class names when overwriting a non vanilla method from another mod
-			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "checkSoilBlock", "checkSoilBlock", desc);
 
-			if (methodNode != null)
-			{
-				addCanPlaceBlockOverride(classNode, methodNode);
-			}
-			else
-				throw new RuntimeException("BlockBaseGarden: checkSoilBlock(" +ObfHelper.getInternalClassName(ASMConstants.WORLD) + "," +ObfHelper.getInternalClassName(ASMConstants.BLOCK_POS) +") method not found");
-		}
-		else if (transformedName.equals("net.minecraft.block.BlockBush"))
+		if (transformedName.equals("net.minecraft.block.BlockBush"))
 		{
 			String desc = ASMHelper.toMethodDescriptor("Z",ObfHelper.getInternalClassName(ASMConstants.IBLOCKSTATE));
 			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "i", "canSustainBush", desc);
@@ -45,27 +34,9 @@ public class ModuleWorldGen implements IClassTransformer
 			else
 				throw new RuntimeException("BlockBaseGarden: canSustainBush (i) method not found");
 		}
-		else if (transformedName.equals("com.pam.harvestcraft.worldgen.BushWorldWorldGen"))
+		else if (name.contains("com.pam.harvestcraft.worldgen"))
 		{
-			String desc = ASMHelper.toMethodDescriptor("V", ASMConstants.RANDOM,"I", "I", gi(ASMConstants.WORLD), gi(ASMConstants.ICHUNKGENERATOR), gi(ASMConstants.ICHUNKPROVIDER));
-			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "generate", "generate", desc);
-
-			if (methodNode != null)
-			{
-				InsnList list = new InsnList();
-				methodNode.instructions.clear();
-				list.add(new InsnNode(Opcodes.RETURN));
-				methodNode.instructions.insert(list);
-			}
-			else
-			{
-				String msg = "BushWorldWorldGen: generate (func_180709_b) method not found! | ";
-				for(MethodNode m : classNode.methods)
-				{
-					msg += m.name+", ";
-				}
-				throw new RuntimeException(msg);
-			}
+			this.transformHrvestcraft(name, classNode);
 		}
 		else if (transformedName.equals("net.minecraft.world.gen.feature.WorldGenTallGrass") || 
 				transformedName.equals("net.minecraft.world.gen.feature.WorldGenDoublePlant"))
@@ -86,6 +57,44 @@ public class ModuleWorldGen implements IClassTransformer
 		}
 
 		return ASMHelper.writeClassToBytes(classNode);
+	}
+
+	private void transformHrvestcraft(String name, ClassNode classNode)
+	{
+		if (name.equals("com.pam.harvestcraft.blocks.blocks.BlockBaseGarden"))
+		{
+			String desc = ASMHelper.toMethodDescriptor("Z",ASMConstants.WORLD, ASMConstants.BLOCK_POS);//Note to self, don't attempt to obf the class names when overwriting a non vanilla method from another mod
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "checkSoilBlock", "checkSoilBlock", desc);
+
+			if (methodNode != null)
+			{
+				addCanPlaceBlockOverride(classNode, methodNode);
+			}
+			else
+				throw new RuntimeException("BlockBaseGarden: checkSoilBlock(" +ObfHelper.getInternalClassName(ASMConstants.WORLD) + "," +ObfHelper.getInternalClassName(ASMConstants.BLOCK_POS) +") method not found");
+		}
+		else if (name.equals("com.pam.harvestcraft.worldgen.BushWorldGen"))
+		{
+			String desc = ASMHelper.toMethodDescriptor("V", ASMConstants.RANDOM,"I", "I", gi(ASMConstants.WORLD), gi(ASMConstants.ICHUNKGENERATOR), gi(ASMConstants.ICHUNKPROVIDER));
+			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "generate", "generate", desc);
+
+			if (methodNode != null)
+			{
+				InsnList list = new InsnList();
+				methodNode.instructions.clear();
+				list.add(new InsnNode(Opcodes.RETURN));
+				methodNode.instructions.insert(list);
+			}
+			else
+			{
+				String msg = "BushWorldGen: generate (func_180709_b) method not found! | ";
+				for(MethodNode m : classNode.methods)
+				{
+					msg += m.name+", ";
+				}
+				throw new RuntimeException(msg);
+			}
+		}
 	}
 
 	private String gi(String s)
