@@ -666,6 +666,7 @@ public class WorldGen implements IThreadCompleteListener
 					if(recentlyRequestedMaps.get(i) == id)
 					{
 						recentlyRequestedMaps.remove(i);
+						size--;i--;
 					}
 				}
 				ClientRenderHandler.IsGeneratingFirstIsland  = false;

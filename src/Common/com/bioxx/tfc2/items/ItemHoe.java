@@ -37,6 +37,7 @@ public class ItemHoe extends ItemTerraTool
 		IBlockState soil = worldIn.getBlockState(pos);
 		if(facing == EnumFacing.UP && Core.isSoil(soil))
 		{
+			playerIn.getHeldItemMainhand().damageItem(1, playerIn);
 			worldIn.setBlockState(pos, TFCBlocks.Farmland.getDefaultState().withProperty(BlockFarmland.META_PROPERTY, soil.getValue(BlockDirt.META_PROPERTY)));
 		}
 
