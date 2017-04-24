@@ -41,42 +41,46 @@ public class CreateDungeonHandler
 		if(dungeonCenters.size() == 0)
 			return;
 
-		//Find a suitable location for the entrance
-		Center start = null;
-		int counter = 0;
-		while(start == null)
-		{
-			start = dungeonCenters.get(random.nextInt(dungeonCenters.size()));
-			//pick a relatively flat area.
-			if(counter > 2500 || Math.abs(start.getAverageElevation() - start.getElevation()) <= 0.08)
-			{
-				break;
-			}
-			start = null;
-			counter++;
-		}
-
-		//We want our dungeon to have its entrance in this chunk.
-		int xStartChunk = ((int)(start.point.x) >> 4);
-		int zStartChunk = ((int)(start.point.y) >> 4);
-
-		//Elevation of the center
-		int startElev = event.islandMap.convertHeightToMC(start.getElevation())+64;
-		//this is the Y level where the dungeon will start
-		int elev = startElev-30;
-
-		DungeonTheme dungeonTheme = dsm.getRandomTheme(random);
-		Dungeon dungeon = new Dungeon(dungeonTheme.getThemeName(), xStartChunk, elev, zStartChunk);
-		dungeon.blockMap.put("dungeon_wall", TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
-		dungeon.blockMap.put("dungeon_floor", Core.getPlanks(WoodType.getTypeFromString(event.islandMap.getParams().getCommonTree())));
-		dungeon.blockMap.put("dungeon_ceiling", TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
-		dungeon.blockMap.put("dungeon_smoothstone", TFCBlocks.StoneSmooth.getDefaultState().withProperty(BlockStoneSmooth.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
-		dungeon.blockMap.put("dungeon_stairs_floor", TFCBlocks.StairsOak.getDefaultState());
-		dungeon.blockMap.put("dungeon_stairs_wall", TFCBlocks.StairsOak.getDefaultState());
-		dungeon.blockMap.put("dungeon_door", Blocks.OAK_DOOR.getDefaultState());
-
+		Dungeon dungeon;
+		Center start;
 		while(true)
 		{
+
+			//Find a suitable location for the entrance
+			start = null;
+			int counter = 0;
+			while(start == null)
+			{
+				start = dungeonCenters.get(random.nextInt(dungeonCenters.size()));
+				//pick a relatively flat area.
+				if(counter > 2500 || Math.abs(start.getAverageElevation() - start.getElevation()) <= 0.08)
+				{
+					break;
+				}
+				start = null;
+				counter++;
+			}
+
+			//We want our dungeon to have its entrance in this chunk.
+			int xStartChunk = ((int)(start.point.x) >> 4);
+			int zStartChunk = ((int)(start.point.y) >> 4);
+
+			//Elevation of the center
+			int startElev = event.islandMap.convertHeightToMC(start.getElevation())+64;
+			//this is the Y level where the dungeon will start
+			int elev = startElev-30;
+
+			DungeonTheme dungeonTheme = dsm.getRandomTheme(random);
+			dungeon = new Dungeon(dungeonTheme.getThemeName(), xStartChunk, elev, zStartChunk);
+			dungeon.blockMap.put("dungeon_wall", TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
+			dungeon.blockMap.put("dungeon_floor", Core.getPlanks(WoodType.getTypeFromString(event.islandMap.getParams().getCommonTree())));
+			dungeon.blockMap.put("dungeon_ceiling", TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
+			dungeon.blockMap.put("dungeon_smoothstone", TFCBlocks.StoneSmooth.getDefaultState().withProperty(BlockStoneSmooth.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
+			dungeon.blockMap.put("dungeon_stairs_floor", TFCBlocks.StairsOak.getDefaultState());
+			dungeon.blockMap.put("dungeon_stairs_wall", TFCBlocks.StairsOak.getDefaultState());
+			dungeon.blockMap.put("dungeon_door", Blocks.OAK_DOOR.getDefaultState());
+
+
 			genDungeon(event.islandMap, dungeonTheme, random, xStartChunk, zStartChunk, dungeon);
 			if(dungeon.getRoomCount() > 30)
 				break;
