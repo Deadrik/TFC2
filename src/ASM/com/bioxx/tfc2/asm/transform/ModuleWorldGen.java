@@ -34,9 +34,9 @@ public class ModuleWorldGen implements IClassTransformer
 			else
 				throw new RuntimeException("BlockBaseGarden: canSustainBush (i) method not found");
 		}
-		else if (name.contains("com.pam.harvestcraft.worldgen"))
+		else if (transformedName.contains("com.pam.harvestcraft"))
 		{
-			this.transformHrvestcraft(name, classNode);
+			this.transformHrvestcraft(transformedName, classNode);
 		}
 		else if (transformedName.equals("net.minecraft.world.gen.feature.WorldGenTallGrass") || 
 				transformedName.equals("net.minecraft.world.gen.feature.WorldGenDoublePlant"))
