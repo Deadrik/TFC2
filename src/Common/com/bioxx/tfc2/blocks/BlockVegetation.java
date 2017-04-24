@@ -63,16 +63,26 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	}
 
 	@Override
+	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
+	{
+		if(!worldIn.isRemote && player.getHeldItemMainhand().getItem() == TFCItems.StoneKnife)
+		{
+			IBlockState stateUp = worldIn.getBlockState(pos.up());
+			//This handles dropping straw for the upper double grass block when the lower is broken
+			if(stateUp.getBlock() == this)
+			{
+				EntityItem ei = new EntityItem(worldIn, pos.getX(), pos.getY()+1, pos.getZ(), new ItemStack(TFCItems.Straw, 1));
+				worldIn.spawnEntity(ei);
+			}
+		}
+	}
+
+	@Override
 	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
 	{
 		if(!worldIn.isRemote && player.getHeldItemMainhand().getItem() == TFCItems.StoneKnife)
 		{
-			int count = 1;
-			if(worldIn.getBlockState(pos.up()).getBlock() == this)
-			{
-				count = 2;
-			}
-			EntityItem ei = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(TFCItems.Straw, count));
+			EntityItem ei = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(TFCItems.Straw, 1));
 			worldIn.spawnEntity(ei);
 		}
 	}
