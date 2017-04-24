@@ -2212,7 +2212,7 @@ public class IslandMap
 			}
 			return BiomeType.POND;
 		} 
-		else if (p.hasMarker(Marker.Coast)) 
+		else if (p.hasMarker(Marker.Coast) && p.getElevation() < 0.035) 
 		{
 			return BiomeType.BEACH;
 		} 
