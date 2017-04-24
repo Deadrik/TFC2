@@ -1,18 +1,25 @@
 package com.bioxx.tfc2.blocks;
 
-import com.bioxx.tfc2.core.TFCTabs;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockThatch extends BlockTerra
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFCItems;
+import com.bioxx.tfc2.api.interfaces.ISupportBlock;
+import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
+import com.bioxx.tfc2.core.TFCTabs;
+
+public class BlockThatch extends BlockCollapsible
 {
 	public BlockThatch()
 	{
@@ -20,6 +27,31 @@ public class BlockThatch extends BlockTerra
 		this.setCreativeTab(TFCTabs.TFCBuilding);
 		this.setSoundType(SoundType.PLANT);
 		this.lightOpacity = 255;
+	}
+
+	/*******************************************************************************
+	 * 1. Content 
+	 *******************************************************************************/
+	@Override
+	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos,IBlockState myState)
+	{
+		return 6;
+	}
+
+	@Override
+	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
+	{
+		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
+			return true;
+		return false;
+	}
+
+	@Override
+	public void createFallingEntity(World world, BlockPos pos, IBlockState state)
+	{
+		world.setBlockToAir(pos);
+		EntityItem ei = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, new ItemStack(TFCItems.Straw, 1+world.rand.nextInt(3)));
+		world.spawnEntity(ei);
 	}
 
 	@Override
@@ -40,6 +72,26 @@ public class BlockThatch extends BlockTerra
 	}
 
 	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		if(side == EnumFacing.UP || side == EnumFacing.DOWN)
+			return false;
+		return true;
+	}
+
+	@Override
+	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
+	{
+		return true;
+	}
+
+	/*******************************************************************************
+	 * 2. Rendering 
+	 *******************************************************************************/
+	/*******************************************************************************
+	 * 3. Blockstate 
+	 *******************************************************************************/
+	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
 	{
 		return null;
@@ -51,4 +103,9 @@ public class BlockThatch extends BlockTerra
 		return false;
 	}
 
+	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
+	}
 }
