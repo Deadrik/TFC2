@@ -102,7 +102,7 @@ public class CommonProxy
 
 	protected void registerWorldGen()
 	{
-		//GameRegistry.registerWorldGenerator(new WorldGenErosion(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenCliffNoise(), 0);
 		GameRegistry.registerWorldGenerator(new WorldGenCliffRocks(), 0);
 		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 2);
 		GameRegistry.registerWorldGenerator(new WorldGenStalag(), 4);

@@ -253,16 +253,32 @@ public class IslandMap
 		Vector<Center> land = this.getLandCenters();
 		Vector<Center> starts = new Vector<Center>();
 
-		for(int i = 0; i < 100; i++)
+		for(int i = 0; i < 20; i++)
 		{
 			Center c = land.get(this.mapRandom.nextInt(land.size()));
-			if(c.hasAttribute(Attribute.River) || c.hasAnyMarkersOf(Marker.Water, Marker.Pond, Marker.Coast))
+			LinkedList<Center> queue = new LinkedList<Center>();
+			queue.add(c);
+			int count = 1;
+			while(!queue.isEmpty())
 			{
-				i--;
-				continue;
+				c = queue.pop();
+				if((count < 20 && this.mapRandom.nextFloat() < 0.6) || count > 50)
+					continue;
+
+				if(c.hasAttribute(Attribute.River) || c.hasAnyMarkersOf(Marker.Water, Marker.Pond, Marker.Coast))
+				{
+					continue;
+				}
+				count++;
+				if(mapRandom.nextBoolean())
+					c.setMarkers(Marker.Spire);
+				for(Center n : c.neighbors)
+					if(!n.hasMarker(Marker.Spire))
+					{
+						queue.add(n);
+					}
 			}
-			//c.setElevation(Math.min(c.getElevation()+this.convertMCToHeight(mapRandom.nextInt(15) + 35), 1.0));
-			c.setMarkers(Marker.Spire);
+
 		}
 
 	}

@@ -30,10 +30,7 @@ import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.processing.CaveAttrNode;
 import com.bioxx.jmapgen.processing.OreAttrNode;
 import com.bioxx.libnoise.model.Plane;
-import com.bioxx.libnoise.model.Segment;
 import com.bioxx.libnoise.module.combiner.Max;
-import com.bioxx.libnoise.module.modifier.Clamp;
-import com.bioxx.libnoise.module.modifier.Curve;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Billow;
 import com.bioxx.libnoise.module.source.Perlin;
@@ -49,7 +46,6 @@ import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
 import com.bioxx.tfc2.api.types.Moisture;
-import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.terrain.BlockDirt;
 import com.bioxx.tfc2.blocks.terrain.BlockGrass;
 import com.bioxx.tfc2.blocks.terrain.BlockGravel;
@@ -75,6 +71,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 
 	Vector<Center> centersInChunk;
 	int[] elevationMap;
+
 	/**
 	 * Cache for Hex lookup.
 	 */
@@ -89,9 +86,9 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		super(worldIn, seed, false, rules);
 		worldObj = worldIn;
 		rand = worldObj.rand;
-		hexSamplePoints = new Point[11][6];
+		hexSamplePoints = new Point[16][6];
 		//Setup the sampling hexagon for hex smoothing
-		for(int i = 0; i < 11; i++)
+		for(int i = 0; i < 16; i++)
 		{
 			double c = i;
 			double a = 0.5*c;
@@ -266,7 +263,6 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 		carveCaves(chunkprimer);
 		placeOreSeams(chunkprimer);
 		placeOreLayers(chunkprimer);
-		createSpires(chunkprimer);
 		createDungeons(chunkprimer);
 
 		if(TFCOptions.shouldStripChunks)
@@ -514,7 +510,8 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 					isCliff = true;
 				}
 
-				for(int y = hexElev; y >= 0; y--)
+
+				for(int y = 255; y >= 0; y--)
 				{
 					IBlockState block = chunkprimer.getBlockState(x, y, z);
 					IBlockState blockUp = chunkprimer.getBlockState(x, y+1, z);
@@ -540,19 +537,19 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							{
 								top = sand;
 								fill = sand;
-							}
 
-							//This should prevent most cases of doublestacked sand
-							if(isAir(chunkprimer, pos.down().north()) || isAir(chunkprimer, pos.down().south()) || isAir(chunkprimer, pos.down().east()) || isAir(chunkprimer, pos.down().west()))
-							{
-								chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), air);
-								elevationMap[z << 4 | x] = pos.getY()-1;
-							}
-							else
-								setState(chunkprimer, pos, top);
+								//This should prevent most cases of doublestacked sand
+								if(isAir(chunkprimer, pos.down().north()) || isAir(chunkprimer, pos.down().south()) || isAir(chunkprimer, pos.down().east()) || isAir(chunkprimer, pos.down().west()))
+								{
+									chunkprimer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), air);
+									elevationMap[z << 4 | x] = pos.getY()-1;
+								}
+								else
+									setState(chunkprimer, pos, top);
 
-							setState(chunkprimer, pos.down(1), fill);
-							setState(chunkprimer, pos.down(2), fill);
+								setState(chunkprimer, pos.down(1), fill);
+								setState(chunkprimer, pos.down(2), fill);
+							}
 
 						}
 					}
@@ -784,10 +781,12 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 	protected void generateTerrain(ChunkPrimer chunkprimer, int chunkX, int chunkZ)
 	{
 		Point p;
-		Center closestCenter;
+		Center closestCenter = null;
 		double[] dts = new double[] {0,0};
 		double dist = 0;
 		double loc = 0;
+
+		int maxHeightOfChunk = 255;
 
 		for(int x = 0; x < 16; x++)
 		{
@@ -835,8 +834,26 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						hexElev = convertElevation(getSmoothHeightHex(closestCenter, p, 9));
 				}
 
+				if(closestCenter.hasMarker(Marker.Spire))
+				{
+					Random r = new Random(closestCenter.index);
+					double heightMult = r.nextDouble();
+					double spireElev = closestCenter.getElevation() + (1-closestCenter.getElevation())*(0.5+heightMult*0.3);
+					double diff = spireElev - closestCenter.getElevation();
+					double rad = 20;
+					dist = closestCenter.point.plus(-5+r.nextInt(11), -5+r.nextInt(11)).distance(p.plus(new Point(worldX, worldZ).toIslandCoord()));
+					dist /= 20;
+					dist = 1-dist;
+
+					if(dist > 0.95)
+						dist = 0.95;
+
+					hexElev = convertElevation(getSmoothHeightHex(closestCenter, p) + (diff*(Math.pow(dist, 5))));
+					scanElev = hexElev;
+				}
 
 
+				maxHeightOfChunk = Math.max(maxHeightOfChunk, scanElev);
 				elevationMap[z << 4 | x] = hexElev;
 				for(int y = Math.min(Math.max(scanElev, Global.SEALEVEL), 255); y >= 0; y--)
 				{
@@ -1448,70 +1465,6 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 	{
 		if(pos.getX() >= 0 && pos.getY() >= 0 && pos.getZ() >= 0 && pos.getX() < 16 && pos.getY() < 256 && pos.getZ() < 16)
 			primer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), state);
-	}
-
-	public void createSpires(ChunkPrimer primer)
-	{
-		//I want to expand on these in the future but for now the concept is sound.
-		double radiusSq = 10 * 10;
-		IBlockState stone = TFCBlocks.Stone.getStateFromMeta(this.islandMap.getParams().getSurfaceRock().getMeta());
-		for(Center c : this.centersInChunk)
-		{
-			if(c.hasAnyMarkersOf(Marker.Spire))
-			{
-				Perlin perlin = new Perlin();
-				perlin.setSeed((long)c.index+Helper.combineCoords(mapX, mapZ));
-				perlin.setFrequency(4);
-				perlin.setLacunarity(4);
-				perlin.setOctaveCount(2);
-				perlin.setPersistence(0.2);
-				Clamp clamp = new Clamp(perlin, 0, 1);
-				Curve cu = new Curve();
-				cu.setSourceModule(0, clamp);
-				cu.AddControlPoint(0.0, 0.2);
-				cu.AddControlPoint(0.5, 0.5);
-				cu.AddControlPoint(1, 0.9);
-				Segment s = new Segment(cu);
-				s.setAttenuate(true);
-
-				Point p0 = c.point.minus(new Point(islandChunkX, islandChunkZ).toIslandCoord());
-				Random rand = new Random(c.index);
-				int elev = 35 + rand.nextInt(20);
-				for(int x = -10; x <= 10; x++)
-				{
-					for(int z = -10; z <= 10; z++)
-					{
-						Point p1 = p0.plus(x, z);
-						//Validation
-						if(p1.x < 0 || p1.x > 15 || p1.y < 0 || p1.y > 15)
-							continue;
-
-						//Get the inCircle radius
-						double dist = p1.distanceSq(p0);
-						//Perform a quick test to see if the point is within the inCircle.
-						if(dist == radiusSq && rand.nextBoolean())
-							continue;
-						if(dist <= radiusSq)
-						{
-							int el = elevationMap[(int)p1.y << 4 | (int)p1.x];
-							for(int y = 0; y < elev; y++)
-							{
-
-								double width = s.getValue((double)y/(double)elev) * 7D;
-								if(y < 9)
-								{
-									width = (4-Math.max(y-5, 0));
-								}
-								width *= width;
-								if(p0.distanceSq(p1) < 1+width)
-									this.setState(primer, new BlockPos((int)p1.x, y+el-5, (int)p1.y), stone);
-							}
-							elevationMap[(int)p1.y << 4 | (int)p1.x] += elev;
-						}
-					}
-				}
-			}
-		}
 	}
 
 	public void createDungeons(ChunkPrimer primer)
