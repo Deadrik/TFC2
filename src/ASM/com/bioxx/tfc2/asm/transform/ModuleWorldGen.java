@@ -75,7 +75,7 @@ public class ModuleWorldGen implements IClassTransformer
 		}
 		else if (name.equals("com.pam.harvestcraft.worldgen.BushWorldGen"))
 		{
-			String desc = ASMHelper.toMethodDescriptor("V", ASMConstants.RANDOM,"I", "I", gi(ASMConstants.WORLD), gi(ASMConstants.ICHUNKGENERATOR), gi(ASMConstants.ICHUNKPROVIDER));
+			String desc = ASMHelper.toMethodDescriptor("V", ASMConstants.RANDOM,"I", "I", ASMConstants.WORLD, ASMConstants.ICHUNKGENERATOR, ASMConstants.ICHUNKPROVIDER);
 			MethodNode methodNode = ASMHelper.findMethodNodeOfClass(classNode, "generate", "generate", desc);
 
 			if (methodNode != null)
@@ -87,7 +87,7 @@ public class ModuleWorldGen implements IClassTransformer
 			}
 			else
 			{
-				String msg = "BushWorldGen: generate (func_180709_b) method not found! | ";
+				String msg = "BushWorldGen: generate (generate) method not found! | ";
 				for(MethodNode m : classNode.methods)
 				{
 					msg += m.name+", ";
