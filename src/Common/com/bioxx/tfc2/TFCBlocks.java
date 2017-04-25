@@ -330,4 +330,52 @@ public class TFCBlocks
 	{
 		GameRegistry.registerTileEntity(c, Reference.ModID+":"+id);
 	}
+
+	public static Block getStairsForWood(WoodType wood)
+	{
+		switch(wood)
+		{
+		case Acacia:
+			return TFCBlocks.StairsAcacia;
+		case Ash:
+			return TFCBlocks.StairsAsh;
+		case Aspen:
+			return TFCBlocks.StairsAspen;
+		case Birch:
+			return TFCBlocks.StairsBirch;
+		case Blackwood:
+			return TFCBlocks.StairsBlackwood;
+		case Chestnut:
+			return TFCBlocks.StairsChestnut;
+		case DouglasFir:
+			return TFCBlocks.StairsDouglasFir;
+		case Hickory:
+			return TFCBlocks.StairsHickory;
+		case Kapok:
+			return TFCBlocks.StairsKapok;
+		case Maple:
+			return TFCBlocks.StairsMaple;
+		case Oak:
+			return TFCBlocks.StairsOak;
+		case Palm:
+			return TFCBlocks.StairsPalm;
+		case Pine:
+			return TFCBlocks.StairsPine;
+		case Rosewood:
+			return TFCBlocks.StairsRosewood;
+		case Sequoia:
+			return TFCBlocks.StairsSequoia;
+		case Spruce:
+			return TFCBlocks.StairsSpruce;
+		case Sycamore:
+			return TFCBlocks.StairsSycamore;
+		case WhiteCedar:
+			return TFCBlocks.StairsWhiteCedar;
+		case Willow:
+			return TFCBlocks.StairsWillow;
+		default:
+			return TFCBlocks.StairsOak;
+
+		}
+	}
 }

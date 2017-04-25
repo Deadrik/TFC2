@@ -410,6 +410,7 @@ public class PrintImageMapCommand extends CommandBase
 				}
 
 			}
+			//Player
 			Point p = new Point(xCoord, zCoord).toIslandCoord();
 			graphics.setColor(Color.RED);	
 			poly = new Polygon();

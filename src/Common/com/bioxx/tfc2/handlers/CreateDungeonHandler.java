@@ -76,8 +76,8 @@ public class CreateDungeonHandler
 			dungeon.blockMap.put("dungeon_floor", Core.getPlanks(WoodType.getTypeFromString(event.islandMap.getParams().getCommonTree())));
 			dungeon.blockMap.put("dungeon_ceiling", TFCBlocks.StoneBrick.getDefaultState().withProperty(BlockStoneBrick.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
 			dungeon.blockMap.put("dungeon_smoothstone", TFCBlocks.StoneSmooth.getDefaultState().withProperty(BlockStoneSmooth.META_PROPERTY, event.islandMap.getParams().getSurfaceRock()));
-			dungeon.blockMap.put("dungeon_stairs_floor", TFCBlocks.StairsOak.getDefaultState());
-			dungeon.blockMap.put("dungeon_stairs_wall", TFCBlocks.StairsOak.getDefaultState());
+			dungeon.blockMap.put("dungeon_stairs_floor", TFCBlocks.getStairsForWood(WoodType.getTypeFromString(event.islandMap.getParams().getCommonTree())).getDefaultState());
+			dungeon.blockMap.put("dungeon_stairs_wall", TFCBlocks.getStairsForWood(WoodType.getTypeFromString(event.islandMap.getParams().getCommonTree())).getDefaultState());
 			dungeon.blockMap.put("dungeon_door", Blocks.OAK_DOOR.getDefaultState());
 
 
