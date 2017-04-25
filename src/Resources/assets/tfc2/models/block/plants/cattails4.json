@@ -1,0 +1,23 @@
+{
+    "ambientocclusion": false,
+    "elements": [
+        {   "from": [ -8, -16, 8 ],
+            "to": [ 24, 16, 8 ],
+            "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": -22.5, "rescale": true },
+            "shade": false,
+            "faces": {
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#cattails" },
+                "south": { "uv": [ 16, 0, 0, 16 ], "texture": "#cattails" }
+            }
+        },
+        {   "from": [ 8, -16, -8 ],
+            "to": [ 8, 16, 24 ],
+            "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": -22.5, "rescale": true },
+            "shade": false,
+            "faces": {
+                "west": { "uv": [ 0, 0, 16, 16 ], "texture": "#cattails"},
+                "east": { "uv": [ 16, 0, 0, 16 ], "texture": "#cattails"}
+            }
+        }
+    ]
+}

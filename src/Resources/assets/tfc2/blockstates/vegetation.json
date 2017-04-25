@@ -23,16 +23,37 @@
 			"doublefernbottom": {"textures": {"cross": "blocks/double_plant_fern_bottom"}},
 			"doubleferntop": {"textures": {"cross": "blocks/double_plant_fern_top"}},
 			"shortgrass": {"textures": {"cross": "tfc2:blocks/shortgrass"}},
-			"shortergrass": {"textures": {"cross": "tfc2:blocks/shortergrass"}},
+			"shortergrass": {"textures": {"cross": "tfc2:blocks/shortergrass"} },
 			"doublegrassbottomlush": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_bottom_lush"}},
 			"doublegrasstoplush": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_top_lush"}},
 			"shortgrasslush": {"textures": {"cross": "tfc2:blocks/plants/shortgrass_lush"}},
 			"shortergrasslush": {"textures": {"cross": "tfc2:blocks/plants/shortergrass_lush"}},
-			"toquilla": {"model": "tfc2:plants/toquilla_palm"}
+			"toquilla": {"model": "tfc2:plants/toquilla_palm"},
+			"cattail": {"textures":{"particle" : "tfc2:blocks/plants/cattails4"}}
 		},
 		"inventory": [{
             "transform": "forge:default-block"
         }],
-        "isonstone=false,veg=toquilla":[{"y":0},{"y":90},{"y":180},{"y":270},{"y":0, "submodel":"tfc2:plants/toquilla_palm_flower"},{"y":90, "submodel":"tfc2:plants/toquilla_palm_flower"},{"y":180, "submodel":"tfc2:plants/toquilla_palm_flower"},{"y":270, "submodel":"tfc2:plants/toquilla_palm_flower"}]
+        "isonstone=false,veg=toquilla":
+        [
+        	{"y":0},
+        	{"y":90},
+        	{"y":180},
+        	{"y":270},
+        	{"y":0, "submodel":"tfc2:plants/toquilla_palm_flower"},
+        	{"y":90, "submodel":"tfc2:plants/toquilla_palm_flower"},
+        	{"y":180, "submodel":"tfc2:plants/toquilla_palm_flower"},
+        	{"y":270, "submodel":"tfc2:plants/toquilla_palm_flower"}],
+        "isonstone=false,veg=cattail": 
+        [
+            { "model": "tfc2:plants/cattails0", "weight": 3, "textures":{"cattails" : "tfc2:blocks/plants/cattails0"} },
+            { "model": "tfc2:plants/cattails4", "weight": 3, "textures":{"cattails" : "tfc2:blocks/plants/cattails1"} },
+            { "model": "tfc2:plants/cattails0", "weight": 3, "textures":{"cattails" : "tfc2:blocks/plants/cattails2"} },
+            { "model": "tfc2:plants/cattails4", "weight": 1, "textures":{"cattails" : "tfc2:blocks/plants/cattails4"} },
+            { "model": "tfc2:plants/cattails_dense0", "weight": 3, "textures":{"cattails" : "tfc2:blocks/plants/cattails0"} },
+            { "model": "tfc2:plants/cattails_dense4", "weight": 3, "textures":{"cattails" : "tfc2:blocks/plants/cattails1"} },
+            { "model": "tfc2:plants/cattails_dense0", "weight": 3, "textures":{"cattails" : "tfc2:blocks/plants/cattails2"} },
+            { "model": "tfc2:plants/cattails_dense4", "weight": 2, "textures":{"cattails" : "tfc2:blocks/plants/cattails4"} }
+		]
 	}
 }

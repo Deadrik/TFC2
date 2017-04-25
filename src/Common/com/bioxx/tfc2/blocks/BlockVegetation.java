@@ -112,7 +112,7 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	{
 		BlockPos down = pos.down();
 		IBlockState soil = worldIn.getBlockState(down);
-		if (state.getBlock() != this) 
+		if (soil.getBlock() != this) 
 			return canPlaceBlockOn(state, soil);
 		return soil.getBlock().canSustainPlant(soil, worldIn, down, EnumFacing.UP, this);
 	}
@@ -120,6 +120,10 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 	protected boolean canPlaceBlockOn(IBlockState state, IBlockState soil)
 	{
 		VegType veg = (VegType)state.getValue(META_PROPERTY);
+
+		if(veg == VegType.Cattail)
+			return Core.isWater(soil);
+
 		return Core.isSoil(soil);
 	}
 
@@ -238,7 +242,8 @@ public class BlockVegetation extends BlockTerra implements IPlantable
 		ShorterGrassLush("shortergrasslush", 11),
 		DoubleGrassBottomLush("doublegrassbottomlush", 12),
 		DoubleGrassTopLush("doublegrasstoplush", 13),
-		Toquilla("toquilla", 14);
+		Toquilla("toquilla", 14),
+		Cattail("cattail", 15);
 
 
 		private String name;
