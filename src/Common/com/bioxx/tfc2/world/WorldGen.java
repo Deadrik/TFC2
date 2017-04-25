@@ -337,7 +337,7 @@ public class WorldGen implements IThreadCompleteListener
 
 		id.setIslandTemp(t);
 
-		id.setFeatures(Feature.Desert);
+		//id.setFeatures(Feature.Desert);
 
 
 		Moisture m = Moisture.fromVal(r.nextDouble());
