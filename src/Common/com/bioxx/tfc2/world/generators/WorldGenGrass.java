@@ -16,6 +16,7 @@ import com.bioxx.jmapgen.BiomeType;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.ClimateTemp;
@@ -114,12 +115,12 @@ public class WorldGenGrass implements IWorldGenerator
 							}
 						}
 
-						if(iMoisture.isGreaterThanOrEqual(Moisture.VERYHIGH) && tall)
+						if(closest.hasMarker(Marker.Clearing) && iMoisture.isGreaterThanOrEqual(Moisture.VERYHIGH) && tall)
 						{
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottomLush), bp, 2);
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTopLush), bp.up(), 2);
 						}
-						else if(iMoisture.isGreaterThanOrEqual(Moisture.MEDIUM) && tall)
+						else if(closest.hasMarker(Marker.Clearing) && iMoisture.isGreaterThanOrEqual(Moisture.MEDIUM) && tall)
 						{
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassBottom), bp, 2);
 							Core.setBlock(world, state.withProperty(BlockVegetation.META_PROPERTY, VegType.DoubleGrassTop), bp.up(), 2);

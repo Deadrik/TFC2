@@ -5,6 +5,7 @@ import java.util.Vector;
 import net.minecraft.util.math.BlockPos;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.CaveAttribute;
 import com.bioxx.jmapgen.graph.Center;
@@ -25,7 +26,11 @@ public class CaveProcessor
 	{
 		Vector<Center> land = getCentersBetween(map.centers, 0.02, 1.0);
 		Vector<Center> starts = new Vector<Center>();
-		int majorCavesToGen = 30;
+		int majorCavesToGen = 50;
+		if(map.getParams().hasFeature(Feature.DoubleCaves))
+			majorCavesToGen *= 2;
+		else if(map.getParams().hasFeature(Feature.TripleCaves))
+			majorCavesToGen *= 3;
 
 		if(land.size() == 0)
 			return;
@@ -86,7 +91,7 @@ public class CaveProcessor
 		this.gen(start, caveId, false, 50);
 	}
 
-	private void gen(Center start, int caveId, boolean isSeaCave, int maxLength)
+	public void gen(Center start, int caveId, boolean isSeaCave, int maxLength)
 	{
 		int minCaveSize = 2;
 		int maxCaveSize = 6;//This makes a cave have a 2-8 radius

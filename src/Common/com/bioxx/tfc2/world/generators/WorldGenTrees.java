@@ -54,7 +54,7 @@ public class WorldGenTrees implements IWorldGenerator
 		BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
 		Center c = m.getClosestCenter(new Point(xMLocal+8, zMLocal+8));
 
-		if(c.hasMarker(Marker.Ocean) || !TFCOptions.shouldGenTrees)
+		if(c.hasMarker(Marker.Clearing) || c.hasMarker(Marker.Ocean) || !TFCOptions.shouldGenTrees)
 		{
 			return;
 		}
@@ -261,6 +261,7 @@ public class WorldGenTrees implements IWorldGenerator
 		BlockPos aPos = pos.up();
 		int radius = Math.max(1, growthStage);
 		int count = 0;
+		int failCount = 0;
 
 		if(!world.isAirBlock(aPos))
 			return false;
@@ -270,10 +271,11 @@ public class WorldGenTrees implements IWorldGenerator
 		{
 			for(int k = -radius; k <= radius; k++)
 			{
+				count++;
 				ground = world.getBlockState(gPos.add(i, 0, k));
 
 				if(!world.canBlockSeeSky(gPos.add(i, 1, k)))
-					return false;
+					failCount++;
 
 				if(schem.getWoodType() != WoodType.Palm && !Core.isSoil(ground))
 				{
@@ -285,6 +287,9 @@ public class WorldGenTrees implements IWorldGenerator
 				}
 			}
 		}
+
+		if(failCount > count * 0.25 )
+			return false;
 
 		//Scan to the tree height to make sure there is enough room for the tree
 		/*for(int i = 0; i <= schem.getSizeY(); i++)

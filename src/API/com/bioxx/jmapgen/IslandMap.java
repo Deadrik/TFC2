@@ -195,6 +195,8 @@ public class IslandMap
 
 			createGorges();
 
+			createMesas();
+
 			// Determine downslope paths.
 			calculateDownslopesCenter();
 			// Create rivers.
@@ -203,6 +205,7 @@ public class IslandMap
 			assignSlopedNoise();
 			assignHillyNoise();
 			createSpires();
+			createClearings();
 			calculateDownslopesCenter();
 		}
 		else
@@ -281,6 +284,26 @@ public class IslandMap
 
 		}
 
+	}
+
+	private void createMesas()
+	{
+		if(!this.islandParams.hasFeature(Feature.Mesas))
+			return;
+
+		Vector<Center> landCenters = this.getLandCenters();
+		landCenters = this.filterOutMarkers(landCenters, Marker.SmallCrater, Marker.Volcano, Marker.Water, Marker.Coast);
+		landCenters = filterOutAttributes(landCenters, Attribute.Canyon, Attribute.Gorge);
+		for(int i = 0; i < 100; i++)
+		{
+			Center c = landCenters.get(mapRandom.nextInt(landCenters.size()));
+			double elev = 1 - c.elevation;
+			elev = c.elevation+((0.5+(mapRandom.nextDouble() * 0.3)) * elev);
+			c.setMarkers(Marker.Mesa);
+			c.setElevation(elev);
+			if(mapRandom.nextBoolean())
+				caves.gen(c.getRandomNeighbor(mapRandom), 1000+i, false, 2+mapRandom.nextInt(3));
+		}
 	}
 
 	private void createCanyons()
@@ -372,9 +395,29 @@ public class IslandMap
 						CanyonAttribute c = new CanyonAttribute(Attribute.Canyon, gn.nodeNum);
 						c.setDown(gn.getCenter());
 						if(n.addAttribute(c))
+						{
 							n.setElevation(Math.max(minElevation, gn.getCenter().getElevation()));
+							if(mapRandom.nextInt(5) == 0)
+								caves.gen(gn.getCenter(), 2000+i, false, 2+mapRandom.nextInt(3));
+						}
 					}
 				}
+			}
+		}
+	}
+
+	private void createClearings()
+	{
+		Vector<Center> landCenters = this.getLandCenters();
+		Vector<Center> wetCenters = new Vector<Center>();
+		for(Center c : landCenters)
+		{
+			if(mapRandom.nextInt(10) == 0)
+			{
+				c.setMarkers(Marker.Clearing);
+				for(Center n : c.neighbors)
+					if(mapRandom.nextBoolean())
+						n.setMarkers(Marker.Clearing);
 			}
 		}
 	}
@@ -632,7 +675,27 @@ public class IslandMap
 		Vector<Center> out = new Vector<Center>();
 		for(Center c : centers)
 		{
-			if(c.hasAnyMarkersOf(markers))
+			if(!c.hasAnyMarkersOf(markers))
+				out.add(c);
+		}
+		return out;
+	}
+
+	public Vector<Center> filterOutAttributes(Vector<Center> centers, UUID... attr)
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			boolean keep = true;
+			for(UUID uuid : attr)
+			{
+				if(c.hasAttribute(uuid))
+				{
+					keep = false;
+					break;
+				}
+			}
+			if(keep)
 				out.add(c);
 		}
 		return out;
@@ -1845,6 +1908,8 @@ public class IslandMap
 							a.setDown(cn.getDown().center);
 						a.gorgeID = id;
 						cn.center.addAttribute(a);
+						if(mapRandom.nextInt(6) == 0)
+							caves.gen(cn.center, 3000+id, false, 2+mapRandom.nextInt(3));
 					}
 				}
 			}

@@ -334,7 +334,7 @@ public class IslandParameters
 	{
 		Gorges(1, "Gorges"), 
 		Volcano(0.001, "Volcano"), 
-		Cliffs(1, "Cliffs"), 
+		Cliffs(0.75, "Cliffs"), 
 		SharperMountains(1, "Sharper Mountains"), 
 		EvenSharperMountains(1, "Even Sharper Mountains"), 
 		Valleys(0.6, "Valleys"), 
@@ -348,7 +348,11 @@ public class IslandParameters
 		NutrientRich(0.5,"Nutrient Rich", FeatureSig.Minor),
 		Desert(0.0,"Desert", false),
 		DiverseCrops(0.5,"Diverse Crops", FeatureSig.Minor),
-		RampantWildAnimals(0.25,"Rampant Wild Animals", FeatureSig.Minor);
+		RampantWildAnimals(0.25,"Rampant Wild Animals", FeatureSig.Minor),
+		Mesas(0.25,"Mesas"),
+		DoubleCaves(0.25,"DoubleCaves"),
+		TripleCaves(0.10,"TripleCaves");
+
 
 		public final double rarity;
 		private String name;

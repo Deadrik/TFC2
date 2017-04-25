@@ -450,7 +450,9 @@ public class Center
 		SmallCrater(8), 
 		Pond(9), 
 		Spire(10),
-		Volcano(11);
+		Volcano(11),
+		Mesa(12),
+		Clearing(13);
 
 		long flag;
 		Marker(int f)
