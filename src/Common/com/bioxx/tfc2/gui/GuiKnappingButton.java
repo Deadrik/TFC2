@@ -86,9 +86,11 @@ public class GuiKnappingButton extends GuiButton
 			{
 				Core.bindTexture(GuiKnapping.texture);
 
-				GL11.glColor4f(1f, 1f, 1f, 0.2f);
+				GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.4f);
 				GlStateManager.enableBlend();
+				//GlStateManager.colorMask(false, true, true, true);
 				this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 239, 16, 16);
+				//GlStateManager.colorMask(true, true, true, true);
 				GlStateManager.disableBlend();
 			}
 

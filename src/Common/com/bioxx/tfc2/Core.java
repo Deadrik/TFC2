@@ -313,4 +313,9 @@ public class Core
 
 		return false;
 	}
+
+	public static boolean isHexFullyLoaded(World world, IslandMap map, Center c)
+	{
+		return world.isAreaLoaded(c.point.toBlockPos().add(map.getParams().getWorldX(), 0, map.getParams().getWorldZ()), 20);
+	}
 }
