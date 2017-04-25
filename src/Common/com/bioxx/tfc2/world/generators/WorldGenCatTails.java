@@ -80,9 +80,6 @@ public class WorldGenCatTails extends WorldGenTFC
 						if(p.distance(closest.point) > 20)
 							continue;
 
-						if(closest.biome == BiomeType.RIVER && random.nextInt(25) != 0)
-							continue;
-
 						if(Core.isWater(stateDown) && Core.isTerrain(stateDown2))
 							world.setBlockState(pos, TFCBlocks.Vegetation.getDefaultState().withProperty(BlockVegetation.META_PROPERTY, VegType.Cattail));
 					}
