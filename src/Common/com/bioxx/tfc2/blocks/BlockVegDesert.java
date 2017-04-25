@@ -211,7 +211,8 @@ public class BlockVegDesert extends BlockTerra implements IPlantable
 		DoubleGrassTopSparse("doublegrasstopsparse", 6),
 		GrassSparse("grass_sparse", 7),
 		ShortGrassSparse("shortgrass_sparse", 8),
-		ShorterGrassSparse("shortergrass_sparse", 9);
+		ShorterGrassSparse("shortergrass_sparse", 9),
+		SageBrush("sagebrush", 10);
 
 		private String name;
 		private int meta;

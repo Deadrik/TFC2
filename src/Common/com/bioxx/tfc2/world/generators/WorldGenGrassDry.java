@@ -16,6 +16,7 @@ import com.bioxx.jmapgen.BiomeType;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.ClimateTemp;
@@ -99,12 +100,12 @@ public class WorldGenGrassDry implements IWorldGenerator
 						}
 					}
 				}
-				else if(map.getParams().hasFeature(Feature.Desert) && closest.getMoisture().isLessThanOrEqual(Moisture.MEDIUM))//aka we're actually in the desert areas
+				else if(map.getParams().hasFeature(Feature.Desert) && closest.getMoisture().isLessThanOrEqual(Moisture.MEDIUM) && !closest.hasMarker(Marker.Clearing))//aka we're actually in the desert areas
 				{
 					IBlockState downState = world.getBlockState(bp.down());
 					if(Core.isSand(downState) && random.nextInt(20) == 0)
 					{
-						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Ocatillo), 2);
+						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.SageBrush), 2);
 					}
 				}
 			}
@@ -113,12 +114,12 @@ public class WorldGenGrassDry implements IWorldGenerator
 		int x = 0, y = 0, z = 0; 
 		if(map.getParams().hasFeature(Feature.Desert))
 		{
-			if(map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.SUBTROPICAL))
+			if(map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.SUBTROPICAL) && random.nextInt(7) == 0)
 			{
-				for(int i = 0; i < 4; i++)
+				x = random.nextInt(16); z = random.nextInt(16);
+				for(int i = 0; i < 6; i++)
 				{
-					x = random.nextInt(16); z = random.nextInt(16);
-					BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
+					BlockPos bp = new BlockPos(-2+chunkX+x+random.nextInt(3), Core.getHeight(world, chunkX+x, chunkZ+z), -2+chunkZ+z+random.nextInt(3));
 					closest = map.getClosestCenter(bp);
 					IBlockState downState = world.getBlockState(bp.down());
 
@@ -128,14 +129,14 @@ public class WorldGenGrassDry implements IWorldGenerator
 					}
 				}
 			}
+
 			int count = 3+random.nextInt(6);
 			if(map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.TEMPERATE) && random.nextInt(10) == 0)
 			{
 				x = random.nextInt(16); z = random.nextInt(16);
 				for(int i = 0; i < count; i++)
 				{
-					x += -4+random.nextInt(9); z += -4+random.nextInt(9);
-					BlockPos bp = new BlockPos(chunkX+x, Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z);
+					BlockPos bp = new BlockPos(chunkX+x-4+random.nextInt(9), Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z-4+random.nextInt(9));
 					closest = map.getClosestCenter(bp);
 					IBlockState downState = world.getBlockState(bp.down());
 
@@ -178,6 +179,23 @@ public class WorldGenGrassDry implements IWorldGenerator
 					if(closest.getMoistureRaw() < Moisture.MEDIUM.getMoisture() && Core.isSand(downState))//we're actually in the desert areas
 					{
 						world.setBlockState(bp, TFCBlocks.Cactus.getDefaultState().withProperty(BlockCactus.META_PROPERTY, DesertCactusType.Barrel), 2);
+					}
+				}
+			}
+
+			count = 3+random.nextInt(6);
+			if(map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.TEMPERATE) && random.nextInt(10) == 0)
+			{
+				x = random.nextInt(16); z = random.nextInt(16);
+				for(int i = 0; i < count; i++)
+				{
+					BlockPos bp = new BlockPos(chunkX+x-4+random.nextInt(9), Core.getHeight(world, chunkX+x, chunkZ+z), chunkZ+z-4+random.nextInt(9));
+					closest = map.getClosestCenter(bp);
+					IBlockState downState = world.getBlockState(bp.down());
+
+					if(closest.getMoisture().isLessThanOrEqual(Moisture.MEDIUM) && Core.isSand(downState))//we're actually in the desert areas
+					{
+						world.setBlockState(bp, TFCBlocks.VegDesert.getDefaultState().withProperty(BlockVegDesert.META_PROPERTY, DesertVegType.Ocatillo), 2);
 					}
 				}
 			}

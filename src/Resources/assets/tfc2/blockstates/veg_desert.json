@@ -18,7 +18,8 @@
 			"shortgrass_sparse": {"textures": {"cross": "tfc2:blocks/plants/shortgrass_sparse"}},
 			"shortergrass_sparse": {"textures": {"cross": "tfc2:blocks/plants/shortergrass_sparse"}},
 			"doublegrassbottomsparse": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_bottom_sparse"}},
-			"doublegrasstopsparse": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_top_sparse"}}
+			"doublegrasstopsparse": {"textures": {"cross": "tfc2:blocks/plants/double_plant_grass_top_sparse"}},
+			"sagebrush": {"model": "tfc2:plants/sagebrush"}
 		},
 		"isonstone" : {
 			"true":{"submodel": "tfc2:plants/vegbase"},
@@ -29,6 +30,24 @@
 			{"model": "tfc2:plants/ocatillo_0"},
 			{"model": "tfc2:plants/ocatillo_1"},
 			{"model": "tfc2:plants/ocatillo_2"}
+		],
+		"isonstone=false,veg=sagebrush": 
+		[
+			{"textures": {"cross": "tfc2:blocks/plants/sagebrush01"}, "weight" : 2},
+			{"textures": {"cross": "tfc2:blocks/plants/sagebrush02"}, "weight" : 2},
+			{"textures": {"cross": "tfc2:blocks/plants/sagebrush03"}, "weight" : 2},
+			{"textures": {"cross": "tfc2:blocks/plants/sagebrush04"}, "weight" : 2},
+			{"textures": {"cross": "tfc2:blocks/plants/sagebrush05"}, "weight" : 2},
+			{"textures": {"cross": "tfc2:blocks/plants/sagebrush06"}, "weight" : 2},
+			{"textures": {"cross": "tfc2:blocks/plants/sagebrush07"}, "weight" : 1},
+			{"textures": {"cross": "tfc2:blocks/plants/sagebrush08"}, "weight" : 1}
+		],
+		"isonstone=false,veg=tackweed": 
+		[
+			{"textures": {"cross": "tfc2:blocks/plants/tackweed01"}},
+			{"textures": {"cross": "tfc2:blocks/plants/tackweed02"}},
+			{"textures": {"cross": "tfc2:blocks/plants/tackweed03"}},
+			{"textures": {"cross": "tfc2:blocks/plants/tackweed04"}}
 		]
 	}
 }
