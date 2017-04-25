@@ -1,11 +1,13 @@
 package com.bioxx.tfc2.world.generators;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkGenerator;
@@ -83,6 +85,14 @@ public class WorldGenPortals implements IWorldGenerator
 		EnumFacing dir = attr.direction;
 		if(flip)
 			dir = dir.getOpposite();
+
+		AxisAlignedBB aabb = Core.PortalSchematic.getBoundingBox(portalPos);
+		ArrayList<BlockPos> clearArea = Core.getBlockPosInAABB(aabb.offset(-4, 1, -5));
+		for(BlockPos pos : clearArea)
+		{
+			if(Core.isTerrain(world.getBlockState(pos)))
+				world.setBlockToAir(pos);
+		}
 
 		for(SchemBlock b : Core.PortalSchematic.getBlockMap())
 		{

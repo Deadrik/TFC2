@@ -204,7 +204,7 @@ public class Schematic implements ISchematic
 
 	public AxisAlignedBB getBoundingBox(BlockPos pos)
 	{
-		return aabb.addCoord(pos.getX(), pos.getY(), pos.getZ());
+		return aabb.offset(pos);
 	}
 
 	//*****************

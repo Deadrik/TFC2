@@ -1,5 +1,7 @@
 package com.bioxx.tfc2;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -14,6 +16,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -317,5 +320,21 @@ public class Core
 	public static boolean isHexFullyLoaded(World world, IslandMap map, Center c)
 	{
 		return world.isAreaLoaded(c.point.toBlockPos().add(map.getParams().getWorldX(), 0, map.getParams().getWorldZ()), 20);
+	}
+
+	public static ArrayList<BlockPos> getBlockPosInAABB(AxisAlignedBB aabb)
+	{
+		ArrayList<BlockPos> out = new ArrayList<BlockPos>();
+		for(int x = (int) aabb.minX; x < aabb.maxX; x++)
+		{
+			for(int y = (int) aabb.minY; y < aabb.maxY; y++)
+			{
+				for(int z = (int) aabb.minZ; z < aabb.maxZ; z++)
+				{
+					out.add(new BlockPos(x, y, z));
+				}
+			}
+		}
+		return out;
 	}
 }
