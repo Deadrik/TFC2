@@ -31,8 +31,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
 import com.bioxx.tfc2.core.TFCTabs;
 import com.google.common.collect.Lists;
@@ -97,18 +95,6 @@ public class BlockStairsTFC extends BlockCollapsible
 			((BlockCollapsible)modelBlock).getNaturalSupportRange(world, pos, modelState);
 		}
 		return 5;
-	}
-
-	@Override
-	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
-	{
-		/*if(modelBlock instanceof BlockCollapsible)
-		{
-			return ((BlockCollapsible)modelBlock).canBeSupportedBy(modelState, otherState);
-		}*/
-		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
-			return true;
-		return false;
 	}
 
 	/**

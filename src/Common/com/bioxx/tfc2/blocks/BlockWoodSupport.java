@@ -68,14 +68,6 @@ public class BlockWoodSupport extends BlockCollapsible implements ISupportBlock,
 	}
 
 	@Override
-	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
-	{
-		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
-			return true;
-		return false;
-	}
-
-	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return Item.getItemFromBlock(this);

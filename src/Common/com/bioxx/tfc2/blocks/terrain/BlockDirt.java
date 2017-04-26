@@ -16,6 +16,7 @@ import net.minecraftforge.common.IPlantable;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.interfaces.IGravityBlock;
+import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.core.TFCTabs;
 import com.bioxx.tfc2.core.TFC_Sounds;
@@ -87,7 +88,7 @@ public class BlockDirt extends BlockCollapsible implements IGravityBlock
 	@Override
 	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
-		if(Core.isTerrain(otherState) && !Core.isSand(otherState))
+		if((Core.isTerrain(otherState) && !Core.isSand(otherState)) || otherState.getBlock() instanceof ISupportBlock)
 			return true;
 		return false;
 	}

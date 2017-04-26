@@ -63,9 +63,10 @@ public class BlockStone extends BlockCollapsible
 	}
 
 	@Override
-	protected void onCreateFallingEntity(EntityFallingBlockTFC entity, World world, BlockPos pos)
+	protected void onCreateFallingEntity(EntityFallingBlockTFC entity, IBlockState state, World world, BlockPos pos)
 	{
-		world.setBlockState(pos, TFCBlocks.Gravel.getDefaultState().withProperty(BlockRubble.META_PROPERTY, entity.getBlock().getValue(META_PROPERTY)));
+		if(world.rand.nextFloat() < 0.5)
+			world.setBlockState(pos, TFCBlocks.Gravel.getDefaultState().withProperty(META_PROPERTY, state.getValue(META_PROPERTY)));
 	}
 
 	@Override

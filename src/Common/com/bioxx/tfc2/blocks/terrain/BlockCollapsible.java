@@ -6,12 +6,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.interfaces.IGravityBlock;
+import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.blocks.BlockTerra;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
@@ -76,9 +79,11 @@ public class BlockCollapsible extends BlockTerra
 		{
 			world.setBlockToAir(pos);
 			EntityFallingBlockTFC entityfallingblock = new EntityFallingBlockTFC(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, stateNew);
+			entityfallingblock.shouldDropItem = false;
 			((IGravityBlock)getFallBlockType(state).getBlock()).onStartFalling(entityfallingblock);
 			world.spawnEntity(entityfallingblock);
-			onCreateFallingEntity(entityfallingblock, world, pos);
+			onCreateFallingEntity(entityfallingblock, state, world, pos);
+
 		}
 		else
 		{
@@ -86,7 +91,7 @@ public class BlockCollapsible extends BlockTerra
 		}
 	}
 
-	protected void onCreateFallingEntity(EntityFallingBlockTFC entity, World world, BlockPos pos)
+	protected void onCreateFallingEntity(EntityFallingBlockTFC entity, IBlockState state, World world, BlockPos pos)
 	{
 
 	}
@@ -113,8 +118,8 @@ public class BlockCollapsible extends BlockTerra
 		BlockPos pos1 = new BlockPos(pos.getX()+0.5, 0, pos.getZ()+0.5), pos2;
 
 		boolean isSupported = false;
-		float supportRange = getNaturalSupportRange(world, pos, state);
-		float supportRangeSq = supportRange*supportRange;
+		float supportRangeDefault = getNaturalSupportRange(world, pos, state);
+		float supportRangeSqDefault = supportRangeDefault*supportRangeDefault;
 
 		//If the block beneath this one is solid then we will assume for now that this block is naturally supported
 		IBlockState stateDown = world.getBlockState(pos.down());
@@ -151,20 +156,28 @@ public class BlockCollapsible extends BlockTerra
 				break;
 			}
 
-			//If we move horizontally more than X blocks then stop scanning any further away
-			pos2 = new BlockPos(scanPos.getX()+0.5, 0, scanPos.getZ()+0.5);
-			double dist = pos1.distanceSq(pos2);
-			if(dist > supportRangeSq)
+
+			if(scanState.getBlock() instanceof BlockCollapsible/* && canBeSupportedBy(state, scanState)*/)
 			{
-				continue;
-			}
-			else if(scanState.getBlock() instanceof BlockCollapsible/* && canBeSupportedBy(state, scanState)*/)
-			{
-				supportRange = Math.min(supportRange, ((BlockCollapsible)scanState.getBlock()).getNaturalSupportRange(world, pos, scanState));
-				supportRangeSq = supportRange*supportRange;
+				float supportRange = supportRangeDefault;
+				float supportRangeSq = supportRangeSqDefault;
+				if((!Core.isTerrain(state) && !Core.isTerrain(scanState)) || (Core.isTerrain(state) && Core.isTerrain(scanState)))
+				{
+					supportRange = Math.min(supportRange, ((BlockCollapsible)scanState.getBlock()).getNaturalSupportRange(world, pos, scanState));
+					supportRangeSq = supportRange*supportRange;
+				}
+
+				//If we move horizontally more than X blocks then stop scanning any further away
+				pos2 = new BlockPos(scanPos.getX()+0.5, 0, scanPos.getZ()+0.5);
+				double dist = pos1.distanceSq(pos2);
+				if(dist > supportRangeSq)
+				{
+					continue;
+				}
+
 				scanState2 = world.getBlockState(scanPos.down());
 				if(scanState.getBlock().isSideSolid(scanState, world, scanPos, EnumFacing.DOWN) && 
-						scanState2.getBlock().isSideSolid(scanState2, world, scanPos.down(), EnumFacing.UP))
+						canBeSupportedBy(scanState, scanState2) && scanState2.getBlock().isSideSolid(scanState2, world, scanPos.down(), EnumFacing.UP))
 				{
 					if(!scannedQueue.contains(scanPos.down()))
 						scanQueue.add(scanPos.down());
@@ -227,7 +240,7 @@ public class BlockCollapsible extends BlockTerra
 
 	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
-		if(otherState.getBlock() instanceof BlockCollapsible)
+		if(otherState.getBlock() == this || Core.isTerrain(otherState) || otherState.getBlock() instanceof ISupportBlock || otherState.getBlock() == Blocks.BEDROCK)
 			return true;
 		return false;
 	}

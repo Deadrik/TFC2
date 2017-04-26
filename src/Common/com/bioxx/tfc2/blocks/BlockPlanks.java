@@ -16,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.types.WoodType;
@@ -52,14 +51,6 @@ public class BlockPlanks extends BlockCollapsible implements ISupportBlock
 	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos,IBlockState myState)
 	{
 		return 7;
-	}
-
-	@Override
-	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
-	{
-		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
-			return true;
-		return false;
 	}
 
 	@Override

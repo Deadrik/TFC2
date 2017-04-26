@@ -13,9 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCItems;
-import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
 import com.bioxx.tfc2.core.TFCTabs;
 
@@ -36,14 +34,6 @@ public class BlockThatch extends BlockCollapsible
 	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos,IBlockState myState)
 	{
 		return 6;
-	}
-
-	@Override
-	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
-	{
-		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
-			return true;
-		return false;
 	}
 
 	@Override

@@ -131,7 +131,7 @@ public class BlockGrass extends BlockCollapsible
 	@Override
 	public int getNaturalSupportRange(IBlockAccess world, BlockPos pos, IBlockState myState)
 	{
-		return 1;
+		return 3;
 	}
 
 	/*******************************************************************************
