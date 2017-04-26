@@ -17,7 +17,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -103,13 +102,26 @@ public class BlockStairsTFC extends BlockCollapsible
 	@Override
 	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
-		if(modelBlock instanceof BlockCollapsible)
+		/*if(modelBlock instanceof BlockCollapsible)
 		{
-			((BlockCollapsible)modelBlock).canBeSupportedBy(modelState, otherState);
-		}
+			return ((BlockCollapsible)modelBlock).canBeSupportedBy(modelState, otherState);
+		}*/
 		if(otherState.getBlock() == this || Core.isSoil(otherState) || Core.isStone(otherState) || otherState.getBlock() instanceof ISupportBlock)
 			return true;
 		return false;
+	}
+
+	/**
+	 * @return Can this block attach to other blocks for support checks in this direction
+	 */
+	@Override
+	public boolean canSupportFacing(IBlockState myState, IBlockAccess world, BlockPos pos, EnumFacing facing)
+	{
+		EnumFacing f = (EnumFacing)myState.getValue(BlockStairs.FACING);
+		if(facing == f.rotateY() || facing == f.rotateYCCW())
+			return true;
+
+		return myState.getBlock().isSideSolid(myState, world, pos, facing);
 	}
 
 	@Override
@@ -144,14 +156,24 @@ public class BlockStairsTFC extends BlockCollapsible
 	@Override
 	public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		if (isOpaqueCube(state)) {
-			return true;
-		}
+		if (net.minecraftforge.common.ForgeModContainer.disableStairSlabCulling)
+			return super.doesSideBlockRendering(state, world, pos, face);
 
-		IBlockState iblockstate = world.getBlockState(pos);
-		EnumHalf half = (EnumHalf)iblockstate.getValue(BlockStairs.HALF);
-		EnumFacing side = (EnumFacing)iblockstate.getValue(BlockStairs.FACING);
-		return (side == face.getOpposite()) || ((half == EnumHalf.TOP) && (face == EnumFacing.DOWN)) || ((half == EnumHalf.BOTTOM) && (face == EnumFacing.UP));
+		if ( state.isOpaqueCube() )
+			return true;
+
+		state = this.getActualState(state, world, pos);
+
+		EnumHalf half = state.getValue(BlockStairs.HALF);
+		EnumFacing side = state.getValue(BlockStairs.FACING);
+		EnumShape shape = state.getValue(BlockStairs.SHAPE);
+		if (face == EnumFacing.UP) return half == EnumHalf.TOP;
+		if (face == EnumFacing.DOWN) return half == EnumHalf.BOTTOM;
+		if (shape == EnumShape.OUTER_LEFT || shape == EnumShape.OUTER_RIGHT) return false;
+		if (face == side) return true;
+		if (shape == EnumShape.INNER_LEFT && face.rotateY() == side) return true;
+		if (shape == EnumShape.INNER_RIGHT && face.rotateYCCW() == side) return true;
+		return false;
 	}
 
 	@Override
@@ -202,10 +224,6 @@ public class BlockStairsTFC extends BlockCollapsible
 
 		return list;
 	}
-
-
-
-
 
 	private static AxisAlignedBB getCollQuarterBlock(IBlockState bstate)
 	{
@@ -281,9 +299,6 @@ public class BlockStairsTFC extends BlockCollapsible
 		this.modelBlock.randomDisplayTick(state, worldIn, pos, rand);
 	}
 
-
-
-
 	@Override
 	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)
 	{
@@ -297,17 +312,11 @@ public class BlockStairsTFC extends BlockCollapsible
 		return this.modelBlock.getMixedBrightnessForBlock(worldIn, pos);
 	}*/
 
-
-
-
 	@Override
 	public float getExplosionResistance(Entity exploder)
 	{
 		return this.modelBlock.getExplosionResistance(exploder);
 	}
-
-
-
 
 	@Override
 	public int tickRate(World worldIn)
@@ -356,8 +365,9 @@ public class BlockStairsTFC extends BlockCollapsible
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
-		this.modelState.neighborChanged(worldIn, pos, Blocks.AIR, pos);
-		this.modelBlock.onBlockAdded(worldIn, pos, this.modelState);
+		//this.modelState.neighborChanged(worldIn, pos, Blocks.AIR, pos);
+		//this.modelBlock.onBlockAdded(worldIn, pos, this.modelState);
+		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 	}
 
 	@Override
@@ -375,7 +385,8 @@ public class BlockStairsTFC extends BlockCollapsible
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
-		this.modelBlock.updateTick(worldIn, pos, state, rand);
+		super.updateTick(worldIn, pos, state, rand);
+		//this.modelBlock.updateTick(worldIn, pos, state, rand);
 	}
 
 	@Override
@@ -384,27 +395,17 @@ public class BlockStairsTFC extends BlockCollapsible
 		return this.modelBlock.onBlockActivated(worldIn, pos, this.modelState, playerIn, hand, EnumFacing.DOWN, 0.0F, 0.0F, 0.0F);
 	}
 
-
-
-
 	@Override
 	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn)
 	{
 		this.modelBlock.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
 	}
 
-
-
-
 	@Override
 	public MapColor getMapColor(IBlockState state)
 	{
 		return this.modelBlock.getMapColor(this.modelState);
 	}
-
-
-
-
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
@@ -495,7 +496,6 @@ public class BlockStairsTFC extends BlockCollapsible
 		return p_185709_0_.getBlock() instanceof BlockStairs || p_185709_0_.getBlock() instanceof BlockStairsTFC;
 	}
 
-
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
@@ -503,9 +503,6 @@ public class BlockStairsTFC extends BlockCollapsible
 		iblockstate = iblockstate.withProperty(BlockStairs.FACING, EnumFacing.getFront(5 - (meta & 0x3)));
 		return iblockstate;
 	}
-
-
-
 
 	@Override
 	public int getMetaFromState(IBlockState state)
@@ -520,10 +517,6 @@ public class BlockStairsTFC extends BlockCollapsible
 		i |= 5 - ((EnumFacing)state.getValue(BlockStairs.FACING)).getIndex();
 		return i;
 	}
-
-
-
-
 
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)

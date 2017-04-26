@@ -25,6 +25,7 @@ import com.bioxx.tfc2.api.interfaces.ISupportBlock;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.terrain.BlockCollapsible;
 import com.bioxx.tfc2.core.TFCTabs;
+import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
 public class BlockLogHorizontal extends BlockCollapsible implements ISupportBlock
 {
@@ -64,9 +65,25 @@ public class BlockLogHorizontal extends BlockCollapsible implements ISupportBloc
 	@Override
 	public void createFallingEntity(World world, BlockPos pos, IBlockState state)
 	{
-		world.setBlockToAir(pos);
-		EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.STICK, 1+world.rand.nextInt(3)));
-		world.spawnEntity(ei);
+		if(world.rand.nextFloat() < 0.4)
+		{
+			world.setBlockToAir(pos);
+			EntityItem ei = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.STICK, 1+world.rand.nextInt(3)));
+			world.spawnEntity(ei);
+		}
+		else
+		{
+			int x = 0;
+			int z = 0;
+			if(world.rand.nextFloat() < 0.25)
+			{
+				x = -1 + world.rand.nextInt(3);
+				z = -1 + world.rand.nextInt(3);
+			}
+			world.setBlockToAir(pos);
+			EntityFallingBlockTFC entityfallingblock = new EntityFallingBlockTFC(world, pos.getX() + 0.5D + x, pos.getY(), pos.getZ() + 0.5D + z, state);
+			world.spawnEntity(entityfallingblock);
+		}
 	}
 
 	@Override

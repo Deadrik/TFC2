@@ -117,7 +117,10 @@ public class BlockCollapsible extends BlockTerra
 		float supportRangeSq = supportRange*supportRange;
 
 		//If the block beneath this one is solid then we will assume for now that this block is naturally supported
-		if(world.getBlockState(pos.down()).getBlock().isBlockSolid(world, pos.down(), EnumFacing.UP))
+		IBlockState stateDown = world.getBlockState(pos.down());
+		if(this.canSupportFacing(state, world, pos, EnumFacing.DOWN) && 
+				((stateDown.getBlock() instanceof BlockCollapsible && ((BlockCollapsible)stateDown.getBlock()).canSupportFacing(stateDown, world, pos.down(), EnumFacing.UP)) || 
+						stateDown.getBlock().isBlockSolid(world, pos.down(), EnumFacing.UP)))
 			return true;
 		//If we fail the first case scenario then we will begin a recursive scan downward for each of the blocks surrounding this block
 
@@ -155,29 +158,40 @@ public class BlockCollapsible extends BlockTerra
 			{
 				continue;
 			}
-			else if(canBeSupportedBy(state, scanState))
+			else if(scanState.getBlock() instanceof BlockCollapsible/* && canBeSupportedBy(state, scanState)*/)
 			{
+				supportRange = Math.min(supportRange, ((BlockCollapsible)scanState.getBlock()).getNaturalSupportRange(world, pos, scanState));
+				supportRangeSq = supportRange*supportRange;
 				scanState2 = world.getBlockState(scanPos.down());
-				if(scanState2.getBlock().isSideSolid(scanState2, world, scanPos.down(), EnumFacing.UP))
+				if(scanState.getBlock().isSideSolid(scanState, world, scanPos, EnumFacing.DOWN) && 
+						scanState2.getBlock().isSideSolid(scanState2, world, scanPos.down(), EnumFacing.UP))
 				{
 					if(!scannedQueue.contains(scanPos.down()))
 						scanQueue.add(scanPos.down());
 				}
-				else
-				{
-					if(recievesHorizontalSupport(scanState, world, scanPos, EnumFacing.NORTH) && !scannedQueue.contains(scanPos.north()))
+				if(scanState.getBlock() instanceof BlockCollapsible)
+					if(((BlockCollapsible)scanState.getBlock()).recievesHorizontalSupport(scanState, world, scanPos, EnumFacing.NORTH) && notCurrentlyScanning((List<BlockPos>) scanQueue, scannedQueue, scanPos.north()))
 						scanQueue.add(scanPos.north());
-					if(recievesHorizontalSupport(scanState, world, scanPos, EnumFacing.SOUTH) && !scannedQueue.contains(scanPos.south()))
+				if(scanState.getBlock() instanceof BlockCollapsible)
+					if(((BlockCollapsible)scanState.getBlock()).recievesHorizontalSupport(scanState, world, scanPos, EnumFacing.SOUTH) && notCurrentlyScanning((List<BlockPos>) scanQueue, scannedQueue, scanPos.south()))
 						scanQueue.add(scanPos.south());
-					if(recievesHorizontalSupport(scanState, world, scanPos, EnumFacing.EAST) && !scannedQueue.contains(scanPos.east()))
+				if(scanState.getBlock() instanceof BlockCollapsible)
+					if(((BlockCollapsible)scanState.getBlock()).recievesHorizontalSupport(scanState, world, scanPos, EnumFacing.EAST) && notCurrentlyScanning((List<BlockPos>) scanQueue, scannedQueue, scanPos.east()))
 						scanQueue.add(scanPos.east());
-					if(recievesHorizontalSupport(scanState, world, scanPos,EnumFacing.WEST) && !scannedQueue.contains(scanPos.west()))
+				if(scanState.getBlock() instanceof BlockCollapsible)
+					if(((BlockCollapsible)scanState.getBlock()).recievesHorizontalSupport(scanState, world, scanPos,EnumFacing.WEST) && notCurrentlyScanning((List<BlockPos>) scanQueue, scannedQueue, scanPos.west()))
 						scanQueue.add(scanPos.west());
-				}
 			}
 		}
 
 		return isSupported;
+	}
+
+	private boolean notCurrentlyScanning(List<BlockPos> scanQueue, List<BlockPos> scannedQueue, BlockPos pos)
+	{
+		if(scanQueue.contains(pos) || scannedQueue.contains(pos))
+			return false;
+		return true;
 	}
 
 	/**
@@ -189,15 +203,27 @@ public class BlockCollapsible extends BlockTerra
 		BlockPos otherPos = pos.offset(facing);
 		IBlockState otherState = world.getBlockState(otherPos);
 
-		if(otherState.getBlock().isAir(otherState, world, otherPos) || !otherState.getBlock().isSideSolid(otherState, world, otherPos, facing.getOpposite()))
+		if(otherState.getBlock().isAir(otherState, world, otherPos))
 			return false;
-		//Both this block and the one in the facing direction need to have solid sides touching
-		if(!myState.getBlock().isSideSolid(myState, world, pos, facing))
+
+		//Both this block and the one in the facing direction need to be able to support each other
+		if(!((BlockCollapsible) myState.getBlock()).canSupportFacing(myState, world, pos, facing))
 			return false;
-		return true;
+
+		if(otherState.getBlock() instanceof BlockCollapsible) 
+		{
+			return ((BlockCollapsible) otherState.getBlock()).canSupportFacing(otherState, world, otherPos, facing.getOpposite());
+		}
+		else return otherState.getBlock().isSideSolid(otherState, world, otherPos, facing.getOpposite());
 	}
 
-
+	/**
+	 * @return Can this block attach to other blocks for support checks in this direction
+	 */
+	public boolean canSupportFacing(IBlockState myState, IBlockAccess world, BlockPos pos, EnumFacing facing)
+	{
+		return myState.getBlock().isSideSolid(myState, world, pos, facing);
+	}
 
 	public boolean canBeSupportedBy(IBlockState myState, IBlockState otherState)
 	{
