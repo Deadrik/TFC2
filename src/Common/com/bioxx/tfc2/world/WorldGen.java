@@ -348,10 +348,22 @@ public class WorldGen implements IThreadCompleteListener
 			id.setFeatures(Feature.Desert);
 		}
 
-		String common = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
-		String uncommon = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
-		String rare = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m);
-		id.setTrees(common, uncommon, rare);
+		String common = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m, false);
+		String uncommon = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m, false);
+		String rare = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m, false);
+		String swamp = TreeRegistry.instance.getRandomTreeTypeForIsland(r, t, m, true);
+
+		//Try to use the islands current trees for this purpose, otherwise we find a new tree if possible
+		if(TreeRegistry.instance.treeFromString(common).isSwampTree)
+			swamp = common;
+		else if(TreeRegistry.instance.treeFromString(uncommon).isSwampTree)
+			swamp = uncommon;
+		else if(TreeRegistry.instance.treeFromString(rare).isSwampTree)
+			swamp = rare;
+
+
+
+		id.setTrees(common, uncommon, rare, swamp);
 
 		/***
 		 * Animals

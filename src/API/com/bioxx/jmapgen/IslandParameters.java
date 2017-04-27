@@ -38,6 +38,8 @@ public class IslandParameters
 	private String treeCommon = WoodType.Ash.getName();
 	private String treeUncommon = WoodType.Ash.getName();
 	private String treeRare = WoodType.Ash.getName();
+	private String treeSwamp = WoodType.Ash.getName();
+
 	private Moisture moisture = Moisture.MEDIUM;
 	private ClimateTemp temp = ClimateTemp.TEMPERATE;
 	private ArrayList<Crop> cropList = new ArrayList<Crop>();
@@ -206,11 +208,12 @@ public class IslandParameters
 		return this.treeRare;
 	}
 
-	public void setTrees(String t0, String t1, String t2)
+	public void setTrees(String t0, String t1, String t2, String swamp)
 	{
 		treeCommon = t0;
 		treeUncommon = t1;
 		treeRare = t2;
+		treeSwamp = swamp;
 	}
 
 	public Moisture getIslandMoisture()

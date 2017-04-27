@@ -30,6 +30,7 @@ public class TreeConfig
 	public ClimateTemp maxTemp;
 
 	public boolean isEvergreen;
+	public boolean isSwampTree = false;
 
 	public TreeConfig(String n, IBlockState w, IBlockState l, Moisture minR, Moisture maxR, ClimateTemp minT, ClimateTemp maxT, boolean eg)
 	{
@@ -41,5 +42,11 @@ public class TreeConfig
 		isEvergreen = eg;
 		wood = w;
 		leaves = l;
+	}
+
+	public TreeConfig(String n, IBlockState w, IBlockState l, Moisture minR, Moisture maxR, ClimateTemp minT, ClimateTemp maxT, boolean eg, boolean swamp)
+	{
+		this(n, w, l, minR, maxR, minT, maxT, eg);
+		isSwampTree = swamp;
 	}
 }

@@ -97,7 +97,7 @@ public class TreeRegistry
 		return treeTypeHash.get(treeTypeHash.keySet().toArray(new String[treeTypeHash.keySet().size()])[id]);
 	}
 
-	public String getRandomTreeTypeForIsland(Random r, ClimateTemp temp, Moisture moisture)
+	public String getRandomTreeTypeForIsland(Random r, ClimateTemp temp, Moisture moisture, boolean swamp)
 	{
 		ArrayList<String> list = new ArrayList<String>();
 		Iterator iter = treeTypeHash.keySet().iterator();
@@ -108,12 +108,16 @@ public class TreeRegistry
 			if(tree.equals(WoodType.Palm.name()))
 				continue;
 			TreeConfig tc = treeFromString(tree);
+
+			if(swamp && !tc.isSwampTree)
+				continue;
+
 			if(tc.minTemp.getMapTemp() <= temp.getMapTemp() && tc.maxTemp.getMapTemp() >= temp.getMapTemp() && 
 					tc.minMoisture.getMoisture() <= moisture.getMoisture() && tc.maxMoisture.getMoisture() >= moisture.getMoisture())
 				list.add(tree);
 		}
 		if(list.size() == 0)
-			return null;
+			return "";
 		if(list.size() == 1)
 			return list.get(0);
 
