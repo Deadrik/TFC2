@@ -208,6 +208,11 @@ public class IslandParameters
 		return this.treeRare;
 	}
 
+	public String getSwampTree()
+	{
+		return this.treeSwamp;
+	}
+
 	public void setTrees(String t0, String t1, String t2, String swamp)
 	{
 		treeCommon = t0;

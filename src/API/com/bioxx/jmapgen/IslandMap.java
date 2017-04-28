@@ -2409,18 +2409,6 @@ public class IslandMap
 	public Center getClosestCenter(Point param)
 	{
 		Point p = param.toIslandCoord();
-		/*//First we place the point in a local grid between 0 and the map width
-		p.x = p.x % SIZE;
-		p.y = p.y % SIZE;
-
-		//If the point has any negative numbers, we add the map width to make it positive and get the correct location
-		if(p.x < 0)
-			p.x += SIZE;
-		if(p.y < 0)
-			p.y += SIZE;*/
-
-
-
 		//Form the best guess coordinates
 		int x = (int)Math.floor((p.x /(SIZE/NUM_POINTS_SQ)));
 		int y = (int)Math.floor((p.y /(SIZE/NUM_POINTS_SQ)));

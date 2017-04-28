@@ -38,30 +38,30 @@ public class WorldGenTFC implements IWorldGenerator
 		iMoisture = map.getParams().getIslandMoisture();
 	}
 
-	public Center getCenterInChunk(IslandMap map, int x, int z)
+	public Center getCenterInChunk(int x, int z)
 	{
 		Point p = new Point(x, z).toIslandCoord();
 		Center c = map.getClosestCenter(p);
 		Point p2 = c.point.minus(p);
-		if(p2.x > 0 && p2.x < 16 && p2.y > 0 && p2.y < 16)
+		if(p2.x >= 0 && p2.x < 16 && p2.y >= 0 && p2.y < 16)
 			return c;
 
 		p = new Point(x+15, z).toIslandCoord();
 		c = map.getClosestCenter(p);
 		p2 = c.point.minus(p);
-		if(p2.x > 0 && p2.x < 16 && p2.y > 0 && p2.y < 16)
+		if(p2.x >= 0 && p2.x < 16 && p2.y >= 0 && p2.y < 16)
 			return c;
 
 		p = new Point(x, z+15).toIslandCoord();
 		c = map.getClosestCenter(p);
 		p2 = c.point.minus(p);
-		if(p2.x > 0 && p2.x < 16 && p2.y > 0 && p2.y < 16)
+		if(p2.x >= 0 && p2.x < 16 && p2.y >= 0 && p2.y < 16)
 			return c;
 
 		p = new Point(x+15, z+15).toIslandCoord();
 		c = map.getClosestCenter(p);
 		p2 = c.point.minus(p);
-		if(p2.x > 0 && p2.x < 16 && p2.y > 0 && p2.y < 16)
+		if(p2.x >= 0 && p2.x < 16 && p2.y >= 0 && p2.y < 16)
 			return c;
 
 		return null;

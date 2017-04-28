@@ -32,7 +32,7 @@ public class WorldGenClay extends WorldGenTFC
 		chunkZ *= 16;
 
 		Moisture cMoisture;
-		Center closest = this.getCenterInChunk(map, chunkX, chunkZ);
+		Center closest = getCenterInChunk(chunkX, chunkZ);
 		float rand, m;
 
 		int x = 0, y = 0, z = 0; 

@@ -35,7 +35,7 @@ public class WorldGenCatTails extends WorldGenTFC
 		chunkZ *= 16;
 
 		Moisture cMoisture;
-		Center closest = this.getCenterInChunk(map, chunkX, chunkZ);
+		Center closest = this.getCenterInChunk(chunkX, chunkZ);
 		float rand, m;
 
 		if(closest != null)
