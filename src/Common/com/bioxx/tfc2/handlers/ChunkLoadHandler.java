@@ -1,9 +1,10 @@
 package com.bioxx.tfc2.handlers;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -12,9 +13,7 @@ import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
-import com.bioxx.tfc2.world.AnimalSpawner;
+import com.bioxx.tfc2.api.HexGenRegistry;
 
 public class ChunkLoadHandler
 {
@@ -24,7 +23,37 @@ public class ChunkLoadHandler
 		if(!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0)
 		{
 			BlockPos chunkWorldPos = new BlockPos(event.getChunk().xPosition * 16, 0, event.getChunk().zPosition * 16);
-			Point islandPos = new Point(chunkWorldPos.getX() % 4096, chunkWorldPos.getZ() % 4096);
+			IslandMap map = Core.getMapForWorld(event.getWorld(), chunkWorldPos);
+
+			Point islandPos = new Point(chunkWorldPos.getX(), chunkWorldPos.getZ()).toIslandCoord();
+			Center temp = map.getClosestCenter(islandPos);
+
+			ArrayList<Center> genList = new ArrayList<Center>();
+			genList.add(temp);
+			genList.addAll(temp.neighbors);
+
+			for(Center c : genList)
+			{
+				AxisAlignedBB aabb = c.getAABB();
+				if(!c.hasGenerated)
+				{					
+					if(Core.areChunksLoadedInArea(event.getWorld().getChunkProvider(), 
+							new ChunkPos((int)(map.getParams().getWorldX()+aabb.minX) >> 4, (int)(map.getParams().getWorldZ() + aabb.minZ) >> 4), 
+							new ChunkPos((int)(map.getParams().getWorldX()+aabb.maxX) >> 4, (int)(map.getParams().getWorldZ() + aabb.maxZ) >> 4)))
+					{
+						HexGenRegistry.generate(map, c, event.getWorld());
+						c.hasGenerated = true;
+					}
+				}	
+			}
+
+		}
+
+		//animal stuff
+		/*if(!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0)
+		{
+			BlockPos chunkWorldPos = new BlockPos(event.getChunk().xPosition * 16, 0, event.getChunk().zPosition * 16);
+			Point islandPos = new Point(chunkWorldPos.getX(), chunkWorldPos.getZ()).toIslandCoord();
 			IslandMap map = Core.getMapForWorld(event.getWorld(), chunkWorldPos);
 			Center centerInChunk = null;
 
@@ -70,6 +99,6 @@ public class ChunkLoadHandler
 						centerInChunk.getCustomNBT().setTag("animalsToSpawn", tag);
 				}
 			}
-		}
+		}*/
 	}
 }

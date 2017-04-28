@@ -49,6 +49,7 @@ public class RegenChunkCommand extends CommandBase
 					Chunk c = cps.chunkGenerator.provideChunk(x, z);
 					Chunk old = world.getChunkProvider().provideChunk(x, z);
 					old.setStorageArrays(c.getBlockStorageArray());
+					c.setTerrainPopulated(false);
 					c.onChunkLoad();
 					c.setChunkModified();
 					//old.populateChunk(cps, cps.chunkGenerator);
@@ -93,6 +94,10 @@ public class RegenChunkCommand extends CommandBase
 					player.connection.sendPacket(new SPacketChunkData(cps.provideChunk(x, z), 0xffffffff));
 				}
 			}
+		}
+		else if(player.getEntityWorld().provider.getDimension() == 0 && params.length == 2 && params[1].equalsIgnoreCase("hex"))
+		{
+
 		}
 	}
 

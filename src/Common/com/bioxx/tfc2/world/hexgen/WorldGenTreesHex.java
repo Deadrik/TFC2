@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.world.generators;
+package com.bioxx.tfc2.world.hexgen;
 
 import java.util.Random;
 
@@ -6,15 +6,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkGenerator;
-import net.minecraft.world.chunk.IChunkProvider;
-
-import net.minecraftforge.fml.common.IWorldGenerator;
 
 import com.bioxx.jmapgen.BiomeType;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters.Feature;
-import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.Core;
@@ -30,57 +25,49 @@ import com.bioxx.tfc2.api.trees.TreeSchematic;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.WoodType;
-import com.bioxx.tfc2.world.WorldGen;
 
-public class WorldGenTrees implements IWorldGenerator
+public class WorldGenTreesHex extends WorldGenHex
 {
 	TreeSchemManager tsm;
 	TreeConfig tc;
 	TreeSchematic schem;
 
 	@Override
-	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGen, IChunkProvider chunkProvider)
+	public void generate(Random random, IslandMap map, Center c, World world)
 	{
-		if(world.provider.getDimension() == 0)
+		super.generate(random, map, c, world);
+		if(world.provider.getDimension() != 0)
 			return;
-		chunkX *= 16;
-		chunkZ *= 16;
 
-		int xM = (chunkX >> 12);
-		int zM = (chunkZ >> 12);
-		int xMLocal = chunkX & 4095;
-		int zMLocal = chunkZ & 4095;
-		IslandMap m = WorldGen.getInstance().getIslandMap(xM, zM);
-		BlockPos chunkPos = new BlockPos(chunkX, 0, chunkZ);
-		Center c = m.getClosestCenter(new Point(xMLocal+8, zMLocal+8));
+		if(map == null || c == null)
+			return;
 
 		if(c.hasMarker(Marker.Clearing) || c.hasMarker(Marker.Ocean) || !TFCOptions.shouldGenTrees)
 		{
 			return;
 		}
 
-		//The theoretical max number of trees per chunk is 8.
-		//We mult this by whichever is lower, the hex moisture or the island moisture.
+		//We mult by whichever is lower, the hex moisture or the island moisture.
 		//This way base dry islands still feature less trees overall.
 		int baseTrees = 100;
-		baseTrees = (int)(baseTrees * Math.min(c.getMoisture().getMoisture(), m.getParams().getIslandMoisture().getMoisture()));
+		baseTrees = (int)(baseTrees * Math.min(c.getMoisture().getMoisture(), map.getParams().getIslandMoisture().getMoisture()));
 
 		if(c.biome == BiomeType.DRY_FOREST)
 			baseTrees /= 2;
 
-		int numTrees = random.nextInt(baseTrees+1)+1;
-		//numTrees = (int)(numTrees * c.getMoisture().getMoisture());
+		int numTrees = random.nextInt(baseTrees/2+1)+baseTrees/2;
 
 		if(c.getMoisture() == Moisture.LOW)
 			numTrees = random.nextDouble() < 0.25 ? 1 : 0;
 
 		// Do palm tree gen on valid islands
-		if(c.getElevation() < 0.2 && c.getMoisture().getMoisture() >= Moisture.HIGH.getMoisture() && 
-				m.getParams().getIslandTemp().getMapTemp() >= ClimateTemp.SUBTROPICAL.getMapTemp())
+		if(c.getElevation() < 0.2 && c.getMoisture().isGreaterThanOrEqual(Moisture.HIGH) && 
+				map.getParams().getIslandTemp().isWarmerThanOrEqual(ClimateTemp.SUBTROPICAL))
 		{
 			for(int l = 0; l < 3; l++)
 			{
-				genPalm(random, chunkX, chunkZ, world, chunkPos, m);
+				if(c.biome != BiomeType.MARSH)
+					genPalm(random, world, c, map);
 			}
 		}
 
@@ -88,40 +75,40 @@ public class WorldGenTrees implements IWorldGenerator
 		{
 			double rarity = random.nextDouble();
 			TreeReturn out;
-			if(rarity > 0.9)
-				out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getRareTree());
-			else if(rarity > 0.6)
-				out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getUncommonTree());
-			else
-				out = gen(random, chunkX, chunkZ, world, chunkPos, m, m.getParams().getCommonTree());
 
-			if(out.baseCount > 4)
+			if(c.biome == BiomeType.MARSH)
+				out = gen(random, world, c, map, map.getParams().getSwampTree());
+			else if(rarity > 0.9)
+				out = gen(random, world, c, map, map.getParams().getRareTree());
+			else if(rarity > 0.6)
+				out = gen(random, world, c, map, map.getParams().getUncommonTree());
+			else
+				out = gen(random, world, c, map, map.getParams().getCommonTree());
+
+			if(out.size != TreeReturnEnum.None && out.baseCount > 4)
 			{
 				numTrees -= 1;
 			}
 		}
 	}
 
-	private TreeReturn gen(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m, String wood) 
+	private TreeReturn gen(Random random, World world, Center c, IslandMap m, String wood) 
 	{
 		tsm = TreeRegistry.instance.managerFromString(wood);
 		tc = TreeRegistry.instance.treeFromString(wood);
-		if(tsm == null || tc == null)
+		if(tsm == null || tc.equals(""))
 		{
 			TFC.log.info("Can't locate :" + wood);
 			return new TreeReturn(TreeReturnEnum.None, 0);
 		}
 
-		BlockPos genPos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
-		BlockPos treePos;
-		genPos = world.getTopSolidOrLiquidBlock(genPos);
-		Point p = new Point(genPos.getX(), genPos.getZ()).toIslandCoord();
-		Center c = m.getClosestCenter(p);
-		//Obviously we arent going to gen in an ocean hex so we can speed up some generation by skipping this location
-		if(c.hasMarker(Marker.Ocean))
-		{
+		BlockPos genPos = centerPos.add(-20+random.nextInt(41), 0, -20+random.nextInt(41));
+		if(genPos.distanceSq(centerPos) > 400)//20*20
 			return new TreeReturn(TreeReturnEnum.None, 0);
-		}
+
+		genPos = world.getTopSolidOrLiquidBlock(genPos);
+		if(c.biome == BiomeType.MARSH)
+			genPos.add(0, -1, 0);
 
 		int growthStage = 0;
 		if(m.getParams().getIslandMoisture().isGreaterThan(Moisture.LOW) && !m.getParams().hasFeature(Feature.Desert))
@@ -140,10 +127,10 @@ public class WorldGenTrees implements IWorldGenerator
 		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
-			treePos = genPos.add(-(schem.getCenterX()-1), 0, -(schem.getCenterZ()-1));
-			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
+			BlockPos treePos = genPos.add(-(schem.getCenterX()-1), 0, -(schem.getCenterZ()-1));
+			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1), c.biome == BiomeType.MARSH))
 			{
-				if(genTree(schem, tc, world, random, treePos))
+				if(buildTree(schem, tc, world, random, treePos, c))
 				{
 					grown = TreeReturnEnum.fromSize(growthStage);
 				}
@@ -153,15 +140,14 @@ public class WorldGenTrees implements IWorldGenerator
 		return new TreeReturn(grown, schem.getBaseCount());
 	}
 
-	private TreeReturn genPalm(Random random, int chunkX, int chunkZ, World world, BlockPos chunkPos, IslandMap m) 
+	private TreeReturn genPalm(Random random, World world, Center c, IslandMap m) 
 	{
 		tsm = TreeRegistry.instance.managerFromString(WoodType.Palm.getName());
 		tc = TreeRegistry.instance.treeFromString(WoodType.Palm.getName());
 
-		BlockPos genPos = new BlockPos(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
+		BlockPos genPos = centerPos.add(-20+random.nextInt(41), 0, -20+random.nextInt(41));
 		BlockPos treePos;
 		genPos = genPos.add(0, Global.SEALEVEL, 0);
-		Center c = m.getClosestCenter(new Point(genPos.getX() % 4096, genPos.getZ() % 4096));
 
 		if(c.hasMarker(Marker.Ocean))
 		{
@@ -175,9 +161,9 @@ public class WorldGenTrees implements IWorldGenerator
 			schem = tsm.getRandomSchematic(random, growthStage);
 			treePos = genPos.add(-(schem.getCenterX()-1), 0, -(schem.getCenterZ()-1));
 
-			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
+			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1), false))
 			{
-				if(genTree(schem, tc, world, random, treePos))
+				if(buildTree(schem, tc, world, random, treePos, c))
 				{
 					grown = TreeReturnEnum.fromSize(growthStage);
 				}
@@ -191,7 +177,7 @@ public class WorldGenTrees implements IWorldGenerator
 	//*****************
 	// Private methods
 	//*****************
-	private boolean genTree(Schematic schem, TreeConfig tc, World world, Random rand, BlockPos pos)
+	private boolean buildTree(Schematic schem, TreeConfig tc, World world, Random rand, BlockPos pos, Center c)
 	{
 		int rot = rand.nextInt(4);//This causes world gen to change every other time we run the regen command. Not sure why.
 		int index;
@@ -202,17 +188,17 @@ public class WorldGenTrees implements IWorldGenerator
 		world.captureBlockSnapshots = false;
 		for(SchemBlock b : schem.getBlockMap())
 		{
-			Process(world, tc, schem, this.rotateTree(treePos, b.pos, rot), b.state);
+			Process(world, tc, schem, this.rotateTree(treePos, b.pos, rot), b.state, c);
 		}
 		world.captureBlockSnapshots = capture;
 		return true;
 	}
 
-	private void Process(World world, TreeConfig tc, Schematic schem, BlockPos blockPos, IBlockState state)
+	private void Process(World world, TreeConfig tc, Schematic schem, BlockPos blockPos, IBlockState state, Center c)
 	{
 		if(state.getBlock().getMaterial(state) == Material.WOOD)
 		{
-			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos))
+			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos) || (c.biome == BiomeType.MARSH && tc.isSwampTree && Core.isSoil(world.getBlockState(blockPos))))
 				world.setBlockState(blockPos, tc.wood, 2);
 		}
 		else if(state.getBlock().getMaterial(state) == Material.LEAVES)
@@ -253,7 +239,7 @@ public class WorldGenTrees implements IWorldGenerator
 		return new BlockPos(localX, localY, localZ);
 	}
 
-	private boolean canGrowHere(World world, BlockPos pos, TreeSchematic schem, int growthStage)
+	private boolean canGrowHere(World world, BlockPos pos, TreeSchematic schem, int growthStage, boolean ignoreDirt)
 	{
 		IBlockState ground;
 		IBlockState above;
@@ -263,18 +249,18 @@ public class WorldGenTrees implements IWorldGenerator
 		int count = 0;
 		int failCount = 0;
 
-		if(!world.isAirBlock(aPos))
+		if(!world.isAirBlock(aPos) && !ignoreDirt)
 			return false;
-
+		ground = world.getBlockState(gPos);
 		//this should validate the ground
-		for(int i = -radius; i <= radius; i++)
+		/*for(int i = -radius; i <= radius; i++)
 		{
 			for(int k = -radius; k <= radius; k++)
 			{
 				count++;
 				ground = world.getBlockState(gPos.add(i, 0, k));
 
-				if(!world.canBlockSeeSky(gPos.add(i, 1, k)))
+				if(!world.canBlockSeeSky(gPos.add(i, 1, k)) || (ignoreDirt && Core.isSoil(world.getBlockState(aPos))))
 					failCount++;
 
 				if(schem.getWoodType() != WoodType.Palm && !Core.isSoil(ground))
@@ -286,6 +272,18 @@ public class WorldGenTrees implements IWorldGenerator
 					return false;
 				}
 			}
+		}*/
+
+		if(!world.canBlockSeeSky(gPos) && !(ignoreDirt && Core.isSoil(world.getBlockState(aPos))))
+			return false;
+
+		if(schem.getWoodType() != WoodType.Palm && !Core.isSoil(ground))
+		{
+			return false;
+		}
+		else if(schem.getWoodType() == WoodType.Palm && !Core.isSoil(ground) && !Core.isSand(ground))
+		{
+			return false;
 		}
 
 		if(failCount > count * 0.25 )

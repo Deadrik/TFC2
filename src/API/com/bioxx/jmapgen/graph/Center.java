@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.AxisAlignedBB;
 
 import com.bioxx.jmapgen.BiomeType;
 import com.bioxx.jmapgen.IslandMap;
@@ -32,6 +33,7 @@ public class Center
 	public Vector<Corner> corners;
 
 	public HashMap<UUID, Attribute> attribMap;
+	public boolean hasGenerated = false;
 
 	private NBTTagCompound customNBT;
 
@@ -329,6 +331,9 @@ public class Center
 		nbt.setLong("flags", f);
 		nbt.setDouble("elevation", elevation);
 		nbt.setFloat("moisture", moisture);
+		nbt.setBoolean("hasGenerated", hasGenerated);
+
+
 		if(downslope != null)
 			nbt.setInteger("downslope", downslope.index);
 
@@ -377,6 +382,7 @@ public class Center
 			setMarkers(nbt.getLong("flags"));
 			elevation = nbt.getDouble("elevation");
 			moisture = nbt.getFloat("moisture");
+			hasGenerated = nbt.getBoolean("hasGenerated");
 
 			if(nbt.hasKey("downslope"))
 				downslope = m.centers.get(nbt.getInteger("downslope"));
@@ -421,6 +427,24 @@ public class Center
 	public NBTTagCompound getCustomNBT()
 	{
 		return this.customNBT;
+	}
+
+	public AxisAlignedBB getAABB()
+	{
+		double minX = Double.MAX_VALUE;
+		double maxX = Double.MIN_VALUE;
+		double minZ = Double.MAX_VALUE;
+		double maxZ = Double.MIN_VALUE;
+
+		for(Corner c : corners)
+		{
+			minX = Math.min(minX, c.point.x);
+			maxX = Math.max(maxX, c.point.x);
+			minZ = Math.min(minZ, c.point.y);
+			maxZ = Math.max(maxZ, c.point.y);
+		}
+
+		return new AxisAlignedBB(minX, 0, minZ, maxX, 0, maxZ);
 	}
 
 

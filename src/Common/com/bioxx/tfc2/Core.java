@@ -18,8 +18,10 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunkProvider;
 
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.attributes.Attribute;
@@ -336,5 +338,18 @@ public class Core
 			}
 		}
 		return out;
+	}
+
+	public static boolean areChunksLoadedInArea(IChunkProvider provider, ChunkPos min, ChunkPos max)
+	{
+		for(int x = min.chunkXPos; x <= max.chunkXPos; x++)
+		{
+			for(int z = min.chunkZPos; z <= max.chunkZPos; z++)
+			{
+				if(provider.getLoadedChunk(x, z) == null)
+					return false;
+			}
+		}
+		return true;
 	}
 }
