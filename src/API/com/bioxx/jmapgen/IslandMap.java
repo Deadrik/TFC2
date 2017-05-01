@@ -2074,7 +2074,7 @@ public class IslandMap
 			if(r.riverStart == null || (startAttrib != null && startAttrib.getRiver() != 0) || r.nodes.size() < 4)
 				isValid = false;
 
-			if(isValid)
+			if(isValid && r.riverStart != null)
 			{
 				if(r.riverStart.center.hasMarker(Marker.Water) && this.centerInExistingLake(r.riverStart.center).centers.size() > 8)
 					r.riverWidth = 4 - 3 * r.riverStart.center.elevation;
