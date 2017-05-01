@@ -412,7 +412,7 @@ public class IslandMap
 		Vector<Center> wetCenters = new Vector<Center>();
 		for(Center c : landCenters)
 		{
-			if(mapRandom.nextInt(10) == 0)
+			if(mapRandom.nextInt(15) == 0)
 			{
 				c.setMarkers(Marker.Clearing);
 				for(Center n : c.neighbors)
