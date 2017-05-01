@@ -140,6 +140,7 @@ public class CommonProxy
 		Biome.registerBiome(217, "BIOME_TEMPERATE_DESERT", Global.BIOME_TEMPERATE_DESERT);
 		Biome.registerBiome(218, "BIOME_TROPICAL_DESERT", Global.BIOME_TROPICAL_DESERT);
 		Biome.registerBiome(219, "BIOME_TUNDRA", Global.BIOME_TUNDRA);
+		Biome.registerBiome(220, "BIOME_LAKE", Global.BIOME_SWAMP);
 	}
 
 	protected void registerEntities() 
