@@ -10,6 +10,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,6 +51,7 @@ import com.bioxx.tfc2.potion.PotionTFC;
 import com.bioxx.tfc2.world.DimensionTFC;
 import com.bioxx.tfc2.world.generators.*;
 import com.bioxx.tfc2.world.hexgen.WorldGenCatTailsHex;
+import com.bioxx.tfc2.world.hexgen.WorldGenSwampTreesHex;
 import com.bioxx.tfc2.world.hexgen.WorldGenTreesHex;
 
 public class CommonProxy
@@ -115,8 +117,29 @@ public class CommonProxy
 		GameRegistry.registerWorldGenerator(new WorldGenGrassDry(), 100);
 
 		HexGenRegistry.registerWorldGenerator(new WorldGenTreesHex(), 10);
+		HexGenRegistry.registerWorldGenerator(new WorldGenSwampTreesHex(), 10);
 		HexGenRegistry.registerWorldGenerator(new WorldGenCatTailsHex(), 100);
 
+		Biome.registerBiome(200, "BIOME_BARE", Global.BIOME_BARE);
+		Biome.registerBiome(201, "BIOME_BEACH", Global.BIOME_BEACH);
+		Biome.registerBiome(202, "BIOME_DECIDUOUS_FOREST", Global.BIOME_DECIDUOUS_FOREST);
+		Biome.registerBiome(203, "BIOME_DEEP_OCEAN", Global.BIOME_DEEP_OCEAN);
+		Biome.registerBiome(204, "BIOME_DRY_FOREST", Global.BIOME_DRY_FOREST);
+		Biome.registerBiome(205, "BIOME_GRASSLAND", Global.BIOME_GRASSLAND);
+		Biome.registerBiome(206, "BIOME_LAKE", Global.BIOME_LAKE);
+		Biome.registerBiome(207, "BIOME_MARSH", Global.BIOME_MARSH);
+		Biome.registerBiome(208, "BIOME_OCEAN", Global.BIOME_OCEAN);
+		Biome.registerBiome(209, "BIOME_POLAR_DESERT", Global.BIOME_POLAR_DESERT);
+		Biome.registerBiome(210, "BIOME_POND", Global.BIOME_POND);
+		Biome.registerBiome(211, "BIOME_RAIN_FOREST", Global.BIOME_RAIN_FOREST);
+		Biome.registerBiome(212, "BIOME_RIVER", Global.BIOME_RIVER);
+		Biome.registerBiome(213, "BIOME_SCORCHED", Global.BIOME_SCORCHED);
+		Biome.registerBiome(214, "BIOME_SHRUBLAND", Global.BIOME_SHRUBLAND);
+		Biome.registerBiome(215, "BIOME_SUBTROPICAL_DESERT", Global.BIOME_SUBTROPICAL_DESERT);
+		Biome.registerBiome(216, "BIOME_TAIGA", Global.BIOME_TAIGA);
+		Biome.registerBiome(217, "BIOME_TEMPERATE_DESERT", Global.BIOME_TEMPERATE_DESERT);
+		Biome.registerBiome(218, "BIOME_TROPICAL_DESERT", Global.BIOME_TROPICAL_DESERT);
+		Biome.registerBiome(219, "BIOME_TUNDRA", Global.BIOME_TUNDRA);
 	}
 
 	protected void registerEntities() 
@@ -159,7 +182,6 @@ public class CommonProxy
 		Global.EVENT_BUS.register(new IslandUpdateHandler());
 		registerAnimals();
 		registerFuel();
-
 	}
 
 	protected void setupOre()

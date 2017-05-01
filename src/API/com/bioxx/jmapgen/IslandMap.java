@@ -2282,6 +2282,8 @@ public class IslandMap
 		} 
 		else if (p.hasMarker(Marker.Water)) 
 		{
+			if (this.getParams().getIslandMoisture().isGreaterThanOrEqual(Moisture.VERYHIGH) && p.elevation < 0.1) 
+				return BiomeType.SWAMP;
 			if (p.elevation < 0.1) 
 				return BiomeType.MARSH;
 			if(p.hasAttribute(Attribute.Lake))

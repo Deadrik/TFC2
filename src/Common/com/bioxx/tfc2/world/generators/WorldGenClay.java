@@ -36,7 +36,8 @@ public class WorldGenClay extends WorldGenTFC
 		float rand, m;
 
 		int x = 0, y = 0, z = 0; 
-		if(closest != null && (closest.biome == BiomeType.RIVER || closest.biome == BiomeType.LAKE || closest.biome == BiomeType.LAKESHORE || closest.biome == BiomeType.POND || closest.biome == BiomeType.MARSH))
+		if(closest != null && (closest.biome == BiomeType.RIVER || closest.biome == BiomeType.LAKE || 
+				closest.biome == BiomeType.LAKESHORE || closest.biome == BiomeType.POND || closest.biome == BiomeType.MARSH || closest.biome == BiomeType.SWAMP))
 		{
 			//islands that are more wet will have more clay
 			if(random.nextInt(100) < 100-(iMoisture.getMoisture()*40))//This will need to be balanced with playtesting in the future

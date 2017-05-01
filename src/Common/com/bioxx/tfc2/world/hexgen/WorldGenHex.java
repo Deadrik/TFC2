@@ -21,6 +21,9 @@ public class WorldGenHex implements IHexGenerator
 	@Override
 	public void generate(Random random, IslandMap map, Center c, World world) 
 	{
+		if(map == null || c == null)
+			return;
+		this.map = map;
 		iMoisture = map.getParams().getIslandMoisture();
 		centerX = (int)(map.getParams().getWorldX()+c.point.getX());
 		centerZ = (int)(map.getParams().getWorldZ()+c.point.getZ());

@@ -10,6 +10,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
 
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.HexGenRegistry;
+
 public class RegenChunkCommand extends CommandBase
 {
 	@Override
@@ -97,7 +101,9 @@ public class RegenChunkCommand extends CommandBase
 		}
 		else if(player.getEntityWorld().provider.getDimension() == 0 && params.length == 2 && params[1].equalsIgnoreCase("hex"))
 		{
-
+			execute(server, sender, new String[] {params[0]});
+			IslandMap map = Core.getMapForWorld(world, player.getPosition());
+			HexGenRegistry.generate(Core.getMapForWorld(world, player.getPosition()), map.getClosestCenter(player.getPosition()), world);
 		}
 	}
 

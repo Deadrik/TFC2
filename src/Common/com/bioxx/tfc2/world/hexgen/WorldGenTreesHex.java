@@ -31,6 +31,7 @@ public class WorldGenTreesHex extends WorldGenHex
 	TreeSchemManager tsm;
 	TreeConfig tc;
 	TreeSchematic schem;
+	boolean replaceSoil = false;
 
 	@Override
 	public void generate(Random random, IslandMap map, Center c, World world)
@@ -92,7 +93,7 @@ public class WorldGenTreesHex extends WorldGenHex
 		}
 	}
 
-	private TreeReturn gen(Random random, World world, Center c, IslandMap m, String wood) 
+	protected TreeReturn gen(Random random, World world, Center c, IslandMap m, String wood) 
 	{
 		tsm = TreeRegistry.instance.managerFromString(wood);
 		tc = TreeRegistry.instance.treeFromString(wood);
@@ -128,7 +129,8 @@ public class WorldGenTreesHex extends WorldGenHex
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
 			BlockPos treePos = genPos.add(-(schem.getCenterX()-1), 0, -(schem.getCenterZ()-1));
-			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1), c.biome == BiomeType.MARSH))
+			IBlockState s = world.getBlockState(treePos);
+			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
 				if(buildTree(schem, tc, world, random, treePos, c))
 				{
@@ -140,7 +142,7 @@ public class WorldGenTreesHex extends WorldGenHex
 		return new TreeReturn(grown, schem.getBaseCount());
 	}
 
-	private TreeReturn genPalm(Random random, World world, Center c, IslandMap m) 
+	protected TreeReturn genPalm(Random random, World world, Center c, IslandMap m) 
 	{
 		tsm = TreeRegistry.instance.managerFromString(WoodType.Palm.getName());
 		tc = TreeRegistry.instance.treeFromString(WoodType.Palm.getName());
@@ -159,9 +161,9 @@ public class WorldGenTreesHex extends WorldGenHex
 		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
-			treePos = genPos.add(-(schem.getCenterX()-1), 0, -(schem.getCenterZ()-1));
+			treePos = genPos;
 
-			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1), false))
+			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
 			{
 				if(buildTree(schem, tc, world, random, treePos, c))
 				{
@@ -177,13 +179,13 @@ public class WorldGenTreesHex extends WorldGenHex
 	//*****************
 	// Private methods
 	//*****************
-	private boolean buildTree(Schematic schem, TreeConfig tc, World world, Random rand, BlockPos pos, Center c)
+	protected boolean buildTree(Schematic schem, TreeConfig tc, World world, Random rand, BlockPos pos, Center c)
 	{
 		int rot = rand.nextInt(4);//This causes world gen to change every other time we run the regen command. Not sure why.
 		int index;
 		int id;
 		int meta;
-		BlockPos treePos = pos.add(1, 0, 1);
+		BlockPos treePos = pos.add(-(schem.getCenterX()), 0, -(schem.getCenterZ()));
 		boolean capture = world.captureBlockSnapshots;
 		world.captureBlockSnapshots = false;
 		for(SchemBlock b : schem.getBlockMap())
@@ -194,11 +196,11 @@ public class WorldGenTreesHex extends WorldGenHex
 		return true;
 	}
 
-	private void Process(World world, TreeConfig tc, Schematic schem, BlockPos blockPos, IBlockState state, Center c)
+	protected void Process(World world, TreeConfig tc, Schematic schem, BlockPos blockPos, IBlockState state, Center c)
 	{
 		if(state.getBlock().getMaterial(state) == Material.WOOD)
 		{
-			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos) || (c.biome == BiomeType.MARSH && tc.isSwampTree && Core.isSoil(world.getBlockState(blockPos))))
+			if(world.getBlockState(blockPos).getBlock().isReplaceable(world, blockPos) || (replaceSoil && Core.isSoil(world.getBlockState(blockPos))))
 				world.setBlockState(blockPos, tc.wood, 2);
 		}
 		else if(state.getBlock().getMaterial(state) == Material.LEAVES)
@@ -214,7 +216,7 @@ public class WorldGenTreesHex extends WorldGenHex
 		}
 	}
 
-	private BlockPos rotateTree(BlockPos treePos, BlockPos localPos, int rot)
+	protected BlockPos rotateTree(BlockPos treePos, BlockPos localPos, int rot)
 	{
 		int localX = treePos.getX() + (localPos.getX() * -1) - 2;
 		int localZ = treePos.getZ() + (localPos.getZ() * -1) - 2;
@@ -239,7 +241,7 @@ public class WorldGenTreesHex extends WorldGenHex
 		return new BlockPos(localX, localY, localZ);
 	}
 
-	private boolean canGrowHere(World world, BlockPos pos, TreeSchematic schem, int growthStage, boolean ignoreDirt)
+	protected boolean canGrowHere(World world, BlockPos pos, TreeSchematic schem, int growthStage)
 	{
 		IBlockState ground;
 		IBlockState above;
@@ -249,19 +251,19 @@ public class WorldGenTreesHex extends WorldGenHex
 		int count = 0;
 		int failCount = 0;
 
-		if(!world.isAirBlock(aPos) && !ignoreDirt)
+		if(!world.isAirBlock(aPos))
 			return false;
-		ground = world.getBlockState(gPos);
+
 		//this should validate the ground
-		/*for(int i = -radius; i <= radius; i++)
+		for(int i = -radius; i <= radius; i++)
 		{
 			for(int k = -radius; k <= radius; k++)
 			{
 				count++;
 				ground = world.getBlockState(gPos.add(i, 0, k));
 
-				if(!world.canBlockSeeSky(gPos.add(i, 1, k)) || (ignoreDirt && Core.isSoil(world.getBlockState(aPos))))
-					failCount++;
+				/*if(!world.canBlockSeeSky(gPos.add(i, 1, k)))
+					failCount++;*/
 
 				if(schem.getWoodType() != WoodType.Palm && !Core.isSoil(ground))
 				{
@@ -272,46 +274,15 @@ public class WorldGenTreesHex extends WorldGenHex
 					return false;
 				}
 			}
-		}*/
-
-		if(!world.canBlockSeeSky(gPos) && !(ignoreDirt && Core.isSoil(world.getBlockState(aPos))))
-			return false;
-
-		if(schem.getWoodType() != WoodType.Palm && !Core.isSoil(ground))
-		{
-			return false;
-		}
-		else if(schem.getWoodType() == WoodType.Palm && !Core.isSoil(ground) && !Core.isSand(ground))
-		{
-			return false;
 		}
 
-		if(failCount > count * 0.25 )
-			return false;
-
-		//Scan to the tree height to make sure there is enough room for the tree
-		/*for(int i = 0; i <= schem.getSizeY(); i++)
-		{
-			aPos = aPos.add(0, i, 0);
-			above = world.getBlockState(aPos);
-			if(!above.getBlock().isReplaceable(world, aPos))
-			{
-				return false;
-			}
-			if(above.getBlock().isLeaves(above, world, aPos))
-			{
-				count++;
-			}
-			//If we run into too many leaves, then don't place the tree here. This is not perfect as it
-			//can not account for wide trees, but at least trees with a small radius will not stack.
-			if(count > 2)
-				return false;
-		}*/
+		/*if(failCount > count * 0.25 )
+			return false;*/
 
 		return true;
 	}
 
-	private class TreeReturn
+	public static class TreeReturn
 	{
 		public final TreeReturnEnum size;
 		public final int baseCount;
@@ -323,7 +294,7 @@ public class WorldGenTreesHex extends WorldGenHex
 		}
 	}
 
-	private enum TreeReturnEnum
+	public enum TreeReturnEnum
 	{
 		None, Small, Normal, Large;
 

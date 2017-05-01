@@ -68,7 +68,7 @@ public class WorldGenGrass implements IWorldGenerator
 				else if(Core.isGrass(world.getBlockState(bp.down())))
 				{
 					boolean genGrass = false;
-					if(closest.biome == BiomeType.MARSH || closest.biome == BiomeType.LAKE)
+					if(closest.biome == BiomeType.MARSH || closest.biome == BiomeType.LAKE || closest.biome == BiomeType.SWAMP)
 						genGrass = random.nextFloat() < 0.75;
 					else
 						genGrass = random.nextFloat() < 0.25;

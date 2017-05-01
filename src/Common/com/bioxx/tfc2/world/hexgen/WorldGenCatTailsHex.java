@@ -57,7 +57,7 @@ public class WorldGenCatTailsHex extends WorldGenHex
 				}
 			}
 
-			if(closest.biome == BiomeType.MARSH)
+			if(closest.biome == BiomeType.MARSH || closest.biome == BiomeType.SWAMP)
 			{
 				for(int _x = -20; _x <= 20; _x++)
 				{

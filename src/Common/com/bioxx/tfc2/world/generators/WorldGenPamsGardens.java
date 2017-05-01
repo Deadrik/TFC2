@@ -141,7 +141,7 @@ public class WorldGenPamsGardens implements IWorldGenerator
 					pos = world.getTopSolidOrLiquidBlock(pos);
 					closest = map.getClosestCenter(pos);
 					cMoisture = closest.getMoisture();
-					if((closest.biome == BiomeType.MARSH || closest.biome == BiomeType.RIVER) && soggyGarden.canPlaceBlockAt(world, pos))
+					if((closest.biome == BiomeType.MARSH || closest.biome == BiomeType.RIVER || closest.biome == BiomeType.SWAMP) && soggyGarden.canPlaceBlockAt(world, pos))
 					{
 						//We dont want rivers to have as many soggy gardens so we give it an additional chance to fail placement
 						if(closest.biome == BiomeType.RIVER && random.nextBoolean())

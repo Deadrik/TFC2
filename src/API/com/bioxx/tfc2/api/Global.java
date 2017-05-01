@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeRiver;
 
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
@@ -91,6 +93,27 @@ public class Global
 	public static final String SKILL_PROSPECTING = "skill.prospecting";
 	public static final String SKILL_BUTCHERING = "skill.butchering";
 
+	public static final Biome BIOME_OCEAN = new BiomeRiver(new Biome.BiomeProperties("ocean_tfc2"));
+	public static final Biome BIOME_DEEP_OCEAN = new BiomeRiver(new Biome.BiomeProperties("deepocean_tfc2"));
+	public static final Biome BIOME_BEACH = new BiomeRiver(new Biome.BiomeProperties("beach_tfc2"));
+	public static final Biome BIOME_RIVER = new BiomeRiver(new Biome.BiomeProperties("river_tfc2"));
+	public static final Biome BIOME_SCORCHED = new BiomeRiver(new Biome.BiomeProperties("scorched_tfc2"));
+	public static final Biome BIOME_POLAR_DESERT = new BiomeRiver(new Biome.BiomeProperties("polar_desert_tfc2"));
+	public static final Biome BIOME_TEMPERATE_DESERT = new BiomeRiver(new Biome.BiomeProperties("temperate_desert_tfc2"));
+	public static final Biome BIOME_TROPICAL_DESERT = new BiomeRiver(new Biome.BiomeProperties("tropical_desert_tfc2"));
+	public static final Biome BIOME_SUBTROPICAL_DESERT = new BiomeRiver(new Biome.BiomeProperties("subtropical_desert_tfc2"));
+	public static final Biome BIOME_MARSH = new BiomeRiver(new Biome.BiomeProperties("marsh_tfc2"));
+	public static final Biome BIOME_TUNDRA = new BiomeRiver(new Biome.BiomeProperties("tundra_tfc2"));
+	public static final Biome BIOME_BARE = new BiomeRiver(new Biome.BiomeProperties("bare_tfc2"));
+	public static final Biome BIOME_TAIGA = new BiomeRiver(new Biome.BiomeProperties("taiga_tfc2"));
+	public static final Biome BIOME_SHRUBLAND = new BiomeRiver(new Biome.BiomeProperties("shrubland_tfc2"));
+	public static final Biome BIOME_RAIN_FOREST = new BiomeRiver(new Biome.BiomeProperties("rainforest_tfc2"));
+	public static final Biome BIOME_DECIDUOUS_FOREST = new BiomeRiver(new Biome.BiomeProperties("deciduous_forest_tfc2"));
+	public static final Biome BIOME_DRY_FOREST = new BiomeRiver(new Biome.BiomeProperties("dry_forest_tfc2"));
+	public static final Biome BIOME_GRASSLAND = new BiomeRiver(new Biome.BiomeProperties("grassland_tfc2"));
+	public static final Biome BIOME_POND = new BiomeRiver(new Biome.BiomeProperties("pond_tfc2"));
+	public static final Biome BIOME_LAKE = new BiomeRiver(new Biome.BiomeProperties("lake_tfc2"));
+	public static final Biome BIOME_SWAMP = new BiomeRiver(new Biome.BiomeProperties("swamp_tfc2"));
 
 	/*public static Metal BISMUTH;
 	public static Metal BISMUTHBRONZE;

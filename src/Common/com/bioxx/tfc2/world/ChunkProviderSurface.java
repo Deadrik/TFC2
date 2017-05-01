@@ -601,10 +601,10 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							chunkprimer.setBlockState(x, y, z, sand);
 						}
 					}
-					else if(closestCenter.biome == BiomeType.MARSH && closestCenter.hasAttribute(Attribute.Lake))
+					else if((closestCenter.biome == BiomeType.MARSH || closestCenter.biome == BiomeType.SWAMP) && closestCenter.hasAttribute(Attribute.Lake))
 					{
 						LakeAttribute attrib = (LakeAttribute)closestCenter.getAttribute(Attribute.Lake);
-						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= closestElev-this.getTurbulence(closestCenter, p, 2)-1 && this.rand.nextInt(100) < 70)
+						if(!isLakeBorder(p, closestCenter) && y < convertElevation(attrib.getLakeElev()) && y >= closestElev-this.getTurbulence(closestCenter, p, 1)-1 && this.rand.nextInt(100) < 70)
 							chunkprimer.setBlockState(x, y, z, freshwater);
 					}
 
@@ -1078,7 +1078,7 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 				int elev = this.convertElevation(closest.getElevation());
 
 				if(closest.hasAttribute(Attribute.River) && 
-						(closest.biome == BiomeType.BEACH  || closest.biome == BiomeType.MARSH)){return;}
+						(closest.biome == BiomeType.BEACH || closest.biome == BiomeType.MARSH || closest.biome == BiomeType.SWAMP)){return;}
 				else
 				{
 					if(elevationMap[pos.getZ() << 4 | pos.getX()] != elev)
