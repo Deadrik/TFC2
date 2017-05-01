@@ -108,8 +108,6 @@ public class WorldGenTreesHex extends WorldGenHex
 			return new TreeReturn(TreeReturnEnum.None, 0);
 
 		genPos = world.getTopSolidOrLiquidBlock(genPos);
-		if(c.biome == BiomeType.MARSH)
-			genPos.add(0, -1, 0);
 
 		int growthStage = 0;
 		if(m.getParams().getIslandMoisture().isGreaterThan(Moisture.LOW) && !m.getParams().hasFeature(Feature.Desert))
@@ -128,11 +126,9 @@ public class WorldGenTreesHex extends WorldGenHex
 		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
-			BlockPos treePos = genPos.add(-(schem.getCenterX()-1), 0, -(schem.getCenterZ()-1));
-			IBlockState s = world.getBlockState(treePos);
-			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
+			if( schem != null && canGrowHere(world, genPos.down(), schem, Math.max(growthStage, 1)))
 			{
-				if(buildTree(schem, tc, world, random, treePos, c))
+				if(buildTree(schem, tc, world, random, genPos, c))
 				{
 					grown = TreeReturnEnum.fromSize(growthStage);
 				}
@@ -161,11 +157,9 @@ public class WorldGenTreesHex extends WorldGenHex
 		for(;growthStage >= 0 && grown == TreeReturnEnum.None; growthStage--)
 		{
 			schem = tsm.getRandomSchematic(random, growthStage);
-			treePos = genPos;
-
-			if( schem != null && canGrowHere(world, treePos.down(), schem, Math.max(growthStage, 1)))
+			if( schem != null && canGrowHere(world, genPos.down(), schem, Math.max(growthStage, 1)))
 			{
-				if(buildTree(schem, tc, world, random, treePos, c))
+				if(buildTree(schem, tc, world, random, genPos, c))
 				{
 					grown = TreeReturnEnum.fromSize(growthStage);
 				}
@@ -185,7 +179,7 @@ public class WorldGenTreesHex extends WorldGenHex
 		int index;
 		int id;
 		int meta;
-		BlockPos treePos = pos.add(-(schem.getCenterX()), 0, -(schem.getCenterZ()));
+		BlockPos treePos = pos;
 		boolean capture = world.captureBlockSnapshots;
 		world.captureBlockSnapshots = false;
 		for(SchemBlock b : schem.getBlockMap())
@@ -218,8 +212,8 @@ public class WorldGenTreesHex extends WorldGenHex
 
 	protected BlockPos rotateTree(BlockPos treePos, BlockPos localPos, int rot)
 	{
-		int localX = treePos.getX() + (localPos.getX() * -1) - 2;
-		int localZ = treePos.getZ() + (localPos.getZ() * -1) - 2;
+		int localX = treePos.getX() + (localPos.getX() * -1) - 1;
+		int localZ = treePos.getZ() + (localPos.getZ() * -1) - 1;
 		int localY = treePos.getY() + localPos.getY();
 
 		if(rot == 0)
@@ -229,13 +223,13 @@ public class WorldGenTreesHex extends WorldGenHex
 		}
 		else if(rot == 1)
 		{
-			localX = treePos.getX() + localPos.getZ();
-			localZ = treePos.getZ() + (localPos.getX() * -1) - 2;
+			localX = treePos.getX() + localPos.getZ() + 1;
+			localZ = treePos.getZ() + (localPos.getX() * -1) - 1;
 		}
 		else if(rot == 2)
 		{
-			localX = treePos.getX()  + (localPos.getZ() * -1) -2;
-			localZ = treePos.getZ() + localPos.getX();
+			localX = treePos.getX()  + (localPos.getZ() * -1) -1;
+			localZ = treePos.getZ() + localPos.getX()+1;
 		}
 
 		return new BlockPos(localX, localY, localZ);
