@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.interfaces.IFood;
 
 public class InventoryPlayerTFC extends InventoryPlayer {
 
@@ -16,7 +17,8 @@ public class InventoryPlayerTFC extends InventoryPlayer {
 	public InventoryPlayerTFC(EntityPlayer par1EntityPlayer) {
 		super(par1EntityPlayer);
 		this.player = par1EntityPlayer;
-		this.allInventories.add(extraEquipInventory);
+		if(Core.getExtraEquipInventorySize() > 0)
+			this.allInventories.add(extraEquipInventory);
 	}
 
 	@Override
@@ -37,6 +39,12 @@ public class InventoryPlayerTFC extends InventoryPlayer {
 		}
 
 		return super.isEmpty();
+	}
+
+	public static boolean stackEqualExact(ItemStack stack1, ItemStack stack2)
+	{
+		return stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() || stack1.getMetadata() == stack2.getMetadata()) && 
+				(ItemStack.areItemStackTagsEqual(stack1, stack2) || (stack1.getItem() instanceof IFood && stack2.getItem() instanceof IFood && Food.areEqual(stack1, stack2)));
 	}
 
 	/*@Override

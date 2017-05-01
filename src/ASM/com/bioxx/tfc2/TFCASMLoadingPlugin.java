@@ -7,10 +7,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 import com.bioxx.tfc2.asm.ObfHelper;
-import com.bioxx.tfc2.asm.transform.ModuleEntityRenderer;
-import com.bioxx.tfc2.asm.transform.ModuleFood;
-import com.bioxx.tfc2.asm.transform.ModuleVanillaReplacement;
-import com.bioxx.tfc2.asm.transform.ModuleWorldGen;
+import com.bioxx.tfc2.asm.transform.*;
 
 @TransformerExclusions({ "com.bioxx.tfc2.asm" })
 public class TFCASMLoadingPlugin implements IFMLLoadingPlugin
@@ -27,7 +24,8 @@ public class TFCASMLoadingPlugin implements IFMLLoadingPlugin
 	public String[] getASMTransformerClass() {
 		return new String[]{
 				ModuleEntityRenderer.class.getName(), ModuleWorldGen.class.getName(), 
-				ModuleFood.class.getName(), ModuleVanillaReplacement.class.getName()
+				ModuleFood.class.getName(), ModuleVanillaReplacement.class.getName(), 
+				ModuleInventory.class.getName()
 		};
 	}
 

@@ -18,6 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.bioxx.tfc2.api.FoodRegistry;
 import com.bioxx.tfc2.api.FoodRegistry.FoodGroupPair;
 import com.bioxx.tfc2.api.FoodRegistry.TFCFood;
+import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.api.interfaces.IFoodStatsTFC;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
 
@@ -62,6 +63,8 @@ public class Food
 
 	public static boolean areEqual(ItemStack is1, ItemStack is2)
 	{
+		if(is1.getItem() != is2.getItem())
+			return false;
 		if(isBrined(is1) != isBrined(is2))
 			return false;
 		if(isPickled(is1) != isPickled(is2))
@@ -73,6 +76,21 @@ public class Food
 		if(isSalted(is1) != isSalted(is2))
 			return false;
 		return true;
+	}
+
+	/**
+	 * @return this sets the decaytimer of is2 to the lower of the decaytimers between is1 and is2
+	 */
+	public static ItemStack mergeFood(ItemStack is1, ItemStack is2)
+	{
+		if(is1.getItem() instanceof IFood && is2.getItem() instanceof IFood)
+		{
+			long ex1 = Food.getDecayTimer(is1);
+			long ex2 = Food.getDecayTimer(is2);
+			if(ex1 < ex2)
+				Food.setDecayTimer(is2, ex1);
+		}
+		return is2;
 	}
 
 	public static boolean isBrined(ItemStack is)
