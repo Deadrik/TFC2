@@ -50,9 +50,7 @@ import com.bioxx.tfc2.handlers.client.DrinkWaterHandler;
 import com.bioxx.tfc2.potion.PotionTFC;
 import com.bioxx.tfc2.world.DimensionTFC;
 import com.bioxx.tfc2.world.generators.*;
-import com.bioxx.tfc2.world.hexgen.WorldGenCatTailsHex;
-import com.bioxx.tfc2.world.hexgen.WorldGenSwampTreesHex;
-import com.bioxx.tfc2.world.hexgen.WorldGenTreesHex;
+import com.bioxx.tfc2.world.hexgen.*;
 
 public class CommonProxy
 {
@@ -110,12 +108,12 @@ public class CommonProxy
 		GameRegistry.registerWorldGenerator(new WorldGenCliffRocks(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 2);
 		GameRegistry.registerWorldGenerator(new WorldGenStalag(), 4);
-		GameRegistry.registerWorldGenerator(new WorldGenLooseRock(), 5);
-		GameRegistry.registerWorldGenerator(new WorldGenClay(), 5);
 		GameRegistry.registerWorldGenerator(new WorldGenPamsGardens(), 25);
 		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
 		GameRegistry.registerWorldGenerator(new WorldGenGrassDry(), 100);
 
+		HexGenRegistry.registerWorldGenerator(new WorldGenClayHex(), 5);
+		HexGenRegistry.registerWorldGenerator(new WorldGenLooseRockHex(), 5);
 		HexGenRegistry.registerWorldGenerator(new WorldGenTreesHex(), 10);
 		HexGenRegistry.registerWorldGenerator(new WorldGenSwampTreesHex(), 10);
 		HexGenRegistry.registerWorldGenerator(new WorldGenCatTailsHex(), 100);
@@ -140,7 +138,7 @@ public class CommonProxy
 		Biome.registerBiome(217, "BIOME_TEMPERATE_DESERT", Global.BIOME_TEMPERATE_DESERT);
 		Biome.registerBiome(218, "BIOME_TROPICAL_DESERT", Global.BIOME_TROPICAL_DESERT);
 		Biome.registerBiome(219, "BIOME_TUNDRA", Global.BIOME_TUNDRA);
-		Biome.registerBiome(220, "BIOME_LAKE", Global.BIOME_SWAMP);
+		Biome.registerBiome(220, "BIOME_SWAMP", Global.BIOME_SWAMP);
 	}
 
 	protected void registerEntities() 
