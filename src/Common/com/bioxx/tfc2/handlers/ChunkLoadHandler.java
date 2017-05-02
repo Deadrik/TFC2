@@ -44,7 +44,22 @@ public class ChunkLoadHandler
 						HexGenRegistry.generate(map, c, event.getWorld());
 						c.hasGenerated = true;
 					}
-				}	
+				}
+
+				/*if(c != null && c.getCustomNBT().hasKey("animalsToSpawn"))
+				{
+					NBTTagList tag = c.getCustomNBT().getTagList("animalsToSpawn", 8);
+
+					for(int i = 0; i < tag.tagCount(); i++)
+					{
+						String groupName = tag.getStringTagAt(i);
+
+						SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(groupName);
+						AnimalSpawner.SpawnAnimalGroup(event.getWorld(), group, new BlockPos(map.getParams().getWorldX()+c.point.getX(), 0, map.getParams().getWorldX()+c.point.getX()));
+					}
+
+					c.getCustomNBT().removeTag("animalsToSpawn");
+				}*/
 			}
 
 		}

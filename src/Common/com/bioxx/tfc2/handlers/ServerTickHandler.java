@@ -22,7 +22,7 @@ public class ServerTickHandler
 				{
 					WorldGen.getInstance().trimCache();
 					WorldGen.getInstance().buildFromQueue();
-					WorldGen.getInstance().runUpdateLoop();
+					WorldGen.getInstance().runUpdateLoop(event.world);
 				}
 			}			
 		}

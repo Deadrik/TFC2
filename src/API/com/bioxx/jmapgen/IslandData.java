@@ -20,9 +20,11 @@ public class IslandData
 	public PortalEnumType westPortalState = PortalEnumType.Disabled;
 	public int islandLevel = 0;
 	public Map<String, SpawnEntry> animalEntries = new HashMap<String, SpawnEntry>();
+	public IslandWildlifeManager wildlifeManager;
 
-	public IslandData(IslandParameters params)
+	public IslandData(IslandMap map, IslandParameters params)
 	{
+		wildlifeManager = new IslandWildlifeManager(map);
 		Iterator iter = params.animalSpawnGroups.iterator();
 		while(iter.hasNext())
 		{
@@ -86,6 +88,7 @@ public class IslandData
 			animalEntries.put(key, entry);
 		}
 
+		wildlifeManager.readFromNBT(nbt.getCompoundTag("wildlifeManager"));
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
@@ -108,5 +111,8 @@ public class IslandData
 			fnbt.setTag(group, gnbt);
 		}
 		nbt.setTag("animalEntries", fnbt);
+		NBTTagCompound wmNBT = new NBTTagCompound();
+		wildlifeManager.writeToNBT(wmNBT);
+		nbt.setTag("wildlifeManager", wmNBT);
 	}
 }

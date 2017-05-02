@@ -552,11 +552,11 @@ public class WorldGen implements IThreadCompleteListener
 		}
 	}
 
-	public void runUpdateLoop()
+	public void runUpdateLoop(World world)
 	{
 		for(CachedIsland ci : islandCache.values())
 		{
-			ci.update();
+			ci.update(world);
 		}
 	}
 

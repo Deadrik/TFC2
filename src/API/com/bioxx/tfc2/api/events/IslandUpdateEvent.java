@@ -1,5 +1,7 @@
 package com.bioxx.tfc2.api.events;
 
+import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import com.bioxx.jmapgen.IslandMap;
@@ -17,9 +19,11 @@ import com.bioxx.jmapgen.IslandMap;
 public class IslandUpdateEvent extends Event
 {
 	public final IslandMap map;
+	public final World world;
 
-	public IslandUpdateEvent(IslandMap map)
+	public IslandUpdateEvent(IslandMap map, World world)
 	{
+		this.world = world;
 		this.map = map;
 	}
 

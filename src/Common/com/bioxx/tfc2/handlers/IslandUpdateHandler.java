@@ -10,17 +10,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.processing.AnimalProcessor;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.events.IslandUpdateEvent;
+import com.bioxx.tfc2.core.Timekeeper;
 
 public class IslandUpdateHandler 
 {
 	@SubscribeEvent
 	public void handle(IslandUpdateEvent event)
 	{
-		for(SpawnEntry entry : event.map.getIslandData().animalEntries.values())
+		/*for(SpawnEntry entry : event.map.getIslandData().animalEntries.values())
 		{
 			SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(entry.getGroupName());
 			if(entry.hasRoomForNewSpawns())
@@ -32,7 +31,9 @@ public class IslandUpdateHandler
 				genSingleGroup(group, event.map);
 
 			}
-		}
+		}*/
+
+		event.map.getIslandData().wildlifeManager.process(event.world, Timekeeper.getInstance().getTotalHours());
 	}
 
 	public int genSingleGroup(SpawnGroup group, IslandMap map)

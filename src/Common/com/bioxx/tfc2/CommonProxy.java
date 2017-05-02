@@ -2,8 +2,6 @@ package com.bioxx.tfc2;
 
 import java.io.File;
 
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
@@ -25,12 +23,6 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.attributes.Attribute;
-import com.bioxx.jmapgen.attributes.LakeAttribute;
-import com.bioxx.jmapgen.attributes.RiverAttribute;
-import com.bioxx.jmapgen.graph.Center;
-import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.api.*;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnParameters;
@@ -43,8 +35,6 @@ import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.core.Recipes;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.*;
-import com.bioxx.tfc2.entity.EntityBear.BearType;
-import com.bioxx.tfc2.entity.EntityTiger.TigerType;
 import com.bioxx.tfc2.handlers.*;
 import com.bioxx.tfc2.handlers.client.DrinkWaterHandler;
 import com.bioxx.tfc2.potion.PotionTFC;
@@ -228,7 +218,15 @@ public class CommonProxy
 
 	protected void registerAnimals()
 	{
-		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Elephant",  EntityElephant.class, 2, 4, 20, 20, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MAX)
+		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Elephant",  EntityElephant.class, 2, 10, 50, 50, new SpawnParameters(ClimateTemp.POLAR, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MAX)
+		{
+			@Override
+			public boolean canSpawnInDesert()
+			{
+				return true;
+			}
+		}));
+		/*AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Elephant",  EntityElephant.class, 2, 4, 20, 20, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MAX)
 		{
 			@Override
 			public boolean canSpawnInDesert()
@@ -377,7 +375,7 @@ public class CommonProxy
 
 				return isValid;
 			}
-		}));
+		}));*/
 	}
 
 	protected void registerFuel()

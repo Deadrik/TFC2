@@ -5,9 +5,7 @@ import java.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
@@ -37,8 +35,6 @@ import com.bioxx.libnoise.module.source.Perlin;
 import com.bioxx.libnoise.module.source.RidgedMulti;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.Schematic.SchemBlock;
 import com.bioxx.tfc2.api.TFCOptions;
@@ -339,30 +335,6 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							centerInChunk = temp;
 					}
 				}
-			}
-
-			if(centerInChunk != null && centerInChunk.getCustomNBT().hasKey("animalsToSpawn"))
-			{
-				NBTTagList tag = centerInChunk.getCustomNBT().getTagList("animalsToSpawn", 8);
-				IEntityLivingData ientitylivingdata = null;
-				/*Iterator iter = tag.getKeySet().iterator();
-				while(iter.hasNext())
-				{
-					String key = (String)iter.next();
-					String groupName = tag.getString(key);
-					SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(groupName);
-					AnimalSpawner.SpawnAnimalGroup(worldObj, group, worldObj.getChunkFromChunkCoords(x, z));
-					tag.removeTag(key);
-				}*/
-				for(int i = 0; i < tag.tagCount(); i++)
-				{
-					String groupName = tag.getStringTagAt(i);
-
-					SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(groupName);
-					AnimalSpawner.SpawnAnimalGroup(worldObj, group, worldObj.getChunkFromChunkCoords(x, z));
-				}
-
-				centerInChunk.getCustomNBT().removeTag("animalsToSpawn");
 			}
 		}
 

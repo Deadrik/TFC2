@@ -2,6 +2,8 @@ package com.bioxx.tfc2.world;
 
 import java.util.LinkedList;
 
+import net.minecraft.world.World;
+
 import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.api.Global;
@@ -27,9 +29,9 @@ public class CachedIsland
 		return island;
 	}
 
-	public void update()
+	public void update(World world)
 	{
-		Global.EVENT_BUS.post(new IslandUpdateEvent(island));
+		Global.EVENT_BUS.post(new IslandUpdateEvent(island, world));
 		for(int i = 0; i < 50; i++)
 		{
 			Center c = updateQueue.pollFirst();

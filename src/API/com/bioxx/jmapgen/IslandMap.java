@@ -88,7 +88,7 @@ public class IslandMap
 		NUM_POINTS = is.SIZE*4;
 		NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 		is.createShape(seed);
-		islandData = new IslandData(is);
+		islandData = new IslandData(this, is);
 	}
 
 	public IslandParameters getParams()
@@ -2591,7 +2591,7 @@ public class IslandMap
 			dungeons.add(d);
 		}
 
-		this.islandData = new IslandData(this.getParams());
+		this.islandData = new IslandData(this, this.getParams());
 		islandData.readFromNBT(nbt.getCompoundTag("data"));
 	}
 

@@ -8,6 +8,9 @@ public enum Gender implements IStringSerializable
 
 	@Override
 	public String getName() {
-		return "";
+		if(this == Male)
+			return "Male";
+		else
+			return "Female";
 	}
 }
