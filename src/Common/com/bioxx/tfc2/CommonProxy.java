@@ -49,9 +49,6 @@ import com.bioxx.tfc2.handlers.*;
 import com.bioxx.tfc2.handlers.client.DrinkWaterHandler;
 import com.bioxx.tfc2.potion.PotionTFC;
 import com.bioxx.tfc2.world.DimensionTFC;
-import com.bioxx.tfc2.world.generators.WorldGenCliffNoise;
-import com.bioxx.tfc2.world.generators.WorldGenCliffRocks;
-import com.bioxx.tfc2.world.generators.WorldGenPortals;
 import com.bioxx.tfc2.world.generators.WorldGenStalag;
 import com.bioxx.tfc2.world.hexgen.*;
 
@@ -107,11 +104,13 @@ public class CommonProxy
 
 	protected void registerWorldGen()
 	{
-		GameRegistry.registerWorldGenerator(new WorldGenCliffNoise(), 1);
-		GameRegistry.registerWorldGenerator(new WorldGenCliffRocks(), 1);
-		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 2);
+		//GameRegistry.registerWorldGenerator(new WorldGenCliffNoise(), 1);
+		//GameRegistry.registerWorldGenerator(new WorldGenCliffRocks(), 1);
+		//GameRegistry.registerWorldGenerator(new WorldGenPortals(), 2);
 		GameRegistry.registerWorldGenerator(new WorldGenStalag(), 4);
 
+		HexGenRegistry.registerWorldGenerator(new WorldGenCliffRocksHex(), 1);
+		HexGenRegistry.registerWorldGenerator(new WorldGenPortalsHex(), 2);
 		HexGenRegistry.registerWorldGenerator(new WorldGenClayHex(), 5);
 		HexGenRegistry.registerWorldGenerator(new WorldGenLooseRockHex(), 5);
 		HexGenRegistry.registerWorldGenerator(new WorldGenTreesHex(), 10);
