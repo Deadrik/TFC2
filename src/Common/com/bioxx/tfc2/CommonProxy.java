@@ -49,7 +49,10 @@ import com.bioxx.tfc2.handlers.*;
 import com.bioxx.tfc2.handlers.client.DrinkWaterHandler;
 import com.bioxx.tfc2.potion.PotionTFC;
 import com.bioxx.tfc2.world.DimensionTFC;
-import com.bioxx.tfc2.world.generators.*;
+import com.bioxx.tfc2.world.generators.WorldGenCliffNoise;
+import com.bioxx.tfc2.world.generators.WorldGenCliffRocks;
+import com.bioxx.tfc2.world.generators.WorldGenPortals;
+import com.bioxx.tfc2.world.generators.WorldGenStalag;
 import com.bioxx.tfc2.world.hexgen.*;
 
 public class CommonProxy
@@ -108,15 +111,15 @@ public class CommonProxy
 		GameRegistry.registerWorldGenerator(new WorldGenCliffRocks(), 1);
 		GameRegistry.registerWorldGenerator(new WorldGenPortals(), 2);
 		GameRegistry.registerWorldGenerator(new WorldGenStalag(), 4);
-		GameRegistry.registerWorldGenerator(new WorldGenPamsGardens(), 25);
-		GameRegistry.registerWorldGenerator(new WorldGenGrass(), 100);
-		GameRegistry.registerWorldGenerator(new WorldGenGrassDry(), 100);
 
 		HexGenRegistry.registerWorldGenerator(new WorldGenClayHex(), 5);
 		HexGenRegistry.registerWorldGenerator(new WorldGenLooseRockHex(), 5);
 		HexGenRegistry.registerWorldGenerator(new WorldGenTreesHex(), 10);
 		HexGenRegistry.registerWorldGenerator(new WorldGenSwampTreesHex(), 10);
 		HexGenRegistry.registerWorldGenerator(new WorldGenCatTailsHex(), 100);
+		HexGenRegistry.registerWorldGenerator(new WorldGenGrassHex(), 100);
+		HexGenRegistry.registerWorldGenerator(new WorldGenGrassDryHex(), 100);
+		HexGenRegistry.registerWorldGenerator(new WorldGenPamsGardensHex(), 25);
 
 		Biome.registerBiome(200, "BIOME_BARE", Global.BIOME_BARE);
 		Biome.registerBiome(201, "BIOME_BEACH", Global.BIOME_BEACH);

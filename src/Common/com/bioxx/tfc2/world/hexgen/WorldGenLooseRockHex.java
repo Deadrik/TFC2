@@ -48,7 +48,7 @@ public class WorldGenLooseRockHex extends WorldGenHex
 				BlockPos pos = new BlockPos(p.getX(), 0, p.getZ());
 				pos = world.getTopSolidOrLiquidBlock(pos);
 				IBlockState state = world.getBlockState(pos.down());
-				if(Core.isTerrain(state))
+				if(Core.isTerrain(state) && !Core.isWater(world.getBlockState(pos)))
 					Core.setBlock(world, TFCBlocks.LooseRocks.getStateFromMeta(map.getParams().getSurfaceRock().getMeta()), pos, 2);
 			}
 		}
