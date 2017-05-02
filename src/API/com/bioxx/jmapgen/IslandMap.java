@@ -574,6 +574,11 @@ public class IslandMap
 					for(Center c : l.centers)
 					{
 						c.elevation = minElevation/**0.79*/;
+						if(c.hasAttribute(Attribute.Lake))
+						{
+							LakeAttribute attrib = (LakeAttribute) c.getAttribute(Attribute.Lake);
+							attrib.setLakeElev(minElevation);
+						}
 					}
 				}
 			}
@@ -1656,7 +1661,9 @@ public class IslandMap
 			{
 				c.elevation = lake.lowestCenter.elevation;
 				LakeAttribute attrib = new LakeAttribute(Attribute.Lake);
-				attrib.setLakeElev(lake.lowestCenter.elevation);
+				if(c.getElevation() < lake.lowestCenter.getElevation())
+					attrib.setLakeElev(c.getElevation() );
+				attrib.setLakeElev(lake.lowestCenter.getElevation());
 				attrib.setLakeID(lakeID);
 				//Here we try to smooth the centers around lakes a bit
 				for(Center n : c.neighbors)
