@@ -1,21 +1,33 @@
 package com.bioxx.jmapgen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.UUID;
+import java.util.*;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
 
+import com.bioxx.jmapgen.attributes.Attribute;
+import com.bioxx.jmapgen.attributes.NeedZoneAttribute;
 import com.bioxx.jmapgen.graph.Center;
+import com.bioxx.jmapgen.graph.Center.Marker;
+import com.bioxx.jmapgen.pathfinding.CenterPath;
+import com.bioxx.jmapgen.pathfinding.CenterPathFinder;
+import com.bioxx.jmapgen.pathfinding.CenterPathNode;
+import com.bioxx.jmapgen.threads.ThreadPathfind;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry;
+import com.bioxx.tfc2.api.VirtualAnimal;
+import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.types.Gender;
+import com.bioxx.tfc2.api.util.IThreadCompleteListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class IslandWildlifeManager 
+public class IslandWildlifeManager implements IThreadCompleteListener
 {
+	public static Logger log = LogManager.getLogger("IslandWildlifeManager");
 	HashMap<UUID, Herd> herdMap = new HashMap<UUID, Herd>();
+	ThreadPathfind[] pathfindThreads;
 	long lastTickHour = -1;
 	IslandMap map;
 
@@ -26,7 +38,7 @@ public class IslandWildlifeManager
 
 	public void addHerd(Herd h)
 	{
-		herdMap.put(h.uuid, h);
+		herdMap.put(h.getUUID(), h);
 	}
 
 	public Herd getHerd(UUID uuid)
@@ -36,7 +48,7 @@ public class IslandWildlifeManager
 
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		herdMap .clear();
+		herdMap.clear();
 		NBTTagList invList = nbt.getTagList("herds", 10);
 		for(int i = 0; i < invList.tagCount(); i++)
 		{
@@ -56,9 +68,49 @@ public class IslandWildlifeManager
 			Herd h = (Herd) herdMap.values().toArray()[i];
 			NBTTagCompound herdTag = new NBTTagCompound();
 			h.writeToNBT(herdTag);
+			herdList.appendTag(herdTag);
 		}
 		nbt.setTag("herds", herdList);
 		nbt.setLong("lastTickHour", lastTickHour);
+	}
+
+	/**
+	 * This is called one time when the map is built to create the initial herds
+	 */
+	public void initialBuild(World world)
+	{
+		Vector<Center> needZones = map.filterKeepAttributes(map.filterOutMarkers(map.centers, Marker.Ocean), Attribute.NeedZone);
+
+		for(String animalType : map.getParams().animalTypes)
+		{
+			IAnimalDef def = AnimalSpawnRegistry.getInstance().getDefFromName(animalType);
+			Vector<Center> myNeedZones = new Vector<Center>();
+			//Filter out only our own need zones
+			for(Center c : needZones)
+			{
+				NeedZoneAttribute attrib = (NeedZoneAttribute) c.getAttribute(Attribute.NeedZone);
+				if(attrib.animalType.equals(def.getName()))
+					myNeedZones.add(c);
+			}
+
+			int numToGen = def.getMaxIslandPop(map.getParams());
+			while(numToGen > 0)
+			{
+				ArrayList<VirtualAnimal> list = def.provideHerd(world);
+				if(list.size() > 0)
+				{
+					numToGen -= list.size();
+					Herd h = new Herd(def.getName(), myNeedZones.get(map.mapRandom.nextInt(myNeedZones.size())));
+					h.addAllAnimals(list);
+					this.addHerd(h);
+				}
+				else
+				{
+					log.info("Attempted to create empty herd for: " + def.getName());
+				}
+			}
+
+		}
 	}
 
 	public void process(World world, long currentHour)
@@ -66,13 +118,15 @@ public class IslandWildlifeManager
 		if(currentHour > lastTickHour)
 		{
 			lastTickHour++;
+
+			//Process the brains for each herd
 			ArrayList<UUID> herdsToRemove = new ArrayList<UUID>();
 			for(Herd h : herdMap.values())
 			{
-				h.brain.process(world, map, currentHour);
+				h.brain.process(world, map, lastTickHour);
 				//Mark herd for deletion if all of the animals are gone.
 				if(h.animals.size() == 0)
-					herdsToRemove.add(h.uuid);
+					herdsToRemove.add(h.getUUID());
 			}
 
 			//Cull empty herds
@@ -83,24 +137,69 @@ public class IslandWildlifeManager
 		}
 	}
 
+	public ArrayList<Herd> getHerdsInCenter(Center c)
+	{
+		ArrayList<Herd> herds = new ArrayList<Herd>();
+		for(Herd h : herdMap.values())
+		{
+			if(h.brain.currentLocation == c)
+			{
+				herds.add(h);
+			}
+		}
+		return herds;
+	}
+
+
+	@Override
+	public void notifyOfThreadComplete(Thread thread) 
+	{
+		pathfindThreads[((ThreadPathfind)thread).threadID] = null;
+	}
+
 	public static class Herd
 	{
 		UUID uuid = UUID.randomUUID();
 		String animalType;
-		ArrayList<Animal> animals = new ArrayList<Animal>();
+		ArrayList<VirtualAnimal> animals = new ArrayList<VirtualAnimal>();
 		HerdBrain brain;
 
 		public Herd(String type, Center curLoc)
 		{
 			animalType = type;
-			brain = new HerdBrain(curLoc);
+			brain = new HerdBrain(this,curLoc);
 		}
 
-		public Animal addAnimal(Gender g)
+		public String getAnimalType()
 		{
-			Animal a = new Animal(animalType, g);
+			return animalType;
+		}
+
+		public HerdBrain getHerdBrain()
+		{
+			return brain;
+		}
+
+		public UUID getUUID()
+		{
+			return uuid;
+		}
+
+		public VirtualAnimal addAnimal(Gender g)
+		{
+			VirtualAnimal a = new VirtualAnimal(animalType, g);
 			animals.add(a);
 			return a;
+		}
+
+		public ArrayList<VirtualAnimal> getVirtualAnimals()
+		{
+			return this.animals;
+		}
+
+		public void addAllAnimals(ArrayList<VirtualAnimal> list)
+		{
+			animals.addAll(list);
 		}
 
 		public void readFromNBT(NBTTagCompound nbt, IslandMap map)
@@ -108,7 +207,7 @@ public class IslandWildlifeManager
 			NBTTagList invList = nbt.getTagList("animalList", 10);
 			for(int i = 0; i < invList.tagCount(); i++)
 			{
-				Animal a = new Animal("", null);
+				VirtualAnimal a = new VirtualAnimal("", null);
 				a.readFromNBT((NBTTagCompound)invList.get(i));
 				animals.add(a);
 			}
@@ -120,13 +219,12 @@ public class IslandWildlifeManager
 		public void writeToNBT(NBTTagCompound nbt)
 		{
 			NBTTagList animalList = new NBTTagList();
-
 			for(int i = 0; i < animals.size(); i++)
 			{
-				Animal a = animals.get(i);
+				VirtualAnimal a = animals.get(i);
 				NBTTagCompound animalTag = new NBTTagCompound();
 				a.writeToNBT(animalTag);
-				animalList.set(i, animalTag);
+				animalList.appendTag(animalTag);
 			}
 			nbt.setTag("animalList", animalList);
 			brain.writeToNBT(nbt);
@@ -137,15 +235,17 @@ public class IslandWildlifeManager
 
 	public static class HerdBrain
 	{
+		Herd herd;
 		HerdGoal currentGoal;
 		HerdActivityEnum currentActivity;
 		int activityTimer;
 		Center currentLocation;
 
-		public HerdBrain(Center curLoc)
+		public HerdBrain(Herd h, Center curLoc)
 		{
-			activityTimer = 0;
-			currentActivity = HerdActivityEnum.WAITING;
+			herd = h;
+			activityTimer = 1;
+			currentActivity = HerdActivityEnum.WORKING;
 			currentLocation = curLoc;
 			currentGoal = new HerdGoal(HerdGoalEnum.REST, curLoc);
 		}
@@ -153,28 +253,83 @@ public class IslandWildlifeManager
 		public void process(World world, IslandMap map, long currentHour)
 		{
 			activityTimer--;
-			if(activityTimer == 0)
+			if(activityTimer <= 0)
 			{
-				activityTimer = 1;
-
-				//========Create a new goal========
-				//1. Decide what the herd needs
-				HerdGoalEnum goal = HerdGoalEnum.REST;
-				if(currentGoal.goalType == HerdGoalEnum.REST)
+				if(currentActivity == HerdActivityEnum.WORKING)//The herd is ready to leave the current need zone
 				{
-					goal = world.rand.nextBoolean() ? HerdGoalEnum.FOOD : HerdGoalEnum.WATER;
+					activityTimer = 1;
+
+					//========Create a new goal========
+					//1. Decide what the herd needs
+					HerdGoalEnum goal = HerdGoalEnum.REST;
+					if(currentGoal.goalType == HerdGoalEnum.REST)
+					{
+						goal = world.rand.nextBoolean() ? HerdGoalEnum.FOOD : HerdGoalEnum.WATER;
+					}
+					else if(currentGoal.goalType == HerdGoalEnum.FOOD)
+					{
+						goal = world.rand.nextBoolean() ? HerdGoalEnum.REST : HerdGoalEnum.WATER;
+					}
+					else
+					{
+						goal = world.rand.nextBoolean() ? HerdGoalEnum.REST : HerdGoalEnum.FOOD;
+					}
+					//2. Find an appropriate location to fill this need
+					Vector<Center> allZones = map.filterKeepAttributes(map.centers, Attribute.NeedZone);
+					Vector<Center> goalZones = new Vector<Center>();
+					for(Center z : allZones)
+					{
+						NeedZoneAttribute attrib = (NeedZoneAttribute) z.getAttribute(Attribute.NeedZone);
+						if(attrib.goalType == goal)
+							goalZones.add(z);
+					}
+					Center goalLoc = goalZones.get(world.rand.nextInt(goalZones.size()));
+					//3. Figure out a path to reach the destination
+					CenterPathFinder pathfinder = new CenterPathFinder(AnimalSpawnRegistry.getInstance().getDefFromName(herd.animalType).getPathProfile());
+					CenterPath path = pathfinder.findPath(map, currentLocation, goalLoc);
+					//4. Move the herd
+					if(path == null)
+						return;
+					currentGoal = new HerdGoal(goal, goalLoc, new HerdPath(currentHour, path));
+					currentActivity = HerdActivityEnum.TRAVELING;
 				}
-				//2. Find an appropriate location to fill this need
-
-				//3. Figure out a path to reach the destination
-
-				//4. Move the herd
+				else if(currentActivity == HerdActivityEnum.TRAVELING)//The herd is actively moving to a new needzone
+				{
+					currentLocation = currentGoal.path.move();
+					activityTimer = 1;
+					if(currentGoal.goalLocation == currentLocation)
+					{
+						activityTimer = 24;
+						currentActivity = HerdActivityEnum.WORKING;
+					}
+				}
+				else if(currentActivity == HerdActivityEnum.WAITING)//Something interrupted this herd while it was traveling and it should recalculate its route
+				{
+					activityTimer = 2;
+					currentLocation = currentGoal.path.move();
+					currentGoal.path.recalculatePath(currentLocation);
+				}
+				else if(currentActivity == HerdActivityEnum.FLEEING)//If we have recently been fleeing from danger we should reset to waiting for now
+				{
+					activityTimer = 1;
+					currentActivity = HerdActivityEnum.WAITING;
+				}
 			}
+		}
+
+		public HerdActivityEnum getActivity()
+		{
+			return currentActivity;
 		}
 
 		public void setLocation(Center center)
 		{
 			currentLocation = center;
+		}
+
+		public Center getLocation()
+		{
+			return currentLocation;
 		}
 
 		public void setGoal(HerdGoalEnum goal, Center loc)
@@ -206,15 +361,41 @@ public class IslandWildlifeManager
 
 	public static class HerdPath
 	{
+		long calcTimestamp;
 		LinkedList<Center> path = new LinkedList<Center>();
+
+		public HerdPath(long timestamp)
+		{
+			calcTimestamp = timestamp;
+		}
+
+		public HerdPath(long timestamp, CenterPath cPath)
+		{
+			this(timestamp);
+			for(CenterPathNode c : cPath.path)
+			{
+				addNode(c.center);
+			}
+		}
 
 		public void addNode(Center c)
 		{
 			path.add(c);
 		}
 
+		public void recalculatePath(Center start)
+		{
+
+		}
+
+		public Center move()
+		{
+			return path.removeLast();
+		}
+
 		public void readFromNBT(NBTTagCompound nbt, IslandMap map)
 		{
+			this.calcTimestamp = nbt.getLong("timestamp");
 			int[] pathArray = nbt.getIntArray("path");
 			for(int i = 0; i < pathArray.length; i++)
 			{
@@ -224,6 +405,7 @@ public class IslandWildlifeManager
 
 		public void writeToNBT(NBTTagCompound nbt)
 		{
+			nbt.setLong("timestamp", calcTimestamp);
 			int[] pathArray = new int[path.size()];
 
 			for(int i = 0; i < path.size(); i++)
@@ -245,14 +427,25 @@ public class IslandWildlifeManager
 		{
 			goalType = goal;
 			goalLocation = loc;
-			path = null;
+			path = new HerdPath(0L);
+		}
+
+		public HerdGoal(HerdGoalEnum goal, Center loc, HerdPath p)
+		{
+			this(goal, loc);
+			path = p;
+		}
+
+		public void updateHerdPath(HerdPath p)
+		{
+			path = p;
 		}
 
 		public void readFromNBT(NBTTagCompound nbt, IslandMap map)
 		{
 			goalType = HerdGoalEnum.valueOf(nbt.getString("goalType"));
 			goalLocation = map.centers.get(nbt.getInteger("goalLocation"));
-			HerdPath path = new HerdPath();
+			HerdPath path = new HerdPath(0);
 			path.readFromNBT(nbt.getCompoundTag("path"), map);
 			this.path = path;
 		}
@@ -261,22 +454,27 @@ public class IslandWildlifeManager
 		{
 			nbt.setInteger("goalLocation", goalLocation.index);
 			nbt.setString("goalType", goalType.getName());
-			NBTTagCompound pathNBT = new NBTTagCompound();
-			path.writeToNBT(pathNBT);
-			nbt.setTag("path", pathNBT);
+			if(path != null){
+				NBTTagCompound pathNBT = new NBTTagCompound();
+				path.writeToNBT(pathNBT);
+				nbt.setTag("path", pathNBT);
+			}
 		}
 	}
 
 	public static enum HerdActivityEnum implements IStringSerializable
 	{
-		TRAVELING, WAITING;
+		TRAVELING("traveling"), WAITING("waiting"), FLEEING("fleeing"), WORKING("working");
+		String name;
+
+		HerdActivityEnum(String s)
+		{
+			name = s;
+		}
 
 		@Override
 		public String getName() {
-			if(this == TRAVELING)
-				return "traveling";
-			else
-				return "waiting";
+			return name;
 		}
 	}
 
@@ -293,29 +491,18 @@ public class IslandWildlifeManager
 			else
 				return "rest";
 		}
-	}
 
-	public static class Animal
-	{
-		String animalType;
-		Gender gender;
-
-		public Animal(String type, Gender g)
+		public static HerdGoalEnum getEnum(String s)
 		{
-			animalType = type;
-			gender = g;
-		}
-
-		public void readFromNBT(NBTTagCompound nbt)
-		{
-			animalType = nbt.getString("type");
-			gender = Gender.valueOf(nbt.getString("gender"));
-		}
-
-		public void writeToNBT(NBTTagCompound nbt)
-		{
-			nbt.setString("type", animalType);
-			nbt.setString("gender", gender.getName());
+			if(s.equals("rest"))
+				return REST;
+			else if(s.equals("food"))
+				return FOOD;
+			else if(s.equals("water"))
+				return WATER;
+			throw new IllegalArgumentException();
 		}
 	}
+
+
 }

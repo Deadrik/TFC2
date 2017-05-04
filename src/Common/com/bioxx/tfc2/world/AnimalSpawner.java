@@ -7,18 +7,18 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 
 import com.bioxx.tfc2.TFC;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
+import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 
 public class AnimalSpawner 
 {
-	public static void SpawnAnimalGroup(World world, SpawnGroup group, BlockPos pos)
+	public static void SpawnAnimalGroup(World world, IAnimalDef group, BlockPos pos)
 	{
 
 		IEntityLivingData ientitylivingdata = null;
 		int groupSize = 1;
 
 		pos = world.getTopSolidOrLiquidBlock(pos);
-		if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(group.getSpawnParams().getPlacementType(), world, pos))
+		if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(group.getPlacementType(), world, pos))
 		{
 			try
 			{
@@ -30,7 +30,7 @@ public class AnimalSpawner
 			}
 			catch(Exception e)
 			{
-				TFC.log.warn("Error while attempting to spawn entity ("+group.getGroupName()+") at " + pos.toString());
+				TFC.log.warn("Error while attempting to spawn entity ("+group.getName()+") at " + pos.toString());
 			}
 		}
 	}

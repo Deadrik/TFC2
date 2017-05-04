@@ -13,7 +13,7 @@ public class NeedZoneAttribute extends Attribute
 
 	public NeedZoneAttribute() 
 	{
-		super(Attribute.Ore);
+		super(Attribute.NeedZone);
 	}
 
 	public NeedZoneAttribute(UUID i) 
@@ -33,7 +33,7 @@ public class NeedZoneAttribute extends Attribute
 	public void readFromNBT(NBTTagCompound nbt, com.bioxx.jmapgen.IslandMap m) 
 	{
 		this.id = UUID.fromString(nbt.getString("uuid"));
-		goalType = HerdGoalEnum.valueOf(nbt.getString("goalType"));
+		goalType = HerdGoalEnum.getEnum(nbt.getString("goalType"));
 		animalType = nbt.getString("animalType");
 	}
 

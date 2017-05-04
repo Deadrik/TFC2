@@ -24,12 +24,13 @@ import com.bioxx.jmapgen.RandomCollection;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.events.IslandGenEvent;
+import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
 import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.types.EnumAnimalDiet;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.api.util.Helper;
@@ -200,20 +201,31 @@ public class WorldGen implements IThreadCompleteListener
 			if(islandCache.get(Helper.combineCoords(x, z)).getIslandMap().seed == seed2)
 				return islandCache.get(Helper.combineCoords(x, z)).getIslandMap();
 		}
-
+		// 1 - Create Island Params and fire event so mods can add or alter it
 		IslandGenEvent.Pre preEvent = new IslandGenEvent.Pre(createParams(seed2, x, z));
 		Global.EVENT_BUS.post(preEvent);
+
+		// 2 - Generate the island based on the provided Params
 		IslandMap mapgen = new IslandMap(ISLAND_SIZE, seed2);
 		mapgen.newIsland(preEvent.params);
 		mapgen.generateFull();
-		//Make sure we don't access IslandData until after generateFull because the data may become lost
+
+		// 3 - Setup all of the important stuff in IslandData
+		//----Make sure we don't access IslandData until after generateFull because the data may become lost
+		// 3.1 - Set the island level based on the island's X Coordinate and unlock the island if it is tier 0
 		mapgen.getIslandData().islandLevel = Math.abs(x);
 		if(x == 0)
 		{
 			mapgen.getIslandData().unlockIsland();
 		}
+		// 3.2 - Perform initial setup on the IslandWildlifeManager
+		mapgen.getIslandData().wildlifeManager.initialBuild(this.world);
+
+		// 4 Fire a new event with the completed islandmap for mods to alter as needed
 		IslandGenEvent.Post postEvent = new IslandGenEvent.Post(mapgen);
 		Global.EVENT_BUS.post(postEvent);
+
+		// 5 - Create a CachedIsland  and add it to the island cache
 		CachedIsland ci = new CachedIsland(postEvent.islandMap);
 		if(this != instanceClient) saveMap(ci);
 
@@ -224,6 +236,8 @@ public class WorldGen implements IThreadCompleteListener
 			islandCache.remove(Helper.combineCoords(x, z));
 			islandCache.put(Helper.combineCoords(x, z), ci);
 		}
+
+		// 6 - Return the new island
 		return ci.island;
 	}
 
@@ -360,29 +374,51 @@ public class WorldGen implements IThreadCompleteListener
 			swamp = uncommon;
 		else if(TreeRegistry.instance.treeFromString(rare).isSwampTree)
 			swamp = rare;
-
-
-
 		id.setTrees(common, uncommon, rare, swamp);
-
-		/***
-		 * Animals
-		 */
-		ArrayList<SpawnGroup> spawnGroups = AnimalSpawnRegistry.getInstance().getValidSpawnGroups(id);
-
-		int max = Math.min(spawnGroups.size(), 4+r.nextInt(Math.max(spawnGroups.size()-4, 1)));
-		for(int i = 0; i < max; i++)
-		{
-			SpawnGroup group = spawnGroups.get(r.nextInt(spawnGroups.size()));
-			id.animalSpawnGroups.add(group);
-			spawnGroups.remove(group);
-		}
 
 		if(id.hasFeature(Feature.Desert))
 			id.setIslandMoisture(Moisture.LOW);
 
 		if(id.hasFeature(Feature.TripleCaves) && id.hasFeature(Feature.DoubleCaves))
 			id.removeFeatures(Feature.DoubleCaves);
+
+		/***
+		 * Animals - This should always be last so that it is most accurate
+		 */
+		ArrayList<IAnimalDef> carnivores = AnimalSpawnRegistry.getInstance().getValidSpawnDefs(id, EnumAnimalDiet.Carnivore);
+		ArrayList<IAnimalDef> herbivores = AnimalSpawnRegistry.getInstance().getValidSpawnDefs(id, EnumAnimalDiet.Herbivore, EnumAnimalDiet.Omnivore);
+
+		//If we have more than 1 valid type of carnivore then select up to 2 types for this island
+		if(carnivores.size() > 1)
+		{
+			int count = 1+r.nextInt(2);
+			for(int i = 0; i < count; i++)
+			{
+				int index = r.nextInt(carnivores.size());
+				id.animalTypes.add(carnivores.get(index).getName());
+				carnivores.remove(index);
+			}
+		}
+		else if(carnivores.size() == 1)//if there is only 1 valid carnivore then add it
+		{
+			id.animalTypes.add(carnivores.get(0).getName());
+		}
+
+		if(herbivores.size() > 0)
+		{
+			//Attempt to generate between 3 and 5 types of herbivores for the island
+			int totalHerb = herbivores.size();
+			int count = 3+r.nextInt(3);
+			count = Math.min(totalHerb, count);
+			for(int i = 0; i < count; i++)
+			{
+				int index = r.nextInt(herbivores.size());
+				if(count == totalHerb)
+					index = i;
+				id.animalTypes.add(herbivores.get(index).getName());
+				herbivores.remove(index);
+			}
+		}
 
 		return id;
 	}

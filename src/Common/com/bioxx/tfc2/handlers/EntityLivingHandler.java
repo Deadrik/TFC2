@@ -25,9 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnEntry;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.heat.ItemHeat;
 import com.bioxx.tfc2.api.interfaces.IFood;
@@ -260,13 +258,13 @@ public class EntityLivingHandler
 
 		if(entity.getEntityData().hasKey("TFC2"))
 		{
-			NBTTagCompound nbt = entity.getEntityData().getCompoundTag("TFC2");
+			/*NBTTagCompound nbt = entity.getEntityData().getCompoundTag("TFC2");
 			if(nbt.getBoolean("isWild"))
 			{
 				IslandMap map = Core.getMapForWorld(event.getEntity().getEntityWorld(), event.getEntity().getPosition());
 				SpawnEntry entry = map.getIslandData().animalEntries.get(nbt.getString("SpawnGroup"));
 				entry.removeAnimal();
-			}
+			}*/
 		}
 	}
 

@@ -1,16 +1,7 @@
 package com.bioxx.tfc2.handlers;
 
-import java.util.Vector;
-
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.graph.Center;
-import com.bioxx.jmapgen.processing.AnimalProcessor;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.events.IslandUpdateEvent;
 import com.bioxx.tfc2.core.Timekeeper;
 
@@ -36,7 +27,7 @@ public class IslandUpdateHandler
 		event.map.getIslandData().wildlifeManager.process(event.world, Timekeeper.getInstance().getTotalHours());
 	}
 
-	public int genSingleGroup(SpawnGroup group, IslandMap map)
+	/*public int genSingleGroup(AnimalDef group, IslandMap map)
 	{
 		Vector<Center> spawnableList = AnimalProcessor.GetSpawnableCenters(group, map);
 		Center c = spawnableList.get(map.mapRandom.nextInt(spawnableList.size()));
@@ -47,5 +38,5 @@ public class IslandUpdateHandler
 			spawnList.appendTag(new NBTTagString(group.getGroupName()));
 		}
 		return groupCount;
-	}
+	}*/
 }

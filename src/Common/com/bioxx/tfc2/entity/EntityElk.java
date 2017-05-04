@@ -1,11 +1,12 @@
 package com.bioxx.tfc2.entity;
 
+import java.util.UUID;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -15,12 +16,19 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.interfaces.IAnimalDef;
+import com.bioxx.tfc2.api.interfaces.IHerdAnimal;
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
+import com.bioxx.tfc2.entity.ai.EntityAIHerdMove;
 
-public class EntityElk extends EntityAnimal 
+public class EntityElk extends EntityAnimal implements IHerdAnimal
 {
+	UUID herdID;
 	Gender gender;
+	IAnimalDef animalDef;
 	protected static final DataParameter<Gender> GENDER = EntityDataManager.createKey(EntityElk.class, DataSerializersTFC.GENDER);
 
 	public EntityElk(World worldIn) 
@@ -31,9 +39,10 @@ public class EntityElk extends EntityAnimal
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIMate(this, 0.8D));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 0.8D, true));
-		this.tasks.addTask(5, new EntityAIFollowParent(this, 0.8D));		
-		this.tasks.addTask(6, new EntityAIWander(this, 0.5D));
-		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		this.tasks.addTask(5, new EntityAIFollowParent(this, 0.8D));	
+		this.tasks.addTask(6, new EntityAIHerdMove(this, 0.5D));
+		this.tasks.addTask(7, new EntityAIWander(this, 0.5D));
+		//this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
 		setGender(worldIn.rand.nextBoolean() ? Gender.Male : Gender.Female);
@@ -105,7 +114,23 @@ public class EntityElk extends EntityAnimal
 	@Override
 	protected boolean canDespawn ()
 	{
-		return this.ticksExisted > 30000;
+		if(getEntityWorld().provider.getDimension() == 0)
+		{
+			IslandMap map = Core.getMapForWorld(getEntityWorld(), getPosition());
+			boolean inLoaded = Core.isHexFullyLoaded(getEntityWorld(), map, map.getClosestCenter(getPosition()));
+			return !inLoaded;
+		}
+		return false;
+	}
+
+	@Override
+	protected void despawnEntity()
+	{
+		super.despawnEntity();
+		if(canDespawn())
+		{
+			this.setDead();
+		}
 	}
 
 	/**
@@ -219,5 +244,25 @@ public class EntityElk extends EntityAnimal
 	{
 		this.gender = t;
 		getDataManager().set(GENDER, t);	
+	}
+
+	@Override
+	public UUID getHerdUUID() {
+		return herdID;
+	}
+
+	@Override
+	public void setHerdUUID(UUID id) {
+		herdID = id;
+	}
+
+	@Override
+	public IAnimalDef getAnimalDef() {
+		return animalDef;
+	}
+
+	@Override
+	public void setAnimalDef(IAnimalDef def) {
+		animalDef = def;
 	}
 }

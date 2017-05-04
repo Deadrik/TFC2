@@ -11,13 +11,12 @@ import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.module.Module;
 import com.bioxx.libnoise.module.modifier.ScaleBias;
 import com.bioxx.libnoise.module.source.Perlin;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
 import com.bioxx.tfc2.api.Crop;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.api.util.Helper;
 
 public class IslandParameters 
 {
@@ -44,7 +43,7 @@ public class IslandParameters
 	private ClimateTemp temp = ClimateTemp.TEMPERATE;
 	private ArrayList<Crop> cropList = new ArrayList<Crop>();
 
-	public ArrayList<SpawnGroup> animalSpawnGroups = new ArrayList<SpawnGroup>();
+	public ArrayList<String> animalTypes = new ArrayList<String>();
 
 	public IslandParameters() 
 	{
@@ -137,6 +136,11 @@ public class IslandParameters
 	public int getZCoord()
 	{
 		return this.zCoord;
+	}
+
+	public int getCantorizedID()
+	{
+		return Helper.combineCoords(xCoord, zCoord);
 	}
 
 	public void setFeatures(Feature... f)
@@ -263,7 +267,10 @@ public class IslandParameters
 		return false;
 	}
 
-
+	public double getMCBlockHeight()
+	{
+		return 1d / islandMaxHeight;
+	}
 
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -284,16 +291,15 @@ public class IslandParameters
 		this.moisture = Moisture.values()[nbt.getInteger("moisture")];
 		this.temp = ClimateTemp.values()[nbt.getInteger("temp")];
 		this.seed = nbt.getLong("seed");
-		this.animalSpawnGroups = new ArrayList<SpawnGroup>();
-		fnbt = nbt.getCompoundTag("spawnGroups");
-		for(int i = 0; i < fnbt.getSize(); i++)
+
+		this.animalTypes = new ArrayList<String>();
+		String animals = nbt.getString("animalTypes");
+		String[] split = animals.split(",");
+		for(int i = 0; i < split.length; i++)
 		{
-			SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(fnbt.getString("animal-"+i));
-			if(group != null)
-			{
-				animalSpawnGroups.add(group);
-			}
+			animalTypes.add(split[i]);
 		}
+
 		cropList.clear();
 		int[] cropArray = nbt.getIntArray("crops");
 		for(int i = 0; i < cropArray.length; i++)
@@ -324,12 +330,15 @@ public class IslandParameters
 		nbt.setInteger("temp", temp.ordinal());
 		nbt.setLong("seed", seed);
 
-		fnbt = new NBTTagCompound();
-		for(int i = 0; i < animalSpawnGroups.size(); i++)
+		String animals = "";
+		for(int i = 0; i < animalTypes.size(); i++)
 		{
-			fnbt.setString("animal-"+i, animalSpawnGroups.get(i).getGroupName());
+			animals += animalTypes.get(i);
+			if(i < animalTypes.size() - 1)
+				animals += ",";
 		}
-		nbt.setTag("spawnGroups", fnbt);
+		nbt.setString("animalTypes", animals);
+
 		int[] cropArray = new int[cropList.size()];
 		for(int i = 0; i < cropArray.length; i++)
 		{

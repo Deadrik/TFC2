@@ -51,6 +51,7 @@ public class PlayerTracker
 		{
 			WorldGen.getInstance().resetCache();
 			WorldGen.ClearInstances();
+			ChunkLoadHandler.loadedCentersMap.clear();
 		}
 	}
 

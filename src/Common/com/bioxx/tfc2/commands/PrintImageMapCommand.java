@@ -23,8 +23,8 @@ import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.RiverAttribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Corner;
-import com.bioxx.jmapgen.pathfinding.Path;
-import com.bioxx.jmapgen.pathfinding.PathNode;
+import com.bioxx.jmapgen.pathfinding.CenterPath;
+import com.bioxx.jmapgen.pathfinding.CenterPathNode;
 import com.bioxx.libnoise.NoiseQuality;
 import com.bioxx.libnoise.model.Plane;
 import com.bioxx.libnoise.module.Cache;
@@ -147,13 +147,13 @@ public class PrintImageMapCommand extends CommandBase
 					Center closest = map.getClosestCenter(new Point((int)Math.floor(player.posX) & 4095, (int)Math.floor(player.posZ) & 4095));
 					Vector<Center> land = map.getLandCenters();
 					Center end = land.get(world.rand.nextInt(land.size()));
-					Path path = map.pathfinder.findPath(closest, end);
+					CenterPath path = map.pathfinder.findPath(map, closest, end);
 					if(path == null)
 					{
 						System.out.println("Failed to find path");
 						return;
 					}
-					for(PathNode pn : path.path)
+					for(CenterPathNode pn : path.path)
 					{
 						count++;
 						graphics.setColor(Color.white);		

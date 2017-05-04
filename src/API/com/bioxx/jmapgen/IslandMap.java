@@ -20,7 +20,7 @@ import com.bioxx.jmapgen.dungeon.Dungeon;
 import com.bioxx.jmapgen.graph.*;
 import com.bioxx.jmapgen.graph.Center.HexDirection;
 import com.bioxx.jmapgen.graph.Center.Marker;
-import com.bioxx.jmapgen.pathfinding.PathFinder;
+import com.bioxx.jmapgen.pathfinding.CenterPathFinder;
 import com.bioxx.jmapgen.processing.AnimalProcessor;
 import com.bioxx.jmapgen.processing.CaveProcessor;
 import com.bioxx.jmapgen.processing.OreProcessor;
@@ -55,7 +55,7 @@ public class IslandMap
 	public Vector<Lake> lakes;
 	public long seed;
 
-	public PathFinder pathfinder;
+	public CenterPathFinder pathfinder;
 	public Vector<Dungeon> dungeons;
 
 	private CaveProcessor caves;
@@ -73,7 +73,6 @@ public class IslandMap
 		corners = new Vector<Corner>();
 		lakes = new Vector<Lake>();
 		rivers = new Vector<River>();
-		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
 		animalProc = new AnimalProcessor(this);
@@ -109,7 +108,6 @@ public class IslandMap
 		corners.clear();
 		lakes.clear();
 		rivers.clear();
-		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
 		animalProc = new AnimalProcessor(this);
@@ -132,7 +130,6 @@ public class IslandMap
 		corners.clear();
 		lakes.clear();
 		rivers.clear();
-		pathfinder = new PathFinder(this);
 		caves = new CaveProcessor(this);
 		ores = new OreProcessor(this);
 		animalProc = new AnimalProcessor(this);
@@ -702,6 +699,23 @@ public class IslandMap
 			}
 			if(keep)
 				out.add(c);
+		}
+		return out;
+	}
+
+	public Vector<Center> filterKeepAttributes(Vector<Center> centers, UUID... attr)
+	{
+		Vector<Center> out = new Vector<Center>();
+		for(Center c : centers)
+		{
+			for(UUID uuid : attr)
+			{
+				if(c.hasAttribute(uuid))
+				{
+					out.add(c);
+					break;
+				}
+			}
 		}
 		return out;
 	}

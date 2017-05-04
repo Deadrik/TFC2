@@ -1,15 +1,15 @@
 package com.bioxx.jmapgen.processing;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Vector;
 
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandWildlifeManager.HerdGoalEnum;
+import com.bioxx.jmapgen.attributes.Attribute;
+import com.bioxx.jmapgen.attributes.NeedZoneAttribute;
 import com.bioxx.jmapgen.graph.Center;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
+import com.bioxx.jmapgen.graph.Center.Marker;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry;
+import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 
 public class AnimalProcessor 
 {
@@ -22,54 +22,59 @@ public class AnimalProcessor
 
 	public void generate()
 	{
-		ArrayList<SpawnGroup> spawnGroups = map.getParams().animalSpawnGroups;
-
-		Iterator<SpawnGroup> spawnGroupsIter = spawnGroups.iterator();
-
-		//Cycle through each spawnable animal for this island
-		while(spawnGroupsIter.hasNext())
+		for(String animal : map.getParams().animalTypes)
 		{
-			SpawnGroup workingGroup = spawnGroupsIter.next();
-			Vector<Center> spawnableList = GetSpawnableCenters(workingGroup, map);
-			//Each animal has X number that should be spawned at any given time.
-			for(int i = 0; spawnableList.size() > 0 && i < workingGroup.getMaxConcurrent(); i++)
+			IAnimalDef def = AnimalSpawnRegistry.getInstance().getDefFromName(animal);
+			if(def.shouldGenNeedZones())
 			{
-				Center c = spawnableList.get(map.mapRandom.nextInt(spawnableList.size()));
-				NBTTagList spawnList = GetCenterSpawnList(c);
-				int groupCount = workingGroup.getMinGroupSpawn() + map.mapRandom.nextInt(1+workingGroup.getMaxGroupSpawn() - workingGroup.getMinGroupSpawn());
-				for(int j = 0; j < groupCount && i < workingGroup.getMaxConcurrent(); j++)
+				Vector<Center> centers = map.filterOutMarkers(map.centers, Marker.Ocean);
+				for(int i = 0; i < 10; i++)
 				{
-					spawnList.appendTag(new NBTTagString(workingGroup.getGroupName()));
-					i++;
+					Center c = centers.get(map.mapRandom.nextInt(centers.size()));
+					if(!def.isValidNeedZone(c, HerdGoalEnum.FOOD) || c.hasAttribute(Attribute.NeedZone))
+					{
+						i--;
+						continue;
+					}
+
+					NeedZoneAttribute attrib = new NeedZoneAttribute();
+					attrib.animalType = def.getName();
+					attrib.goalType = HerdGoalEnum.FOOD;
+					c.addAttribute(attrib);
 				}
-				//map.getIslandData().animalEntries.get(workingGroup.getGroupName()).availablePopulation -= groupCount;
-				c.getCustomNBT().setTag("animalsToSpawn", spawnList);
+
+				for(int i = 0; i < 50; i++)
+				{
+					Center c = centers.get(map.mapRandom.nextInt(centers.size()));
+					if(!def.isValidNeedZone(c, HerdGoalEnum.REST) || c.hasAttribute(Attribute.NeedZone))
+					{
+						i--;
+						continue;
+					}
+
+					NeedZoneAttribute attrib = new NeedZoneAttribute();
+					attrib.animalType = def.getName();
+					attrib.goalType = HerdGoalEnum.REST;
+					c.addAttribute(attrib);
+				}
+
+				for(int i = 0; i < 10; i++)
+				{
+					Center c = centers.get(map.mapRandom.nextInt(centers.size()));
+					if(!def.isValidNeedZone(c, HerdGoalEnum.WATER) || c.hasAttribute(Attribute.NeedZone))
+					{
+						i--;
+						continue;
+					}
+
+					NeedZoneAttribute attrib = new NeedZoneAttribute();
+					attrib.animalType = def.getName();
+					attrib.goalType = HerdGoalEnum.WATER;
+					c.addAttribute(attrib);
+				}
 			}
 		}
 	}
 
-	public static NBTTagList GetCenterSpawnList(Center c)
-	{
-		if(c.getCustomNBT().hasKey("animalsToSpawn"))
-		{
-			return c.getCustomNBT().getTagList("animalsToSpawn", 8);
-		}
-		else
-		{
-			return new NBTTagList();
-		}
-	}
 
-	public static Vector<Center> GetSpawnableCenters(SpawnGroup group, IslandMap map)
-	{
-		Vector<Center> spawnableList = new Vector<Center>();
-
-		for(Center c : map.centers)
-		{
-			if(group.getSpawnParams().canSpawnHere(map, c))
-				spawnableList.add(c);
-		}
-
-		return spawnableList;
-	}
 }

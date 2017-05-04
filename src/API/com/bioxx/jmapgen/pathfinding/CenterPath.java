@@ -4,19 +4,18 @@ import java.util.LinkedList;
 
 import com.bioxx.jmapgen.graph.Center;
 
-public class Path 
+public class CenterPath 
 {
-	int totalCost = 0;
-	public LinkedList<PathNode> path = new LinkedList<PathNode>();
+	public LinkedList<CenterPathNode> path = new LinkedList<CenterPathNode>();
 
-	public void addNode(PathNode c)
+	public void addNode(CenterPathNode c)
 	{
 		path.add(c);
 	}
 
 	public boolean contains(Center c)
 	{
-		for(PathNode pn : path)
+		for(CenterPathNode pn : path)
 		{
 			if(pn.center == c)
 				return true;

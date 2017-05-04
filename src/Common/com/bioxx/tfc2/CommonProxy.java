@@ -23,14 +23,15 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.bioxx.tfc2.animals.ElkAnimalDef;
 import com.bioxx.tfc2.api.*;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnGroup;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry.SpawnParameters;
 import com.bioxx.tfc2.api.SkillsManager.Skill;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
-import com.bioxx.tfc2.api.types.*;
+import com.bioxx.tfc2.api.types.OreType;
+import com.bioxx.tfc2.api.types.StoneType;
+import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.core.Recipes;
 import com.bioxx.tfc2.core.TFC_Sounds;
@@ -218,14 +219,8 @@ public class CommonProxy
 
 	protected void registerAnimals()
 	{
-		AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Elephant",  EntityElephant.class, 2, 10, 50, 50, new SpawnParameters(ClimateTemp.POLAR, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MAX)
-		{
-			@Override
-			public boolean canSpawnInDesert()
-			{
-				return true;
-			}
-		}));
+		AnimalSpawnRegistry.getInstance().register(new ElkAnimalDef());
+		//AnimalSpawnRegistry.getInstance().register(new AnimalDef("Elephant",  EntityElephant.class, 2, 10, 50, 50, new AnimalSpawnParams(ClimateTemp.POLAR, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MAX)));
 		/*AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Elephant",  EntityElephant.class, 2, 4, 20, 20, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MAX)
 		{
 			@Override

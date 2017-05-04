@@ -1,22 +1,35 @@
 package com.bioxx.tfc2.handlers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldEntitySpawner;
 
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandWildlifeManager.Herd;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.TFC;
+import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.HexGenRegistry;
+import com.bioxx.tfc2.api.VirtualAnimal;
+import com.bioxx.tfc2.api.interfaces.IAnimalDef;
+import com.bioxx.tfc2.api.interfaces.IHerdAnimal;
 
 public class ChunkLoadHandler
 {
+	public static HashMap<Integer, ArrayList<Center>> loadedCentersMap = new HashMap<Integer, ArrayList<Center>>();
+
 	@SubscribeEvent
 	public void onChunkLoad(ChunkEvent.Load event)
 	{
@@ -35,85 +48,94 @@ public class ChunkLoadHandler
 			for(Center c : genList)
 			{
 				AxisAlignedBB aabb = c.getAABB();
-				if(!c.hasGenerated)
-				{					
-					if(Core.areChunksLoadedInArea(event.getWorld().getChunkProvider(), 
-							new ChunkPos((int)(map.getParams().getWorldX()+aabb.minX) >> 4, (int)(map.getParams().getWorldZ() + aabb.minZ) >> 4), 
-							new ChunkPos((int)(map.getParams().getWorldX()+aabb.maxX) >> 4, (int)(map.getParams().getWorldZ() + aabb.maxZ) >> 4)))
+				if(Core.areChunksLoadedInArea(event.getWorld().getChunkProvider(), 
+						new ChunkPos((int)(map.getParams().getWorldX()+aabb.minX) >> 4, (int)(map.getParams().getWorldZ() + aabb.minZ) >> 4), 
+						new ChunkPos((int)(map.getParams().getWorldX()+aabb.maxX) >> 4, (int)(map.getParams().getWorldZ() + aabb.maxZ) >> 4)))
+				{
+					if(!loadedCentersMap.containsKey(map.getParams().getCantorizedID()))
 					{
+						loadedCentersMap.put(map.getParams().getCantorizedID(), new ArrayList<Center>());
+					}
+					ArrayList<Center> loaded = loadedCentersMap.get(map.getParams().getCantorizedID());
+					if(loaded.contains(c))
+						continue;
+
+					loaded.add(c);					
+
+					if(!c.hasGenerated)
+					{					
 						HexGenRegistry.generate(map, c, event.getWorld());
 						c.hasGenerated = true;
 					}
-				}
 
-				/*if(c != null && c.getCustomNBT().hasKey("animalsToSpawn"))
-				{
-					NBTTagList tag = c.getCustomNBT().getTagList("animalsToSpawn", 8);
-
-					for(int i = 0; i < tag.tagCount(); i++)
+					ArrayList<Herd> herdsToLoad = map.getIslandData().wildlifeManager.getHerdsInCenter(c);
+					BlockPos centerPos = new BlockPos(map.getParams().getWorldX()+c.point.getX(), 0, map.getParams().getWorldZ()+c.point.getZ());
+					if(herdsToLoad.size() > 0)
 					{
-						String groupName = tag.getStringTagAt(i);
+						for(Herd h : herdsToLoad)
+						{
+							IAnimalDef def = AnimalSpawnRegistry.getInstance().getDefFromName(h.getAnimalType());
+							for(VirtualAnimal animal : h.getVirtualAnimals())
+							{
+								BlockPos pos = event.getWorld().getTopSolidOrLiquidBlock(centerPos.add(-10+event.getWorld().rand.nextInt(21), 0, -10+event.getWorld().rand.nextInt(21)));
+								if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(def.getPlacementType(), event.getWorld(), pos))
+								{
+									IEntityLivingData ientitylivingdata = null;
+									try
+									{
+										EntityLiving e = def.getEntityClass().getConstructor(new Class[] {World.class}).newInstance(new Object[] {event.getWorld()});
+										e.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), event.getWorld().rand.nextFloat() * 360.0F, 0.0F);
+										event.getWorld().spawnEntity(e);
+										ientitylivingdata = e.onInitialSpawn(event.getWorld().getDifficultyForLocation(new BlockPos(e)), ientitylivingdata);
+										def.onSpawn(e);
+										if(e instanceof IHerdAnimal)
+										{
+											((IHerdAnimal)e).setAnimalDef(def);
+											((IHerdAnimal)e).setHerdUUID(h.getUUID());
+										}
 
-						SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(groupName);
-						AnimalSpawner.SpawnAnimalGroup(event.getWorld(), group, new BlockPos(map.getParams().getWorldX()+c.point.getX(), 0, map.getParams().getWorldX()+c.point.getX()));
+									}
+									catch(Exception e)
+									{
+										TFC.log.warn("Error while attempting to spawn entity ("+def.getName()+") at " + pos.toString());
+									}
+								}
+							}
+						}
 					}
-
-					c.getCustomNBT().removeTag("animalsToSpawn");
-				}*/
+				}
 			}
-
 		}
+	}
 
-		//animal stuff
-		/*if(!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0)
+	@SubscribeEvent
+	public void onChunkUnload(ChunkEvent.Unload event)
+	{
+		if(!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0)
 		{
 			BlockPos chunkWorldPos = new BlockPos(event.getChunk().xPosition * 16, 0, event.getChunk().zPosition * 16);
-			Point islandPos = new Point(chunkWorldPos.getX(), chunkWorldPos.getZ()).toIslandCoord();
 			IslandMap map = Core.getMapForWorld(event.getWorld(), chunkWorldPos);
-			Center centerInChunk = null;
 
+			Point islandPos = new Point(chunkWorldPos.getX(), chunkWorldPos.getZ()).toIslandCoord();
+			AxisAlignedBB chunkAABB = new AxisAlignedBB(islandPos.getX(), 0, islandPos.getZ(), islandPos.getX()+16, 0, islandPos.getZ()+16);
 			Center temp = map.getClosestCenter(islandPos);
-			if(Core.isCenterInRect(temp, (int)islandPos.x, (int)islandPos.y, 16, 16))
-				centerInChunk = temp;
-			else 
-			{
-				temp = map.getClosestCenter(islandPos.plus(15, 0));
-				if(Core.isCenterInRect(temp, (int)islandPos.x, (int)islandPos.y, 16, 16))
-					centerInChunk = temp;
-				else
-				{
-					temp = map.getClosestCenter(islandPos.plus(0, 15));
-					if(Core.isCenterInRect(temp, (int)islandPos.x, (int)islandPos.y, 16, 16))
-						centerInChunk = temp;
-					else
-					{
-						temp = map.getClosestCenter(islandPos.plus(15, 15));
-						if(Core.isCenterInRect(temp, (int)islandPos.x, (int)islandPos.y, 16, 16))
-							centerInChunk = temp;
-					}
-				}
-			}
 
-			if(centerInChunk != null)
+			ArrayList<Center> genList = new ArrayList<Center>();
+			genList.add(temp);
+			genList.addAll(temp.neighbors);
+
+			if(loadedCentersMap.containsKey(map.getParams().getCantorizedID()))
 			{
-				if(centerInChunk.getCustomNBT().hasKey("animalsToSpawn"))
-				{
-					NBTTagCompound tag = centerInChunk.getCustomNBT().getCompoundTag("animalsToSpawn");
-					Iterator iter = tag.getKeySet().iterator();
-					while(iter.hasNext())
+				ArrayList<Center> loaded = loadedCentersMap.get(map.getParams().getCantorizedID());
+				for(Center c : genList)
+				{	
+					AxisAlignedBB aabb = c.getAABB();
+					if(loaded.contains(c) && aabb.intersectsWith(chunkAABB))
 					{
-						String key = (String)iter.next();
-						String groupName = tag.getString(key);
-						SpawnGroup group = AnimalSpawnRegistry.getInstance().getGroupFromName(groupName);
-						AnimalSpawner.SpawnAnimalGroup(event.getWorld(), group, event.getChunk());
-						tag.removeTag(key);
+						loaded.remove(c);
 					}
-					if(tag.hasNoTags())
-						centerInChunk.getCustomNBT().removeTag("animalsToSpawn");
-					else
-						centerInChunk.getCustomNBT().setTag("animalsToSpawn", tag);
 				}
 			}
-		}*/
+		}
 	}
 }
