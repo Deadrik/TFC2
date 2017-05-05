@@ -3,8 +3,10 @@ package com.bioxx.tfc2.handlers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -25,6 +27,8 @@ import com.bioxx.tfc2.api.HexGenRegistry;
 import com.bioxx.tfc2.api.VirtualAnimal;
 import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.interfaces.IHerdAnimal;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 public class ChunkLoadHandler
 {
@@ -75,6 +79,7 @@ public class ChunkLoadHandler
 						for(Herd h : herdsToLoad)
 						{
 							IAnimalDef def = AnimalSpawnRegistry.getInstance().getDefFromName(h.getAnimalType());
+							h.setLoaded();
 							for(VirtualAnimal animal : h.getVirtualAnimals())
 							{
 								BlockPos pos = event.getWorld().getTopSolidOrLiquidBlock(centerPos.add(-10+event.getWorld().rand.nextInt(21), 0, -10+event.getWorld().rand.nextInt(21)));
@@ -93,6 +98,7 @@ public class ChunkLoadHandler
 											((IHerdAnimal)e).setAnimalDef(def);
 											((IHerdAnimal)e).setHerdUUID(h.getUUID());
 										}
+										animal.setLoaded(e);
 
 									}
 									catch(Exception e)
@@ -117,7 +123,7 @@ public class ChunkLoadHandler
 			IslandMap map = Core.getMapForWorld(event.getWorld(), chunkWorldPos);
 
 			Point islandPos = new Point(chunkWorldPos.getX(), chunkWorldPos.getZ()).toIslandCoord();
-			AxisAlignedBB chunkAABB = new AxisAlignedBB(islandPos.getX(), 0, islandPos.getZ(), islandPos.getX()+16, 0, islandPos.getZ()+16);
+			AxisAlignedBB chunkAABB = new AxisAlignedBB(islandPos.getX(), 0, islandPos.getZ(), islandPos.getX()+16, 1, islandPos.getZ()+16);
 			Center temp = map.getClosestCenter(islandPos);
 
 			ArrayList<Center> genList = new ArrayList<Center>();
@@ -130,12 +136,30 @@ public class ChunkLoadHandler
 				for(Center c : genList)
 				{	
 					AxisAlignedBB aabb = c.getAABB();
-					if(loaded.contains(c) && aabb.intersectsWith(chunkAABB))
+					boolean intersect =aabb.intersectsWith(chunkAABB);
+					if(intersect && loaded.contains(c) )
 					{
 						loaded.remove(c);
+						ArrayList<Herd> herdsToUnload = map.getIslandData().wildlifeManager.getHerdsInCenter(c);
+						for(Herd h : herdsToUnload)
+						{
+							h.setUnloaded();
+							for(VirtualAnimal animal : h.getVirtualAnimals())
+							{
+								Predicate<Entity> predicate = Predicates.<Entity>and(EntitySelectors.NOT_SPECTATING, EntitySelectors.notRiding(animal.getEntity()));
+								Entity closestEntity = animal.getEntity().world.getClosestPlayer(animal.getEntity().posX, animal.getEntity().posY, animal.getEntity().posZ, 100D, predicate);
+								if(closestEntity == null)
+								{
+									animal.getEntity().setDead();
+									animal.setUnloaded();
+								}
+							}
+						}
 					}
 				}
 			}
+
+
 		}
 	}
 }

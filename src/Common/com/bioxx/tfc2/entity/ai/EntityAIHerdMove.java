@@ -27,6 +27,7 @@ public class EntityAIHerdMove extends EntityAIBase
 	protected int executionChance;
 	protected boolean mustUpdate;
 	Center target;
+	Vec3d targetVec;
 
 	public EntityAIHerdMove(EntityAnimal creatureIn, double speedIn)
 	{
@@ -49,7 +50,7 @@ public class EntityAIHerdMove extends EntityAIBase
 	{
 		if(!mustUpdate)
 		{
-			if (this.entity.getRNG().nextInt(2/*this.executionChance*/) != 0)
+			if (this.entity.getRNG().nextInt(10) != 0)
 			{
 				return false;
 			}
@@ -65,18 +66,19 @@ public class EntityAIHerdMove extends EntityAIBase
 			if(herd!= null && herd.getHerdBrain().getActivity() == HerdActivityEnum.TRAVELING)
 			{
 				Center loc = iwf.getHerd(animal.getHerdUUID()).getHerdBrain().getLocation();
-				if(loc == target)
+				Center closest = map.getClosestCenter(entity.getPosition());
+				if(loc == closest)
 					return false;
-				target = loc;
+
 				Point p = loc.point.plus(map.getParams().getWorldX(), map.getParams().getWorldZ());
-				Vec3d vec3d = new Vec3d(p.getX(), Global.SEALEVEL+map.convertHeightToMC(loc.getElevation()), p.getZ());
-				net.minecraft.pathfinding.Path path = entity.getNavigator().getPathToXYZ(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord);
-				if(path == null)
-				{
-					vec3d = RandomPositionGenerator.findRandomTargetBlockTowards(entity, 20, 5, vec3d);
-				}
+				//Vec3d vec3d = new Vec3d(-5+entity.world.rand.nextInt(11)+p.getX(), Global.SEALEVEL+map.convertHeightToMC(loc.getElevation()), -5+entity.world.rand.nextInt(11)+p.getZ());
+				Vec3d vec3d = new Vec3d(p.getX(), Global.SEALEVEL+map.convertHeightToMC(loc.getElevation()),p.getZ());
+				vec3d = RandomPositionGenerator.findRandomTargetBlockTowards(entity, 20, 8, vec3d);
 				if(vec3d != null)
 				{
+					//TFC.log.info(vec3d.toString());
+					target = loc;
+					targetVec = vec3d;
 					this.xPosition = vec3d.xCoord;
 					this.yPosition = vec3d.yCoord;
 					this.zPosition = vec3d.zCoord;

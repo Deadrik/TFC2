@@ -1,5 +1,6 @@
 package com.bioxx.tfc2.api;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.bioxx.tfc2.api.types.Gender;
@@ -8,11 +9,34 @@ public class VirtualAnimal
 {
 	String animalType;
 	Gender gender;
+	boolean isLoaded = false;
+	public EntityLiving entity;
 
 	public VirtualAnimal(String type, Gender g)
 	{
 		animalType = type;
 		gender = g;
+	}
+
+	public boolean isLoaded()
+	{
+		return isLoaded;
+	}
+
+	public void setLoaded(EntityLiving e)
+	{
+		isLoaded = true;
+		entity = e;
+	}
+
+	public void setUnloaded()
+	{
+		isLoaded = false;
+	}
+
+	public EntityLiving getEntity()
+	{
+		return entity;
 	}
 
 	public void readFromNBT(NBTTagCompound nbt)

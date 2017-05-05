@@ -5,7 +5,10 @@ import java.util.UUID;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.*;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAIFollowParent;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,12 +20,15 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.jmapgen.IslandWildlifeManager.Herd;
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.VirtualAnimal;
 import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.interfaces.IHerdAnimal;
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.ai.EntityAIHerdMove;
+import com.bioxx.tfc2.entity.ai.EntityAISmartSwim;
 
 public class EntityElk extends EntityAnimal implements IHerdAnimal
 {
@@ -31,17 +37,19 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 	IAnimalDef animalDef;
 	protected static final DataParameter<Gender> GENDER = EntityDataManager.createKey(EntityElk.class, DataSerializersTFC.GENDER);
 
+	EntityAIHerdMove aiHerdMove;
+
 	public EntityElk(World worldIn) 
 	{
 		super(worldIn);
-		this.setSize(1.8F, 2.5F);
+		this.setSize(1.5F, 1.8F);
 		((PathNavigateGround)this.getNavigator()).setCanSwim(true);
-		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(2, new EntityAIMate(this, 0.8D));
+		this.tasks.addTask(0, new EntityAISmartSwim(this));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 0.8D, true));
 		this.tasks.addTask(5, new EntityAIFollowParent(this, 0.8D));	
-		this.tasks.addTask(6, new EntityAIHerdMove(this, 0.5D));
-		this.tasks.addTask(7, new EntityAIWander(this, 0.5D));
+		aiHerdMove = new EntityAIHerdMove(this, 0.5D);
+		this.tasks.addTask(6, aiHerdMove);
+		//this.tasks.addTask(7, new EntityAIWander(this, 0.5D));
 		//this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
@@ -73,7 +81,8 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);//MaxHealth
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);//MaxHealth
+		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(100);
 	}
 
 	/**
@@ -84,6 +93,15 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 	protected boolean canTriggerWalking ()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean writeToNBTOptional(NBTTagCompound compound)
+	{
+		//we should return true here later if the entity needs to star around
+
+		//return false here to prevent the entity from saving to disk
+		return false;
 	}
 
 	/**
@@ -129,6 +147,18 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 		super.despawnEntity();
 		if(canDespawn())
 		{
+			IslandMap map = Core.getMapForWorld(getEntityWorld(), getPosition());
+			Herd h = map.getIslandData().wildlifeManager.getHerd(getHerdUUID());
+			if(h != null)
+			{
+				for(VirtualAnimal a : h.getVirtualAnimals())
+				{
+					if(a.isLoaded() && a.getEntity() == this)
+					{
+						a.setUnloaded();
+					}
+				}
+			}
 			this.setDead();
 		}
 	}

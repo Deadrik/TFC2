@@ -79,6 +79,8 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 	 */
 	public void initialBuild(World world)
 	{
+		if(map.getParams().getXCoord() != 0 || map.getParams().getZCoord() != -2)
+			return;
 		Vector<Center> needZones = map.filterKeepAttributes(map.filterOutMarkers(map.centers, Marker.Ocean), Attribute.NeedZone);
 
 		for(String animalType : map.getParams().animalTypes)
@@ -103,6 +105,8 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 					Herd h = new Herd(def.getName(), myNeedZones.get(map.mapRandom.nextInt(myNeedZones.size())));
 					h.addAllAnimals(list);
 					this.addHerd(h);
+					//numToGen = 0;//remove me
+					//log.info("Created herd at: " + h.getHerdBrain().currentLocation.point.toString());
 				}
 				else
 				{
@@ -163,6 +167,7 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 		String animalType;
 		ArrayList<VirtualAnimal> animals = new ArrayList<VirtualAnimal>();
 		HerdBrain brain;
+		boolean isLoaded = false;//This doesnt need to be saved to disk
 
 		public Herd(String type, Center curLoc)
 		{
@@ -183,6 +188,21 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 		public UUID getUUID()
 		{
 			return uuid;
+		}
+
+		public boolean isLoaded()
+		{
+			return isLoaded;
+		}
+
+		public void setLoaded()
+		{
+			isLoaded = true;
+		}
+
+		public void setUnloaded()
+		{
+			isLoaded = false;
 		}
 
 		public VirtualAnimal addAnimal(Gender g)
@@ -241,6 +261,8 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 		int activityTimer;
 		Center currentLocation;
 
+		int hoursWaitingOnHerd = 0;
+
 		public HerdBrain(Herd h, Center curLoc)
 		{
 			herd = h;
@@ -295,6 +317,40 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 				}
 				else if(currentActivity == HerdActivityEnum.TRAVELING)//The herd is actively moving to a new needzone
 				{
+					if(herd.isLoaded())
+					{
+						ArrayList<VirtualAnimal> animalsToRemove = new ArrayList<VirtualAnimal>();
+						for(VirtualAnimal animal : herd.animals)
+						{
+							if(animal.getEntity() == null)
+							{
+								animalsToRemove.add(animal);
+							}
+							else
+							{
+								Center c = map.getClosestCenter(animal.getEntity().getPosition());
+								if(c != currentLocation)
+								{
+									if(hoursWaitingOnHerd < 3)
+									{
+										hoursWaitingOnHerd++;
+										activityTimer = 1;
+										return;
+									}
+									else
+									{
+										animalsToRemove.add(animal);
+									}
+								}
+							}
+						}
+
+						for(VirtualAnimal animal : animalsToRemove)
+						{
+							herd.animals.remove(animal);
+						}
+					}
+					hoursWaitingOnHerd = 0;
 					currentLocation = currentGoal.path.move();
 					activityTimer = 1;
 					if(currentGoal.goalLocation == currentLocation)
@@ -339,7 +395,7 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 
 		public void readFromNBT(NBTTagCompound nbt, IslandMap map)
 		{
-			currentActivity = HerdActivityEnum.valueOf(nbt.getString("currentActivity"));
+			currentActivity = HerdActivityEnum.getEnum(nbt.getString("currentActivity"));
 			activityTimer = nbt.getInteger("activityTimer");
 			currentLocation = map.centers.get(nbt.getInteger("currentLocation"));
 			currentGoal = new HerdGoal(HerdGoalEnum.REST, currentLocation);
@@ -443,7 +499,7 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 
 		public void readFromNBT(NBTTagCompound nbt, IslandMap map)
 		{
-			goalType = HerdGoalEnum.valueOf(nbt.getString("goalType"));
+			goalType = HerdGoalEnum.getEnum(nbt.getString("goalType"));
 			goalLocation = map.centers.get(nbt.getInteger("goalLocation"));
 			HerdPath path = new HerdPath(0);
 			path.readFromNBT(nbt.getCompoundTag("path"), map);
@@ -475,6 +531,16 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 		@Override
 		public String getName() {
 			return name;
+		}
+
+		public static HerdActivityEnum getEnum(String s)
+		{
+			for(HerdActivityEnum e : values())
+			{
+				if(e.name.equals(s))
+					return e;
+			}
+			throw new IllegalArgumentException();
 		}
 	}
 

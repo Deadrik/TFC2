@@ -25,6 +25,9 @@ public class CenterPathFinder
 			CenterPathNode node = choose_node(reachable, end);
 			Center c = node.center;
 
+			if(reachable.size() > 10000)
+				return null;
+
 			//if we find our goal then build a path and return it
 			if(c == end)
 			{

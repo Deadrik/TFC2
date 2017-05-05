@@ -444,7 +444,7 @@ public class Center
 			maxZ = Math.max(maxZ, c.point.y);
 		}
 
-		return new AxisAlignedBB(minX, 0, minZ, maxX, 0, maxZ);
+		return new AxisAlignedBB(minX, 0, minZ, maxX, 1, maxZ);
 	}
 
 
