@@ -25,7 +25,7 @@ import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.types.PortalEnumType;
 import com.bioxx.tfc2.api.util.Helper;
 import com.bioxx.tfc2.blocks.BlockPortal;
-import com.bioxx.tfc2.world.generators.WorldGenPortals;
+import com.bioxx.tfc2.world.hexgen.WorldGenPortalsHex;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 
 public class TeleporterPaths extends Teleporter
@@ -49,7 +49,7 @@ public class TeleporterPaths extends Teleporter
 		{
 			if (!this.placeInExistingPortal(entity, yaw))
 			{
-				this.makePortal(entity);
+				//this.makePortal(entity);
 				makePath(entity);
 				if(!this.placeInExistingPortal(entity, yaw))
 				{
@@ -64,26 +64,41 @@ public class TeleporterPaths extends Teleporter
 		}
 		else
 		{
-			int playerX = MathHelper.floor(entity.posX);
-			int playerZ = MathHelper.floor(entity.posZ);
-			IslandMap islandMap = WorldGen.getInstance().getIslandMap(playerX >> 12, playerZ >> 12);
-			Center closest = islandMap.getClosestCenter(new Point(playerX % 4096,playerZ % 4096));
+			IslandMap islandMap = WorldGen.getInstance().getIslandMap(MathHelper.floor(entity.posX) >> 12, MathHelper.floor(entity.posZ) >> 12);
+			Center closest = islandMap.getClosestCenter(entity.getPosition());
 			//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
 			closest = this.getPortalNeighbor(closest);
 
-			BlockPos pos = new BlockPos((playerX >> 12)*4096+closest.point.x, Global.SEALEVEL+islandMap.convertHeightToMC(closest.getElevation()), (playerZ >> 12)*4096+closest.point.y);
-			//Find portal
-			pos = this.findPortal(pos);
+			BlockPos pos = new BlockPos(
+					islandMap.getParams().getWorldX()+closest.point.x, 
+					Global.SEALEVEL+islandMap.convertHeightToMC(closest.getElevation()), 
+					islandMap.getParams().getWorldZ()+closest.point.y);
 
 			PortalAttribute attr = (PortalAttribute) closest.getAttribute(Attribute.Portal);
-			if(this.checkRoomForPlayer(pos.north()))
-				pos = pos.north();
-			else if(this.checkRoomForPlayer(pos.south()))
-				pos = pos.south();
-			else if(this.checkRoomForPlayer(pos.east()))
-				pos = pos.east();
-			else if(this.checkRoomForPlayer(pos.west()))
-				pos = pos.west();
+			//Find portal
+			BlockPos portalpos = pos;
+
+			if(attr == null)
+				portalpos = findPortal(pos);
+			else
+			{
+				int x = closest.getCustomNBT().getInteger("PortalX");
+				int y = closest.getCustomNBT().getInteger("PortalY");
+				int z = closest.getCustomNBT().getInteger("PortalZ");
+				portalpos = new BlockPos(x,y,z);
+			}
+
+			if(portalpos != null)
+			{
+				if(this.checkRoomForPlayer(portalpos.north()))
+					pos = portalpos.north();
+				else if(this.checkRoomForPlayer(portalpos.south()))
+					pos = portalpos.south();
+				else if(this.checkRoomForPlayer(portalpos.east()))
+					pos = portalpos.east();
+				else if(this.checkRoomForPlayer(portalpos.west()))
+					pos = portalpos.west();
+			}
 
 			entity.setLocationAndAngles(pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, yaw, entity.rotationPitch);
 		}
@@ -181,12 +196,12 @@ public class TeleporterPaths extends Teleporter
 		Center closest = islandMap.getClosestCenter(new Point((playerX*8) % 4096,(playerZ*8) % 4096));
 		//Sometimes due to the world scaling, we might find the closest center is actually a neighbor of the portal hex
 		closest = this.getPortalNeighbor(closest);
-		BlockPos portalPos = new BlockPos(entityIn);
+		BlockPos portalPos = new BlockPos(entityIn).down();
 
 		if(closest != null)
 		{
 			PortalAttribute attr = (PortalAttribute) closest.getAttribute(Attribute.Portal);
-			WorldGenPortals.BuildPortalSchem(worldServerInstance, closest, portalPos, islandMap, true);
+			WorldGenPortalsHex.BuildPortalSchem(worldServerInstance, closest, portalPos, islandMap, true);
 		}
 		else return false;
 
@@ -226,6 +241,8 @@ public class TeleporterPaths extends Teleporter
 		BlockPos end = dest.point.toBlockPos().add(destX * 4096, Global.SEALEVEL+destMap.convertHeightToMC(dest.getElevation()), destZ * 4096);
 		end = new BlockPos(end.getX() * factor, end.getY(), end.getZ() * factor);
 
+		WorldGenPortalsHex.BuildPortalSchem(worldServerInstance, closest, start, islandMap, true);
+
 		//Create the spline if it does not exist
 		if(startAttr.getSpline() == null)
 		{
@@ -247,7 +264,12 @@ public class TeleporterPaths extends Teleporter
 				for(int i = 1; i < 6; i++)
 				{
 					BlockPos pos = spline.getPoint((double)i*loc);
-					pos = pos.add(-30+r.nextInt(61), -5+r.nextInt(11), -30+r.nextInt(61));
+					pos = pos.add(0, -3+r.nextInt(7), 0);
+					if(startAttr.direction == EnumFacing.NORTH || startAttr.direction == EnumFacing.SOUTH)
+						pos = pos.add(-20+r.nextInt(41), 0, 0);
+					else if(startAttr.direction == EnumFacing.EAST || startAttr.direction == EnumFacing.WEST)
+						pos = pos.add(0, 0, -20+r.nextInt(41));
+
 					list.add(pos);
 				}
 				list.add(end);
@@ -259,8 +281,8 @@ public class TeleporterPaths extends Teleporter
 		if(destMap.getIslandData().getPortalState(endAttr.direction) == PortalEnumType.Disabled)
 			destMap.getIslandData().enablePortal(endAttr.direction);
 
-		WorldGenPortals.BuildPath(worldServerInstance, start, end, startAttr.getSpline());
-		WorldGenPortals.BuildPortalSchem(worldServerInstance, dest, end, destMap, true);
+		WorldGenPortalsHex.BuildPath(worldServerInstance, start, end, startAttr.getSpline());
+		WorldGenPortalsHex.BuildPortalSchem(worldServerInstance, dest, end, destMap, true);
 
 		return true;
 	}

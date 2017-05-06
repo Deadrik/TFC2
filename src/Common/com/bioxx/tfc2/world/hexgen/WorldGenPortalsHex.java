@@ -122,6 +122,12 @@ public class WorldGenPortalsHex extends WorldGenHex
 			else if(state.getBlock() == Blocks.GLASS)
 			{
 				state = TFCBlocks.Portal.getDefaultState().withProperty(BlockPortal.AXIS, axis).withProperty(BlockPortal.CENTER, true);
+				if(world.provider.getDimension() == 0)
+				{
+					c.getCustomNBT().setInteger("PortalX", localPos.getX());
+					c.getCustomNBT().setInteger("PortalY", localPos.getY());
+					c.getCustomNBT().setInteger("PortalZ", localPos.getZ());
+				}
 			}
 
 			if(state.getBlock() != Blocks.AIR)
@@ -165,9 +171,9 @@ public class WorldGenPortalsHex extends WorldGenHex
 		for(double len = 0; len <= 1; len += 0.001)
 		{
 			BlockPos pos = spline.getPoint(len);
-			int radius = 2;
+			int radius = 3;
 			if(len == 0 || len >= 0.998)
-				radius = 8;
+				radius = 14;
 			for(int x = -radius; x <= radius; x++)
 			{
 				for(int z = -radius; z <= radius; z++)
