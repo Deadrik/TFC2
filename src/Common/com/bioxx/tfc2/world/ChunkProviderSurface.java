@@ -1278,11 +1278,11 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 										BlockPos placerUp = pos3.up();
 										while(Core.isSoil(getState(chunkprimer, placerUp)))
 										{
-											BlockPos placerDn = pos3.down();
+											BlockPos placerDn = placerUp.down();
 											while(getState(chunkprimer, placerDn).getBlock() == Blocks.AIR)
 												placerDn = placerDn.down();
 											setState(chunkprimer, placerDn.up(), up);
-											setState(chunkprimer, pos3.up(), Blocks.AIR.getDefaultState());
+											setState(chunkprimer, pos3.up(), fillBlock);
 											placerUp = placerUp.up();
 										}
 
