@@ -44,7 +44,7 @@ public class WorldGenStalag implements IWorldGenerator
 				BlockPos pos = new BlockPos(chunkX+x, 0, chunkZ+z);
 				Center closest = map.getClosestCenter(pos);
 				int elev = mcElev(closest.getElevation());
-				for(int y = 1; y < elev; y++)
+				for(int y = 1; y < elev*0.8; y++)
 				{
 					pos = new BlockPos(chunkX+x, y, chunkZ+z);
 					IBlockState state = world.getBlockState(pos);
