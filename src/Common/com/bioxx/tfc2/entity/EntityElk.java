@@ -186,7 +186,7 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 	protected SoundEvent getHurtSound()
 	{
 		if(isChild())
-			return null;
+			return TFC_Sounds.ELKCUBHURT;
 		else
 			return TFC_Sounds.ELKHURT;
 	}
@@ -198,7 +198,7 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 	protected SoundEvent getDeathSound()
 	{
 		if(isChild())
-			return null;
+			return TFC_Sounds.ELKCUBDEATH;
 		else
 			return TFC_Sounds.ELKDEATH;
 		
