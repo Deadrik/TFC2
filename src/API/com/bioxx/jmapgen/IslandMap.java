@@ -25,12 +25,14 @@ import com.bioxx.jmapgen.processing.AnimalProcessor;
 import com.bioxx.jmapgen.processing.CaveProcessor;
 import com.bioxx.jmapgen.processing.OreProcessor;
 import com.bioxx.jmapgen.processing.PortalProcessor;
-import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.Moisture;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class IslandMap 
 {
+	public static Logger log = LogManager.getLogger("IslandMap");
 	public int NUM_POINTS = 4096*4;
 	public int NUM_POINTS_SQ = (int) Math.sqrt(NUM_POINTS);
 	boolean builtVoronoi = false;
@@ -145,16 +147,6 @@ public class IslandMap
 
 		// Determine the elevations and water at Voronoi corners.
 		int borderCount = assignCornerElevations();
-		//If there is too much land on the borders then toss this island and start fresh
-		if(borderCount > 20)
-		{
-			seed += 1234567;
-			newIsland(islandParams);
-			//resetMap();
-			generateFull();
-			TFC.log.debug("Reset Map: Centers-" + centers.size());
-			return;
-		}
 
 		// Determine polygon and corner type: ocean, coast, land.
 		assignOceanCoastAndLand();
@@ -189,8 +181,8 @@ public class IslandMap
 			createCanyons();
 
 			calculateDownslopesCenter();
-
 			createGorges();
+			createRamps();
 
 			createMesas();
 
@@ -401,6 +393,49 @@ public class IslandMap
 				}
 			}
 		}
+	}
+
+	private void createRamps()
+	{
+		if(getParams().hasAnyFeatureOf(Feature.LowLand))
+			return;
+
+		Vector<Center> landCenters = this.getLandCenters();
+		Vector<Center> cliffCenters = new Vector<Center>();
+		double mcHeight = this.getParams().getMCBlockHeight();
+		for(Center c : landCenters)
+		{
+			Center lowest = c.getLowestNeighbor();
+			if(c.getElevation() - lowest.getElevation() > mcHeight * 10)
+			{
+				cliffCenters.add(c);
+			}
+		}
+		Collections.sort(cliffCenters, new ElevationComparator());
+		int count = (int) (cliffCenters.size()*0.1);
+		for(int i = 0; i < count; i++)
+		{
+			int index = mapRandom.nextInt(cliffCenters.size());
+			index = index + mapRandom.nextInt(cliffCenters.size() - index);//We try to skew towards higher elevations
+			Center c = cliffCenters.get(index).getLowestNeighbor();
+
+			while(true)
+			{
+				//Get the lowest neighbor and the height diff between this block and the neighbor
+				Center highest = getRandomCenter(c.getOnlyHigherCenters());
+				double blockDiff = (highest.getElevation()-c.getElevation()) * mcHeight;
+
+				if(blockDiff <= 5)
+					break;
+				highest.setElevation(c.getElevation() + (4*mcHeight));
+				c = highest;
+			}
+		}
+	}
+
+	private Center getRandomCenter(List<Center> list)
+	{
+		return list.get(mapRandom.nextInt(list.size()));
 	}
 
 	private void createClearings()

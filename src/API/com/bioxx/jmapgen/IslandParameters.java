@@ -168,6 +168,14 @@ public class IslandParameters
 		return features.contains(feat);
 	}
 
+	public boolean hasAnyFeatureOf(Feature... feat)
+	{
+		for(Feature f : feat)
+			if(features.contains(f))
+				return true;
+		return false;
+	}
+
 	public String featuresToString()
 	{
 		String s = "[";
