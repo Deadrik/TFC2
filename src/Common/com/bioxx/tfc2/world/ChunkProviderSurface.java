@@ -1275,8 +1275,19 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 												fillBlock = state;
 										}
 
-										if(TFCOptions.shouldStripChunks)
-											fillBlock = Blocks.WOOL.getDefaultState();
+										BlockPos placerUp = pos3.up();
+										while(Core.isSoil(getState(chunkprimer, placerUp)))
+										{
+											BlockPos placerDn = pos3.down();
+											while(getState(chunkprimer, placerDn).getBlock() == Blocks.AIR)
+												placerDn = placerDn.down();
+											setState(chunkprimer, placerDn.up(), up);
+											setState(chunkprimer, pos3.up(), Blocks.AIR.getDefaultState());
+											placerUp = placerUp.up();
+										}
+
+										if(Core.isStone(getState(chunkprimer, pos3.up())) && getState(chunkprimer, pos3.up(2)).getBlock() == Blocks.AIR)
+											setState(chunkprimer, pos3.up(), Blocks.AIR.getDefaultState());
 
 										setState(chunkprimer, pos3, fillBlock);
 
