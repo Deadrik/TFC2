@@ -46,6 +46,13 @@ public class TFC_Sounds
 	public static SoundEvent LIONHURT;
 	public static SoundEvent LIONDEATH;
 	public static SoundEvent KNAPPING;
+	public static SoundEvent ELKHORNS;
+	public static SoundEvent ELKCRY;
+	public static SoundEvent ELKHURT;
+	public static SoundEvent ELKDEATH;
+	public static SoundEvent ELKCUBCRY;
+	public static SoundEvent ELKCUBHURT;
+	public static SoundEvent ELKCUBDEATH;
 
 	public static SoundEvent TFCMUSIC;
 
@@ -86,7 +93,14 @@ public class TFC_Sounds
 		LIONHURT = createSound("mob.lion.hurt");
 		LIONDEATH = createSound("mob.lion.death");
 		KNAPPING = createSound("knapping");
-
+		ELKHORNS = createSound("mob.elk.horns.say");
+		ELKCRY = createSound("mob.elk.cry");
+		ELKHURT = createSound("mob.elk.hurt");
+		ELKDEATH = createSound("mob.elk.death");
+		ELKCUBCRY = createSound("mob.elk.cub.cry");
+		ELKCUBHURT = createSound("mob.elk.cub.hurt");
+		ELKCUBDEATH = createSound("mob.elk.cub.death");
+		
 		TFCMUSIC = createSound("music");
 	}
 

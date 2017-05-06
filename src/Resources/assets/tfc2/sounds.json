@@ -158,6 +158,65 @@
     ]
   },
 
+  "mob.elk.horns.say": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:elkhorns1"
+    ]
+  },
+
+  "mob.elk.cry": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:elkcry1",
+      "tfc2:elkcry2",
+      "tfc2:elkcry3",
+      "tfc2:elkcry4",
+      "tfc2:elkcry5",
+      "tfc2:elkcry6"
+    ]
+  },
+
+  "mob.elk.hurt": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:elkhurt1",
+      "tfc2:elkhurt2"
+    ]
+  },
+
+  "mob.elk.death": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:elkdeath1"
+    ]
+  },
+
+  "mob.elk.cub.cry": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:elkcubcry1",
+      "tfc2:elkcubcry2",
+      "tfc2:elkcubcry3",
+      "tfc2:elkcubcry4"
+    ]
+  },
+
+  "mob.elk.cub.hurt": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:elkcubhurt1",
+      "tfc2:elkcubhurt2"
+    ]
+  },
+
+  "mob.elk.cub.death": {
+    "category": "ambient",
+    "sounds": [
+      "tfc2:elkcubdeath1"
+    ]
+  },
+
   "mob.bison.say": {
     "category": "ambient",
     "sounds": [

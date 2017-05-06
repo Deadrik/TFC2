@@ -170,11 +170,13 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 	protected SoundEvent getAmbientSound ()
 	{
 		if(isChild() && world.rand.nextInt(100) < 5)
-			return TFC_Sounds.BEARCUBCRY;
+			return TFC_Sounds.ELKCUBCRY;
 		else if(world.rand.nextInt(100) < 5)
-			return TFC_Sounds.BEARCRY;
+			return TFC_Sounds.ELKCRY;
+		else if(world.rand.nextInt(100) < 5 && this.gender == Gender.Male)
+			return TFC_Sounds.ELKHORNS;
 
-		return isChild() ? null : TFC_Sounds.BEARSAY;
+		return null;
 	}
 
 	/**
@@ -183,10 +185,10 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 	@Override
 	protected SoundEvent getHurtSound()
 	{
-		if(!isChild())
-			return TFC_Sounds.BEARHURT;
+		if(isChild())
+			return null;
 		else
-			return TFC_Sounds.BEARCUBCRY;
+			return TFC_Sounds.ELKHURT;
 	}
 
 	/**
@@ -195,10 +197,11 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 	@Override
 	protected SoundEvent getDeathSound()
 	{
-		if(!isChild())
-			return TFC_Sounds.BEARDEATH;
+		if(isChild())
+			return null;
 		else
-			return TFC_Sounds.BEARCUBCRY;
+			return TFC_Sounds.ELKDEATH;
+		
 	}
 
 	/**
