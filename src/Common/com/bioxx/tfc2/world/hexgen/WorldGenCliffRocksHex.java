@@ -11,6 +11,7 @@ import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.blocks.terrain.BlockStone;
@@ -46,22 +47,25 @@ public class WorldGenCliffRocksHex extends WorldGenHex
 				BlockPos pos = new BlockPos(p.getX(), 0, p.getZ());
 				pos = world.getTopSolidOrLiquidBlock(pos).add(0, -1, 0);
 
-				int size = 1+random.nextInt(2);
-				BlockPos pos2 = random.nextBoolean() ? pos.add(new BlockPos(1, 0, 0)) : null;
-				BlockPos pos3 = random.nextBoolean() ? pos.add(new BlockPos(-1, 0, 0)) : null;
-				BlockPos pos4 = random.nextBoolean() ? pos.add(new BlockPos(0, 0, 1)) : null;
-				BlockPos pos5 = random.nextBoolean() ? pos.add(new BlockPos(0, 0, -1)) : null;
-				for(int y = -2; y <= size; y++)
+				if(Core.isTerrain(world.getBlockState(pos)))
 				{
-					world.setBlockState(pos.add(0,y,0), stone, 2);
-					if(pos2 != null && y < size)
-						world.setBlockState(pos2.add(0,y,0), stone, 2);
-					if(pos3 != null && y < size)
-						world.setBlockState(pos3.add(0,y,0), stone, 2);
-					if(pos4 != null && y < size)
-						world.setBlockState(pos4.add(0,y,0), stone, 2);
-					if(pos5 != null && y < size)
-						world.setBlockState(pos5.add(0,y,0), stone, 2);
+					int size = 1+random.nextInt(2);
+					BlockPos pos2 = random.nextBoolean() ? pos.add(new BlockPos(1, 0, 0)) : null;
+					BlockPos pos3 = random.nextBoolean() ? pos.add(new BlockPos(-1, 0, 0)) : null;
+					BlockPos pos4 = random.nextBoolean() ? pos.add(new BlockPos(0, 0, 1)) : null;
+					BlockPos pos5 = random.nextBoolean() ? pos.add(new BlockPos(0, 0, -1)) : null;
+					for(int y = -2; y <= size; y++)
+					{
+						world.setBlockState(pos.add(0,y,0), stone, 2);
+						if(pos2 != null && y < size)
+							world.setBlockState(pos2.add(0,y,0), stone, 2);
+						if(pos3 != null && y < size)
+							world.setBlockState(pos3.add(0,y,0), stone, 2);
+						if(pos4 != null && y < size)
+							world.setBlockState(pos4.add(0,y,0), stone, 2);
+						if(pos5 != null && y < size)
+							world.setBlockState(pos5.add(0,y,0), stone, 2);
+					}
 				}
 			}
 		}
