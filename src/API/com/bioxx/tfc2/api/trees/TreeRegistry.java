@@ -112,6 +112,10 @@ public class TreeRegistry
 			if(swamp && !tc.isSwampTree)
 				continue;
 
+			//Willows are only allowed to be Swamp Trees
+			if(!swamp && tree.equals(WoodType.Willow.name()))
+				continue;
+
 			if(tc.minTemp.getMapTemp() <= temp.getMapTemp() && tc.maxTemp.getMapTemp() >= temp.getMapTemp() && 
 					tc.minMoisture.getMoisture() <= moisture.getMoisture() && tc.maxMoisture.getMoisture() >= moisture.getMoisture())
 				list.add(tree);
