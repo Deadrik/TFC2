@@ -2,6 +2,7 @@ package com.bioxx.tfc2.entity;
 
 import java.util.UUID;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,6 +18,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.IslandMap;
@@ -76,13 +78,19 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 		getDataManager().register(GENDER, gender);
 	}
 
-
 	@Override
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);//MaxHealth
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(100);
+	}
+
+	@Override
+	public boolean getCanSpawnHere()
+	{
+		IBlockState iblockstate = this.world.getBlockState((new BlockPos(this)).down());
+		return Core.isTerrain(iblockstate);
 	}
 
 	/**
@@ -201,7 +209,7 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 			return TFC_Sounds.ELKCUBDEATH;
 		else
 			return TFC_Sounds.ELKDEATH;
-		
+
 	}
 
 	/**

@@ -82,13 +82,15 @@ public class ChunkLoadHandler
 							h.setLoaded();
 							for(VirtualAnimal animal : h.getVirtualAnimals())
 							{
-								BlockPos pos = event.getWorld().getTopSolidOrLiquidBlock(centerPos.add(-10+event.getWorld().rand.nextInt(21), 0, -10+event.getWorld().rand.nextInt(21)));
+								BlockPos pos = event.getWorld().getTopSolidOrLiquidBlock(centerPos);
 								if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(def.getPlacementType(), event.getWorld(), pos))
 								{
 									IEntityLivingData ientitylivingdata = null;
 									try
 									{
 										EntityLiving e = def.getEntityClass().getConstructor(new Class[] {World.class}).newInstance(new Object[] {event.getWorld()});
+										e.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), 0, 0.0F);
+										pos = getSpawnLocation(e, e.getPosition(), 10);
 										e.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), event.getWorld().rand.nextFloat() * 360.0F, 0.0F);
 										event.getWorld().spawnEntity(e);
 										ientitylivingdata = e.onInitialSpawn(event.getWorld().getDifficultyForLocation(new BlockPos(e)), ientitylivingdata);
@@ -112,6 +114,19 @@ public class ChunkLoadHandler
 				}
 			}
 		}
+	}
+
+	private BlockPos getSpawnLocation(EntityLiving e, BlockPos pos, int range)
+	{
+		BlockPos out = e.getPosition();
+		int count = 0;
+		while(!e.getCanSpawnHere() && count < 20)
+		{
+			count++;
+			out = e.world.getTopSolidOrLiquidBlock(pos.add(-range+e.world.rand.nextInt(1+(range*2)), 0, -range+e.world.rand.nextInt(1+(range*2))));
+		}
+
+		return out;
 	}
 
 	@SubscribeEvent
