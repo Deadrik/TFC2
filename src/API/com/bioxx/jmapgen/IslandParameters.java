@@ -358,7 +358,7 @@ public class IslandParameters
 	public enum Feature
 	{
 		Gorges(1, "Gorges"), 
-		Volcano(0.001, "Volcano"), 
+		Volcano(0.001, "Volcano", false), 
 		Cliffs(0.75, "Cliffs"), 
 		SharperMountains(1, "Sharper Mountains"), 
 		EvenSharperMountains(1, "Even Sharper Mountains"), 
