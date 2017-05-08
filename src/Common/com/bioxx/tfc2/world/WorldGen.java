@@ -252,6 +252,10 @@ public class WorldGen implements IThreadCompleteListener
 		for(int i = 0; i < fcount; i++)
 		{
 			Feature f = Feature.getRandomFeature(FeatureSig.Major);
+
+			if(f == null)
+				break;
+
 			if(f == Feature.Canyons)
 				id.setFeatures(Feature.Gorges);
 

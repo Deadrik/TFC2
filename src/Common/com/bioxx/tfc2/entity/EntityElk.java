@@ -31,6 +31,7 @@ import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
 import com.bioxx.tfc2.entity.ai.EntityAIHerdMove;
 import com.bioxx.tfc2.entity.ai.EntityAISmartSwim;
+import com.bioxx.tfc2.entity.ai.EntityAIWanderHex;
 
 public class EntityElk extends EntityAnimal implements IHerdAnimal
 {
@@ -51,6 +52,7 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 		this.tasks.addTask(5, new EntityAIFollowParent(this, 0.8D));	
 		aiHerdMove = new EntityAIHerdMove(this, 0.5D);
 		this.tasks.addTask(6, aiHerdMove);
+		this.tasks.addTask(7, new EntityAIWanderHex(this, 0.5D));
 		//this.tasks.addTask(7, new EntityAIWander(this, 0.5D));
 		//this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));

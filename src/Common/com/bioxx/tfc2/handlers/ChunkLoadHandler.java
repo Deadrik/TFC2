@@ -161,6 +161,11 @@ public class ChunkLoadHandler
 							h.setUnloaded();
 							for(VirtualAnimal animal : h.getVirtualAnimals())
 							{
+								if(animal.getEntity() == null)
+								{
+									animal.setUnloaded();
+									continue;
+								}
 								Predicate<Entity> predicate = Predicates.<Entity>and(EntitySelectors.NOT_SPECTATING, EntitySelectors.notRiding(animal.getEntity()));
 								Entity closestEntity = animal.getEntity().world.getClosestPlayer(animal.getEntity().posX, animal.getEntity().posY, animal.getEntity().posZ, 100D, predicate);
 								if(closestEntity == null)

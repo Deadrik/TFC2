@@ -430,10 +430,11 @@ public class IslandParameters
 
 		public static Feature getRandomFeature(FeatureSig sig)
 		{
-			if(sig == FeatureSig.Major)
+			if(sig == FeatureSig.Major && potMajor.size() > 0)
 				return potMajor.next();
-			else
+			else if(potMinor.size() > 0)
 				return potMinor.next();
+			return null;
 		}
 
 		@Override
