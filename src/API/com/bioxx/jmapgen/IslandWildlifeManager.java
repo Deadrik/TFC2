@@ -2,9 +2,12 @@ package com.bioxx.jmapgen;
 
 import java.util.*;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.attributes.Attribute;
@@ -15,11 +18,14 @@ import com.bioxx.jmapgen.pathfinding.CenterPath;
 import com.bioxx.jmapgen.pathfinding.CenterPathFinder;
 import com.bioxx.jmapgen.pathfinding.CenterPathNode;
 import com.bioxx.jmapgen.threads.ThreadPathfind;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.VirtualAnimal;
 import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.api.util.IThreadCompleteListener;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -339,7 +345,26 @@ public class IslandWildlifeManager implements IThreadCompleteListener
 									}
 									else
 									{
-										animalsToRemove.add(animal);
+										Predicate<Entity> predicate = Predicates.<Entity>and(EntitySelectors.NOT_SPECTATING, EntitySelectors.notRiding(animal.getEntity()));
+										Entity closestEntity = animal.getEntity().world.getClosestPlayer(animal.getEntity().posX, animal.getEntity().posY, animal.getEntity().posZ, 100D, predicate);
+										if(closestEntity == null)
+										{
+											BlockPos pos = new BlockPos(currentLocation.point.getX()+map.getParams().getWorldX(), 0, currentLocation.point.getZ()+map.getParams().getWorldZ());
+											BlockPos randPos = pos;
+
+											for(int i = 0; i < 10; i++)
+											{
+												randPos = pos.add(world.rand.nextInt(21)-10, 0, world.rand.nextInt(21)-10);
+												randPos = world.getTopSolidOrLiquidBlock(pos);
+												if(Core.isTerrain(world.getBlockState(randPos.down())))
+													break;
+											}
+											animal.getEntity().setPosition(randPos.getX(), randPos.getY(), randPos.getZ());
+										}
+										else
+										{
+											animalsToRemove.add(animal);
+										}
 									}
 								}
 							}
