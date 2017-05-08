@@ -256,9 +256,6 @@ public class WorldGenTreesHex extends WorldGenHex
 				count++;
 				ground = world.getBlockState(gPos.add(i, 0, k));
 
-				/*if(!world.canBlockSeeSky(gPos.add(i, 1, k)))
-					failCount++;*/
-
 				if(schem.getWoodType() != WoodType.Palm && !Core.isSoil(ground))
 				{
 					return false;
@@ -266,6 +263,12 @@ public class WorldGenTreesHex extends WorldGenHex
 				else if(schem.getWoodType() == WoodType.Palm && !Core.isSoil(ground) && !Core.isSand(ground))
 				{
 					return false;
+				}
+
+				for(int y = 1; y <= schem.getSizeY(); y++)
+				{
+					if(Core.isNaturalLog(world.getBlockState(gPos.add(0, y, 0))))
+						return false;
 				}
 			}
 		}
