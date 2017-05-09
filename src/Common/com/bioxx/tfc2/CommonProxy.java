@@ -10,6 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
+import net.minecraftforge.common.BiomeDictionary;
+import static net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -132,6 +134,28 @@ public class CommonProxy
 		Biome.registerBiome(218, "BIOME_TROPICAL_DESERT", Global.BIOME_TROPICAL_DESERT);
 		Biome.registerBiome(219, "BIOME_TUNDRA", Global.BIOME_TUNDRA);
 		Biome.registerBiome(220, "BIOME_SWAMP", Global.BIOME_SWAMP);
+		
+		BiomeDictionary.addTypes(Global.BIOME_BARE, Type.SPARSE, Type.DEAD, Type.WASTELAND);
+		BiomeDictionary.addTypes(Global.BIOME_BEACH, Type.BEACH);
+		BiomeDictionary.addTypes(Global.BIOME_DECIDUOUS_FOREST, Type.FOREST);
+		BiomeDictionary.addTypes(Global.BIOME_DEEP_OCEAN, Type.OCEAN);
+		BiomeDictionary.addTypes(Global.BIOME_DRY_FOREST, Type.DRY, Type.FOREST);
+		BiomeDictionary.addTypes(Global.BIOME_GRASSLAND, Type.PLAINS);
+		BiomeDictionary.addTypes(Global.BIOME_LAKE, Type.WATER);
+		BiomeDictionary.addTypes(Global.BIOME_MARSH, Type.WET, Type.LUSH, Type.SWAMP);
+		BiomeDictionary.addTypes(Global.BIOME_OCEAN, Type.OCEAN);
+		BiomeDictionary.addTypes(Global.BIOME_POLAR_DESERT, Type.COLD, Type.SPARSE, Type.DRY, Type.SANDY, Type.SNOWY);
+		BiomeDictionary.addTypes(Global.BIOME_POND, Type.WATER);
+		BiomeDictionary.addTypes(Global.BIOME_RAIN_FOREST, Type.HOT, Type.DENSE, Type.WET, Type.JUNGLE, Type.LUSH, Type.FOREST);
+		BiomeDictionary.addTypes(Global.BIOME_RIVER, Type.RIVER);
+		BiomeDictionary.addTypes(Global.BIOME_SCORCHED, Type.HOT, Type.SPARSE, Type.DRY, Type.DEAD, Type.WASTELAND);
+		BiomeDictionary.addTypes(Global.BIOME_SHRUBLAND, Type.DRY, Type.PLAINS);
+		BiomeDictionary.addTypes(Global.BIOME_SUBTROPICAL_DESERT, Type.HOT, Type.SPARSE, Type.DRY, Type.SANDY);
+		BiomeDictionary.addTypes(Global.BIOME_TAIGA, Type.COLD, Type.CONIFEROUS, Type.FOREST, Type.SNOWY);
+		BiomeDictionary.addTypes(Global.BIOME_TEMPERATE_DESERT, Type.SPARSE, Type.DRY, Type.SANDY);
+		BiomeDictionary.addTypes(Global.BIOME_TROPICAL_DESERT, Type.HOT, Type.SPARSE, Type.DRY, Type.SANDY);
+		BiomeDictionary.addTypes(Global.BIOME_TUNDRA, Type.COLD, Type.SPARSE, Type.SNOWY);
+		BiomeDictionary.addTypes(Global.BIOME_SWAMP, Type.WET, Type.SPOOKY, Type.LUSH, Type.SWAMP);
 	}
 
 	protected void registerEntities() 
