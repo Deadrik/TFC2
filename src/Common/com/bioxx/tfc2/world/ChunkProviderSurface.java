@@ -1213,7 +1213,11 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 			{
 				for(CaveAttrNode n : attrib.nodes)
 				{
-					wSq = n.getNodeWidth() * n.getNodeWidth();
+					if(n.getNodeWidth() > n.getNodeHeight())
+						wSq = n.getNodeWidth() * n.getNodeWidth();
+					else 
+						wSq = n.getNodeHeight() * n.getNodeHeight();
+
 					points.clear();
 					if(n.getPrev() != null)
 						points.add(n.getPrevOffset());
@@ -1222,41 +1226,55 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 						points.add(n.getNextOffset());
 
 					spline = new Spline3D(points);
+
+					ArrayList<BlockPos> grassList = new ArrayList<BlockPos>();
+
 					//Iterate down the spline and carve the cave
 					for(double i = 0; i < 1; i+= 0.05)
 					{
 						pos = spline.getPoint(i);
 
+						//Create a list of all the BlockPos that lay within the bounds of the tunnel
 						ArrayList<BlockPos> list = new ArrayList<BlockPos>();
-						for(int y = -n.getNodeHeight(); y < n.getNodeHeight(); y++)
+
+						for(int x = -n.getNodeWidth(); x <= n.getNodeWidth(); x++)
 						{
-							for(int x = -n.getNodeWidth(); x < n.getNodeWidth(); x++)
+							for(int z = -n.getNodeWidth(); z <= n.getNodeWidth(); z++)
 							{
-								for(int z = -n.getNodeWidth(); z < n.getNodeWidth(); z++)
+								for(int y = -n.getNodeHeight(); y <= n.getNodeHeight(); y++)
 								{
-									if(pos.add(x, y, z).distanceSq(pos.getX(), pos.getY(), pos.getZ()) <= wSq)
+									pos2 = pos.add(x, y, z);
+									if(pos2.distanceSq(pos.getX(), pos.getY(), pos.getZ()) <= wSq)
 										list.add(pos.add(x, y, z));
 								}	
 							}
 						}
+
+						//Iterate through the list and turn every block into air if it is actually within the bounds
 						IBlockState down, up, fillBlock, state;
 						Iterator it = list.iterator();
 						while(it.hasNext())
 						{
 							fillBlock = Blocks.AIR.getDefaultState();
 							pos2 = (BlockPos) it.next();
-							if(pos.distanceSqToCenter(pos2.getX(), pos2.getY(), pos2.getZ()) <= wSq)
+							if(inEllipse(pos.getX(), pos.getY(), pos2.getX(), pos2.getY(), n.getNodeWidth(), n.getNodeHeight()) && 
+									inEllipse(pos.getZ(), pos.getY(), pos2.getZ(), pos2.getY(), n.getNodeWidth(), n.getNodeHeight()) )
 							{
+								//pos3 is the coordinates in local chunkspace
 								BlockPos pos3 = pos2.subtract(islandOffset);
+								//Verify that that we are in the active chunk
 								if(pos3.getX() >= 0 && pos3.getY() >= 0 && pos3.getZ() >= 0 && pos3.getX() < 16 && pos3.getY() < 256 && pos3.getZ() < 16)
 								{
 									state = getState(chunkprimer, pos3);
 									Block b = state.getBlock();
+
+									//If the block is not bedrock or water then its ok to carve it
 									if(b != Blocks.BEDROCK && b.getMaterial(state) != Material.WATER)
 									{
 										down = getState(chunkprimer, pos3.down());
 										up = getState(chunkprimer, pos3.up());
-										if(Core.isDirt(down))
+
+										if(b == TFCBlocks.Grass && Core.isDirt(down))
 										{
 											setState(chunkprimer, pos3.down(), TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, down.getValue(BlockDirt.META_PROPERTY)));
 										}
@@ -1264,9 +1282,11 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 										if(down.getBlock().getMaterial(down) == Material.WATER)
 											continue;
 
+										//If the block above this is water then we do not want to carve this block so we dont have floating water
 										if(up.getBlock().getMaterial(up) == Material.WATER)
 											continue;
 
+										//If this is a sea cave and we're blow sea level then change our fillblock to water
 										if(n.isSeaCave() && pos3.getY() < Global.SEALEVEL)
 											fillBlock = Blocks.WATER.getDefaultState();
 										else if(c.hasAttribute(Attribute.River))
@@ -1275,19 +1295,34 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 												fillBlock = state;
 										}
 
-										BlockPos placerUp = pos3.up();
-										while(Core.isSoil(getState(chunkprimer, placerUp)))
+										//If we find a grass block then add it to a list for later use
+										if(Core.isGrass(getState(chunkprimer, pos3)))
 										{
-											BlockPos placerDn = placerUp.down();
-											while(getState(chunkprimer, placerDn).getBlock() == Blocks.AIR)
-												placerDn = placerDn.down();
-											setState(chunkprimer, placerDn.up(), up);
-											setState(chunkprimer, pos3.up(), fillBlock);
-											placerUp = placerUp.up();
+											grassList.add(pos3);
 										}
 
+										BlockPos placerUp = pos3.up();
+										/*while(Core.isSoil(getState(chunkprimer, placerUp)))
+										{
+											BlockPos placerDn = placerUp.down();
+											IBlockState stateDn = getState(chunkprimer, placerDn);
+											//keep moving down until we hit stone
+											while(stateDn.getBlock() == Blocks.AIR)
+											{
+												placerDn = placerDn.down();
+												stateDn = getState(chunkprimer, placerDn);
+											}
+											IBlockState upState = getState(chunkprimer, placerUp);
+											setState(chunkprimer, placerDn, upState);
+											setState(chunkprimer, placerUp, fillBlock);
+											placerUp = placerUp.up();
+										}*/
+
+										//Try to remove orphan stone blocks
 										if(Core.isStone(getState(chunkprimer, pos3.up())) && getState(chunkprimer, pos3.up(2)).getBlock() == Blocks.AIR)
 											setState(chunkprimer, pos3.up(), Blocks.AIR.getDefaultState());
+
+
 
 										setState(chunkprimer, pos3, fillBlock);
 
@@ -1300,29 +1335,33 @@ public class ChunkProviderSurface extends ChunkProviderOverworld
 							}
 						}
 					}
-					//After the main iteration, we'll go down the spline one more and add natural columns for cave support
-					/*if(n.getOffset().getY() < 64+islandMap.convertHeightToMC(c.getElevation()))
+
+					Iterator it = grassList.iterator();
+					while(it.hasNext())
 					{
-						float width = n.getNodeWidth()/3;
-						pos = spline.getPoint(0.4+this.rand.nextDouble()*0.2);
-						pos = pos.add(-2+rand.nextInt(2), -n.getNodeHeight(), -2+rand.nextInt(2)).subtract(islandOffset);
-						IBlockState fillBlock = TFCBlocks.Stone.getDefaultState().withProperty(BlockStone.META_PROPERTY, islandMap.getParams().getSurfaceRock());
-						for(double i = 0; i < 1; i+= 0.1)
+						pos = (BlockPos)it.next();
+						IBlockState state = getState(chunkprimer, pos);
+						while(state.getBlock() == Blocks.AIR)
 						{
-							for(float x = -width; x <= width; x++)
-							{
-								for(float z = -width; z <= width; z++)
-								{
-									pos2 = pos.add(x, i * (n.getNodeHeight() * 2), z);
-									if(Helper.dist2dSq(pos, pos2) < width*width)
-										setState(chunkprimer, pos2, fillBlock);
-								}
-							}
+							pos = pos.down();
+							state = getState(chunkprimer, pos);
 						}
-					}*/
+						setState(chunkprimer, pos, TFCBlocks.Grass.getDefaultState().withProperty(BlockGrass.META_PROPERTY, islandMap.getParams().getSurfaceRock()));
+					}
 				}
 			}
 		}
+	}
+
+	private boolean inEllipse(double originX, double originY, double x, double y, double radiusX, double radiusY)
+	{
+		double _x = Math.pow(x - originX, 2) /  Math.pow(radiusX, 2);
+		double _y = Math.pow(y - originY, 2) /  Math.pow(radiusY, 2);
+
+		if(_x + _y < 1)
+			return true;
+
+		return false;
 	}
 
 	protected void placeOreSeams(ChunkPrimer chunkprimer)

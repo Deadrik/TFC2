@@ -56,11 +56,15 @@ public class RegenChunkCommand extends CommandBase
 					c.setTerrainPopulated(false);
 					c.onChunkLoad();
 					c.setChunkModified();
-					//old.populateChunk(cps, cps.chunkGenerator);
+					c.checkLight();
+					cps.chunkGenerator.populate(c.xPosition, c.zPosition);
+					net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(c.xPosition, c.zPosition, world, cps.chunkGenerator, world.getChunkProvider());
+					c.setChunkModified();
+					player.connection.sendPacket(new SPacketChunkData(cps.provideChunk(x, z), 0xffffffff));
 				}
 			}
 
-			for(int i = -radius; i <= radius; i++)
+			/*for(int i = -radius; i <= radius; i++)
 			{
 				for(int k = -radius; k <= radius; k++)
 				{
@@ -71,14 +75,7 @@ public class RegenChunkCommand extends CommandBase
 
 					Chunk c = cps.chunkGenerator.provideChunk(x, z);
 					Chunk old = world.getChunkProvider().provideChunk(x, z);
-					//old.setStorageArrays(c.getBlockStorageArray());
-					//c.onChunkLoad();
-					//c.setChunkModified();
 					old.populateChunk(cps, cps.chunkGenerator);
-					/*Chunk old = world.getChunkProvider().provideChunk(x, z);
-					old.setStorageArrays(c.getBlockStorageArray());
-					old.setTerrainPopulated(false);
-					old.populateChunk(cps, cps.chunkGenerator);*/
 
 					if (c.isTerrainPopulated())
 					{
@@ -97,7 +94,7 @@ public class RegenChunkCommand extends CommandBase
 
 					player.connection.sendPacket(new SPacketChunkData(cps.provideChunk(x, z), 0xffffffff));
 				}
-			}
+			}*/
 		}
 		else if(player.getEntityWorld().provider.getDimension() == 0 && params.length == 2 && params[1].equalsIgnoreCase("hex"))
 		{

@@ -26,7 +26,7 @@ public class CaveProcessor
 	{
 		Vector<Center> land = getCentersBetween(map.centers, 0.02, 1.0);
 		Vector<Center> starts = new Vector<Center>();
-		int majorCavesToGen = 50;
+		int majorCavesToGen = 40;
 		if(map.getParams().hasFeature(Feature.DoubleCaves))
 			majorCavesToGen *= 2;
 		else if(map.getParams().hasFeature(Feature.TripleCaves))
@@ -163,8 +163,7 @@ public class CaveProcessor
 			center = nextCenter;
 			//Finished cycling
 
-			curNode.setNodeHeight(minCaveSize+map.mapRandom.nextInt(maxCaveSize));
-			curNode.setNodeWidth(minCaveSize+map.mapRandom.nextInt(maxCaveSize));
+
 			if(mcElev(center.getElevation()) - curNode.offset.getY() > 20)
 			{
 				if(map.mapRandom.nextDouble() < 0.1)
@@ -204,13 +203,18 @@ public class CaveProcessor
 
 
 			//Acquire the next hex
-			nextCenter = center.getRandomNeighborExcept(map.mapRandom, prevCenter);
-
-			if(map.mapRandom.nextDouble() < 0.05)
+			if(map.mapRandom.nextDouble() < 0.05)//5% chance to move vertically in the same hex
 			{
 				nextCenter = center;
 				elevOffset = map.mapRandom.nextInt(31)-15;
 			}
+			else
+			{
+				nextCenter = center.getRandomNeighborExcept(map.mapRandom, prevCenter);
+			}
+
+			curNode.setNodeHeight(minCaveSize+map.mapRandom.nextInt(maxCaveSize));
+			curNode.setNodeWidth(minCaveSize+map.mapRandom.nextInt(maxCaveSize));
 
 			//Create our next node
 			nextNode = new CaveAttrNode(caveId);
