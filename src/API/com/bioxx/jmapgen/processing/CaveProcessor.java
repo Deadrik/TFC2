@@ -125,7 +125,7 @@ public class CaveProcessor
 		CaveAttrNode curNode = new CaveAttrNode(caveId);//Start slightly above the ground
 		CaveAttrNode nextNode = new CaveAttrNode(caveId);
 		curNode.setOffset(new BlockPos(center.point.x, mcElev(start.getElevation()) + 3, center.point.y));
-
+		curNode.setEntrance(true);
 		//First form the mouth of the cave by either going straight down or at an angle.
 		//If the start hex is next to a cliff then move into that
 		if(mcElev(nextCenter.getElevation()) - mcElev(start.getElevation()) >= 8)

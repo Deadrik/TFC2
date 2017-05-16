@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.bioxx.jmapgen.IslandWildlifeManager.HerdGoalEnum;
+import com.bioxx.tfc2.api.animals.HerdGoalEnum;
 
 public class NeedZoneAttribute extends Attribute 
 {

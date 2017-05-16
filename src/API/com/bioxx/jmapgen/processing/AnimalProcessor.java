@@ -3,12 +3,12 @@ package com.bioxx.jmapgen.processing;
 import java.util.Vector;
 
 import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.IslandWildlifeManager.HerdGoalEnum;
 import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.attributes.NeedZoneAttribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry;
+import com.bioxx.tfc2.api.animals.AnimalSpawnRegistry;
+import com.bioxx.tfc2.api.animals.HerdGoalEnum;
 import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 
 public class AnimalProcessor 

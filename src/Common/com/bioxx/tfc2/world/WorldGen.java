@@ -23,9 +23,9 @@ import com.bioxx.jmapgen.IslandParameters.Feature.FeatureSig;
 import com.bioxx.jmapgen.RandomCollection;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.TFC;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.TFCOptions;
+import com.bioxx.tfc2.api.animals.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.events.IslandGenEvent;
 import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.trees.TreeRegistry;
@@ -417,8 +417,10 @@ public class WorldGen implements IThreadCompleteListener
 			for(int i = 0; i < count; i++)
 			{
 				int index = r.nextInt(herbivores.size());
-				if(count == totalHerb)
-					index = i;
+				/*if(count == totalHerb)
+					index = i;*/
+				if(herbivores.size() == 0)
+					break;
 				id.animalTypes.add(herbivores.get(index).getName());
 				herbivores.remove(index);
 			}

@@ -13,10 +13,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.IslandWildlifeManager.Herd;
-import com.bioxx.jmapgen.IslandWildlifeManager.HerdActivityEnum;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.animals.Herd;
+import com.bioxx.tfc2.api.animals.HerdActivityEnum;
 import com.bioxx.tfc2.api.interfaces.IHerdAnimal;
 
 public class EntityAIWanderHex extends EntityAIBase

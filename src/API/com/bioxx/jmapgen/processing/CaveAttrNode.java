@@ -22,6 +22,7 @@ public class CaveAttrNode
 	int nodeHeight = 2;
 	boolean isMajorNode = false;
 	boolean isSeaCave = false;
+	boolean isEntrance = false;
 
 	public CaveAttrNode(int id) 
 	{
@@ -29,6 +30,16 @@ public class CaveAttrNode
 		offset = new BlockPos(0,0,0);
 		nextOffset = new BlockPos(0,0,0);
 		prevOffset = new BlockPos(0,0,0);
+	}
+
+	public boolean isEntrance()
+	{
+		return isEntrance;
+	}
+
+	public void setEntrance(boolean b)
+	{
+		isEntrance = b;
 	}
 
 	public boolean isMajorNode() {

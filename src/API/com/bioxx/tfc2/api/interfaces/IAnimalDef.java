@@ -1,17 +1,20 @@
 package com.bioxx.tfc2.api.interfaces;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLiving.SpawnPlacementType;
 import net.minecraft.world.World;
 
+import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters;
-import com.bioxx.jmapgen.IslandWildlifeManager.HerdGoalEnum;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.pathfinding.IPathProfile;
-import com.bioxx.tfc2.api.VirtualAnimal;
+import com.bioxx.tfc2.api.animals.HerdGoalEnum;
+import com.bioxx.tfc2.api.animals.IHerdBrain;
+import com.bioxx.tfc2.api.animals.VirtualAnimal;
 import com.bioxx.tfc2.api.types.EnumAnimalDiet;
 
 public interface IAnimalDef 
@@ -30,7 +33,7 @@ public interface IAnimalDef
 	public Class<? extends EntityLiving> getEntityClass();
 
 	/**
-	 * @return A list of VirtualAnimals for use in {@link com.bioxx.jmapgen.IslandWildlifeManager}
+	 * @return A list of VirtualAnimals for use in {@link com.bioxx.tfc2.api.WildlifeManager}
 	 */
 	public ArrayList<VirtualAnimal> provideHerd(World world);
 
@@ -44,8 +47,6 @@ public interface IAnimalDef
 	 */
 	public boolean canSpawn(IslandParameters params);
 
-	public boolean doesMigrate();
-
 	public boolean doesReplenishPopulation();
 
 	public boolean isValidNeedZone(Center center, HerdGoalEnum goal);
@@ -57,4 +58,12 @@ public interface IAnimalDef
 	public EnumAnimalDiet getAnimalDiet();
 
 	public IPathProfile getPathProfile();
+
+	public Class<? extends IHerdBrain> getBrainClass();
+
+	/**
+	 * @param map
+	 * @return a list of centers for placing this animal or null if letting the default behavior run
+	 */
+	public Vector<Center> getCentersForPlacement(IslandMap map);
 }

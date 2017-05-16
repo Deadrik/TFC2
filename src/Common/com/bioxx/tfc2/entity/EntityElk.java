@@ -22,9 +22,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.IslandWildlifeManager.Herd;
 import com.bioxx.tfc2.Core;
-import com.bioxx.tfc2.api.VirtualAnimal;
+import com.bioxx.tfc2.api.animals.Herd;
+import com.bioxx.tfc2.api.animals.IGenderedAnimal;
+import com.bioxx.tfc2.api.animals.VirtualAnimal;
 import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.interfaces.IHerdAnimal;
 import com.bioxx.tfc2.api.types.Gender;
@@ -33,10 +34,10 @@ import com.bioxx.tfc2.entity.ai.EntityAIHerdMove;
 import com.bioxx.tfc2.entity.ai.EntityAISmartSwim;
 import com.bioxx.tfc2.entity.ai.EntityAIWanderHex;
 
-public class EntityElk extends EntityAnimal implements IHerdAnimal
+public class EntityElk extends EntityAnimal implements IHerdAnimal, IGenderedAnimal
 {
 	UUID herdID;
-	Gender gender;
+	public Gender gender;
 	IAnimalDef animalDef;
 	protected static final DataParameter<Gender> GENDER = EntityDataManager.createKey(EntityElk.class, DataSerializersTFC.GENDER);
 
@@ -283,7 +284,8 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 		}
 	}
 
-	protected void setGender(Gender t)
+	@Override
+	public void setGender(Gender t)
 	{
 		this.gender = t;
 		getDataManager().set(GENDER, t);	
@@ -307,5 +309,10 @@ public class EntityElk extends EntityAnimal implements IHerdAnimal
 	@Override
 	public void setAnimalDef(IAnimalDef def) {
 		animalDef = def;
+	}
+
+	@Override
+	public Gender getGender() {
+		return gender;
 	}
 }

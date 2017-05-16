@@ -3,6 +3,7 @@ package com.bioxx.jmapgen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
+import com.bioxx.tfc2.api.WildlifeManager;
 import com.bioxx.tfc2.api.types.PortalEnumType;
 
 public class IslandData 
@@ -13,11 +14,11 @@ public class IslandData
 	public PortalEnumType eastPortalState = PortalEnumType.Disabled;
 	public PortalEnumType westPortalState = PortalEnumType.Disabled;
 	public int islandLevel = 0;
-	public IslandWildlifeManager wildlifeManager;
+	public WildlifeManager wildlifeManager;
 
 	public IslandData(IslandMap map, IslandParameters params)
 	{
-		wildlifeManager = new IslandWildlifeManager(map);
+		wildlifeManager = new WildlifeManager(map);
 	}
 
 	public void unlockIsland()

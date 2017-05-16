@@ -17,14 +17,15 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.bioxx.jmapgen.IslandMap;
-import com.bioxx.jmapgen.IslandWildlifeManager.Herd;
 import com.bioxx.jmapgen.Point;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
-import com.bioxx.tfc2.api.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.HexGenRegistry;
-import com.bioxx.tfc2.api.VirtualAnimal;
+import com.bioxx.tfc2.api.animals.AnimalSpawnRegistry;
+import com.bioxx.tfc2.api.animals.Herd;
+import com.bioxx.tfc2.api.animals.IGenderedAnimal;
+import com.bioxx.tfc2.api.animals.VirtualAnimal;
 import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.interfaces.IHerdAnimal;
 import com.google.common.base.Predicate;
@@ -99,6 +100,10 @@ public class ChunkLoadHandler
 										{
 											((IHerdAnimal)e).setAnimalDef(def);
 											((IHerdAnimal)e).setHerdUUID(h.getUUID());
+										}
+										if(e instanceof IGenderedAnimal)
+										{
+											((IGenderedAnimal)e).setGender(animal.getGender());
 										}
 										animal.setLoaded(e);
 

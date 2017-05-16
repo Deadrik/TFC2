@@ -696,6 +696,29 @@ public class IslandMap
 		}
 	}
 
+	public Vector<Center> filterRange(Vector<Center> centers, Center home, double range)
+	{
+		double sq = range * range;
+		Vector<Center> out = new  Vector<Center>();
+		Vector<Center> queue = new  Vector<Center>();
+		Vector<Center> checked = new  Vector<Center>();
+		queue.add(home);
+		Iterator<Center> iter = queue.iterator();
+		while(iter.hasNext())
+		{
+			Center c = iter.next();
+			if(checked.contains(c))
+				continue;
+			if(c.point.distanceSq(home.point) < sq)
+			{
+				checked.add(c);
+				out.add(c);
+				queue.addAll(c.neighbors);
+			}
+		}
+		return out;
+	}
+
 	public Vector<Center> filterKeepMarkers(Vector<Center> centers, Marker... markers)
 	{
 		Vector<Center> out = new Vector<Center>();

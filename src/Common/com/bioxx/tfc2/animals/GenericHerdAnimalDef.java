@@ -1,6 +1,7 @@
 package com.bioxx.tfc2.animals;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -8,38 +9,34 @@ import net.minecraft.entity.EntityLiving.SpawnPlacementType;
 import net.minecraft.world.World;
 
 import com.bioxx.jmapgen.BiomeType;
+import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters;
-import com.bioxx.jmapgen.IslandParameters.Feature;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.pathfinding.IPathProfile;
-import com.bioxx.tfc2.animals.path.PathProfileElk;
-import com.bioxx.tfc2.api.animals.MigrationBrain;
 import com.bioxx.tfc2.api.animals.HerdGoalEnum;
 import com.bioxx.tfc2.api.animals.IHerdBrain;
+import com.bioxx.tfc2.api.animals.MigrationBrain;
 import com.bioxx.tfc2.api.animals.VirtualAnimal;
-import com.bioxx.tfc2.api.types.ClimateTemp;
+import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.types.EnumAnimalDiet;
 import com.bioxx.tfc2.api.types.Gender;
-import com.bioxx.tfc2.api.types.Moisture;
-import com.bioxx.tfc2.entity.EntityElk;
 
-public class ElkAnimalDef extends GenericHerdAnimalDef
+public class GenericHerdAnimalDef implements IAnimalDef
 {
-	IPathProfile pathProfile;
-	public ElkAnimalDef() 
+	public GenericHerdAnimalDef() 
 	{
-		pathProfile = new PathProfileElk();
+
 	}
 
 	@Override
 	public String getName() {
-		return "elk";
+		return "";
 	}
 
 	@Override
 	public int getMaxIslandPop(IslandParameters params) {
-		return 100;
+		return 0;
 	}
 
 	@Override
@@ -49,7 +46,7 @@ public class ElkAnimalDef extends GenericHerdAnimalDef
 
 	@Override
 	public Class<? extends EntityLiving> getEntityClass() {
-		return EntityElk.class;
+		return null;
 	}
 
 	@Override
@@ -79,18 +76,24 @@ public class ElkAnimalDef extends GenericHerdAnimalDef
 	}
 
 	@Override
+	public boolean canSpawn(Center c) 
+	{
+		if(c.hasAnyMarkersOf(Marker.Ocean, Marker.Coast, Marker.Water, Marker.Mesa))
+			return false;
+
+		return true;
+	}
+
+	@Override
 	public boolean canSpawn(IslandParameters params) 
 	{
-		ClimateTemp temp = params.getIslandTemp();
-		Moisture m = params.getIslandMoisture();
-
-		if(temp.isWarmerThanOrEqual(ClimateTemp.POLAR) && temp.isCoolerThanOrEqual(ClimateTemp.TEMPERATE) && m.isGreaterThanOrEqual(Moisture.MEDIUM))
-		{
-			if(!params.hasFeature(Feature.Desert))
-				return true;
-		}
-
 		return false;
+	}
+
+	@Override
+	public boolean doesReplenishPopulation()
+	{
+		return true;
 	}
 
 	@Override
@@ -117,9 +120,27 @@ public class ElkAnimalDef extends GenericHerdAnimalDef
 	}
 
 	@Override
+	public SpawnPlacementType getPlacementType()
+	{
+		return SpawnPlacementType.ON_GROUND;
+	}
+
+	@Override
+	public boolean shouldGenNeedZones()
+	{
+		return true;
+	}
+
+	@Override
+	public EnumAnimalDiet getAnimalDiet()
+	{
+		return EnumAnimalDiet.Herbivore;
+	}
+
+	@Override
 	public IPathProfile getPathProfile()
 	{
-		return pathProfile;
+		return null;
 	}
 
 	@Override
@@ -127,4 +148,9 @@ public class ElkAnimalDef extends GenericHerdAnimalDef
 		return MigrationBrain.class;
 	}
 
+	@Override
+	public Vector<Center> getCentersForPlacement(IslandMap map)
+	{
+		return null;
+	}
 }

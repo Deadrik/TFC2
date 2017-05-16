@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.api;
+package com.bioxx.tfc2.api.animals;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,6 +37,11 @@ public class VirtualAnimal
 	public EntityLiving getEntity()
 	{
 		return entity;
+	}
+
+	public Gender getGender()
+	{
+		return gender;
 	}
 
 	public void readFromNBT(NBTTagCompound nbt)

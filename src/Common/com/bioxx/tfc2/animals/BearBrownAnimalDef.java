@@ -1,40 +1,46 @@
 package com.bioxx.tfc2.animals;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLiving.SpawnPlacementType;
 import net.minecraft.world.World;
 
-import com.bioxx.jmapgen.BiomeType;
+import com.bioxx.jmapgen.IslandMap;
 import com.bioxx.jmapgen.IslandParameters;
 import com.bioxx.jmapgen.IslandParameters.Feature;
+import com.bioxx.jmapgen.attributes.Attribute;
+import com.bioxx.jmapgen.attributes.CaveAttribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.jmapgen.pathfinding.IPathProfile;
+import com.bioxx.jmapgen.processing.CaveAttrNode;
 import com.bioxx.tfc2.animals.path.PathProfileElk;
-import com.bioxx.tfc2.api.animals.MigrationBrain;
 import com.bioxx.tfc2.api.animals.HerdGoalEnum;
 import com.bioxx.tfc2.api.animals.IHerdBrain;
+import com.bioxx.tfc2.api.animals.LingerBrain;
 import com.bioxx.tfc2.api.animals.VirtualAnimal;
+import com.bioxx.tfc2.api.interfaces.IAnimalDef;
 import com.bioxx.tfc2.api.types.ClimateTemp;
 import com.bioxx.tfc2.api.types.EnumAnimalDiet;
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.api.types.Moisture;
-import com.bioxx.tfc2.entity.EntityElk;
+import com.bioxx.tfc2.entity.EntityBear;
+import com.bioxx.tfc2.entity.EntityBear.BearType;
 
-public class ElkAnimalDef extends GenericHerdAnimalDef
+public class BearBrownAnimalDef implements IAnimalDef
 {
 	IPathProfile pathProfile;
-	public ElkAnimalDef() 
+	public BearBrownAnimalDef() 
 	{
 		pathProfile = new PathProfileElk();
 	}
 
 	@Override
 	public String getName() {
-		return "elk";
+		return "bearBrown";
 	}
 
 	@Override
@@ -44,12 +50,12 @@ public class ElkAnimalDef extends GenericHerdAnimalDef
 
 	@Override
 	public void onSpawn(Entity e) {
-
+		((EntityBear)e).setBearType(BearType.Brown);
 	}
 
 	@Override
 	public Class<? extends EntityLiving> getEntityClass() {
-		return EntityElk.class;
+		return EntityBear.class;
 	}
 
 	@Override
@@ -79,6 +85,15 @@ public class ElkAnimalDef extends GenericHerdAnimalDef
 	}
 
 	@Override
+	public boolean canSpawn(Center c) 
+	{
+		if(c.hasAnyMarkersOf(Marker.Ocean, Marker.Coast, Marker.Water, Marker.Mesa))
+			return false;
+
+		return true;
+	}
+
+	@Override
 	public boolean canSpawn(IslandParameters params) 
 	{
 		ClimateTemp temp = params.getIslandTemp();
@@ -94,26 +109,33 @@ public class ElkAnimalDef extends GenericHerdAnimalDef
 	}
 
 	@Override
+	public boolean doesReplenishPopulation()
+	{
+		return false;
+	}
+
+	@Override
 	public boolean isValidNeedZone(Center center, HerdGoalEnum goal) 
 	{
-		if(center.hasAnyMarkersOf(Marker.Ocean, Marker.Coast, Marker.Water, Marker.Mesa, Marker.Lava))
-			return false;
-		if(goal == HerdGoalEnum.FOOD)
-		{			
-			if(center.hasAnyMarkersOf(Marker.Clearing))
-				return true;
-		}
-		else if(goal == HerdGoalEnum.REST)
-		{
-			if(center.biome == BiomeType.DECIDUOUS_FOREST)
-				return true;
-		}
-		else if(goal == HerdGoalEnum.WATER)
-		{
-			if(center.biome == BiomeType.LAKESHORE || center.biome == BiomeType.POND || center.biome == BiomeType.RIVER)
-				return true;
-		}
 		return false;
+	}
+
+	@Override
+	public SpawnPlacementType getPlacementType()
+	{
+		return SpawnPlacementType.ON_GROUND;
+	}
+
+	@Override
+	public boolean shouldGenNeedZones()
+	{
+		return false;
+	}
+
+	@Override
+	public EnumAnimalDiet getAnimalDiet()
+	{
+		return EnumAnimalDiet.Omnivore;
 	}
 
 	@Override
@@ -123,8 +145,33 @@ public class ElkAnimalDef extends GenericHerdAnimalDef
 	}
 
 	@Override
-	public Class<? extends IHerdBrain> getBrainClass() {
-		return MigrationBrain.class;
+	public Class<? extends IHerdBrain> getBrainClass() 
+	{
+		return LingerBrain.class;
+	}
+
+	@Override
+	public Vector<Center> getCentersForPlacement(IslandMap map)
+	{
+		Vector<Center> out = new Vector<Center>();
+		Vector<Center> filter = map.filterOutMarkers(map.centers, Marker.Coast, Marker.Water, Marker.Volcano);
+		for(Center c : filter)
+		{
+			if(c.hasAttribute(Attribute.Cave))
+			{
+				CaveAttribute attrib = (CaveAttribute) c.getAttribute(Attribute.Cave);
+				for(CaveAttrNode node : attrib.nodes)
+				{
+					if(node.isEntrance())
+					{
+						out.add(c);
+						break;
+					}
+				}
+			}
+		}
+
+		return out;
 	}
 
 }

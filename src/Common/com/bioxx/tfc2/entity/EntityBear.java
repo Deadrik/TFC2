@@ -1,5 +1,7 @@
 package com.bioxx.tfc2.entity;
 
+import java.util.UUID;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,13 +17,25 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
+import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.tfc2.Core;
+import com.bioxx.tfc2.api.animals.Herd;
+import com.bioxx.tfc2.api.animals.IGenderedAnimal;
+import com.bioxx.tfc2.api.animals.VirtualAnimal;
+import com.bioxx.tfc2.api.interfaces.IAnimalDef;
+import com.bioxx.tfc2.api.interfaces.IHerdAnimal;
 import com.bioxx.tfc2.api.types.Gender;
 import com.bioxx.tfc2.core.TFC_Sounds;
+import com.bioxx.tfc2.entity.ai.EntityAIHerdMove;
+import com.bioxx.tfc2.entity.ai.EntityAISmartSwim;
+import com.bioxx.tfc2.entity.ai.EntityAIWanderHex;
 
-public class EntityBear extends EntityAnimal 
+public class EntityBear extends EntityAnimal implements IHerdAnimal, IGenderedAnimal
 {
+	UUID herdID;
 	BearType bearType;
 	Gender gender;
+	IAnimalDef animalDef;
 	protected static final DataParameter<Gender> GENDER = EntityDataManager.createKey(EntityBear.class, DataSerializersTFC.GENDER);
 	protected static final DataParameter<BearType> BEARTYPE = EntityDataManager.createKey(EntityBear.class, DataSerializersTFC.BEARTYPE);
 
@@ -30,17 +44,17 @@ public class EntityBear extends EntityAnimal
 		super(worldIn);
 		this.setSize(1.5F, 1.7F);
 		((PathNavigateGround)this.getNavigator()).setCanSwim(true);
-		this.tasks.addTask(0, new EntityAISwimming(this));
+		this.tasks.addTask(0, new EntityAISmartSwim(this));
 		this.tasks.addTask(2, new EntityAIMate(this, 0.8D));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 0.8D, true));
 		this.tasks.addTask(5, new EntityAIFollowParent(this, 0.8D));		
-		this.tasks.addTask(6, new EntityAIWander(this, 0.5D));
-		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		this.tasks.addTask(8, new EntityAILookIdle(this));
+		this.tasks.addTask(6, new EntityAIHerdMove(this, 0.5D));
+		this.tasks.addTask(7, new EntityAIWanderHex(this, 0.5D));
+		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		this.tasks.addTask(9, new EntityAILookIdle(this));
 		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true, new Class[0]));//The array seems to be for class types that this task should ignore
 		setGender(worldIn.rand.nextBoolean() ? Gender.Male : Gender.Female);
 		setBearType(BearType.values()[worldIn.rand.nextInt(3)]);
-		this.enablePersistence();
 	}
 
 	@Override
@@ -105,6 +119,14 @@ public class EntityBear extends EntityAnimal
 		this.setGender(Gender.values()[nbt.getInteger("gender")]);
 	}
 
+	@Override
+	public boolean writeToNBTOptional(NBTTagCompound compound)
+	{
+		//we should return true here later if the entity needs to stay around
+
+		//return false here to prevent the entity from saving to disk
+		return false;
+	}
 
 	/**
 	 * Determines if an entity can be despawned, used on idle far away entities
@@ -112,7 +134,35 @@ public class EntityBear extends EntityAnimal
 	@Override
 	protected boolean canDespawn ()
 	{
-		return this.ticksExisted > 30000;
+		if(getEntityWorld().provider.getDimension() == 0)
+		{
+			IslandMap map = Core.getMapForWorld(getEntityWorld(), getPosition());
+			boolean inLoaded = Core.isHexFullyLoaded(getEntityWorld(), map, map.getClosestCenter(getPosition()));
+			return !inLoaded;
+		}
+		return false;
+	}
+
+	@Override
+	protected void despawnEntity()
+	{
+		super.despawnEntity();
+		if(canDespawn())
+		{
+			IslandMap map = Core.getMapForWorld(getEntityWorld(), getPosition());
+			Herd h = map.getIslandData().wildlifeManager.getHerd(getHerdUUID());
+			if(h != null)
+			{
+				for(VirtualAnimal a : h.getVirtualAnimals())
+				{
+					if(a.isLoaded() && a.getEntity() == this)
+					{
+						a.setUnloaded();
+					}
+				}
+			}
+			this.setDead();
+		}
 	}
 
 	/**
@@ -209,6 +259,7 @@ public class EntityBear extends EntityAnimal
 		return par1Entity.attackEntityFrom (DamageSource.causeMobDamage (this), dam);
 	}
 
+	@Override
 	public void setGender(Gender t)
 	{
 		this.gender = t;
@@ -229,5 +280,32 @@ public class EntityBear extends EntityAnimal
 	public enum BearType
 	{
 		Brown, Polar, Black, Panda;
+	}
+
+	@Override
+	public Gender getGender() 
+	{
+		return gender;
+	}
+
+	@Override
+	public UUID getHerdUUID() {
+		return herdID;
+	}
+
+	@Override
+	public void setHerdUUID(UUID id) {
+		herdID = id;
+
+	}
+
+	@Override
+	public IAnimalDef getAnimalDef() {
+		return animalDef;
+	}
+
+	@Override
+	public void setAnimalDef(IAnimalDef def) {
+		animalDef = def;
 	}
 }

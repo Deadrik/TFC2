@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.api;
+package com.bioxx.tfc2.api.animals;
 
 import java.util.ArrayList;
 import java.util.HashMap;

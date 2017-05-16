@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
 import net.minecraftforge.common.BiomeDictionary;
-import static net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -25,9 +25,12 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.bioxx.tfc2.animals.BearBrownAnimalDef;
+import com.bioxx.tfc2.animals.ElephantAnimalDef;
 import com.bioxx.tfc2.animals.ElkAnimalDef;
 import com.bioxx.tfc2.api.*;
 import com.bioxx.tfc2.api.SkillsManager.Skill;
+import com.bioxx.tfc2.api.animals.AnimalSpawnRegistry;
 import com.bioxx.tfc2.api.ore.OreConfig;
 import com.bioxx.tfc2.api.ore.OreConfig.VeinType;
 import com.bioxx.tfc2.api.ore.OreRegistry;
@@ -134,7 +137,7 @@ public class CommonProxy
 		Biome.registerBiome(218, "BIOME_TROPICAL_DESERT", Global.BIOME_TROPICAL_DESERT);
 		Biome.registerBiome(219, "BIOME_TUNDRA", Global.BIOME_TUNDRA);
 		Biome.registerBiome(220, "BIOME_SWAMP", Global.BIOME_SWAMP);
-		
+
 		BiomeDictionary.addTypes(Global.BIOME_BARE, Type.SPARSE, Type.DEAD, Type.WASTELAND);
 		BiomeDictionary.addTypes(Global.BIOME_BEACH, Type.BEACH);
 		BiomeDictionary.addTypes(Global.BIOME_DECIDUOUS_FOREST, Type.FOREST);
@@ -161,23 +164,23 @@ public class CommonProxy
 	protected void registerEntities() 
 	{
 		DataSerializersTFC.register();
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Cart"), EntityCart.class, "Cart", 0, TFC.instance, 80, 3, true, 0x000000, 0x00ff00);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Bear"), EntityBear.class, "Bear", 1, TFC.instance, 80, 3, true, 0x000000, 0xff0000);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"BearPanda"), EntityBearPanda.class, "BearPanda", 2, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Lion"), EntityLion.class, "Lion", 3, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Tiger"), EntityTiger.class, "Tiger", 4, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Rhino"), EntityRhino.class, "Rhino", 5, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Elephant"), EntityElephant.class, "Elephant", 6, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Mammoth"), EntityMammoth.class, "Mammoth", 7, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Boar"), EntityBoar.class, "Boar", 8, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Bison"), EntityBison.class, "Bison", 9, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"FoxRed"), EntityFoxRed.class, "FoxRed", 10, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"FoxArctic"), EntityFoxArctic.class, "FoxArctic", 11, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"FoxDesert"), EntityFoxDesert.class, "FoxDesert", 12, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Hippo"), EntityHippo.class, "Hippo", 13, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"BigCat"), EntityBigCat.class, "BigCat", 14, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Sabertooth"), EntitySabertooth.class, "Sabertooth", 15, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
-		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"Elk"), EntityElk.class, "Elk", 16, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"cart"), EntityCart.class, "cart", 0, TFC.instance, 80, 3, true, 0x000000, 0x00ff00);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"bear"), EntityBear.class, "bear", 1, TFC.instance, 80, 3, true, 0x000000, 0xff0000);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"bearpanda"), EntityBearPanda.class, "bearpanda", 2, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"lion"), EntityLion.class, "lion", 3, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"tiger"), EntityTiger.class, "tiger", 4, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"rhino"), EntityRhino.class, "rhino", 5, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"elephant"), EntityElephant.class, "elephant", 6, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"mammoth"), EntityMammoth.class, "mammoth", 7, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"boar"), EntityBoar.class, "boar", 8, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"bison"), EntityBison.class, "bison", 9, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"foxred"), EntityFoxRed.class, "foxred", 10, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"foxarctic"), EntityFoxArctic.class, "foxarctic", 11, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"foxdesert"), EntityFoxDesert.class, "foxdesert", 12, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"hippo"), EntityHippo.class, "hippo", 13, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"bigcat"), EntityBigCat.class, "bigcat", 14, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"sabertooth"), EntitySabertooth.class, "sabertooth", 15, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
+		EntityRegistry.registerModEntity(Core.CreateRes(Reference.getResID()+"elk"), EntityElk.class, "elk", 16, TFC.instance, 80, 3, true, 0x000000, 0xffffff);
 	}
 
 	public void postInit(FMLPostInitializationEvent event)
@@ -244,6 +247,8 @@ public class CommonProxy
 	protected void registerAnimals()
 	{
 		AnimalSpawnRegistry.getInstance().register(new ElkAnimalDef());
+		AnimalSpawnRegistry.getInstance().register(new ElephantAnimalDef());
+		AnimalSpawnRegistry.getInstance().register(new BearBrownAnimalDef());
 		//AnimalSpawnRegistry.getInstance().register(new AnimalDef("Elephant",  EntityElephant.class, 2, 10, 50, 50, new AnimalSpawnParams(ClimateTemp.POLAR, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MAX)));
 		/*AnimalSpawnRegistry.getInstance().register(new SpawnGroup("Elephant",  EntityElephant.class, 2, 4, 20, 20, new SpawnParameters(ClimateTemp.SUBTROPICAL, ClimateTemp.TROPICAL, Moisture.LOW, Moisture.MAX)
 		{

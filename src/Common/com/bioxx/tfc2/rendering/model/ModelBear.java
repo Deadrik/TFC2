@@ -148,13 +148,13 @@ public class ModelBear extends ModelBase
 		GlStateManager.scale(1.3, 1.3, 1.3);
 		GlStateManager.translate(0.0, -0.35, 0);
 		float f6 = (180F / (float)Math.PI);
+		float rotationDiv = 2;
 		this.Head.rotateAngleX = p_78087_5_ / (180F / (float)Math.PI);
 		this.Head.rotateAngleY = p_78087_4_ / (180F / (float)Math.PI);
-		this.Body.rotateAngleX = 0;//((float)Math.PI / 2F);
-		this.LegLeftFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
-		this.LegLeftRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_;
-		this.LegRightFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_;
-		this.LegRightRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
+		this.LegLeftFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_ / rotationDiv;
+		this.LegLeftRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_ / rotationDiv;
+		this.LegRightFront.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 1.4F * p_78087_2_ / rotationDiv;
+		this.LegRightRear.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_ / rotationDiv;
 	}
 
 }
