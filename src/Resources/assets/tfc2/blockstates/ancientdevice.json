@@ -1,0 +1,19 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"side": "tfc2:blocks/devices/iron anvil",
+			"top": "tfc2:blocks/devices/iron anvil",
+			"particle": "tfc2:blocks/metal/wrought iron"
+		},
+		"model": "tfc2:anvil",
+		"y":90
+	},
+	"variants": {
+		"inventory": [{
+            "transform": "forge:default-block"
+        }],
+		"normal": [{}]
+		
+	}
+}

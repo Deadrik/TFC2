@@ -84,6 +84,7 @@ public class TFCBlocks
 	public static Block Cactus;
 	public static Block Thatch;
 	public static Block PitKiln;
+	public static Block AncientDevice;
 
 	public static void LoadBlocks()
 	{
@@ -156,6 +157,7 @@ public class TFCBlocks
 		Cactus = new BlockCactus().setHardness(4F).setUnlocalizedName("cactus");
 		Thatch = new BlockThatch().setHardness(4F).setUnlocalizedName("thatch");
 		PitKiln = new BlockPitKiln().setHardness(4F).setUnlocalizedName("pitkiln");
+		AncientDevice = new BlockAncientDevice().setHardness(-1F).setResistance(6000000f).setUnlocalizedName("ancientdevice");
 	}
 
 	public static void RegisterBlocks()
@@ -209,6 +211,7 @@ public class TFCBlocks
 		register(StoneStalac, ItemStone.class);
 		register(Firepit, ItemBlock.class);
 		register(PitKiln);
+		register(AncientDevice);
 
 		stairsList = new ArrayList<Block>();
 		stairsList.add(register(StairsAsh, ItemStair.class));
