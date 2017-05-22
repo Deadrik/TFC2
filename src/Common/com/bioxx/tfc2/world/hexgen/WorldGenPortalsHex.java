@@ -19,6 +19,7 @@ import com.bioxx.jmapgen.attributes.PortalAttribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
+import com.bioxx.tfc2.api.Global;
 import com.bioxx.tfc2.api.Schematic.SchemBlock;
 import com.bioxx.tfc2.api.types.PortalEnumType;
 import com.bioxx.tfc2.blocks.BlockPortal;
@@ -36,7 +37,6 @@ public class WorldGenPortalsHex extends WorldGenHex
 	{
 		super.generate(random, map, closest, world);
 
-
 		if(world.provider.getDimension() == 0)
 		{
 			if(closest != null && closest.hasAttribute(Attribute.Portal))
@@ -44,6 +44,15 @@ public class WorldGenPortalsHex extends WorldGenHex
 				PortalAttribute attr = (PortalAttribute) closest.getAttribute(Attribute.Portal);
 				Point p = new Point(centerX, centerZ);
 				BlockPos bp = centerPos;
+
+				/*
+				 * This should hopefully prevent stacking portals from occuring if the world saves but the islandmap does not
+				 */
+				if(findPortal(world, bp.add(0, map.convertHeightToMC(closest.elevation)+Global.SEALEVEL, 0)) != null)
+				{
+					return;
+				}
+
 				bp = world.getTopSolidOrLiquidBlock(bp);
 				BlockPos portalPos = bp;
 				BuildPortalSchem(world, closest, portalPos, map, false);
@@ -52,6 +61,25 @@ public class WorldGenPortalsHex extends WorldGenHex
 				return;
 			}
 		}
+	}
+
+	private BlockPos findPortal(World world, BlockPos pos)
+	{
+		for(int x = -64; x < 65; x++)
+		{
+			for(int z = -64; z < 65; z++)
+			{
+				for(int y = -20; y < 20; y++)
+				{
+					IBlockState state = world.getBlockState(pos.add(x, y, z));
+					if(state.getBlock() == TFCBlocks.Portal && (Boolean)state.getValue(BlockPortal.CENTER) == true)
+					{
+						return pos.add(x, y, z).down();
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	public static void BuildPortalSchem(World world, Center c, BlockPos portalPos, IslandMap map, boolean flip) {
