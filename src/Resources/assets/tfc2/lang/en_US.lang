@@ -136,6 +136,9 @@ gui.skill.armorsmith=Armorsmith
 gui.skill.farmer=Farmer
 gui.skill.fisherman=Fisherman
 gui.skill.butcher=Butcher
+gui.axe.maxcutsize=Max Tree Size
+gui.axe.needsrepair=The axe needs to be repaired!
+gui.axe.treetoobig=The tree is too large for this axe!
 
 #=================
 #======Items======

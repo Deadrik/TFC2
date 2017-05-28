@@ -1,14 +1,14 @@
 package com.bioxx.tfc2.items;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -25,13 +25,22 @@ import com.google.common.collect.Sets;
 public class ItemAxe extends ItemTerraTool 
 {
 	private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER, TFCBlocks.LogNatural, TFCBlocks.LogNatural2, TFCBlocks.LogNaturalPalm});
+	public int maxTreeSize = 0;
 
-	public ItemAxe(ToolMaterial mat)
+	public ItemAxe(ToolMaterial mat, int maxCutSize)
 	{
 		super(mat, EFFECTIVE_ON);
 		this.damageVsEntity = 1;
 		this.attackSpeed = -3.2f;
 		this.setCreativeTab(TFCTabs.TFCTools);
+		this.maxTreeSize = maxCutSize;
+	}
+
+	@Override
+	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
+	{
+		super.addInformation(is, player, arraylist, flag);
+		arraylist.add(Core.translate("gui.axe.maxcutsize") + ": " + maxTreeSize);
 	}
 
 	@Override
@@ -50,38 +59,19 @@ public class ItemAxe extends ItemTerraTool
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
+	public int getMaxDamage(ItemStack stack)
 	{
-		if(worldIn.isRemote || !Core.isNaturalLog(state))
-			return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
-
-		LinkedList<BlockPos> queue = new LinkedList<BlockPos>();
-		queue.add(pos);
-
-		BlockPos scanPos;
-		IBlockState scanState;
-		int count = 0;
-		while(!queue.isEmpty())
-		{
-			scanPos = queue.pop();
-			scanState = worldIn.getBlockState(scanPos);
-			if(Core.isNaturalLog(scanState) || scanState.getBlock() == TFCBlocks.Leaves2) //Leaves2 is needed for the palm top (maybe there is a better way to do this?)
-			{
-				scanState.getBlock().dropBlockAsItem(worldIn, scanPos, scanState, 0);
-				worldIn.setBlockToAir(scanPos);
-				count++;
-				Iterable<BlockPos> list = BlockPos.getAllInBox(scanPos.add(-1, 0, -1), scanPos.add(1, 1, 1));
-				for(BlockPos p : list)
-				{
-					queue.add(p);
-				}
-			}
-		}
-
-		if(count > 0)
-			stack.damageItem(count, entityLiving);
-
-		return false;
+		return this.getMaxDamage() - (stack.hasTagCompound() ? stack.getTagCompound().getInteger("reducedDur") : 0);
 	}
 
+	@Override
+	public ItemStack onRepair(ItemStack is)
+	{
+		if(!is.hasTagCompound())
+		{
+			is.setTagCompound(new NBTTagCompound());
+		}
+		is.getTagCompound().setInteger("reducedDur", Math.max((is.hasTagCompound() ? is.getTagCompound().getInteger("reducedDur") : 0)*2, 1));
+		return is;
+	}
 }

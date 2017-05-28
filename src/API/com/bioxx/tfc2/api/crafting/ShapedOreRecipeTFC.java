@@ -46,6 +46,7 @@ public class ShapedOreRecipeTFC implements IRecipeTFC
 	protected int width = 0;
 	protected int height = 0;
 	protected boolean mirrored = true;
+	protected boolean isRepair;
 
 	public ShapedOreRecipeTFC(Block     result, Object... recipe){ this(new ItemStack(result), recipe); }
 	public ShapedOreRecipeTFC(Item      result, Object... recipe){ this(new ItemStack(result), recipe); }
@@ -347,5 +348,10 @@ public class ShapedOreRecipeTFC implements IRecipeTFC
 	@Override
 	public int getRecipeHeight() {
 		return height;
+	}
+	@Override
+	public boolean isRepairRecipe() {
+		// TODO Auto-generated method stub
+		return isRepair;
 	}
 }

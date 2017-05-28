@@ -9,19 +9,29 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFCBlocks;
 import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.api.util.BlockPosList;
 import com.bioxx.tfc2.core.TFCTabs;
+import com.bioxx.tfc2.items.ItemAxe;
 
 public class BlockLogNatural2 extends BlockTerra
 {
-	public static PropertyEnum META_PROPERTY = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 18));
+	public static PropertyEnum WOOD = PropertyEnum.create("wood", WoodType.class, Arrays.copyOfRange(WoodType.values(), 16, 18));
 
 	public BlockLogNatural2()
 	{
-		super(Material.GROUND, META_PROPERTY);
+		super(Material.GROUND, WOOD);
 		this.setCreativeTab(TFCTabs.TFCBuilding);
 		this.setShowInCreative(false);
 		setSoundType(SoundType.WOOD);
@@ -30,19 +40,19 @@ public class BlockLogNatural2 extends BlockTerra
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[]{META_PROPERTY});
+		return new BlockStateContainer(this, new IProperty[]{WOOD});
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(META_PROPERTY, WoodType.getTypeFromMeta(meta+16));
+		return this.getDefaultState().withProperty(WOOD, WoodType.getTypeFromMeta(meta+16));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return ((WoodType)state.getValue(META_PROPERTY)).getMeta() & 15;
+		return ((WoodType)state.getValue(WOOD)).getMeta() & 15;
 	}
 
 	@Override
@@ -54,6 +64,52 @@ public class BlockLogNatural2 extends BlockTerra
 	@Override
 	public int damageDropped(IBlockState state)
 	{
-		return ((WoodType)state.getValue(META_PROPERTY)).getMeta();
+		return ((WoodType)state.getValue(WOOD)).getMeta();
+	}
+
+	@Override
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+	{
+		if(world.isRemote)
+			return true;
+
+		//get our item parameters
+		ItemStack stack = player.getHeldItemMainhand();
+		int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
+		int maxCut = 0;
+		if(stack.getItem() instanceof ItemAxe)
+		{
+			maxCut = ((ItemAxe)stack.getItem()).maxTreeSize;
+		}
+		else return false;
+
+		//create the map of our tree
+		BlockPosList tree = BlockLogNatural.getTreeForCut(world, pos);
+		int count = tree.size();
+
+		//if the tree has too many blocks then prevent chopping
+		if(count > maxCut)
+		{
+			player.sendMessage(new TextComponentTranslation(Core.translate("gui.axe.treetoobig")));
+			return false;
+		}
+		else if(count > stack.getMaxDamage() - stack.getItemDamage())
+		{
+			player.sendMessage(new TextComponentTranslation(Core.translate("gui.axe.needsrepair")));
+			return false;
+		}
+		else
+		{
+			for(BlockPos p : tree)
+			{
+				IBlockState s = world.getBlockState(p);
+				this.onBlockHarvested(world, pos, s, player);
+				world.setBlockToAir(p);
+				s.getBlock().dropBlockAsItem(world, p, s, fortune);
+			}
+		}
+		stack.damageItem(count-1, player);
+
+		return true;
 	}
 }

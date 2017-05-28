@@ -38,7 +38,7 @@ public class TFCItems
 		LooseRock = registerItemOnly(new ItemLooseRock().setUnlocalizedName("looserock"));
 		Plank = registerItemOnly(new ItemPlank().setUnlocalizedName("plank"));
 
-		StoneAxe = registerItem(new ItemAxe(ToolMaterial.STONE).setUnlocalizedName("stone_axe"));
+		StoneAxe = registerItem(new ItemAxe(ToolMaterial.STONE, 30).setUnlocalizedName("stone_axe"));
 		StoneShovel = registerItem(new ItemShovel(ToolMaterial.STONE).setUnlocalizedName("stone_shovel"));
 		StoneKnife = registerItem(new ItemKnife(ToolMaterial.STONE).setUnlocalizedName("stone_knife"));
 		StoneHoe = registerItem(new ItemHoe(ToolMaterial.STONE).setUnlocalizedName("stone_hoe"));

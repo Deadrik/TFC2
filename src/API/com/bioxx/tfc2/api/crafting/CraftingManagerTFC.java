@@ -11,6 +11,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 import com.bioxx.tfc2.api.interfaces.IRecipeTFC;
+import com.bioxx.tfc2.items.ItemTerraTool;
 
 public class CraftingManagerTFC
 {
@@ -65,7 +66,11 @@ public class CraftingManagerTFC
 	public ShapelessOreRecipeTFC addShapelessRecipe(RecipeType rt, ItemStack itemstack, Object... aobj)
 	{
 		ShapelessOreRecipeTFC recipesTFC = new ShapelessOreRecipeTFC(itemstack, aobj);
-		if(rt == RecipeType.NORMAL)
+		if(rt == RecipeType.NORMAL_REPAIR)
+		{
+			recipesTFC.isRepairRecipe = true;
+		}
+		if(rt == RecipeType.NORMAL || rt == RecipeType.NORMAL_REPAIR)
 			recipes.add(recipesTFC);
 		else if(rt == RecipeType.KNAPPING)
 			recipes_knapping.add(recipesTFC);
@@ -98,7 +103,30 @@ public class CraftingManagerTFC
 			IRecipeTFC irecipe = rec.get(k);
 			if (irecipe.matches(inventorycrafting, world))
 			{
-				return irecipe.getCraftingResult(inventorycrafting);
+				ItemStack out = irecipe.getCraftingResult(inventorycrafting);
+				if(irecipe.isRepairRecipe())
+				{
+					for(int i = 0; i < inventorycrafting.getSizeInventory(); i++)
+					{
+						ItemStack is = inventorycrafting.getStackInSlot(i);
+						if(is.getItem() == out.getItem())
+						{
+							int dam = is.getItemDamage();
+							out.setItemDamage(dam/2);
+							if(is.hasTagCompound() && ! out.hasTagCompound())
+								out.setTagCompound(is.getTagCompound());
+
+							if(out.getItem() instanceof ItemTerraTool)
+							{
+								((ItemTerraTool)out.getItem()).onRepair(out);
+							}
+
+							break;
+						}
+					}
+				}
+
+				return out;
 			}
 		}
 
@@ -138,7 +166,7 @@ public class CraftingManagerTFC
 
 	public enum RecipeType
 	{
-		NORMAL, KNAPPING, ANVIL, POTTERY;
+		NORMAL, NORMAL_REPAIR, KNAPPING, ANVIL, POTTERY;
 	}
 
 }

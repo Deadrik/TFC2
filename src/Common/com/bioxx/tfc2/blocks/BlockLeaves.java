@@ -124,8 +124,8 @@ public class BlockLeaves extends BlockTerra
 					{
 						scanPos = pos.add(x, y, z);
 						scanState = world.getBlockState(pos.add(x, y, z));
-						if((state.getBlock() == TFCBlocks.Leaves && scanState.getBlock() == TFCBlocks.LogNatural && scanState.getValue(BlockLogNatural.META_PROPERTY) == wood) ||
-								(state.getBlock() == TFCBlocks.Leaves2 && scanState.getBlock() == TFCBlocks.LogNatural2 && scanState.getValue(BlockLogNatural2.META_PROPERTY) == wood))
+						if((state.getBlock() == TFCBlocks.Leaves && scanState.getBlock() == TFCBlocks.LogNatural && scanState.getValue(BlockLogNatural.WOOD) == wood) ||
+								(state.getBlock() == TFCBlocks.Leaves2 && scanState.getBlock() == TFCBlocks.LogNatural2 && scanState.getValue(BlockLogNatural2.WOOD) == wood))
 							return;
 					}
 				}

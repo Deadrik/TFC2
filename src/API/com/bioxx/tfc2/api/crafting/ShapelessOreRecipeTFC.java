@@ -42,6 +42,7 @@ public class ShapelessOreRecipeTFC implements IRecipeTFC
 {
 	protected ItemStack output = ItemStack.EMPTY;
 	protected List<Object> input = new ArrayList<Object>();
+	public boolean isRepairRecipe = false;
 
 	public ShapelessOreRecipeTFC(Block result, Object... recipe){ this(new ItemStack(result), recipe); }
 	public ShapelessOreRecipeTFC(Item  result, Object... recipe){ this(new ItemStack(result), recipe); }
@@ -277,17 +278,18 @@ public class ShapelessOreRecipeTFC implements IRecipeTFC
 	}
 	@Override
 	public List<Object> getRecipeItems() {
-		// TODO Auto-generated method stub
 		return input;
 	}
 	@Override
 	public int getRecipeWidth() {
-		// TODO Auto-generated method stub
 		return this.input.size();
 	}
 	@Override
 	public int getRecipeHeight() {
-		// TODO Auto-generated method stub
 		return this.input.size();
+	}
+	@Override
+	public boolean isRepairRecipe() {
+		return isRepairRecipe;
 	}
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.api.interfaces.IGravityBlock;
 import com.bioxx.tfc2.api.interfaces.ISupportBlock;
+import com.bioxx.tfc2.api.util.BlockPosList;
 import com.bioxx.tfc2.blocks.BlockTerra;
 import com.bioxx.tfc2.entity.EntityFallingBlockTFC;
 
@@ -276,66 +277,6 @@ public class BlockCollapsible extends BlockTerra
 	{
 		Nature,
 		Structure;
-	}
-
-	/***
-	 * Built this Custom List because BlockPos.equals as used in generic list types
-	 * did not seem to be properly comparing BlockPos Objects.
-	 * @author Bioxx
-	 *
-	 */
-	private static class BlockPosList extends AbstractList<BlockPos> {
-
-		private static final int INITIAL_CAPACITY = 16;
-		private BlockPos[] a;
-		private int size = 0;
-		BlockPosList() {
-			a = new BlockPos[INITIAL_CAPACITY];
-		}
-
-		@Override
-		public BlockPos get(int index) {
-			return a[index];
-		}
-
-		@Override
-		public BlockPos set(int index, BlockPos element) {
-			BlockPos oldValue = a[index];
-			a[index] = element;
-			return oldValue;
-		}
-
-		@Override
-		public boolean add(BlockPos e) {
-			if (size == a.length) {
-				ensureCapacity(); //increase current capacity of list, make it double.
-			} 
-			a[size++] = e;
-			return true;
-		}
-
-		private void ensureCapacity() 
-		{
-			int newIncreasedCapacity = a.length * 2;
-			a = Arrays.copyOf(a, newIncreasedCapacity);
-		}
-
-		@Override
-		public int size() {
-			return a.length;
-		}
-
-		@Override
-		public boolean contains(Object obj)
-		{
-			BlockPos compare = (BlockPos)obj;
-			for(int i = 0; i < size; i++)
-			{
-				if(a[i] != null && a[i].getX() == compare.getX() && a[i].getY() == compare.getY() && a[i].getZ() == compare.getZ())
-					return true;
-			}
-			return false;
-		}
 	}
 
 

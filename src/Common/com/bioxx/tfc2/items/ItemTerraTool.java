@@ -44,4 +44,9 @@ public class ItemTerraTool extends ItemTool
 
 		return multimap;
 	}
+
+	public ItemStack onRepair(ItemStack is)
+	{
+		return is;
+	}
 }

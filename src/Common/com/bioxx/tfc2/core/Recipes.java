@@ -32,6 +32,11 @@ public class Recipes
 		manager.addRecipe(RecipeType.NORMAL, new ItemStack(TFCBlocks.Thatch), new Object[]{"XX", "XX", Character.valueOf('X'), new ItemStack(TFCItems.Straw, 1)});
 		manager.addShapelessRecipe(RecipeType.NORMAL, new ItemStack(TFCItems.Straw, 4), new Object[]{new ItemStack(TFCBlocks.Thatch, 1)});
 
+		manager.addShapelessRecipe(RecipeType.NORMAL_REPAIR, new ItemStack(TFCItems.StoneAxe), new ItemStack(TFCItems.StoneAxe, 1, WILDCARD), new ItemStack(TFCItems.LooseRock, 1, WILDCARD));
+		manager.addShapelessRecipe(RecipeType.NORMAL_REPAIR, new ItemStack(TFCItems.StoneKnife), new ItemStack(TFCItems.StoneKnife, 1, WILDCARD), new ItemStack(TFCItems.LooseRock, 1, WILDCARD));
+		manager.addShapelessRecipe(RecipeType.NORMAL_REPAIR, new ItemStack(TFCItems.StoneShovel), new ItemStack(TFCItems.StoneShovel, 1, WILDCARD), new ItemStack(TFCItems.LooseRock, 1, WILDCARD));
+		manager.addShapelessRecipe(RecipeType.NORMAL_REPAIR, new ItemStack(TFCItems.StoneHoe), new ItemStack(TFCItems.StoneHoe, 1, WILDCARD), new ItemStack(TFCItems.LooseRock, 1, WILDCARD));
+
 		List<IRecipe> list = CraftingManager.getInstance().getRecipeList();
 		for(int i = 0; i < list.size(); i++)
 		{
