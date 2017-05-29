@@ -8,7 +8,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -24,7 +23,13 @@ import com.google.common.collect.Sets;
 
 public class ItemAxe extends ItemTerraTool 
 {
-	private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER, TFCBlocks.LogNatural, TFCBlocks.LogNatural2, TFCBlocks.LogNaturalPalm});
+	private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, 
+			Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER, TFCBlocks.LogNatural, TFCBlocks.LogNatural2, TFCBlocks.LogNaturalPalm, 
+			TFCBlocks.Planks, TFCBlocks.Planks2, TFCBlocks.LogHorizontal, TFCBlocks.LogHorizontal2, TFCBlocks.LogHorizontal3, TFCBlocks.LogVertical, TFCBlocks.LogVertical2,
+			TFCBlocks.StairsAcacia, TFCBlocks.StairsAsh, TFCBlocks.StairsBirch, TFCBlocks.StairsBlackwood, TFCBlocks.StairsChestnut, TFCBlocks.StairsDouglasFir,
+			TFCBlocks.StairsHickory, TFCBlocks.StairsMaple, TFCBlocks.StairsOak, TFCBlocks.StairsPine, TFCBlocks.StairsSequoia, TFCBlocks.StairsSpruce, 
+			TFCBlocks.StairsSycamore, TFCBlocks.StairsWhiteCedar, TFCBlocks.StairsWillow, TFCBlocks.StairsKapok, TFCBlocks.StairsAcacia, TFCBlocks.StairsRosewood, 
+			TFCBlocks.StairsBlackwood, TFCBlocks.StairsPalm, TFCBlocks.SupportBeam, TFCBlocks.SupportBeam2, TFCBlocks.SupportBeam3});
 	public int maxTreeSize = 0;
 
 	public ItemAxe(ToolMaterial mat, int maxCutSize)
@@ -34,6 +39,17 @@ public class ItemAxe extends ItemTerraTool
 		this.attackSpeed = -3.2f;
 		this.setCreativeTab(TFCTabs.TFCTools);
 		this.maxTreeSize = maxCutSize;
+	}
+
+	@Override
+	public float getStrVsBlock(ItemStack stack, IBlockState state)
+	{
+		for (String type : getToolClasses(stack))
+		{
+			if (state.getBlock().isToolEffective(type, state))
+				return efficiencyOnProperMaterial;
+		}
+		return EFFECTIVE_ON.contains(state.getBlock()) ? this.efficiencyOnProperMaterial : 1.0F;
 	}
 
 	@Override
@@ -58,20 +74,5 @@ public class ItemAxe extends ItemTerraTool
 		return EnumActionResult.SUCCESS;
 	}
 
-	@Override
-	public int getMaxDamage(ItemStack stack)
-	{
-		return this.getMaxDamage() - (stack.hasTagCompound() ? stack.getTagCompound().getInteger("reducedDur") : 0);
-	}
 
-	@Override
-	public ItemStack onRepair(ItemStack is)
-	{
-		if(!is.hasTagCompound())
-		{
-			is.setTagCompound(new NBTTagCompound());
-		}
-		is.getTagCompound().setInteger("reducedDur", Math.max((is.hasTagCompound() ? is.getTagCompound().getInteger("reducedDur") : 0)*2, 1));
-		return is;
-	}
 }
