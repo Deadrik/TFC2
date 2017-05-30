@@ -52,8 +52,6 @@ global.willow=Willow
 global.clay=Clay
 global.ceramic=Ceramic
 
-gui.generatingmapmessage=Generating Island Map Please Wait...
-
 #== Creative Tabs ==
 itemGroup.TFCArmor=(TFC) Armor
 itemGroup.TFCMaterials=(TFC) Materials
@@ -117,6 +115,18 @@ tile.stairs_palm.name=Stairs
 #=========
 #= GUI =
 #=========
+size.tiny=Tiny
+size.verysmall=Very Small
+size.small=Small
+size.medium=Medium
+size.large=Large
+size.verylarge=Very Large
+size.huge=Huge
+weight.verylight=Very Light
+weight.light=Light
+weight.medium=Medium
+weight.heavy=Heavy
+weight.veryheavy=Very Heavy
 gui.food.fruit=Fruit
 gui.food.vegetable=Vegetable
 gui.food.grain=Grain
@@ -139,6 +149,7 @@ gui.skill.butcher=Butcher
 gui.axe.maxcutsize=Max Tree Size
 gui.axe.needsrepair=The axe needs to be repaired!
 gui.axe.treetoobig=The tree is too large for this axe!
+gui.generatingmapmessage=Generating Island Map Please Wait...
 
 #=================
 #======Items======

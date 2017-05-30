@@ -1,8 +1,11 @@
 package com.bioxx.tfc2;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.util.ResourceLocation;
@@ -37,6 +40,8 @@ import com.bioxx.tfc2.api.ore.OreRegistry;
 import com.bioxx.tfc2.api.types.OreType;
 import com.bioxx.tfc2.api.types.StoneType;
 import com.bioxx.tfc2.api.types.WoodType;
+import com.bioxx.tfc2.api.util.SizeWeightReader;
+import com.bioxx.tfc2.api.util.SizeWeightReader.SizeWeightJSON;
 import com.bioxx.tfc2.core.FluidTFC;
 import com.bioxx.tfc2.core.Recipes;
 import com.bioxx.tfc2.core.TFC_Sounds;
@@ -84,6 +89,8 @@ public class CommonProxy
 		SkillsManager.instance.registerSkill(new Skill("gui.skill.farmer", 1.0f, 1f));
 		SkillsManager.instance.registerSkill(new Skill("gui.skill.fisherman", 1.0f, 1f));
 		SkillsManager.instance.registerSkill(new Skill("gui.skill.butcher", 1.0f, 1f));
+
+		readSizeWeight();
 	}
 
 	public void init(FMLInitializationEvent event)
@@ -484,5 +491,63 @@ public class CommonProxy
 	public EntityPlayer getPlayer()
 	{
 		return null;
+	}
+
+	public void readSizeWeight()
+	{
+
+		SizeWeightReader reader;
+		try
+		{
+			//List<String> list = Helper.getResourceFiles("/assets/tfc2/food/");
+			//if(list.size() == 0)
+			//	TFC.log.info("Food -> No internal files found");
+			List<String> list = new ArrayList<String>();
+			list.add("harvestcraft_sizeweight.json");
+			list.add("tfc2_sizeweight.json");
+
+			for(String f : list)
+			{
+				reader = new SizeWeightReader("/assets/tfc2/sizeweight/"+f);
+				TFC.log.info("SizeWeight -> Reading " + reader.path);
+				if(reader.read())
+				{
+					applySizeWeightValues(reader);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			TFC.log.error(e.getMessage());
+		}
+		//Now read from the user's mods folder
+		reader = new SizeWeightReader("");
+		File folder = new File(TFC.proxy.getMinecraftDir(), "/mods/tfc2/sizeweight/");
+		if(folder != null && folder.listFiles() != null)
+		{
+			for (final File fileEntry : folder.listFiles()) 
+			{
+				if(reader.read(fileEntry))
+				{
+					applySizeWeightValues(reader);
+				}
+			}
+		}
+	}
+
+	private void applySizeWeightValues(SizeWeightReader reader)
+	{
+		for(SizeWeightJSON json : reader.list)
+		{
+			ResourceLocation rl = new ResourceLocation(json.itemName);
+			Item i = ForgeRegistries.ITEMS.getValue(rl);
+			if(i == null)
+			{
+				TFC.log.warn("SizeWeightRegistry -> Item not found when searching ItemRegistry for object ->" + json.itemName);
+				continue;
+			}
+
+			SizeWeightRegistry.GetInstance().addProperty(json);
+		}
 	}
 }

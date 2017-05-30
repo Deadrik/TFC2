@@ -1,4 +1,4 @@
-package com.bioxx.tfc2.core.util;
+package com.bioxx.tfc2.api.util;
 
 import java.io.File;
 import java.io.InputStream;

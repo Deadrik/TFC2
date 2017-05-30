@@ -12,6 +12,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.tfc2.api.FoodRegistry;
 import com.bioxx.tfc2.api.FoodRegistry.TFCFood;
+import com.bioxx.tfc2.api.SizeWeightRegistry;
+import com.bioxx.tfc2.api.SizeWeightRegistry.SizeWeightProp;
 import com.bioxx.tfc2.api.heat.ItemHeat;
 import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.core.Food;
@@ -22,6 +24,9 @@ public class ClientOverrides
 {
 	public static void addInformation(ItemStack is, EntityPlayer player, List arraylist, Item item)
 	{
+		SizeWeightProp prop = SizeWeightRegistry.GetInstance().getProperty(is);
+		arraylist.add("§6\u21F2§3" + Core.translate(prop.size.getUnlocalizedName()) + "  §6\u2696§3"  + Core.translate(prop.weight.getUnlocalizedName())+"§f");
+
 		//Do heat stuff
 		if(ItemHeat.Get(is) > 0)
 		{

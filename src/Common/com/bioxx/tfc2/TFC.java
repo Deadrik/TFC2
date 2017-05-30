@@ -87,7 +87,7 @@ public class TFC
 		Core.PortalSchematic.Load();
 
 		//Read our built in food values first
-		FoodReader reader;
+		FoodReader foodReader;
 		try
 		{
 			//List<String> list = Helper.getResourceFiles("/assets/tfc2/food/");
@@ -99,11 +99,11 @@ public class TFC
 
 			for(String f : list)
 			{
-				reader = new FoodReader("/assets/tfc2/food/"+f);
-				TFC.log.info("Food -> Reading " + reader.path);
-				if(reader.read())
+				foodReader = new FoodReader("/assets/tfc2/food/"+f);
+				TFC.log.info("Food -> Reading " + foodReader.path);
+				if(foodReader.read())
 				{
-					applyFoodValues(reader);
+					applyFoodValues(foodReader);
 				}
 			}
 		}
@@ -112,18 +112,21 @@ public class TFC
 			TFC.log.error(e.getMessage());
 		}
 		//Now read from the user's mods folder
-		reader = new FoodReader("");
+		foodReader = new FoodReader("");
 		File folder = new File(TFC.proxy.getMinecraftDir(), "/mods/tfc2/food/");
 		if(folder != null && folder.listFiles() != null)
 		{
 			for (final File fileEntry : folder.listFiles()) 
 			{
-				if(reader.read(fileEntry))
+				if(foodReader.read(fileEntry))
 				{
-					applyFoodValues(reader);
+					applyFoodValues(foodReader);
 				}
 			}
 		}
+
+
+
 	}
 
 	@EventHandler
@@ -372,7 +375,7 @@ public class TFC
 			Item i = ForgeRegistries.ITEMS.getValue(rl);
 			if(i == null)
 			{
-				log.warn("Item not found when searching FoodRegistry for food object ->" + f.itemName);
+				log.warn("FoodRegistry -> Item not found when searching ItemRegistry for object ->" + f.itemName);
 				continue;
 			}
 			if(!(i instanceof IFood))

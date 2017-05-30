@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.bioxx.tfc2.api.FoodRegistry.FoodGroupPair;
 import com.bioxx.tfc2.api.types.EnumFoodGroup;
+import com.bioxx.tfc2.api.util.JSONReader;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
