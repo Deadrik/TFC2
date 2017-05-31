@@ -54,7 +54,7 @@ public class FoodStatsTFC
 		//waterTimer = Math.max(TFC_Time.getTotalTicks(),TFC_Time.startTime);
 		//foodTimer = Math.max(TFC_Time.getTotalTicks(),TFC_Time.startTime);
 		//foodHealTimer = Math.max(TFC_Time.getTotalTicks(),TFC_Time.startTime);
-	}
+	}	
 
 	/**
 	 * Handles the food game logic.
@@ -416,4 +416,5 @@ public class FoodStatsTFC
 			soberTime += player.world.rand.nextInt(1000) + 400;
 		sendUpdate = true;*/
 	}
+
 }

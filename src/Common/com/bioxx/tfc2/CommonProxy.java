@@ -103,6 +103,9 @@ public class CommonProxy
 		registerEntities();
 
 		ForgeRegistries.POTIONS.register(PotionTFC.THIRST_POTION);
+		ForgeRegistries.POTIONS.register(PotionTFC.ENCUMB_MEDIUM_POTION);
+		ForgeRegistries.POTIONS.register(PotionTFC.ENCUMB_HEAVY_POTION);
+		ForgeRegistries.POTIONS.register(PotionTFC.ENCUMB_MAX_POTION);
 	}
 
 	protected void registerWorldGen()

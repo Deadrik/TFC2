@@ -13,6 +13,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -28,6 +29,7 @@ import com.bioxx.jmapgen.attributes.Attribute;
 import com.bioxx.jmapgen.graph.Center;
 import com.bioxx.jmapgen.graph.Center.Marker;
 import com.bioxx.tfc2.api.Global;
+import com.bioxx.tfc2.api.SizeWeightRegistry;
 import com.bioxx.tfc2.api.types.WoodType;
 import com.bioxx.tfc2.blocks.*;
 import com.bioxx.tfc2.core.FoodStatsTFC;
@@ -351,5 +353,16 @@ public class Core
 			}
 		}
 		return true;
+	}
+
+	public static int getEncumbrance(NonNullList<ItemStack> stackList)
+	{
+		int out = 0;
+		for(ItemStack i :stackList)
+		{
+			if(!i.isEmpty())
+				out += SizeWeightRegistry.GetInstance().getProperty(i).weight.encumbrance;
+		}
+		return out;
 	}
 }

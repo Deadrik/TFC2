@@ -28,7 +28,7 @@ public class ContainerAnvil extends ContainerTFC
 		this.world = world;
 		this.anvil = anvil;
 		anvil.openInventory(player);
-		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 91, false, true);
+		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 95, false, true);
 		layoutContainer(playerinv, anvil, 0, 0);
 	}
 

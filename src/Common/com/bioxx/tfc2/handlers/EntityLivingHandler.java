@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.bioxx.jmapgen.IslandMap;
+import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.TFC;
 import com.bioxx.tfc2.api.TFCOptions;
 import com.bioxx.tfc2.api.heat.ItemHeat;
@@ -114,6 +115,8 @@ public class EntityLivingHandler
 					}
 				}
 
+				updateEncumb(player);
+
 				//Drain Nutrition
 				NBTTagCompound tfcData = getEntityData(player.getEntityData());
 				if(!tfcData.hasKey("nutritionDrainTimer"))
@@ -139,6 +142,47 @@ public class EntityLivingHandler
 			{
 
 			}
+		}
+	}
+
+	public void updateEncumb(EntityPlayer player)
+	{
+		float encumb = Core.getEncumbrance(player.inventory.mainInventory) / 80f;
+		if(encumb >= 1.0)
+		{
+			if(player.isPotionActive(PotionTFC.ENCUMB_HEAVY_POTION))
+				player.removeActivePotionEffect(PotionTFC.ENCUMB_HEAVY_POTION);
+			if(player.isPotionActive(PotionTFC.ENCUMB_MEDIUM_POTION))
+				player.removeActivePotionEffect(PotionTFC.ENCUMB_MEDIUM_POTION);
+
+			if(player.isPotionActive(PotionTFC.ENCUMB_MAX_POTION))
+				return;
+
+			player.addPotionEffect(new PotionEffect(PotionTFC.ENCUMB_MAX_POTION, Integer.MAX_VALUE, 0, false, false));
+		}
+		else if(encumb >= 0.75)
+		{
+			if(player.isPotionActive(PotionTFC.ENCUMB_MAX_POTION))
+				player.removeActivePotionEffect(PotionTFC.ENCUMB_MAX_POTION);
+			if(player.isPotionActive(PotionTFC.ENCUMB_MEDIUM_POTION))
+				player.removeActivePotionEffect(PotionTFC.ENCUMB_MEDIUM_POTION);
+
+			if(player.isPotionActive(PotionTFC.ENCUMB_HEAVY_POTION))
+				return;
+
+			player.addPotionEffect(new PotionEffect(PotionTFC.ENCUMB_HEAVY_POTION, Integer.MAX_VALUE, 0, false, false));
+		}
+		else if(encumb >= 0.5)
+		{
+			if(player.isPotionActive(PotionTFC.ENCUMB_MAX_POTION))
+				player.removeActivePotionEffect(PotionTFC.ENCUMB_MAX_POTION);
+			if(player.isPotionActive(PotionTFC.ENCUMB_HEAVY_POTION))
+				player.removeActivePotionEffect(PotionTFC.ENCUMB_HEAVY_POTION);
+
+			if(player.isPotionActive(PotionTFC.ENCUMB_MEDIUM_POTION))
+				return;
+
+			player.addPotionEffect(new PotionEffect(PotionTFC.ENCUMB_MEDIUM_POTION, Integer.MAX_VALUE, 0, false, false));
 		}
 	}
 

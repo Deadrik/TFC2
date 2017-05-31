@@ -52,70 +52,13 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		int k = this.guiLeft;
 		int l = this.guiTop;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, 102);
+
 		//Draw the player avatar
 		GuiInventory.drawEntityOnScreen(k + 51, l + 75, 30, k + 51 - this.xSizeLow, l + 75 - 50 - this.ySizeLow, this.mc.player);
 
 		PlayerInventory.drawInventory(this, width, height, ySize - PlayerInventory.invYSize);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	}
-
-	//Removed durign port
-	/*@Override
-	public void drawTexturedModelRectFromIcon(int i, int j, IIcon icon, int w, int h)
-	{
-
-		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		worldrenderer.startDrawingQuads();
-		worldrenderer.addVertexWithUV(i + 0, j + h, this.zLevel, icon.getMinU(), icon.getMaxV());
-		worldrenderer.addVertexWithUV(i + w, j + h, this.zLevel, icon.getMaxU(), icon.getMaxV());
-		worldrenderer.addVertexWithUV(i + w, j + 0, this.zLevel, icon.getMaxU(), icon.getMinV());
-		worldrenderer.addVertexWithUV(i + 0, j + 0, this.zLevel, icon.getMinU(), icon.getMinV());
-		tessellator.draw();
-		GL11.glDisable(GL11.GL_BLEND);
-	}*/
-
-	/*public static void drawPlayerModel(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent)
-	{
-		GlStateManager.enableColorMaterial();
-		GlStateManager.pushMatrix();
-		GlStateManager.translate((float)posX, (float)posY, 50.0F);
-		GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
-		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-		float f2 = ent.renderYawOffset;
-		float f3 = ent.rotationYaw;
-		float f4 = ent.rotationPitch;
-		float f5 = ent.prevRotationYawHead;
-		float f6 = ent.rotationYawHead;
-		GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
-		RenderHelper.enableStandardItemLighting();
-		GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
-		GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
-		ent.renderYawOffset = (float)Math.atan((double)(mouseX / 40.0F)) * 20.0F;
-		ent.rotationYaw = (float)Math.atan((double)(mouseX / 40.0F)) * 40.0F;
-		ent.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
-		ent.rotationYawHead = ent.rotationYaw;
-		ent.prevRotationYawHead = ent.rotationYaw;
-		GlStateManager.translate(0.0F, 0.0F, 0.0F);
-		RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
-		rendermanager.setPlayerViewY(180.0F);
-		rendermanager.setRenderShadow(false);
-		rendermanager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-		rendermanager.setRenderShadow(true);
-		ent.renderYawOffset = f2;
-		ent.rotationYaw = f3;
-		ent.rotationPitch = f4;
-		ent.prevRotationYawHead = f5;
-		ent.rotationYawHead = f6;
-		GlStateManager.popMatrix();
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-		GlStateManager.disableTexture2D();
-		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-	}*/
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
@@ -257,59 +200,7 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		if(this.activeSlot != null && this.activeSlot.slotNumber == 0 && this.activeSlot.getHasStack() &&
 				this.activeSlot.getStack().getItem() instanceof IFood)
 			return false;
-		//Remvoed during port
-		//Here is the code for quick stacking food
-		/*if(keycode == 31 && activeSlot != null && activeSlot.canTakeStack(player) && activeSlot.getHasStack() && 
-				activeSlot.getStack() != null && activeSlot.getStack().getItem() instanceof IFood && TFC_Time.getTotalTicks() > spamTimer+5)
-		{
-			spamTimer = 0;//TFC_Time.getTotalTicks();  //Removed during port
-			Item iType = activeSlot.getStack().getItem();
-			ItemStack activeIS = activeSlot.getStack();
-			for(int i = 9; i < 45 && getEmptyCraftSlot() != -1; i++)
-			{
-				ItemStack is = this.inventorySlots.getSlot(i).getStack();
-				if(is != null && is.getItem() == iType && Food.areEqual(activeIS, is) && ((IFood)is.getItem()).getFoodWeight(is) < Global.FOOD_MAX_WEIGHT)
-					this.handleMouseClick(this.inventorySlots.getSlot(i), i, getEmptyCraftSlot(), 7);
-			}
-
-			if(this.inventorySlots.getSlot(0).getStack() != null)
-			{
-				this.handleMouseClick(this.inventorySlots.getSlot(0), 0, 0, 1);
-			}
-			return true;
-		}
-		else if(keycode == 32 && TFC_Time.getTotalTicks() > spamTimer+5)
-		{
-			spamTimer = TFC_Time.getTotalTicks();
-			int knifeSlot = -1;
-			if(!getCraftingHasKnife())
-			{
-				for(int i = 9; i < 45 && getEmptyCraftSlot() != -1; i++)
-				{
-					ItemStack is = this.inventorySlots.getSlot(i).getStack();
-					if(is != null && is.getItem() instanceof IKnife)
-					{
-						knifeSlot = i;
-						break;
-					}
-				}
-			}
-			for(int i = 9; i < 45 && getEmptyCraftSlot() != -1 && knifeSlot != -1 && inventorySlots.getSlot(knifeSlot).getStack() != null; i++)
-			{
-				ItemStack is = this.inventorySlots.getSlot(i).getStack();
-				int knifeDamage = inventorySlots.getSlot(knifeSlot).getStack().getItemDamage();
-				if(knifeDamage >= inventorySlots.getSlot(knifeSlot).getStack().getMaxDamage())
-					break;
-				if(is != null && !(is.getItem() instanceof ItemMeal) && is.getItem() instanceof IFood && ((IFood)is.getItem()).getFoodDecay(is) > 0 && 
-						Food.getDecayTimer(is) >= TFC_Time.getTotalHours())
-				{
-					this.handleMouseClick(this.inventorySlots.getSlot(i), i, getEmptyCraftSlot(), 7);
-					this.handleMouseClick(this.inventorySlots.getSlot(0), 0, 0, 1);
-				}
-			}
-			return true;
-		}
-		else*/ return super.checkHotbarKeys(keycode);
+		return super.checkHotbarKeys(keycode);
 	}
 
 	private int getEmptyCraftSlot()
@@ -337,33 +228,5 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 		}
 
 		return -1;
-	}
-
-	private boolean getCraftingHasKnife()
-	{
-		//Remvoed during port
-		/*if(this.inventorySlots.getSlot(4).getStack() != null && this.inventorySlots.getSlot(4).getStack().getItem() instanceof IKnife)
-			return true;
-		if(this.inventorySlots.getSlot(1).getStack() != null && this.inventorySlots.getSlot(1).getStack().getItem() instanceof IKnife)
-			return true;
-		if(this.inventorySlots.getSlot(2).getStack() != null && this.inventorySlots.getSlot(2).getStack().getItem() instanceof IKnife)
-			return true;
-		if(this.inventorySlots.getSlot(3).getStack() != null && this.inventorySlots.getSlot(3).getStack().getItem() instanceof IKnife)
-			return true;
-		if(player.getEntityData().hasKey("craftingTable"))
-		{
-			if(this.inventorySlots.getSlot(45).getStack() != null && this.inventorySlots.getSlot(45).getStack().getItem() instanceof IKnife)
-				return true;
-			if(this.inventorySlots.getSlot(46).getStack() != null && this.inventorySlots.getSlot(46).getStack().getItem() instanceof IKnife)
-				return true;
-			if(this.inventorySlots.getSlot(47).getStack() != null && this.inventorySlots.getSlot(47).getStack().getItem() instanceof IKnife)
-				return true;
-			if(this.inventorySlots.getSlot(48).getStack() != null && this.inventorySlots.getSlot(48).getStack().getItem() instanceof IKnife)
-				return true;
-			if(this.inventorySlots.getSlot(49).getStack() != null && this.inventorySlots.getSlot(49).getStack().getItem() instanceof IKnife)
-				return true;
-		}*/
-
-		return false;
 	}
 }

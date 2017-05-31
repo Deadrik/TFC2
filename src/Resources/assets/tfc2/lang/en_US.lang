@@ -427,3 +427,11 @@ entity.Elk.name=Elk
 #=================
 fluid.saltwater=Saltwater
 fluid.freshwater=Fresh Water
+
+#=================
+#= Potion ========
+#=================
+potion.thirst=Thirsty
+potion.encumb_med=Medium Burden
+potion.encumb_hvy=Heavy Burden
+potion.encumb_max=Max Burden

@@ -80,7 +80,7 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				}
 			});
 		}
-		PlayerInventory.buildInventoryLayout(this, playerInv, 8, 107, false, true);
+		PlayerInventory.buildInventoryLayout(this, playerInv, 8, 113, false, true);
 
 		//Manually built the remaining crafting slots because of an order issue. These have to be created after the default slots
 		if(player.getEntityData().hasKey("craftingTable") || !player.world.isRemote)

@@ -23,7 +23,7 @@ public class ContainerCart extends ContainerTFC
 		this.world = world;
 		this.cart = cart;
 		cart.openInventory(player);
-		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 93, false, true);
+		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 97, false, true);
 		layoutContainer(playerinv, cart, 0, 0);
 	}
 

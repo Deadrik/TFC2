@@ -31,7 +31,7 @@ public class ContainerFirepit extends ContainerTFC
 		this.world = world;
 		this.firepit = firepit;
 		firepit.openInventory(player);
-		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 90, false, true);
+		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 94, false, true);
 		layoutContainer(playerinv, firepit, 0, 0);
 	}
 

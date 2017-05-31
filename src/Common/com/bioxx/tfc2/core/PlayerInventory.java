@@ -20,7 +20,7 @@ import com.bioxx.tfc2.containers.slots.SlotForShowOnly;
 public class PlayerInventory
 {
 	public static int invXSize = 176;
-	public static int invYSize = 87;
+	public static int invYSize = 90;
 	private static ResourceLocation invTexture = new ResourceLocation(Reference.ModID, Reference.AssetPathGui + "gui_inventory_lower.png");
 	public static InventoryCrafting containerInv;
 	private static int index;
@@ -116,16 +116,22 @@ public class PlayerInventory
 	{
 		Core.bindTexture(invTexture);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		int l = (screenWidth - invXSize) / 2;
-		int i1 = (screenHeight - (upperGuiHeight+invYSize)) / 2 + upperGuiHeight;
-		container.drawTexturedModalRect(l, i1, 0, 0, invXSize, invYSize);
-		//container.drawTexturedModalRect(l+invXSize, i1+1, 0, 87, 83, 83);
-		/*ItemStack is = getInventory(container.mc.player).extraEquipInventory[0];
-		if(is != null)
-		{
-			if(is.getItem() instanceof ItemQuiver)
-				container.drawTexturedModalRect(l+invXSize, i1+1, 84, 87, 47, 83);
-		}*/
+		int guiX = (screenWidth - invXSize) / 2;
+		int guiY = (screenHeight - (upperGuiHeight+invYSize)) / 2 + upperGuiHeight;
+		container.drawTexturedModalRect(guiX, guiY, 0, 0, invXSize, invYSize);
+
+		//encumbrance bar
+		float eMult = Core.getEncumbrance(net.minecraft.client.Minecraft.getMinecraft().player.inventory.mainInventory) / 80f;
+		if(eMult < 0.5)
+			GL11.glColor4f(0.0F, 0.8F, 0.0F, 1.0F);
+		else if(eMult < 0.75)
+			GL11.glColor4f(1.0F, 0.8F, 0.0F, 1.0F);
+		else
+			GL11.glColor4f(0.8F, 0.0F, 0.0F, 1.0F);
+		container.drawTexturedModalRect(guiX+8, guiY+5, 2, 245, (int)(160 * eMult), 3);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		//encumbrance meter
+		container.drawTexturedModalRect(guiX+7, guiY+4, 1, 249, 162, 5);
 	}
 
 	/*public static InventoryPlayerTFC getInventory(EntityPlayer p)
