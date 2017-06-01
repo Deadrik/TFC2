@@ -472,6 +472,8 @@ public class ContainerPlayerTFC extends ContainerPlayer
 					}
 
 					int mouseStackSize = mouseStack.getCount();
+					if(dragType == 1)
+						mouseStackSize = 1;
 
 					if (mouseStackSize > sourceSlot.getItemStackLimit(mouseStack) - slotStack.getCount())
 					{

@@ -17,7 +17,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
-import com.bioxx.tfc2.api.interfaces.IFood;
 import com.bioxx.tfc2.core.PlayerInventory;
 
 public class GuiInventoryTFC extends InventoryEffectRenderer
@@ -197,9 +196,9 @@ public class GuiInventoryTFC extends InventoryEffectRenderer
 	@Override
 	protected boolean checkHotbarKeys(int keycode)
 	{
-		if(this.activeSlot != null && this.activeSlot.slotNumber == 0 && this.activeSlot.getHasStack() &&
+		/*if(this.activeSlot != null && this.activeSlot.slotNumber == 0 && this.activeSlot.getHasStack() &&
 				this.activeSlot.getStack().getItem() instanceof IFood)
-			return false;
+			return false;*/
 		return super.checkHotbarKeys(keycode);
 	}
 
