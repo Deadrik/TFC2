@@ -121,7 +121,7 @@ public class PlayerInventory
 		container.drawTexturedModalRect(guiX, guiY, 0, 0, invXSize, invYSize);
 
 		//encumbrance bar
-		float eMult = Core.getEncumbrance(net.minecraft.client.Minecraft.getMinecraft().player.inventory.mainInventory) / 80f;
+		float eMult = Math.min(Core.getEncumbrance(net.minecraft.client.Minecraft.getMinecraft().player.inventory.mainInventory) / 80f, 1.0f);
 		if(eMult < 0.5)
 			GL11.glColor4f(0.0F, 0.8F, 0.0F, 1.0F);
 		else if(eMult < 0.75)

@@ -3,6 +3,7 @@ package com.bioxx.tfc2.handlers;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -143,6 +144,11 @@ public class EntityLivingHandler
 
 			}
 		}
+		else if (event.getEntityLiving() instanceof EntityPlayerSP)
+		{
+			EntityPlayerSP player = (EntityPlayerSP)event.getEntityLiving();
+			updateEncumb(player);
+		}
 	}
 
 	public void updateEncumb(EntityPlayer player)
@@ -183,6 +189,15 @@ public class EntityLivingHandler
 				return;
 
 			player.addPotionEffect(new PotionEffect(PotionTFC.ENCUMB_MEDIUM_POTION, Integer.MAX_VALUE, 0, false, false));
+		}
+		else
+		{
+			if(player.isPotionActive(PotionTFC.ENCUMB_MAX_POTION))
+				player.removeActivePotionEffect(PotionTFC.ENCUMB_MAX_POTION);
+			if(player.isPotionActive(PotionTFC.ENCUMB_HEAVY_POTION))
+				player.removeActivePotionEffect(PotionTFC.ENCUMB_HEAVY_POTION);
+			if(player.isPotionActive(PotionTFC.ENCUMB_MEDIUM_POTION))
+				player.removeActivePotionEffect(PotionTFC.ENCUMB_MEDIUM_POTION);
 		}
 	}
 
