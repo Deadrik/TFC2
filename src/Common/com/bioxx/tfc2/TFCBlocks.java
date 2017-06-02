@@ -85,6 +85,7 @@ public class TFCBlocks
 	public static Block Thatch;
 	public static Block PitKiln;
 	public static Block AncientDevice;
+	public static Block SmallVessel;
 
 	public static void LoadBlocks()
 	{
@@ -158,6 +159,7 @@ public class TFCBlocks
 		Thatch = new BlockThatch().setHardness(4F).setUnlocalizedName("thatch");
 		PitKiln = new BlockPitKiln().setHardness(4F).setUnlocalizedName("pitkiln");
 		AncientDevice = new BlockAncientDevice().setHardness(-1F).setResistance(6000000f).setUnlocalizedName("ancientdevice");
+		SmallVessel = new BlockSmallVessel().setHardness(0.2f).setUnlocalizedName("smallvessel");
 	}
 
 	public static void RegisterBlocks()
@@ -212,6 +214,7 @@ public class TFCBlocks
 		register(Firepit, ItemBlock.class);
 		register(PitKiln);
 		register(AncientDevice);
+		register(SmallVessel);
 
 		stairsList = new ArrayList<Block>();
 		stairsList.add(register(StairsAsh, ItemStair.class));
@@ -327,6 +330,7 @@ public class TFCBlocks
 		registerTileEntity(TileAnvil.class, "anvil");
 		registerTileEntity(TileFirepit.class, "firepit");
 		registerTileEntity(TilePitKiln.class, "pitkiln");
+		registerTileEntity(TileSmallVessel.class, "smallvessel");
 	}
 
 	private static void registerTileEntity(Class<? extends TileEntity> c, String id)

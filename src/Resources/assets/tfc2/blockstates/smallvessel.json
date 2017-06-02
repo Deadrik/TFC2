@@ -1,0 +1,13 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		
+	},
+	"variants": {
+        "normal": 
+        [{
+			"textures": {"particle": "tfc2:blank", "all":"tfc2:blank"},
+        	"model" : "tfc2:smallvessel"
+        }]
+    }
+}

@@ -15,12 +15,13 @@ import com.bioxx.tfc2.Core;
 import com.bioxx.tfc2.Reference;
 import com.bioxx.tfc2.rendering.bakedmodels.BakedAnvilModel;
 import com.bioxx.tfc2.rendering.bakedmodels.BakedPitKilnModel;
+import com.bioxx.tfc2.rendering.bakedmodels.BakedSmallVesselModel;
 
 public class ModelBakeHandler 
 {
 	ModelResourceLocation locPitKilnCharcoal = new ModelResourceLocation(Reference.ModID + ":pitkiln", "fill=0,fillType=charcoal");
 	ModelResourceLocation locPitKilnStraw = new ModelResourceLocation(Reference.ModID + ":pitkiln", "fill=0,fillType=straw");
-	ModelResourceLocation locAnvil = new ModelResourceLocation(Reference.ModID + ":anvil");
+	ModelResourceLocation locSmallVessel = new ModelResourceLocation(Reference.ModID + ":smallvessel","normal");
 	ModelResourceLocation locAnvilN = new ModelResourceLocation(Reference.ModID + ":anvil", "facing=north");
 	ModelResourceLocation locAnvilS = new ModelResourceLocation(Reference.ModID + ":anvil", "facing=south");
 	ModelResourceLocation locAnvilE = new ModelResourceLocation(Reference.ModID + ":anvil", "facing=east");
@@ -38,6 +39,8 @@ public class ModelBakeHandler
 
 		replacePitKilnModel(locPitKilnCharcoal, Core.CreateRes(Reference.ModID + ":block/pitkiln/pitkiln_0"), event);
 		replacePitKilnModel(locPitKilnStraw, Core.CreateRes(Reference.ModID + ":block/pitkiln/pitkiln_0"), event);
+
+		replaceSmallVesselModel(locSmallVessel, Core.CreateRes(Reference.ModID + ":block/smallvessel"), event);
 
 		// silence the missing-model message for the default itemblock
 		//event.getModelRegistry().putObject(locAnvil, event.getModelRegistry().getObject(locAnvil));
@@ -64,6 +67,21 @@ public class ModelBakeHandler
 			IBakedModel standard = event.getModelRegistry().getObject(modelVariantLocation);
 			if(standard instanceof IPerspectiveAwareModel) {
 				IBakedModel finalModel = new BakedPitKilnModel((IPerspectiveAwareModel) standard, DefaultVertexFormats.BLOCK);
+
+				event.getModelRegistry().putObject(modelVariantLocation, finalModel);
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void replaceSmallVesselModel(ModelResourceLocation modelVariantLocation, ResourceLocation modelLocation, ModelBakeEvent event) {
+		try {
+			IModel model = ModelLoaderRegistry.getModel(modelLocation);
+			IBakedModel standard = event.getModelRegistry().getObject(modelVariantLocation);
+			if(standard instanceof IPerspectiveAwareModel) {
+				IBakedModel finalModel = new BakedSmallVesselModel((IPerspectiveAwareModel) standard, DefaultVertexFormats.BLOCK);
 
 				event.getModelRegistry().putObject(modelVariantLocation, finalModel);
 			}

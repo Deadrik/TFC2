@@ -196,6 +196,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit(event);
 		MinecraftForge.EVENT_BUS.register(new ModelBakeHandler());
+		MinecraftForge.EVENT_BUS.register(new SmallVesselHighlightHandler());
 	}
 
 	private void registerItemMesh(Item i, ModelResourceLocation mrl)

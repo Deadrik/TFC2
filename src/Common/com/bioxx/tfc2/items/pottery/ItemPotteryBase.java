@@ -70,6 +70,7 @@ public class ItemPotteryBase extends ItemTerra implements IRegisterSelf
 				world.setBlockState(pos.up(), TFCBlocks.PitKiln.getDefaultState());
 				TilePitKiln te = (TilePitKiln) world.getTileEntity(pos.up());
 				te.setInventorySlotContents(0, player.getHeldItem(hand).splitStack(1));
+				return EnumActionResult.SUCCESS;
 			}
 		}
 
