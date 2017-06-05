@@ -52,7 +52,7 @@ public class TFCItems
 		PotteryJug = registerItemOnly(new ItemPotteryJug().setUnlocalizedName("jug"));
 		PotteryPot = registerItemOnly(new ItemPotteryPot().setUnlocalizedName("pot"));
 		PotteryVessel = registerItemOnly(new ItemPotteryVessel().setUnlocalizedName("vessel"));
-		PotteryMold = registerItemOnly(new ItemPotteryMold().setUnlocalizedName("mold"));
+		//PotteryMold = registerItemOnly(new ItemPotteryMold().setUnlocalizedName("mold"));
 		PotteryBowl = registerItemOnly(new ItemPotteryBowl().setUnlocalizedName("bowl"));
 		PotteryFireBrick = registerItemOnly(new ItemPotteryFireBrick().setUnlocalizedName("fire_brick"));
 	}

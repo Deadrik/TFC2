@@ -24,7 +24,7 @@ public class ItemPotteryVessel extends ItemPotteryBase
 	{
 		super();
 		this.subTypeNames = new String[] {"clay_vessel", "ceramic_vessel", "ceramic_vessel_white"};
-		this.maxSubTypeMeta = 2;
+		this.maxSubTypeMeta =1;
 		this.maxStackSize = 1;
 	}
 

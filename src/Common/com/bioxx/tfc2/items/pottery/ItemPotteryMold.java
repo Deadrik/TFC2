@@ -20,6 +20,7 @@ public class ItemPotteryMold extends ItemPotteryBase
 	@Override
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
+		super.addInformation(is, player, arraylist, flag);
 		if(is.getItemDamage() < 2)
 		{
 			String[] name = new String[] {"global.clay", "global.ceramic"};

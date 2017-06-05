@@ -97,6 +97,7 @@ public class ItemPotteryJug extends ItemPotteryBase
 	@Override
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
+		super.addInformation(is, player, arraylist, flag);
 		String[] name = new String[] {"global.clay", "global.ceramic", "fluid.freshwater"};
 		arraylist.add(TextFormatting.DARK_GRAY + Core.translate(name[is.getItemDamage()]));
 	}
