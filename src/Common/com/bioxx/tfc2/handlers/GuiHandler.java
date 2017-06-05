@@ -50,6 +50,10 @@ public class GuiHandler implements IGuiHandler
 		{
 			return new ContainerCookingPot(player.inventory, (TileFirepit)te, world, x, y, z);
 		}
+		case 7://small vessel
+		{
+			return new ContainerVessel(player.inventory, world);
+		}
 		default:
 		{
 			return null;

@@ -50,6 +50,8 @@ public class GuiHandler extends com.bioxx.tfc2.handlers.GuiHandler
 			return new GuiFirepit(player.inventory, (TileFirepit)te, world, x, y, z);
 		case 6:
 			return new GuiCookingPot(player.inventory, (TileFirepit)te, world, x, y, z);
+		case 7:
+			return new GuiVessel(player.inventory, world);
 		default:
 			return null;
 		}

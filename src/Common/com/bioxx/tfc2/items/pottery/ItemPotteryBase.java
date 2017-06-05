@@ -30,6 +30,7 @@ public class ItemPotteryBase extends ItemTerra implements IRegisterSelf
 	@Override
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
+		super.addInformation(is, player, arraylist, flag);
 		String[] name = new String[] {"global.clay", "global.ceramic"};
 		arraylist.add(TextFormatting.DARK_GRAY + Core.translate(name[is.getItemDamage()]));
 	}

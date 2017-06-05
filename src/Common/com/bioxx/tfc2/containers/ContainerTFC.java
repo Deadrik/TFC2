@@ -118,7 +118,7 @@ public class ContainerTFC extends Container
 		}
 
 		ItemStack is = super.slotClick(slotID, dragType, clickTypeIn, p);
-		saveContents(is);
+		//saveContents(is);
 		return is;
 	}
 
@@ -247,7 +247,7 @@ public class ContainerTFC extends Container
 
 			if (!areItemStacksEqual(itemstack1, itemstack))
 			{
-				if(doItemSaving && i < inventoryItemStacks.size()-36 && !isLoading)
+				if(doItemSaving && i >= 36 && !isLoading)
 					shouldSave = true;
 
 				itemstack1 = itemstack == ItemStack.EMPTY ? ItemStack.EMPTY : itemstack.copy();
@@ -257,9 +257,10 @@ public class ContainerTFC extends Container
 
 				if(shouldSave)
 				{
-					int slotNum = bagsSlotNum + (inventoryItemStacks.size()-36);
-					this.saveContents((ItemStack)inventoryItemStacks.get(slotNum));
-					player.inventory.setInventorySlotContents(bagsSlotNum, (ItemStack)inventoryItemStacks.get(slotNum));
+					int slotNum = bagsSlotNum;
+					ItemStack bag = player.inventory.getStackInSlot(slotNum);
+					this.saveContents(bag);
+					player.inventory.setInventorySlotContents(slotNum, bag);
 					for (int j = 0; j < this.listeners.size(); ++j)
 						((IContainerListener)this.listeners.get(j)).sendSlotContents(this, slotNum, (ItemStack)inventoryItemStacks.get(slotNum));
 				}

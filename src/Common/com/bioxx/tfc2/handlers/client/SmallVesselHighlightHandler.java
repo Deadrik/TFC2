@@ -55,7 +55,7 @@ public class SmallVesselHighlightHandler
 		int index = getIndex(hitX, hitZ);
 
 		if((state.getBlock() == TFCBlocks.SmallVessel) || (target.sideHit == EnumFacing.UP && player.getHeldItemMainhand().getItem() == TFCItems.PotteryVessel && 
-				state.getBlock().isSideSolid(state, world, target.getBlockPos(), EnumFacing.UP)))
+				state.getBlock().isSideSolid(state, world, target.getBlockPos(), EnumFacing.UP) && player.isSneaking()))
 		{
 
 			GlStateManager.enableBlend();
