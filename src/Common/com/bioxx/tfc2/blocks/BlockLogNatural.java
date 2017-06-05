@@ -164,11 +164,11 @@ public class BlockLogNatural extends BlockTerra
 	public static WoodType getWoodType(IBlockState state)
 	{
 		if(state.getBlock() == TFCBlocks.LogNatural)
-			return state.getValue(BlockLogNatural.WOOD);
+			return (WoodType)state.getValue(BlockLogNatural.WOOD);
 		else if(state.getBlock() == TFCBlocks.LogNatural2)
-			return state.getValue(BlockLogNatural2.WOOD);
+			return (WoodType)state.getValue(BlockLogNatural2.WOOD);
 		else if(state.getBlock() == TFCBlocks.LogNaturalPalm)
-			return state.getValue(BlockLogNaturalPalm.WOOD);
+			return (WoodType)state.getValue(BlockLogNaturalPalm.WOOD);
 
 		return null;
 	}
