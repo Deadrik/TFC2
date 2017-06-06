@@ -15,6 +15,7 @@ public class ItemPotteryMold extends ItemPotteryBase
 		super();
 		this.subTypeNames = ClayMoldType.getNamesArray();
 		this.maxSubTypeMeta = this.subTypeNames.length - 1;
+		displayMaterial = false;
 	}
 
 	@Override

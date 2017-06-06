@@ -25,7 +25,8 @@ public class ClientOverrides
 	public static void addInformation(ItemStack is, EntityPlayer player, List arraylist, Item item)
 	{
 		SizeWeightProp prop = SizeWeightRegistry.GetInstance().getProperty(is);
-		arraylist.add("§6\u21F2§3" + Core.translate(prop.size.getUnlocalizedName()) + "  §6\u2696§3"  + Core.translate(prop.weight.getUnlocalizedName())+"§f");
+		arraylist.add(TextFormatting.GOLD +"\u21F2" + TextFormatting.DARK_AQUA +Core.translate(prop.size.getUnlocalizedName()) + 
+				TextFormatting.GOLD +"  \u2696" + TextFormatting.DARK_AQUA + Core.translate(prop.weight.getUnlocalizedName()));
 
 		//Do heat stuff
 		if(ItemHeat.Get(is) > 0)

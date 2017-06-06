@@ -15,6 +15,7 @@ public class ItemPotteryFireBrick extends ItemPotteryBase
 		super();
 		this.subTypeNames = new String[] {"clay_fire_brick", "fire_brick"};
 		this.maxSubTypeMeta = 1;
+		this.displayMaterial = false;
 	}
 
 	@Override

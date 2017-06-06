@@ -30,6 +30,7 @@ public class ItemPotteryJug extends ItemPotteryBase
 		this.subTypeNames = new String[] {"clay_jug", "ceramic_jug", "water_jug"};
 		this.maxSubTypeMeta = 2;
 		this.maxStackSize = 1;
+		displayMaterial = false;
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import com.bioxx.tfc2.tileentities.TilePitKiln;
 
 public class ItemPotteryBase extends ItemTerra implements IRegisterSelf
 {
+	protected boolean displayMaterial = true;
 	public ItemPotteryBase()
 	{
 		super();
@@ -31,8 +32,11 @@ public class ItemPotteryBase extends ItemTerra implements IRegisterSelf
 	public void addInformation(ItemStack is, EntityPlayer player, List arraylist, boolean flag)
 	{
 		super.addInformation(is, player, arraylist, flag);
-		String[] name = new String[] {"global.clay", "global.ceramic"};
-		arraylist.add(TextFormatting.DARK_GRAY + Core.translate(name[is.getItemDamage()]));
+		if(displayMaterial)
+		{
+			String[] name = new String[] {"global.clay", "global.ceramic"};
+			arraylist.add(TextFormatting.DARK_GRAY + Core.translate(name[is.getItemDamage()]));
+		}
 	}
 
 	@Override
