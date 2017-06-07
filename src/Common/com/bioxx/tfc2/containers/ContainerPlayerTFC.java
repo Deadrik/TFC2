@@ -497,8 +497,13 @@ public class ContainerPlayerTFC extends ContainerPlayer
 				}
 				else if (mouseStack.getMaxStackSize() <= sourceSlot.getItemStackLimit(mouseStack))
 				{
-					sourceSlot.putStack(mouseStack);
-					p.inventory.setItemStack(slotStack);
+					int mouseStackSize = mouseStack.getCount();
+					if(dragType == 1)
+						mouseStackSize = 1;
+
+					sourceSlot.putStack(mouseStack.splitStack(mouseStackSize));
+					if(dragType != 1)
+						p.inventory.setItemStack(slotStack);
 					return ItemStack.EMPTY;
 				}
 			}
