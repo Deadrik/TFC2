@@ -45,7 +45,7 @@ public class ContainerSpecialCrafting extends ContainerTFC
 		outputSlot = new SlotSpecialCraftingOutput(this, inventoryplayer.player, craftMatrix, craftResult, 0, 128, 44);
 		addSlotToContainer(outputSlot);
 
-		PlayerInventory.buildInventoryLayout(this, inventoryplayer, 8, 108, true, true);
+		PlayerInventory.buildInventoryLayout(this, inventoryplayer, 8, 114, true, true);
 
 		this.onCraftMatrixChanged(this.craftMatrix);
 		isConstructing = false;

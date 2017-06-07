@@ -31,7 +31,7 @@ public class ContainerFirepit extends ContainerTFC
 		this.world = world;
 		this.firepit = firepit;
 		firepit.openInventory(player);
-		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 94, false, true);
+		PlayerInventory.buildInventoryLayout(this, playerinv, 8, 96, false, true);
 		layoutContainer(playerinv, firepit, 0, 0);
 	}
 
@@ -95,7 +95,7 @@ public class ContainerFirepit extends ContainerTFC
 	{
 		this.addSlotToContainer(new Slot(chestInventory, 0, 56, 53));
 		this.addSlotToContainer(new Slot(chestInventory, 1, 56, 17));
-		this.addSlotToContainer(new SlotFirepitOutput(player, chestInventory, 10, 114, 34));
+		this.addSlotToContainer(new SlotFirepitOutput(player, chestInventory, 10, 116, 35));
 	}
 
 	public EntityPlayer getPlayer()
