@@ -96,6 +96,16 @@ public class ItemPotteryVessel extends ItemPotteryBase
 		return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
 	}
 
+	@Override
+	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
+	{
+		//We dont want onItemUseFirst from ItemPotteryBase to fire
+		if(this.isClay(player.getHeldItem(hand)))
+			return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
+		else
+			return EnumActionResult.PASS;
+	}
+
 	private int getIndex(float hitX, float hitZ)
 	{
 		int index = 0;

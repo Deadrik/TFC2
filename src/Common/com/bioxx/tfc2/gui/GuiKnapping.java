@@ -100,27 +100,25 @@ public class GuiKnapping extends GuiContainerTFC
 			resetButton(guibutton.id);
 			TFC.network.sendToServer(new SKnappingPacket(guibutton.id));
 
-			/*if(PlayerManagerTFC.getInstance().getClientPlayer().isInDebug)
+			/*PlayerInfo pi = PlayerManagerTFC.getInstance().getClientPlayer();
+			StringBuilder out = new StringBuilder("");
+			String[] temp = new String[]{"","","","","","","","",""};
+			int x = 0, y = 0;
+			for(int i = 0; i < 81; i++)
 			{
-				PlayerInfo pi = PlayerManagerTFC.getInstance().getClientPlayer();
-				StringBuilder out = new StringBuilder("");
-				String[] temp = new String[]{"","","","","","","","",""};
-				int x = 0, y = 0;
-				for(int i = 0; i < 81; i++)
-				{
-					y = i / 9;
-					temp[y] += pi.knappingInterface[i] ? " " : "X";
-				}
-				out = out.append("\"").append(temp[0]).append("\",").append("\"").append(temp[1]).append("\",")
-						.append("\"").append(temp[2]).append("\",").append("\"").append(temp[3]).append("\",")
-						.append("\"").append(temp[4]).append("\",").append("\"").append(temp[5]).append("\",")
-						.append("\"").append(temp[6]).append("\",").append("\"").append(temp[7]).append("\",")
-						.append("\"").append(temp[8]).append("\"");
-				StringSelection selection = new StringSelection(out.toString());
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				if(clipboard != null)
-					clipboard.setContents(selection, selection);
-			}*/
+				y = i / 9;
+				//temp[y] += pi.knappingInterface[i] ? " " : "X";
+				temp[y] += pi.knappingInterface[i] ? "X" : " ";
+			}
+			out = out.append("\"").append(temp[0]).append("\",").append("\"").append(temp[1]).append("\",")
+					.append("\"").append(temp[2]).append("\",").append("\"").append(temp[3]).append("\",")
+					.append("\"").append(temp[4]).append("\",").append("\"").append(temp[5]).append("\",")
+					.append("\"").append(temp[6]).append("\",").append("\"").append(temp[7]).append("\",")
+					.append("\"").append(temp[8]).append("\"");
+			StringSelection selection = new StringSelection(out.toString());
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			if(clipboard != null)
+				clipboard.setContents(selection, selection);*/
 
 		}
 		else

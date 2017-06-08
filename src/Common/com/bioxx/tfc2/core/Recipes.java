@@ -58,6 +58,7 @@ public class Recipes
 		manager.addRecipe(RecipeType.KNAPPING, new ItemStack(TFCItems.ToolHead, 1, ToolHeadType.STONE_HOE.ordinal()) ,"         ","XXX      ","  XX     ","   XX    ","    XX   ","    XXX  ","    XXX  ","         ","         ", 'X', new ItemStack(TFCItems.LooseRock, 1, WILDCARD));
 
 		manager.addRecipe(RecipeType.POTTERY, new ItemStack(TFCItems.PotteryJug) ,"XX  XXXXX","XX     XX","X    X XX","       XX","      XXX","      XXX","      XXX","      XXX","X    XXXX", 'X', new ItemStack(Items.CLAY_BALL, 1, WILDCARD));
+		manager.addRecipe(RecipeType.POTTERY, new ItemStack(TFCItems.PotteryVessel) ,"XXX   XXX","XX     XX","X       X","         ","         ","         ","         ","         ","X       X", 'X', new ItemStack(Items.CLAY_BALL, 1, WILDCARD));
 
 		manager.addShapelessRecipe(RecipeType.ANVIL, new ItemStack(Items.GOLD_INGOT, 1 , 0), new ItemStack(Items.IRON_INGOT, 1), new ItemStack(Items.IRON_INGOT, 1));
 	}
