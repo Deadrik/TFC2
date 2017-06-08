@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -94,6 +95,17 @@ public class ItemPotteryVessel extends ItemPotteryBase
 
 
 		return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
+	}
+
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn)
+	{
+		if(!world.isRemote && !player.isSneaking() && !isClay(player.getHeldItemMainhand()))
+		{
+			player.openGui(TFC.instance, 7, world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+			return new ActionResult(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
+		}
+		return new ActionResult(EnumActionResult.PASS, player.getHeldItem(handIn));
 	}
 
 	@Override
