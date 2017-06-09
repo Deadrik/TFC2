@@ -34,9 +34,9 @@ public class ModelTiger extends ModelBase
 		setTextureOffset("LegLEFTREAR.LegRearLeftUpper", 53, 0);
 		setTextureOffset("LegLEFTREAR.LegRearLeftLower", 54, 10);
 		setTextureOffset("LegLEFTREAR.LegRearLeftPaw", 52, 18);
-		setTextureOffset("LegLEFTFRONT.LegFrontRightUpper", 53, 0);
-		setTextureOffset("LegLEFTFRONT.LegFrontRightLower", 54, 10);
-		setTextureOffset("LegLEFTFRONT.LegFrontRightPaw", 52, 18);
+		setTextureOffset("LegLEFTFRONT.LegFrontLeftUpper", 53, 0);
+		setTextureOffset("LegLEFTFRONT.LegFrontLeftLower", 54, 10);
+		setTextureOffset("LegLEFTFRONT.LegFrontLeftPaw", 52, 18);
 		setTextureOffset("LegRIGHTFRONT.LegFrontRightUpper", 53, 0);
 		setTextureOffset("LegRIGHTFRONT.LegFrontRightLower", 54, 10);
 		setTextureOffset("LegRIGHTFRONT.LegFrontRightPaw", 52, 18);
@@ -76,27 +76,29 @@ public class ModelTiger extends ModelBase
 		LegLEFTREAR.addBox("LegRearLeftUpper", 0F, -1F, -1.5F, 2, 7, 3);
 		LegLEFTREAR.addBox("LegRearLeftLower", 0F, 6F, -0.5F, 2, 6, 2);
 		LegLEFTREAR.addBox("LegRearLeftPaw", -0.5F, 12F, -1.5F, 3, 1, 3);
+
 		LegLEFTFRONT = new ModelRenderer(this, "LegLEFTFRONT");
 		LegLEFTFRONT.setRotationPoint(2.5F, 11F, 3F);
 		setRotation(LegLEFTFRONT, 0F, 0F, 0F);
 		LegLEFTFRONT.mirror = true;
-		LegLEFTFRONT.addBox("LegFrontRightUpper", 0F, -1F, -1.5F, 2, 7, 3);
-		LegLEFTFRONT.addBox("LegFrontRightLower", 0F, 6F, -1F, 2, 6, 2);
-		LegLEFTFRONT.addBox("LegFrontRightPaw", -0.5F, 12F, -2F, 3, 1, 3);
+		LegLEFTFRONT.addBox("LegFrontLeftUpper", 0F, -1F, -1.5F, 2, 7, 3);
+		LegLEFTFRONT.addBox("LegFrontLeftLower", 0F, 6F, -1F, 2, 6, 2);
+		LegLEFTFRONT.addBox("LegFrontLeftPaw", -0.5F, 12F, -2F, 3, 1, 3);
+
 		LegRIGHTFRONT = new ModelRenderer(this, "LegRIGHTFRONT");
 		LegRIGHTFRONT.setRotationPoint(-2.5F, 11F, 3F);
 		setRotation(LegRIGHTFRONT, 0F, 0F, 0F);
-		LegRIGHTFRONT.mirror = true;
 		LegRIGHTFRONT.addBox("LegFrontRightUpper", -2F, -1F, -1.5F, 2, 7, 3);
 		LegRIGHTFRONT.addBox("LegFrontRightLower", -2F, 6F, -1F, 2, 6, 2);
 		LegRIGHTFRONT.addBox("LegFrontRightPaw", -2.5F, 12F, -2F, 3, 1, 3);
+
 		LegRIGHTREAR = new ModelRenderer(this, "LegRIGHTREAR");
 		LegRIGHTREAR.setRotationPoint(-2F, 11F, 15F);
 		setRotation(LegRIGHTREAR, 0F, 0F, 0F);
-		LegRIGHTREAR.mirror = true;
 		LegRIGHTREAR.addBox("LegRearRightUpper", -2F, -1F, -1.5F, 2, 7, 3);
 		LegRIGHTREAR.addBox("LegRearRightLower", -2F, 6F, -0.5F, 2, 6, 2);
 		LegRIGHTREAR.addBox("LegRearRightPaw", -2.5F, 12F, -1.5F, 3, 1, 3);
+
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)
