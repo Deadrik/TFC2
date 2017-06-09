@@ -55,9 +55,9 @@ public class ModelElephant extends ModelBase
 		Head.setRotationPoint(0F ,-20F, -20F);
 		setRotation(Head, 0F, 0F, 0F);
 		Head.addBox("Head",-6F, -7F, -15F, 12, 20, 15);
-		Head.addBox("TrunkTop",-3F, 0F, -3F, 6, 8, 6);
-		Head.addBox("TrunkMid",-2.5F, 0F, -2.5F, 5, 8, 5);
-		Head.addBox("TrunkEnd",-2F, 0F, -2F, 4, 8, 4);
+		Head.addBox("TrunkTop",-3F, 13F, -15F, 6, 8, 6);
+		Head.addBox("TrunkMid",-2.5F, 21F, -14.5F, 5, 8, 5);
+		Head.addBox("TrunkEnd",-2F, 29F, -14F, 4, 8, 4);
 
 		ModelRenderer Head_TuskRight = new ModelRenderer(this,"TuskRight");
 		Head_TuskRight.addBox("TuskRight", -1.5F, -1.5F, -15F, 3, 3, 15);
