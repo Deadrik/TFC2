@@ -139,12 +139,14 @@ public class EntityLivingHandler
 				else
 					setThirsty(player, false);
 			}
-			else
-			{
-
-			}
 		}
-		else if (event.getEntityLiving() instanceof EntityPlayerSP)
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onEntityLivingUpdateClient(LivingUpdateEvent event)
+	{
+		if (event.getEntity().getEntityWorld().isRemote && event.getEntityLiving() instanceof EntityPlayerSP)
 		{
 			EntityPlayerSP player = (EntityPlayerSP)event.getEntityLiving();
 			updateEncumb(player);
